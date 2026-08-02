@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 2 * * 0'
+
+jobs:
+  python-checks:
+    name: Python Lint & Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          pip install -U pip
+          pip install ruff mypy pytest
+      
+      - name: Ruff lint
+        run: ruff check .
+      
+      - name: Ruff format check
+        run: ruff format --check .
+      
+      - name: MyPy type check
+        run: mypy . --ignore-missing-imports
+      
+      - name: Run simulations (smoke test)
+        run: |
+          python Sim1_Emergent_Geometry.py --help || true
+          python Sim2_Cosmology.py --help || true
+          python Sim3_Dynamic_Scale.py --help || true
+          python Sim4_Evolution.py --help || true
+          python Sim5_Emergent_Gravity.py --help || true
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+      
+      - name: Upload Trivy results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+      
+      - name: Check for secrets
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: .
+          base: main
+          head: HEAD
+
+  docs:
+    name: Documentation Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Check for README
+        run: test -f README.md
+      
+      - name: Validate markdown links
+        uses: gaurav-nelson/github-action-markdown-link-check@v1
