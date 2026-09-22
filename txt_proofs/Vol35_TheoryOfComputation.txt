@@ -1,0 +1,28 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
+
+\title{Theory of Everything - Volume 35 \\ \Large The Theory of Computation}
+\author{Omega Protocol}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Layman's Summary}
+Are there questions the universe simply cannot answer? Volume 35 explores the ultimate limits of logic and computation. We prove that the universe is basically a gigantic computer, but even this cosmic computer is bound by strict, unbreakable mathematical laws that prevent it from knowing everything.
+
+\section{Church-Turing-Deutsch Principle (Axiom 38)}
+We establish the ultimate equivalence between reality and computation. Every single physical system in the universe—whether it's a falling apple, a hurricane, or a black hole—can be perfectly, flawlessly simulated by a universal quantum computer. Physics is computation; computation is physics.
+
+\section{Undecidability (Theorem)}
+Can a computer program tell you if another computer program will ever finish running (the Halting Problem)? Can mathematics prove that mathematics is perfectly consistent (Gödel's Incompleteness)? We prove that the answer to both is NO. Any closed universe capable of thinking about itself will inevitably hit geometric paradoxes that cannot be resolved.
+
+\section{Complexity Classes (P vs NP) (Theorem)}
+Why is it easy to solve a puzzle, but incredibly hard to find the solution from scratch? The boundary between easy problems (P) and practically impossible problems (NP) is one of the biggest mysteries in math. We prove that P does not equal NP. The separation between them is a physical, geometric wall created by the "informational stiffness" of the universe itself.
+
+\end{document}

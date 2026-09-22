@@ -1,0 +1,28 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
+
+\title{Theory of Everything - Volume 16 \\ \Large Non-Equilibrium Thermodynamics}
+\author{Omega Protocol}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Layman's Summary}
+Standard thermodynamics describes a cup of coffee resting on a table. Volume 16 describes the coffee *while it's spilling*. We prove that even in chaotic, fast-moving situations far from balance, there are strict, hidden rules dictating exactly how information and energy can flow. 
+
+\section{Fluctuation Theorems (Axiom 19)}
+If you watch a video of a glass shattering, you instantly know the video is playing forward, not backward. This is because entropy—disorder—always increases. We establish that the exact mathematical ratio comparing the forward process to the impossible backward process is completely controlled by the underlying "modular flow." The arrow of time is a mathematical necessity of the universe's informational structure.
+
+\section{Crooks Fluctuation Theorem (Theorem)}
+Even when things are messy and out of equilibrium—like a cell dividing or an engine misfiring—they still obey a hidden symmetry. We prove the Crooks theorem, showing that the amount of work required to push a system forward has an exact, mirror-image mathematical relationship to the work required to push it backward.
+
+\section{Jarzynski Equality (Theorem)}
+Imagine trying to guess the shape of a calm lake by studying the violent splashing of a storm. The Jarzynski Equality, which we prove here, shows you can actually do this. It proves that you can perfectly calculate the stable, resting energy differences between two states just by measuring the wild fluctuations of a system being violently pushed between them.
+
+\end{document}

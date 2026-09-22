@@ -1,0 +1,28 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
+
+\title{Theory of Everything - Volume 23 \\ \Large The Measurement Problem}
+\author{Omega Protocol}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Layman's Summary}
+Schrödinger's cat is both alive and dead until you open the box. Why does looking at something force it to pick a state? This is the "Measurement Problem." Volume 23 proves that human consciousness has nothing to do with it. Measurement is a real, physical process driven by the sheer weight of information.
+
+\section{Objective Collapse (Axiom 26)}
+We establish that the "collapse of the wavefunction"—the moment a fuzzy quantum possibility becomes a hard classical reality—is an objective physical event. It doesn't need a conscious observer. It is driven by the accumulation of "informational mass." When a quantum system gets tangled up with too much of the environment, it physically breaks.
+
+\section{Decoherence Limit (Theorem)}
+Exactly how big can a quantum object get before it becomes classical? We prove that the transition from quantum superposition (being in two places at once) to classical probability (being in one place or the other) occurs exactly at the Quantum Fisher Information Metric (QFIM) bound. The geometry of space itself forces the collapse.
+
+\section{The Observer (Theorem)}
+If human consciousness isn't required, what is an "observer"? We prove that an observer is simply any physical subsystem—a camera, a rock, a retina—that is massive enough and complex enough to record an irreversible change in entropy. Measurement is just thermodynamic exhaust.
+
+\end{document}

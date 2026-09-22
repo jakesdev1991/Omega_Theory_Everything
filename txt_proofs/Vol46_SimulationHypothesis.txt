@@ -1,0 +1,28 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
+
+\title{Theory of Everything - Volume 46 \\ \Large The Simulation Hypothesis}
+\author{Omega Protocol}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Layman's Summary}
+Are we living in a computer simulation? Volume 46 proves that the question itself is meaningless. Physics is computation. A perfectly simulated universe is mathematically identical to a "real" universe. However, we also prove that if we *are* inside a simulation running on a finite computer, we should be able to detect the glitches.
+
+\section{Computational Equivalence (Axiom 49)}
+We establish that there is no difference between "base reality" and a perfect simulation. Both are simply mathematical manifolds of informational flow. If an intelligence inside a computer experiences relative entropy dissipation, their reality is as mathematically "real" as the universe hosting the computer.
+
+\section{The Simulation Bound (Theorem)}
+You cannot perfectly simulate a computer inside a computer of the exact same size. We prove that any embedded simulation must operate at a lower resolution (a lower Quantum Fisher Information Metric) than the universe hosting it. This strict thermodynamic bound prevents an infinite Russian doll scenario of simulations within simulations.
+
+\section{Glitches and Anomalies (Theorem)}
+If the computer running our universe has finite RAM and processing power, it has to cut corners. We prove that these computational shortcuts—truncation errors—will inevitably manifest in our universe as high-energy quantum anomalies. By looking closely at the behavior of ultra-high-energy cosmic rays, we can theoretically test if our reality is being "rendered" on a finite machine.
+
+\end{document}

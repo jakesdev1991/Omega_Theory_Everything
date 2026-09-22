@@ -1,0 +1,28 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
+
+\title{Theory of Everything - Volume 12 \\ \Large Quantum Information Theory}
+\author{Omega Protocol}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Layman's Summary}
+The universe is fundamentally a giant computer, processing information rather than just moving matter around. Volume 12 explores the strict rules governing how this information is handled. It proves that information can never truly be destroyed, it cannot be perfectly copied, and it can be instantly teleported across the cosmos using entanglement.
+
+\section{Conservation of Information (Axiom 15)}
+Energy cannot be created or destroyed, and the same is true for quantum information. We establish as a core axiom that the total "von Neumann entropy"—a measure of the total quantum information in the universe—remains perfectly constant over time. The universe never forgets.
+
+\section{The No-Cloning Theorem (Theorem)}
+Unlike a digital file on your computer, you cannot make a perfect, independent copy of an unknown quantum state. This theorem proves that this restriction is a direct, unavoidable consequence of the universe's linear and unitary "modular flow." If you could copy quantum information, you would break the geometric fabric of space itself.
+
+\section{Quantum Teleportation (Theorem)}
+While you can't copy quantum information, you can teleport it. This theorem proves that non-local state transfer—moving the exact state of a particle from point A to point B instantly—is handled by the underlying "Entanglement Router." Space is just a projection, and entanglement provides the secret backdoor to move information without traveling through the space in between.
+
+\end{document}

@@ -1,0 +1,28 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
+
+\title{Theory of Everything - Volume 20 \\ \Large Chaos Theory \& Quantum Scrambling}
+\author{Omega Protocol}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section*{Layman's Summary}
+If a butterfly flaps its wings in Brazil, can it cause a tornado in Texas? Volume 20 tackles Chaos Theory. We prove that unpredictability isn't just because we have bad measuring tools; the universe is fundamentally wired to scramble information as fast as mathematically possible.
+
+\section{Quantum Chaos (Axiom 23)}
+If you throw a book into a fire, the information in the book is scrambled, but not destroyed. We establish that this scrambling happens at a very specific, exponential speed. The mathematical tools used to measure this (Out-of-Time-Order Correlators) show that information decays and mixes at the absolute maximum speed allowed by the temperature of the environment.
+
+\section{Fast Scrambling (Theorem)}
+What is the fastest paper-shredder in the universe? A black hole. We prove that black holes, and the universal informational substrate itself, are "fast scramblers." They take incoming quantum information and mix it up so thoroughly and so quickly that it reaches a state of maximum chaos in the shortest time mathematically permitted by the laws of physics.
+
+\section{The Butterfly Effect (Theorem)}
+The macroscopic "butterfly effect"—where tiny changes in the weather today lead to massive changes next week—is not just a feature of wind and air. We prove that macroscopic chaos is actually the visible, zoomed-out shadow of the universe's underlying quantum algebraic scrambling. The unpredictability of our world is born from the aggressive mixing of the fundamental informational fabric.
+
+\end{document}

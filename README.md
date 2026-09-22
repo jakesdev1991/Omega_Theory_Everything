@@ -25,39 +25,78 @@ Key papers:
 - `Omega_Theory_v4.0_Technical.md` - Full technical specification
 - `Omega_Theory_Laymans_Guide.md` - Accessible overview
 
+## Formal Verification (Lean 4)
+
+The complete mathematical framework is formally verified in Lean 4:
+
+```
+lean_proofs/
+├── ToE.lean                          # Main entry point
+├── OmegaAxioms.lean                  # Foundational axioms
+├── OmegaUnifiedFoundation.lean       # Unified foundation
+├── OmegaDimensionalHierarchy.lean    # Dimensional hierarchy
+├── OmegaProtocol.lean                # Cross-volume theorems
+├── Vol01_ClassicalMechanics.lean     # through
+└── Vol54_TheoryOfNothing.lean        # 54 physics volumes
+```
+
+Each Lean proof has companion files:
+- **LaTeX**: `latex_docs/Vol##_*.tex` - Mathematical typesetting
+- **Text**: `txt_proofs/Vol##_*.txt` - Plain text for accessibility
+
 ## Structure
 
 ```
 Omega_Theory_Everything/
-├── Sim1_Emergent_Geometry.py    # Entanglement → geometry
-├── Sim2_Cosmology.py            # FLRW + dynamic scale
-├── Sim3_Dynamic_Scale.py        # RG flow in spacetime
-├── Sim4_Evolution.py            # Evolution + depletion
-├── Sim5_Emergent_Gravity.py     # Entropic gravity
-├── sim6_v14_depletion.py        # v14 mechanics
-├── update_discovery.sh          # Discovery updater
-├── requirements.txt             # Python deps
-└── *.md                         # Theory documentation
+├── lean_proofs/              # 58 Lean 4 formalizations
+│   ├── ToE.lean
+│   ├── OmegaAxioms.lean
+│   ├── OmegaUnifiedFoundation.lean
+│   ├── OmegaDimensionalHierarchy.lean
+│   ├── OmegaProtocol.lean
+│   ├── Vol01_ClassicalMechanics.lean
+│   └── ... (through Vol54)
+├── latex_docs/               # 46 LaTeX documents (Vol09-Vol54)
+│   ├── Vol09_HolographicPrinciple.tex
+│   └── ... (through Vol54)
+├── txt_proofs/               # 104 plain text companions
+│   ├── Vol01_ClassicalMechanics.txt
+│   └── ... (through Vol54, both Lean + LaTeX)
+├── Sim1_Emergent_Geometry.py
+├── Sim2_Cosmology.py
+├── Sim3_Dynamic_Scale.py
+├── Sim4_Evolution.py
+├── Sim5_Emergent_Gravity.py
+├── sim6_v14_depletion.py
+├── update_discovery.sh
+├── requirements.txt
+└── *.md
 ```
 
 ## Quick Start
 
 ```bash
-# Install dependencies
+# Install Python dependencies
 pip install -r requirements.txt
 
 # Run simulations
 python Sim1_Emergent_Geometry.py
 python Sim2_Cosmology.py
 # ... etc
+
+# Build Lean 4 proofs (requires Lean 4 + Mathlib4)
+cd lean_proofs && lake build
 ```
 
 ## Development
 
 ```bash
-# Lint
+# Python linting
 ruff check .
 mypy .
+
+# Lean 4 build
+cd lean_proofs && lake build
 
 # Test
 pytest -v
