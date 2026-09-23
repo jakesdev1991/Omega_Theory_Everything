@@ -6,6 +6,8 @@ The repository now includes [`tri_token_sovereign_economy_blueprint.md`](tri_tok
 
 The blueprint is intentionally explicit about what is hypothetical, what requires independent validation, and what must not be used for automatic financial, medical, or public-benefit decisions.
 
+The expanded whitepaper set is in [`whitepapers/`](whitepapers/): $OMEGA, TOKAMAK, C.A.R.E./AMITY, and Lucifer–Hermes Omni-Bridge Prime.
+
 
 Complete implementation of the Omega Theory framework - a unified physics model deriving spacetime, gravity, and cosmology from quantum information principles.
 
