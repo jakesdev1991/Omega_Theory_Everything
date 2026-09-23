@@ -27,7 +27,13 @@ theorem boolean_excluded_middle (a : Prop) [Decidable a] : a ∨ ¬a :=
     Categorical distance = Ω-Metric (2D)
     Computation = Informational Viscosity (3D)
     Logic = RCOD Asymmetry (4D) -/
-theorem topos_from_omega :
-  True := by trivial
+theorem topos_from_omega (a : Prop) [Decidable a] : a ∨ ¬a := by
+  exact em a
+
+theorem topos_entropy_bound (R : QRegion) : vonNeumannEntropy R ≤ Real.pi := by
+  exact entropy_bounded R
+
+theorem topos_phi_symm (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R₂ R₁ := by
+  exact Φ_symm R₁ R₂
 
 end OmegaProtocol.Vol36

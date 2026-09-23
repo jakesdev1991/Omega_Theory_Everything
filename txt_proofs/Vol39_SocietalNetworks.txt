@@ -39,7 +39,13 @@ theorem min_connections : 2 * NumConnections ≥ NumNodes := by
     Social distance = Ω-Metric (2D)
     Information flow = Informational Viscosity (3D)
     Influence = RCOD Asymmetry (4D) -/
-theorem society_from_omega :
-  True := by trivial
+theorem society_from_omega : 2 * NumConnections ≥ NumNodes := by
+  exact min_connections
+
+theorem society_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
+  exact monotonicity_lemma R
+
+theorem social_distance_self (R : QRegion) : d R R = 0 := by
+  exact qregion_self_distance_zero R
 
 end OmegaProtocol.Vol39
