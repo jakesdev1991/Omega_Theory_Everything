@@ -84,6 +84,8 @@ Weights and thresholds must be versioned, tested, and reviewable.
 
 The agentic framework is subordinate to accountable human governance. In the C.A.R.E. protocol, qualified senior stewards are called Archangels. The title identifies a level of responsibility; it grants no supernatural authority and does not make a person infallible.
 
+For Proof-of-Care audits, the bridge uses auditable random assignment: one conflict-screened Archangel plus a heterogeneous AI panel selected from independent providers and model families. The Archangel is accountable for the human decision, but cannot choose the entire panel, use only their own agents, or silently override dissent. High-impact cases require independent human review. Selection, dissent, reason codes, and re-audit events are logged without exposing unnecessary care data.
+
 Archangels govern verifier standards, high-impact appeals, safety boundaries, privacy, accessibility, and agent suspension. They must be selected through transparent criteria, publish conflicts of interest, rotate where practical, and remain subject to independent review. The framework must preserve a complete distinction between:
 
 ```text

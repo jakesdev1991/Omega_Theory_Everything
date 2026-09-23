@@ -217,6 +217,12 @@ A dispute process should provide:
 
 Arbitrators must not be able to alter historical ledger records. Corrections are append-only reversals linked to the original decision.
 
+### Randomized Proof-of-Care audits
+
+High-impact care claims are sent through auditable random assignment to one conflict-screened Archangel and a heterogeneous AI audit panel drawn from independent providers and model families. An Archangel’s own agents cannot form the whole panel. Selection uses a verifiable randomness commitment, a case-specific nonce, and a published algorithm. Evidence is blinded or minimized, and reviewer conflicts, dissent, reason codes, re-audits, and appeals are recorded.
+
+AI agents may check completeness, reproduce calculations, identify duplicate evidence, and flag disagreement. They cannot independently finalize a high-impact care decision. No design can honestly guarantee that collusion is impossible; the goal is to distribute authority, reduce payoff, detect correlated behavior, and preserve a practical correction path.
+
 ## 7. Human Archangels and relational safety
 
 The agentic infrastructure is governed by accountable humans. Within C.A.R.E., senior stewards are called **Archangels**. This is a role title for trained, reviewable human governors—not supernatural authority or infallibility.

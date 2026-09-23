@@ -69,11 +69,35 @@ The treasury may absorb a bounded portion of volatility only if reserves are rea
 
 Whitelisted vendors require due diligence, a public policy, expiration, monitoring, and an appeal path. A fee exemption must not become a covert surveillance or exclusion list.
 
-## Arbitration
+## Randomized Proof-of-Care audits and arbitration
 
-A dispute process should use randomized reviewer assignment only when the randomization source is auditable and the process is accessible. A three-disapproval rule or penalty rate must be tested for reviewer collusion, minority bias, false positives, and coercion before adoption.
+Finalized Proof-of-Care claims and high-impact disputes are assigned through an auditable random process. A case is sent to:
 
-Slashing must be:
+1. one Archangel selected from an eligible, conflict-screened pool; and
+2. a panel of AI audit agents selected from independently governed providers, model families, and evaluation profiles.
+
+The Archangel is the accountable human decision-maker, not the owner of the entire audit process. Their own agents cannot constitute the whole panel or provide a hidden override. At least one panel member must be independent of the assigned Archangel’s organization, and high-risk cases require a second human reviewer or appeal panel.
+
+Assignment should use a public commitment to a verifiable randomness source, a case-specific nonce, and a published selection algorithm. The system must record the selection event without exposing sensitive case data. Evidence should be blinded or minimized so reviewers do not see unnecessary identity, status, wealth, or protected health information.
+
+Anti-collusion controls include:
+
+- independent provider and model-family diversity;
+- concealed reviewer identities until required for due process;
+- conflict-of-interest declarations;
+- reviewer rotation and rate limits;
+- pairwise agreement and suspicious-pattern monitoring;
+- deterministic audit logs and signed reason codes;
+- quorum decisions rather than one-model approval;
+- random re-audits of approved and rejected cases;
+- an independent appeal panel with no conflicted members;
+- sealed evidence commitments that prevent after-the-fact editing.
+
+AI agents may identify missing evidence, compare the claim with policy, reproduce calculations, and flag disagreement. They may not diagnose a person, infer moral worth, or independently finalize a high-impact care decision. The human Archangel must record the reasoning, uncertainty, dissenting signals, and appeal route.
+
+No system can honestly promise that collusion is impossible. The security goal is to reduce the payoff, distribute authority, detect correlated behavior, preserve evidence, and make correction practical.
+
+Slashing or reversal must be:
 
 - proportionate;
 - evidence-based;
