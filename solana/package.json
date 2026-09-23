@@ -18,7 +18,7 @@
   "dependencies": {
     "@metaplex-foundation/mpl-token-metadata-kit": "0.0.3",
     "@solana-program/system": "0.12.2",
-    "@solana-program/token": "0.13.0",
+    "@solana-program/token": "0.16.1",
     "@solana/kit": "6.5.0",
     "dotenv": "16.6.1"
   }
