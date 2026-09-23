@@ -39,7 +39,13 @@ theorem equilibrium_excess_demand_zero :
     Price distance = Ω-Metric (2D)
     Transaction time = Informational Viscosity (3D)
     Efficiency = RCOD Asymmetry (4D) -/
-theorem economics_from_omega :
-  True := by trivial
+theorem economics_from_omega : ExcessDemand equilibrium_price = 0 := by
+  exact equilibrium_excess_demand_zero
+
+theorem economics_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
+  exact monotonicity_lemma R
+
+theorem market_phi_symm (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R₂ R₁ := by
+  exact Φ_symm R₁ R₂
 
 end OmegaProtocol.Vol38
