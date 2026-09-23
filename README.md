@@ -85,6 +85,8 @@ Omega_Theory_Everything/
 ├── Sim4_Evolution.py
 ├── Sim5_Emergent_Gravity.py
 ├── sim6_v14_depletion.py
+├── rcod/                     # RCOD optimizer governor (research prototype + benchmark)
+├── cpp/                      # CBwK shadow-price pacer (Lucifer–Hermes routing governor, C++23)
 ├── update_discovery.sh
 ├── requirements.txt
 └── *.md

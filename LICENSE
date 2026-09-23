@@ -17,8 +17,8 @@ Apache-2.0 permits commercial use of these covered materials subject to its term
 
 The following are proprietary and are **not** open-source licensed by this version of the repository:
 
-- all files in `app/` and `rust/`
-- `tri_token_sovereign_economy_blueprint.md`
+- all files in `app/`, `rust/`, and `cpp/`
+- `tri_token_sovereign_economy_blueprint.md`, `launch/novel_day_one_plan.md`, and all files in `novel/`
 - all files in `whitepapers/`
 
 These files are marked `LicenseRef-Omega-Product-Proprietary`. The notice at [`LICENSES/Omega-Product-Proprietary.txt`](LICENSES/Omega-Product-Proprietary.txt) reserves rights; it does not itself grant commercial-use permission. Commercial use may be considered only under a separate, signed written license with percentage-based compensation. The royalty rate and calculation base are not set in this repository.
