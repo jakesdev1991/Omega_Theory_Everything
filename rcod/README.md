@@ -72,7 +72,7 @@ for batch in loader:
     loss = criterion(model(batch.x), batch.y)
     gov.zero_grad()
     loss.backward()
-    _, telemetry = gov.step()   # telemetry: regime, mu_bar, sigma_mu, ...
+    _, telemetry = gov.step()  # telemetry: regime, mu_bar, sigma_mu, ...
 ```
 
 Benchmark:

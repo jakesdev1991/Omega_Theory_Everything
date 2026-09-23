@@ -5,12 +5,11 @@ from __future__ import annotations
 import asyncio
 import json
 import sys
-from typing import Any
 
 # Point at the repo-local package so we don't depend on a global install.
 sys.path.insert(0, "/tmp/omwga/mcp")
 
-from omega_mcp import mcp, OmegaState
+from omega_mcp import OmegaState, mcp
 
 
 async def async_checks() -> list[str]:
@@ -24,7 +23,13 @@ async def async_checks() -> list[str]:
 
     # State plane existence
     STATE = OmegaState()
-    for plane in ("sov_balances", "use_receipts", "care_claims", "amity_balances", "omega_balances"):
+    for plane in (
+        "sov_balances",
+        "use_receipts",
+        "care_claims",
+        "amity_balances",
+        "omega_balances",
+    ):
         present = hasattr(STATE, plane)
         out.append(f"plane.{plane}={present}")
 
@@ -76,7 +81,14 @@ async def run_stdio_serve_then_stop() -> str:
                 "arguments": {},
             },
         }
-        payload = json.dumps(init) + "\n" + json.dumps(initialized) + "\n" + json.dumps(call) + "\n"
+        payload = (
+            json.dumps(init)
+            + "\n"
+            + json.dumps(initialized)
+            + "\n"
+            + json.dumps(call)
+            + "\n"
+        )
         stdout, stderr = await asyncio.to_thread(
             lambda: proc.communicate(input=payload, timeout=15)
         )

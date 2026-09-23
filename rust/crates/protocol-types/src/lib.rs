@@ -7,7 +7,7 @@ pub type AccountId = u64;
 pub type ClaimId = u64;
 pub type Amount = u128;
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum Asset {
     Sov,
     Use,
