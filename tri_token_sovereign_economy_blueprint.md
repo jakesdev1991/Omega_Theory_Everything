@@ -217,7 +217,19 @@ A dispute process should provide:
 
 Arbitrators must not be able to alter historical ledger records. Corrections are append-only reversals linked to the original decision.
 
-## 7. Active inference and cadCAD simulation
+## 7. Human Archangels and relational safety
+
+The agentic infrastructure is governed by accountable humans. Within C.A.R.E., senior stewards are called **Archangels**. This is a role title for trained, reviewable human governors—not supernatural authority or infallibility.
+
+Archangels supervise verifier legitimacy, high-impact appeals, privacy, safeguarding, agent suspension, and standards changes. They cannot unilaterally mint AMITY or override the separation between CARE evidence and exchange settlement.
+
+A proposed advancement rule gives 80% weight to demonstrated care integrity—empathy in action, non-judgmental listening, truthful disclosure, repair, safeguarding, and independent-review outcomes—and 20% to transparent economic stewardship. Wealth alone cannot raise a person’s level. Levels are bounded, non-transferable, periodically reviewed, and appealable.
+
+C.A.R.E. distinguishes people from behaviors. A distinction assessment is a survival and safeguarding tool: it checks observable behavior, evidence, uncertainty, and immediate risk. It is not a permanent judgment of identity or worth. The design recognizes that reflexive judgment can be insecurity or status defense, while still allowing proportionate evidence-based boundaries.
+
+A **thought virus** is the protocol’s name for a relational communication failure in which two or more people develop mutually reinforcing, skewed interpretations and use them as faulty foundational assumptions. It is not a psychiatric diagnosis. The response is to separate observations from interpretations, restore shared facts, mediate where safe, repair the misunderstanding, and document consent. Immediate danger permits protective action, with human oversight and later review.
+
+## 8. Active inference and cadCAD simulation
 
 Active inference is used here as a modeling vocabulary for agents that update beliefs and select actions under uncertainty. It is not evidence that an individual’s mental state can be reliably inferred from economic or biometric data.
 

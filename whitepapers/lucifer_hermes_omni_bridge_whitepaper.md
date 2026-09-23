@@ -63,6 +63,18 @@ score = quality - cost - latency - privacy_risk - safety_risk - uncertainty_pena
 
 Weights and thresholds must be versioned, tested, and reviewable.
 
+## Human governors and Archangel oversight
+
+The agentic framework is subordinate to accountable human governance. In the C.A.R.E. protocol, qualified senior stewards are called Archangels. The title identifies a level of responsibility; it grants no supernatural authority and does not make a person infallible.
+
+Archangels govern verifier standards, high-impact appeals, safety boundaries, privacy, accessibility, and agent suspension. They must be selected through transparent criteria, publish conflicts of interest, rotate where practical, and remain subject to independent review. The framework must preserve a complete distinction between:
+
+```text
+agent recommendation -> human verifier judgment -> authorized governance action
+```
+
+An agent cannot promote an Archangel, assign a moral score, or infer genuineness from facial, linguistic, biometric, or economic data. Progression evidence must be reviewed by humans and include successful correction, repair, and appeal behavior.
+
 ## Economic role
 
 The framework can verify a PoUW claim, calculate a bounded issuance recommendation, or route a care claim to authorized reviewers. It may not mint, slash, freeze, or transfer value without the protocol’s deterministic authorization and an append-only audit event.

@@ -6,7 +6,7 @@ These are research drafts and system specifications. They do not constitute an o
 
 - [`omega_protocol_whitepaper.md`](omega_protocol_whitepaper.md) — macro-governance, staking, supply, and governance.
 - [`tokamak_domain_token_whitepaper.md`](tokamak_domain_token_whitepaper.md) — plasma-domain computation, telemetry boundaries, and scientific PoUW.
-- [`care_amity_protocol_whitepaper.md`](care_amity_protocol_whitepaper.md) — Proof of Care, CARE Verifiers, privacy, arbitration, and the CARE-to-AMITY exchange boundary.
+- [`care_amity_protocol_whitepaper.md`](care_amity_protocol_whitepaper.md) — Proof of Care, CARE Verifiers, human Archangels, stewardship progression, privacy, arbitration, and the CARE-to-AMITY exchange boundary.
 - [`lucifer_hermes_omni_bridge_whitepaper.md`](lucifer_hermes_omni_bridge_whitepaper.md) — agentic routing, verification, sandboxing, audit, and governance boundaries.
 
 ## Naming decision
