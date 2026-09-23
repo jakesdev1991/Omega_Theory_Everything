@@ -1,11 +1,29 @@
-# TOKAMAK Domain Execution Token Whitepaper
+# TOKAMAK Reality-to-Measurement Token Whitepaper
 
-**Version:** 0.1 research draft  
-**Status:** Experimental compute and telemetry design; not a claim of fusion-reactor safety or a financial instrument.
+**Version:** 0.2 research draft  
+**Status:** Experimental compute and measurement design; not a claim of fusion-reactor safety or a financial instrument.
 
 ## Abstract
 
-TOKAMAK is the proposed domain-specific utility asset for plasma diagnostics, physics-informed computation, benchmark generation, and safety-oriented research workflows. It rewards independently reproducible computation and useful scientific artifacts. It does not grant authority to operate a reactor and cannot replace qualified engineers, instrumentation, or regulatory controls.
+TOKAMAK is the proposed reality-to-measurement utility asset for work that decomposes real-world phenomena into numbers, models, simulations, measurements, and testable predictions. Plasma diagnostics and fusion research are an important domain, but not the boundary of the token. Climate, biology, infrastructure, economics, astronomy, materials, software observability, and other domains may qualify when the contribution is reproducible, useful, and open to correction.
+
+The token rewards independently reproducible scientific and technical artifacts. It does not certify that a theory is true, grant authority to operate hazardous equipment, or replace qualified engineers, instrumentation, scientific review, or regulatory controls.
+
+## Scope and correction standard
+
+A contributor may submit a theory-derived model, measurement pipeline, dataset, benchmark, simulation, or correction. The theory’s origin does not create automatic legitimacy. Reviewers evaluate the artifact against evidence and competing explanations.
+
+A qualifying contribution should make clear:
+
+- what reality-facing question is being measured;
+- which quantities and units are used;
+- what assumptions convert observations into numbers;
+- what predictions or classifications follow;
+- how another person can reproduce the result;
+- what would falsify or correct it;
+- where uncertainty, bias, and missing data remain.
+
+A correction is valuable work when it improves measurement, exposes an invalid assumption, or makes a result less misleading—even when it does not confirm the original theory.
 
 ## Utility
 

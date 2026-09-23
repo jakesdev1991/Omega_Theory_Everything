@@ -8,6 +8,8 @@ The blueprint is intentionally explicit about what is hypothetical, what require
 
 The expanded whitepaper set is in [`whitepapers/`](whitepapers/): $OMEGA, TOKAMAK, C.A.R.E./AMITY, and Lucifer–Hermes Omni-Bridge Prime.
 
+A local wallet-first social prototype is in [`app/`](app/). It is intentionally offline and valueless: it demonstrates the product flows without collecting keys or connecting to a chain.
+
 
 Complete implementation of the Omega Theory framework - a unified physics model deriving spacetime, gravity, and cosmology from quantum information principles.
 

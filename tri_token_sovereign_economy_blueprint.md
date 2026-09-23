@@ -229,7 +229,21 @@ C.A.R.E. distinguishes people from behaviors. A distinction assessment is a surv
 
 A **thought virus** is the protocol’s name for a relational communication failure in which two or more people develop mutually reinforcing, skewed interpretations and use them as faulty foundational assumptions. It is not a psychiatric diagnosis. The response is to separate observations from interpretations, restore shared facts, mediate where safe, repair the misunderstanding, and document consent. Immediate danger permits protective action, with human oversight and later review.
 
-## 8. Active inference and cadCAD simulation
+## 8. Wallet and social application
+
+The primary user surface is a wallet-first social application. It should let people hold simulated or regulated balances, publish useful work, submit Proof of Care through consent-controlled flows, discover projects, and see exactly which human and deterministic checks sit between a contribution and a settlement event.
+
+The app must separate:
+
+- **wallet:** balances, permissions, transfers, and transaction history;
+- **social layer:** posts, projects, collaboration, and creator profiles;
+- **contribution layer:** PoUW submissions, evidence, reviewers, and appeals;
+- **care layer:** protected CARE proofs, consent, human verifiers, and Archangel oversight;
+- **research layer:** reality-to-measurement claims, models, reproducibility, and corrections.
+
+Creators may earn WCT/AMITY for approved work under published policies. CARE eligibility is not automatic: it requires a qualifying care action, consent, human verification, safeguarding review where necessary, and an appeal path. The first release must remain local and valueless, with no private-key collection and no automatic exchange settlement.
+
+## 9. Active inference and cadCAD simulation
 
 Active inference is used here as a modeling vocabulary for agents that update beliefs and select actions under uncertainty. It is not evidence that an individual’s mental state can be reliably inferred from economic or biometric data.
 
