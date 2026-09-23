@@ -1,13 +1,23 @@
 <!-- Copyright (c) 2025-2026 Jacob See. SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary. -->
 
-# Novel — sealed manuscript staging
+# Crucible: The Satoshi Protocol — sealed manuscript staging
 
-This directory stages the novel for the token-gated day-one launch described in
-[`../launch/novel_day_one_plan.md`](../launch/novel_day_one_plan.md).
+This directory stages the novel **"Crucible: The Satoshi Protocol"** (working draft; the
+author states the manuscript is not yet final) for the token-gated day-one launch described
+in [`../launch/novel_day_one_plan.md`](../launch/novel_day_one_plan.md).
 
 The manuscript is committed **encrypted**, with a public SHA-256 commitment of the
 plaintext. The plaintext is intentionally never published in this repository before the
 launch event; the content key is released only through the token gates on day one.
+
+## Copyright
+
+Copyright in the manuscript belongs to the author (Jacob See) automatically, from the
+moment of creation — no registration required for the copyright to exist. US Copyright
+Office registration via copyright.gov (eCO, "Literary Work", unpublished, ~$45) is
+recommended to lock in priority for the draft; the final published version can be
+registered separately at or within 3 months of publication. Full details and steps:
+[`../launch/novel_day_one_plan.md` §6.1](../launch/novel_day_one_plan.md).
 
 ## Layout
 

@@ -12,7 +12,7 @@ The expanded whitepaper set is in [`whitepapers/`](whitepapers/): $OMEGA, TOKAMA
 
 A local wallet-first social prototype is in [`app/`](app/). It is intentionally offline and valueless: it demonstrates the product flows without collecting keys or connecting to a chain.
 
-The day-one launch plan for the token-gated novel release ($OMEGA on Ethereum, WCT on Solana, AMITY on Bitcoin Lightning via Taproot Assets) is in [`launch/novel_day_one_plan.md`](launch/novel_day_one_plan.md). The novel manuscript is staged under seal in [`novel/`](novel/): the repo carries only the ciphertext and a SHA-256 commitment of the plaintext; the content key is reserved for release through the token gates on launch day.
+The day-one launch plan for the token-gated release of the novel **Crucible: The Satoshi Protocol** under the C.A.R.E. Protocol ($OMEGA on Ethereum, World Citizen Coin/Token of the World Citizen on Solana, AMITY on Bitcoin Lightning via Taproot Assets) is in [`launch/novel_day_one_plan.md`](launch/novel_day_one_plan.md). The novel manuscript is staged under seal in [`novel/`](novel/): the repo carries only the ciphertext and a SHA-256 commitment of the plaintext; the content key is reserved for release through the token gates on launch day.
 
 
 Complete implementation of the Omega Theory framework - a unified physics model deriving spacetime, gravity, and cosmology from quantum information principles.

@@ -3,28 +3,40 @@
 # Day-One Token-Gated Novel Launch Plan
 
 **Status:** Planning specification — not an offer, not a deployment, not legal advice.
-**Version:** 0.1
+**Version:** 0.2 — 2026-09-23 decisions incorporated (network, ticker shortlist, protocol name, book title, copyright workstream)
 **Date:** 2026-09-23
 **Depends on:** `tri_token_sovereign_economy_blueprint.md`, `whitepapers/`, `novel/`, `app/`
 
 ## 1. Objective and locked decisions
 
-Release the novel as the flagship day-one asset of the ecosystem: on the same day the three
-tokens go live on mainnet, anyone who **holds any one of the three tokens** can unlock the
-novel. This covers both kinds of economy participation:
+Release the novel — **"Crucible: The Satoshi Protocol"** — as the flagship day-one asset of
+the ecosystem: on the same day the three tokens go live on mainnet, anyone who **holds any
+one of the three tokens** can unlock the novel. This covers both kinds of economy
+participation:
 
 - **Investing** — holding/purchasing a token.
 - **Working** — earning a token through verified useful work (PoUW), per the ecosystem spec
-  ("creators may earn WCT/AMITY for approved work").
+  ("creators may earn WCT/AMITY for approved work"; naming to be reconciled — see §2).
 
-| Decision | Value |
-|---|---|
-| Release asset | The novel (16 chapters; manuscript held by the author; title TBD) |
-| Gate mechanism | Token-gated unlock (hold to unlock) |
-| $OMEGA | Ethereum (specific network **TBD** — see §10) |
-| WCT | Solana (**ticker collision — see §10, critical**) |
-| AMITY | Bitcoin, Lightning via Taproot Assets |
-| Day-one rule | Holding ≥ published threshold of any one token unlocks the novel |
+### 1.1 Decision register (updated 2026-09-23)
+
+| Decision | Value | Status |
+|---|---|---|
+| Release asset | **Crucible: The Satoshi Protocol** (novel; draft complete through Ch. 16, author states it is not final) | ✅ Titled |
+| Gate mechanism | Token-gated unlock (hold to unlock) | ✅ Locked |
+| Umbrella protocol name | **The C.A.R.E. Protocol** (whole ecosystem) | ✅ Locked |
+| $OMEGA | Ethereum — **pilot on Sepolia testnet**; mainnet-day-one venue (Ethereum L1 vs L2) **still open** — see §3.1 | ⚠️ Partial |
+| Solana token name | **World Citizen Coin (WCC)** or **Token of the World Citizen (TWC)** — shortlist of two; final pick pending (collision findings in §3.2) | ⚠️ Shortlisted |
+| AMITY | Bitcoin, Lightning via Taproot Assets | ✅ Locked |
+| Day-one rule | Holding ≥ published threshold of any one token unlocks the novel | ✅ Locked |
+| Copyright | Author holds copyright automatically on creation; US registration of the draft via copyright.gov eCO planned (see §6.1) | 🔄 In progress |
+
+**Important clarification on "Sepolia":** Sepolia is an Ethereum **testnet**. It is exactly
+where the $OMEGA contracts should be piloted (blueprint Phase 2), and that is now the plan
+of record. But "mainnet day one" requires the token to ultimately live on Ethereum mainnet
+or an L2 — Sepolia test ETH carries no value and cannot back a real launch. The mainnet
+venue decision (Ethereum L1 vs Base/Arbitrum/OP-style L2) remains open; §3.1 keeps the
+recommendation of an L2 for cheap gate/claim interactions.
 
 ## 2. Where things stand today
 
@@ -32,12 +44,12 @@ Honest inventory as of this plan:
 
 | Component | State |
 |---|---|
-| Novel manuscript | Complete through Ch. 16 in the author's possession; **not yet staged in repo**; title, cover, ebook formats not produced |
+| Novel manuscript | Draft (author states not final); file not yet delivered to the repo — staging prepared in `novel/`; title, cover, ebook formats not produced |
 | Token contracts | **None exist.** No Solidity, no SPL program, no Taproot asset |
 | Rust core (`rust/`) | Deterministic ledger + PoUW claim lifecycle prototype with tests; no chain integration |
 | App (`app/`) | Offline, valueless mockup; no wallet connection of any kind |
 | Specs/whitepapers | Tri-token blueprint + 4 whitepapers ($OMEGA, TOKAMAK, C.A.R.E./AMITY, Lucifer–Hermes) |
-| Naming consistency | **Mismatches:** whitepaper says TOKAMAK but the live token is WCT; blueprint's SOV/USE/CARE set vs the live OMEGA/WCT/AMITY set |
+| Naming consistency | **Decided 2026-09-23, docs not yet reconciled:** the ecosystem/protocol is **the C.A.R.E. Protocol**; tokens are **$OMEGA** (Ethereum), **WCC or TWC** (Solana — pick pending), **AMITY** (Bitcoin/Lightning). Whitepaper "TOKAMAK" is retired as the Solana token name; blueprint SOV/USE/CARE remain legacy local-simulation names |
 | Audits, legal, testnet | Nothing started |
 
 The repo's own blueprint (§13–§15) requires local prototypes → testnet pilot → audit before
@@ -46,14 +58,17 @@ choosing otherwise.
 
 ## 3. Chain legs
 
-### 3.1 $OMEGA — Ethereum (network TBD)
+### 3.1 $OMEGA — Ethereum (pilot: Sepolia; mainnet venue open)
 
-**Open decision (highest priority):** Ethereum mainnet vs an L2 (Base, Arbitrum, OP Mainnet,
-Linea, etc.).
+Decided: the $OMEGA contracts are piloted on **Sepolia testnet** first. That matches
+blueprint Phase 2 and is now the plan of record.
 
-- Recommendation: **an L2**. The gate performs frequent balance checks and claims; L2 gas is
-  negligible where mainnet gas would tax every claimant. Choose mainnet only if brand
-  positioning demands the settlement layer.
+Still open (highest-priority remaining decision): the **mainnet-day-one venue** —
+
+- Ethereum L1 (settlement-layer brand; highest gas for every gate check and claim), vs
+- an L2 such as Base, Arbitrum, or OP Mainnet (near-zero gas for frequent gate/claim
+  interactions).
+- Recommendation remains: **an L2**, for the same reasons as v0.1 of this plan.
 
 Needed for this leg:
 
@@ -64,19 +79,22 @@ Needed for this leg:
 3. Staking/lock contract ("topological-impedance staking"): `weight = amount ×
    duration_factor × bounded_commitment_factor`, with visible expiry and emergency exit.
 4. The **gate/claim contract** (see §4).
-5. Sepolia testnet pilot, then audit, then mainnet.
+5. **Sepolia pilot** (decided) → audit → mainnet deployment (venue decision pending).
 
-### 3.2 WCT — Solana
+### 3.2 World Citizen Coin (WCC) / Token of the World Citizen (TWC) — Solana
 
-**Critical naming issue:** the ticker **WCT is already WalletConnect Token** — a major,
-widely listed token on OP Mainnet with 130k+ holders. Launching a different "WCT" invites
-exchange confusion, listing refusals, and potential trademark/dispute exposure. Options:
+The Solana token is named **World Citizen Coin** or **Token of the World Citizen**; the
+shortlist is **WCC vs TWC**, with the final pick pending. Collision check (2026-09-23):
 
-- keep the name "World Citizen Token" but adopt a distinct ticker (e.g. `WCIT`, `WORLDC`,
-  `CITZ`), or
-- rename the token outright.
+- **WCC** — taken by several projects: *Wrapped Canton Coin* (actively traded on PancakeSwap
+  V3 / BSC) and dormant *World Crypto Coin* / *Worldcore Coin*. No major listing, but a live
+  same-ticker token exists.
+- **TWC** — taken only by *Tiwi Cat*, a defunct BSC meme coin (website offline since
+  October 2024). Cleanest of the two.
 
-This must be decided **before** any contract/metadata is created.
+Assessment: both are usable — neither approaches the severity of the discarded
+"WCT" collision with WalletConnect Token — but **TWC is the cleaner ticker**. Final pick
+plus a trademark clearance search belongs with counsel before SPL metadata is created.
 
 Needed for this leg:
 
@@ -172,19 +190,55 @@ so verified work itself — not just the resulting balance — can qualify a par
 
 ## 6. Content & IP workstream (start immediately — longest lead)
 
-1. **Title** the novel; produce cover + EPUB/PDF; optional per-claimant watermarking.
-2. **IP clearance before any commercial distribution:**
+1. **Title:** decided — **"Crucible: The Satoshi Protocol"** (Ch. 15's CRUCIBLE reveal names
+   the book). Confirm the byline (legal name "Jacob See" vs a pen name) — the eCO
+   registration and title page need it.
+2. Produce cover + EPUB/PDF; optional per-claimant watermarking.
+3. **IP clearance before any commercial distribution:**
    - *Naruto* references are load-bearing plot material (Ch. 5–6, Ch. 14: Infinite
      Tsukuyomi, Madara, 211 episodes). Requires review, rewrite, or clearance.
    - *D-Wave* is a real company named in a fictional heist (Ch. 4–6). Requires review.
    - *Crime and Punishment* is public domain — fine.
    - Satoshi Nakamoto / historical bitcoin events: fiction about a pseudonym; low risk, but
      include in counsel's pass.
-3. **License:** the novel stays `LicenseRef-Omega-Product-Proprietary`. Decide (with
+4. **License:** the novel stays `LicenseRef-Omega-Product-Proprietary`. Decide (with
    counsel) what license claimants receive — e.g. personal, non-commercial read license;
    whether secondary resale of "editions" is permitted.
-4. **Naming/trademark checks:** WCT ticker (§3.2, critical); check existing "Amity"-named
-   tokens; check the novel's eventual title.
+5. **Naming/trademark checks:** final Solana ticker pick (WCC vs TWC — §3.2); check existing
+   "Amity"-named tokens; note that a book **title is not protected by copyright** (titles
+   and short phrases are excluded), so if "Crucible: The Satoshi Protocol" matters as a
+   brand, that is a trademark question.
+
+### 6.1 Copyright registration (United States)
+
+Facts as of 2026-09 (US Copyright Office; the author is a US-based rights holder):
+
+- **Copyright already exists.** Under US law, copyright arises automatically when an
+  original work is fixed in a tangible medium — the manuscript file itself is protected the
+  moment it exists. No notice, registration, or © symbol is required to own the copyright.
+- **Registration is separate and worth doing.** It is required before filing an infringement
+  suit, and registering before infringement (or within 3 months of publication) unlocks
+  statutory damages (up to $150,000 per work for willful infringement) and attorney's fees.
+- **An unpublished draft is registrable now.** The author states the book is not final; the
+  Office accepts registrations of unpublished manuscripts. Common practice: register the
+  draft to lock in priority, then register the final published version later — the second
+  registration covers the text as published.
+- **How:** copyright.gov → eCO (Electronic Copyright Office) → "Register a New Claim" →
+  work type **Literary Work**, material type **Text**, publication status **unpublished**;
+  upload a complete copy (PDF) as the deposit; pay the fee. Fees (Circular 4): **$45**
+  single application (one work, one author, not made for hire, same claimant), **$65**
+  standard, $125 paper. Processing runs roughly 1–8 months; the filing date is locked at
+  submission.
+- **Repo evidence:** the sealed ciphertext + SHA-256 commitment in `novel/` (with dated
+  commits) supports the authorship/priority record per
+  [`../docs/PROVENANCE.md`](../docs/PROVENANCE.md), but it is **not a substitute** for
+  registration. "Poor man's copyright" (mailing a copy to yourself) is a myth — don't rely
+  on it.
+- **Scope:** registration protects the text (expression). It does not protect the title,
+  the Satoshi character concept, or ideas — only the specific written expression.
+
+To-do: file the eCO application for the current draft once the manuscript file is sealed,
+and again for the final version at (or within 3 months of) day-one publication.
 
 ## 7. Workstreams
 
@@ -259,24 +313,26 @@ so verified work itself — not just the resulting balance — can qualify a par
 
 | # | Item | Severity | Notes |
 |---|---|---|---|
-| R1 | **WCT ticker collides with WalletConnect Token** | Critical | Rename ticker before any metadata exists |
-| R2 | Ethereum network undecided | High | Blocks all $OMEGA contract work |
+| R1 | ~~WCT ticker collides with WalletConnect Token~~ | Resolved | WCT abandoned 2026-09-23; shortlist is WCC vs TWC (see R11) |
+| R2 | $OMEGA mainnet venue undecided | High | Sepolia testnet pilot decided; mainnet-day-one venue (L1 vs L2) still blocks the final deployment path |
 | R3 | Naruto / D-Wave IP in the novel | High | Clearance or rewrite before commercial release |
 | R4 | AMITY ops burden + thin retail wallet support | High | Start infra earliest; provide fallback verification |
 | R5 | Securities/regulatory posture of "hold to unlock" + investor framing | High | Counsel review before comms; careful wording of "investing" in public materials |
 | R6 | Gating is not DRM | Medium | Optional watermarking; treat gate as perk/ritual |
 | R7 | Content key custody | Medium | Ceremony, offline backups, no single holder |
 | R8 | Day-one ambition vs blueprint's audit-first phases | Medium | Either respect Phase 2 or document accepted risk explicitly |
-| R9 | Token naming inconsistency across docs | Medium | TOKAMAK vs WCT; SOV/USE/CARE vs live set |
+| R9 | Token naming inconsistency across docs | Medium | Canonical: C.A.R.E. Protocol umbrella; $OMEGA / WCC-or-TWC / AMITY; retire TOKAMAK as Solana-token name; reconcile whitepapers, blueprint, app copy |
 | R10 | Snapshot/claim abuse (sybil wallets just above threshold) | Medium | One-claim-per-wallet, per-token thresholds, monitoring |
+| R11 | WCC/TWC minor ticker collisions | Low | WCC: Wrapped Canton Coin live on BSC + dormant World Crypto Coin / Worldcore Coin. TWC: defunct Tiwi Cat meme coin only — **TWC is cleaner**. Final pick + trademark clearance with counsel |
+| R12 | Manuscript not final | Low | Seal draft now for priority evidence; re-seal final at publication; re-register copyright for the final text (§6.1) |
 
 ## 11. Immediate next actions
 
-1. Decide the Ethereum network for $OMEGA.
-2. Decide the WCT ticker (rename strongly advised).
-3. Deliver the manuscript file and run `novel/seal.sh`; verify the commitment; back up
-   `novel/.release-key.txt` offline.
-4. Choose the novel's title; commission the IP review of the Naruto and D-Wave passages.
-5. Stand up the AMITY testnet node (longest lead item).
-6. Draft the $OMEGA ERC-20 and the gate contract locally (blueprint §15 order).
-7. Reconcile token naming across the whitepapers, blueprint, and app copy.
+1. Decide the **$OMEGA mainnet venue** (Ethereum L1 vs an L2 such as Base/Arbitrum/OP) — Sepolia is already decided for the pilot.
+2. Pick the final Solana ticker: **WCC vs TWC** (TWC currently looks cleaner — §3.2).
+3. Deliver the manuscript file (`full-book.md` did not reach the repo on 2026-09-23 — re-attach), then run `novel/seal.sh`; verify the commitment; back up `novel/.release-key.txt` offline.
+4. Confirm the byline (legal name vs pen name) and file the **eCO copyright registration for the draft** (§6.1: $45, Literary Work, unpublished).
+5. Commission the IP review of the Naruto and D-Wave passages.
+6. Stand up the AMITY testnet node (longest lead item).
+7. Draft the $OMEGA ERC-20 and the gate contract; pilot on Sepolia (blueprint §15 order).
+8. Reconcile token naming across the whitepapers, blueprint, and app copy (C.A.R.E. Protocol / $OMEGA / WCC-or-TWC / AMITY).
