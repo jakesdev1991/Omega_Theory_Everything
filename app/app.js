@@ -1,3 +1,5 @@
+/* Copyright (c) 2025-2026 Jacob See. SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary. */
+
 const views = document.querySelectorAll('.view');
 const nav = document.querySelectorAll('[data-view]');
 const toast = document.getElementById('toast');

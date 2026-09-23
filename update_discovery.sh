@@ -1,8 +1,12 @@
 #!/bin/bash
+# Copyright (c) 2025-2026 Jacob See.
+# SPDX-License-Identifier: Apache-2.0
 
 echo ">> Updating README with The Asymmetry Discovery..."
 
 cat << 'EOF' > README.md
+<!-- Copyright (c) 2025-2026 Jacob See. Licensed under Apache-2.0. See LICENSE. -->
+
 # The Omega Theory: Emergent Reality from Quantum Information (v3.5)
 
 **"Reality is the noise that survives the filter."**
@@ -55,7 +59,11 @@ This discovery aligns three previously separate phenomena into one Informational
 * **`Sim4_Evolution.py`**: Proof that Biological Evolution follows Omega principles.
 
 ---
-*Copyright (C) 2025 Jacob See.*
+## Licensing
+
+Scientific materials in this repository are licensed under Apache-2.0. The app, Rust prototype, whitepapers, and Tri-Token blueprint are all rights reserved; commercial use requires a separate signed percentage-royalty license. See [LICENSE](LICENSE) and [docs/LICENSING.md](docs/LICENSING.md), including the prior MIT-license limitation.
+
+*Copyright (C) 2025-2026 Jacob See.*
 EOF
 
 echo ">> README Updated. Ready to Push."

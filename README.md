@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2025-2026 Jacob See. Licensed under Apache-2.0. See LICENSE. -->
+
 # Omega Theory Everything
 
 ## Integrated systems blueprint
@@ -113,6 +115,13 @@ cd lean_proofs && lake build
 pytest -v
 ```
 
-## License
+## License and intellectual property
 
-MIT License - see [LICENSE](LICENSE) for details.
+This repository uses a **split license**: the science is open; the product materials are proprietary.
+
+| Materials | Terms |
+|---|---|
+| Simulations, Omega theory notes, Lean proofs, LaTeX and text companions, and listed tooling | Apache-2.0 — see [`LICENSES/Apache-2.0.txt`](LICENSES/Apache-2.0.txt) |
+| `app/`, `rust/`, [`whitepapers/`](whitepapers/), and the [Tri-Token blueprint](tri_token_sovereign_economy_blueprint.md) | All rights reserved. Commercial licenses may be negotiated under a separate signed agreement with a percentage-based royalty; no rate or commercial permission is set by this repository. |
+
+See [`LICENSE`](LICENSE) for exact path scope and [`docs/LICENSING.md`](docs/LICENSING.md) for important limits, including the prior MIT license and public-disclosure history. Copyright does not generally make underlying ideas, methods, or systems exclusive. Patent status is not claimed; see [`docs/PATENT-POSTURE.md`](docs/PATENT-POSTURE.md). Project-name notices are in [`docs/TRADEMARKS.md`](docs/TRADEMARKS.md).

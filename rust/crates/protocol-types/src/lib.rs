@@ -1,3 +1,5 @@
+// Copyright (c) 2025-2026 Jacob See.
+// SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
 //! Versioned, deterministic wire types for the local sovereign-economy prototype.
 //! No identity, telemetry, or clinical data belongs in these types.
 

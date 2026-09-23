@@ -1,3 +1,5 @@
+// Copyright (c) 2025-2026 Jacob See.
+// SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
 //! A deterministic, valueless local pilot. This is not a market and has no oracle.
 use ledger::Ledger;
 use protocol_types::{Asset, WorkCategory};

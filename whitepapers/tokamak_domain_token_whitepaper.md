@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2025-2026 Jacob See. SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary. -->
+
 # TOKAMAK Reality-to-Measurement Token Whitepaper
 
 **Version:** 0.2 research draft  

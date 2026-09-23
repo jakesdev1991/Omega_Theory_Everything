@@ -2,7 +2,8 @@
 name = "work-claims"
 version.workspace = true
 edition.workspace = true
-license.workspace = true
+license-file = "LICENSE-PROPRIETARY.txt"
+publish = false
 
 [dependencies]
 protocol-types.workspace = true

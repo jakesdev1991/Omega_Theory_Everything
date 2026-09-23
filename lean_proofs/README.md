@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2025-2026 Jacob See. Licensed under Apache-2.0; see ../LICENSE. -->
+
 # Lean 4 Proofs - Omega Theory
 
 This directory contains the complete formal verification of the Omega Theory framework in Lean 4.
