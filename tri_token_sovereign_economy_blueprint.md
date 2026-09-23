@@ -235,7 +235,27 @@ C.A.R.E. distinguishes people from behaviors. A distinction assessment is a surv
 
 A **thought virus** is the protocol’s name for a relational communication failure in which two or more people develop mutually reinforcing, skewed interpretations and use them as faulty foundational assumptions. It is not a psychiatric diagnosis. The response is to separate observations from interpretations, restore shared facts, mediate where safe, repair the misunderstanding, and document consent. Immediate danger permits protective action, with human oversight and later review.
 
-## 8. Wallet and social application
+## 8. Prevention, public-health partnerships, and grants
+
+C.A.R.E. can be proposed to governments, foundations, universities, and community organizations as voluntary prevention and connection infrastructure. The scope is broader than rehabilitation or substance-use services: trauma processing, isolation, grief, family conflict, domestic violence, coercive control, and early connection to qualified help are all relevant use cases.
+
+The policy case must remain evidence-seeking. Domestic violence and untreated trauma can create major human, health, housing, legal, and economic costs, but the platform must not claim that a token or social feed alone prevents violence or reduces GDP costs. Grant funds should support trauma-informed design, survivor-led governance, qualified moderation, accessibility, privacy engineering, crisis referrals, and independent evaluation—not speculative token appreciation or engagement maximization.
+
+A public pilot should separate:
+
+- anonymous reflection and first-person storytelling;
+- moderated peer-support rooms;
+- resource and referral rooms;
+- consensual mediation;
+- verified Proof-of-Care claims.
+
+People may speak about their own experiences without courtroom-level proof in a support space. That does not make an allegation an established fact. Public posts should distinguish personal narrative, opinion, corroborated evidence, and unresolved allegation. Naming another person, publishing identifying details, doxxing, threats, targeted harassment, or coordinated retaliation is prohibited without explicit consent or a narrowly scoped lawful safeguarding process. A named person can request privacy review, correction, or interjection without controlling someone else’s account of their own experience.
+
+Unverified stories may receive empathy and resource support, but they must not automatically mint tokens, punish an identifiable person, affect employment, or trigger public retaliation. Immediate safety risks and legal reporting duties require trained human safeguarding channels, minimum-necessary disclosure, fast exit tools, and device-safety guidance. Agents may flag possible risk; they may not diagnose, confront an alleged abuser, contact authorities, or publish a safety plan autonomously.
+
+Grant evaluation should measure connection to qualified support, voluntary safety-plan completion, reduced isolation, participant-reported stability, time to human help, harmful escalation, harassment, false-report outcomes, privacy retention, and subgroup accessibility effects.
+
+## 9. Wallet and social application
 
 The primary user surface is a wallet-first social application. It should let people hold simulated or regulated balances, publish useful work, submit Proof of Care through consent-controlled flows, discover projects, and see exactly which human and deterministic checks sit between a contribution and a settlement event.
 
