@@ -9,7 +9,7 @@ The project is split between **open scientific materials** and **proprietary pro
 | Scope | License / status | What it means |
 |---|---|---|
 | Scientific simulations, theory notes, formal proofs, typeset and plain-text proof companions, and listed project tooling | Apache License 2.0 | Commercial use is permitted under the license terms, including attribution, change-notice, and its express contributor patent-license provisions. No royalty is charged for use of these covered files under Apache-2.0. |
-| `app/`, `rust/`, the Tri-Token blueprint, `whitepapers/`, `cpp/`, `rcod/`, and `omni-bridge/` | All rights reserved; `LicenseRef-Omega-Product-Proprietary` | No new general permission to copy, modify, distribute, or commercially exploit these materials is granted by this repository version. Commercial licenses may be negotiated under a separate signed agreement with a percentage-based royalty. |
+| `app/`, `rust/`, `evm/`, `solana/`, the Tri-Token blueprint, `whitepapers/`, `cpp/`, `rcod/`, and `omni-bridge/` | All rights reserved; `LicenseRef-Omega-Product-Proprietary` | No new general permission to copy, modify, distribute, or commercially exploit these materials is granted by this repository version. Commercial licenses may be negotiated under a separate signed agreement with a percentage-based royalty. |
 | Project administration and legal notices | No separate product or source-code license | These documents explain the policy; they do not expand the grants above or license the product architecture. |
 
 ## Exact path scope
@@ -27,7 +27,7 @@ The full license is [`LICENSES/Apache-2.0.txt`](../LICENSES/Apache-2.0.txt). The
 
 ### All-rights-reserved product materials
 
-The product scope is `app/**`, `rust/**`, `whitepapers/**`, `tri_token_sovereign_economy_blueprint.md`, `cpp/**`, `rcod/**`, and `omni-bridge/**`. These files carry or inherit the proprietary identifier `LicenseRef-Omega-Product-Proprietary`; see [`LICENSES/Omega-Product-Proprietary.txt`](../LICENSES/Omega-Product-Proprietary.txt).
+The product scope is `app/**`, `rust/**`, `evm/**`, `solana/**`, `whitepapers/**`, `tri_token_sovereign_economy_blueprint.md`, `cpp/**`, `rcod/**`, and `omni-bridge/**`. These files carry or inherit the proprietary identifier `LicenseRef-Omega-Product-Proprietary`; see [`LICENSES/Omega-Product-Proprietary.txt`](../LICENSES/Omega-Product-Proprietary.txt).
 
 The intended commercial route is an **advance, signed written license with percentage-based compensation payable to Jacob See**. This repository does not set a rate, royalty base (for example, gross or net receipts), minimum, term, reporting/audit terms, territory, sublicensing rights, or other deal terms. Those must be negotiated and written into the separate agreement. Until a suitable agreement is signed, this notice grants no commercial-use permission. Do not infer permission from the fact that the files are publicly viewable or downloadable.
 

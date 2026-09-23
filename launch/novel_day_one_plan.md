@@ -3,7 +3,7 @@
 # Day-One Token-Gated Novel Launch Plan
 
 **Status:** Planning specification — not an offer, not a deployment, not legal advice.
-**Version:** 0.2 — 2026-09-23 decisions incorporated (network, ticker shortlist, protocol name, book title, copyright workstream)
+**Version:** 0.3 — 2026-09-23 decisions incorporated (network, selected TWC identity, protocol name, book title, copyright workstream)
 **Date:** 2026-09-23
 **Depends on:** `tri_token_sovereign_economy_blueprint.md`, `whitepapers/`, `novel/`, `app/`
 
@@ -16,7 +16,7 @@ participation:
 
 - **Investing** — holding/purchasing a token.
 - **Working** — earning a token through verified useful work (PoUW), per the ecosystem spec
-  ("creators may earn WCT/AMITY for approved work"; naming to be reconciled — see §2).
+  ("creators may earn TWC/AMITY for approved work"; any future issuance remains subject to a separate reviewed policy — see §2).
 
 ### 1.1 Decision register (updated 2026-09-23)
 
@@ -26,7 +26,7 @@ participation:
 | Gate mechanism | Token-gated unlock (hold to unlock) | ✅ Locked |
 | Umbrella protocol name | **The C.A.R.E. Protocol** (whole ecosystem) | ✅ Locked |
 | $OMEGA | Ethereum — **pilot on Sepolia testnet**; mainnet-day-one venue (Ethereum L1 vs L2) **still open** — see §3.1 | ⚠️ Partial |
-| Solana token name | **World Citizen Coin (WCC)** or **Token of the World Citizen (TWC)** — shortlist of two; final pick pending (collision findings in §3.2) | ⚠️ Shortlisted |
+| Solana token name | **Token of the World Citizen (`TWC`)**; Devnet pilot identity is `tTWC` | ✅ Selected; Devnet-only issuer/verifier implemented locally, no mint deployed |
 | AMITY | Bitcoin, Lightning via Taproot Assets | ✅ Locked |
 | Day-one rule | Holding ≥ published threshold of any one token unlocks the novel | ✅ Locked |
 | Copyright | Author holds copyright automatically on creation; US registration of the draft via copyright.gov eCO planned (see §6.1) | 🔄 In progress |
@@ -45,12 +45,12 @@ Honest inventory as of this plan:
 | Component | State |
 |---|---|
 | Novel manuscript | Draft (author states not final); file not yet delivered to the repo — staging prepared in `novel/`; title, cover, ebook formats not produced |
-| Token contracts | **None exist.** No Solidity, no SPL program, no Taproot asset |
+| Token contracts | **Ethereum pilot implemented locally:** [`../evm/`](../evm/) contains a Sepolia-only, valueless `tOMEGA` fixed-supply token, vote escrow, locking, Governor + TimelockController, and claim gate. **Solana pilot implemented locally:** [`../solana/`](../solana/) contains a Devnet-only, valueless `tTWC` standard SPL mint issuer/verifier with immutable Metaplex fungible metadata and null mint/freeze authorities. **Neither is deployed or independently audited.** No Taproot asset exists yet. |
 | Rust core (`rust/`) | Deterministic ledger + PoUW claim lifecycle prototype with tests; no chain integration |
 | App (`app/`) | Offline, valueless mockup; no wallet connection of any kind |
 | Specs/whitepapers | Tri-token blueprint + 4 whitepapers ($OMEGA, TOKAMAK, C.A.R.E./AMITY, Lucifer–Hermes) |
-| Naming consistency | **Decided 2026-09-23, docs not yet reconciled:** the ecosystem/protocol is **the C.A.R.E. Protocol**; tokens are **$OMEGA** (Ethereum), **WCC or TWC** (Solana — pick pending), **AMITY** (Bitcoin/Lightning). Whitepaper "TOKAMAK" is retired as the Solana token name; blueprint SOV/USE/CARE remain legacy local-simulation names |
-| Audits, legal, testnet | Nothing started |
+| Naming consistency | The ecosystem/protocol is **the C.A.R.E. Protocol**; pilot identities are **`tOMEGA`** (Ethereum Sepolia), **`tTWC`** (Solana Devnet), and AMITY remains a separate Bitcoin/Lightning workstream. The canonical future Solana identity is **Token of the World Citizen (`TWC`)**. `TOKAMAK` is retired as the Solana-token name; blueprint SOV/USE/CARE remain legacy local-simulation names. Trademark/legal clearance remains open. |
+| Audits, legal, testnet | No independent audit, legal review, or public testnet deployment has started |
 
 The repo's own blueprint (§13–§15) requires local prototypes → testnet pilot → audit before
 value. This plan sequences the launch to respect that, or to document any risk accepted by
@@ -81,29 +81,39 @@ Needed for this leg:
 4. The **gate/claim contract** (see §4).
 5. **Sepolia pilot** (decided) → audit → mainnet deployment (venue decision pending).
 
-### 3.2 World Citizen Coin (WCC) / Token of the World Citizen (TWC) — Solana
+**Implementation status (2026-09-23):** the local, Sepolia-only pilot suite is in
+[`../evm/`](../evm/). It uses a plainly labelled `tOMEGA` test token, is guarded against
+non-Sepolia deployment, and includes fixed supply, non-transferable vote escrow, 7–365-day
+bounded locking, OpenZeppelin Governor + TimelockController, and an immutable-threshold
+claim-receipt gate. Its automated test suite passes locally; no Sepolia deployment, external
+audit, mainnet implementation, or value-bearing use is implied. Follow the preflight and
+post-deploy drills in [`../evm/README.md`](../evm/README.md) before sending any deployment
+transaction.
 
-The Solana token is named **World Citizen Coin** or **Token of the World Citizen**; the
-shortlist is **WCC vs TWC**, with the final pick pending. Collision check (2026-09-23):
+### 3.2 Token of the World Citizen (TWC) — Solana
 
-- **WCC** — taken by several projects: *Wrapped Canton Coin* (actively traded on PancakeSwap
-  V3 / BSC) and dormant *World Crypto Coin* / *Worldcore Coin*. No major listing, but a live
-  same-ticker token exists.
-- **TWC** — taken only by *Tiwi Cat*, a defunct BSC meme coin (website offline since
-  October 2024). Cleanest of the two.
+The selected canonical Solana identity is **Token of the World Citizen (`TWC`)**. Its
+intentionally non-production Devnet identity is **`tTWC`**. The implementation in
+[`../solana/`](../solana/) is a standard SPL Token Program issuer/verifier, not a bespoke
+Solana program: it creates an atomic fixed-supply Devnet mint, starts with no freeze authority,
+revokes the mint authority, and attaches immutable Metaplex `Fungible` metadata. It is locally
+tested and deployment-script ready, but **no Devnet mint exists yet**.
 
-Assessment: both are usable — neither approaches the severity of the discarded
-"WCT" collision with WalletConnect Token — but **TWC is the cleaner ticker**. Final pick
-plus a trademark clearance search belongs with counsel before SPL metadata is created.
+Historical collision review favored TWC over the discarded WCC/WCT options; that selection is
+not a trademark search, a registration claim, or permission to commercialize the name. Counsel
+must complete trademark, securities/compliance, consumer-protection, and distribution review
+before any value-bearing or mainnet use.
 
 Needed for this leg:
 
-1. SPL Token + Metaplex metadata under the final name/ticker.
-2. Distribution plan: workers earn via PoUW (bridging from the Rust claim registry logic to
-   on-chain issuance), investors via sale/allocations (subject to legal review).
-3. Gate: signed-message verification — wallet signs a challenge, service verifies SPL balance
-   ≥ threshold via RPC. Trust-minimized and simple; an on-chain program is optional.
-4. Devnet pilot, audit of any on-chain program, then mainnet-beta.
+1. Approved public Devnet treasury, externally held Devnet-only signer/funds, immutable metadata
+   URI/hash, independent preflight, then a valueless Devnet drill from [`../solana/README.md`](../solana/README.md).
+2. A separate reviewed distribution policy before any future issuance beyond a test pilot; no sale,
+   allocation, or economic claim is implemented here.
+3. Gate: signed-message verification — wallet signs a challenge, service independently verifies
+   an SPL balance or claim event via RPC. The existing client-supplied tier flow is not adequate.
+4. Independent security review, legal approval, and a separate mainnet specification before any
+   mainnet-beta deployment.
 
 ### 3.3 AMITY — Bitcoin, Lightning via Taproot Assets
 
@@ -148,7 +158,7 @@ before launch. The key is released only through the gates.
 
 ### 4.2 Three gates, one key
 
-- Each chain gets an independent gate ($OMEGA claim contract; WCT signed-message
+- Each chain gets an independent gate ($OMEGA claim contract; TWC signed-message
   verification; AMITY proof-of-holdings).
 - Each gate, upon verifying a holder, releases **the same content key** (or a copy of the
   key encrypted to that claimant).
@@ -182,8 +192,8 @@ as the durable gated asset.
 ## 5. Eligibility — "investing or working"
 
 Day-one simplicity: **balance-based gating**. Holding ≥ threshold of any one token at claim
-time qualifies. Workers naturally hold WCT/AMITY earned through PoUW; investors hold $OMEGA
-(or any of the three). No separate registry is needed for day one.
+time qualifies. Workers may eventually hold TWC/AMITY earned through independently reviewed
+PoUW policies; holders may use any one of the three tokens. No separate registry is needed for day one.
 
 Future (post-launch): tie gating/claims to the on-chain `UsefulWorkRegistry` (blueprint §9)
 so verified work itself — not just the resulting balance — can qualify a participant.
@@ -204,8 +214,8 @@ so verified work itself — not just the resulting balance — can qualify a par
 4. **License:** the novel stays `LicenseRef-Omega-Product-Proprietary`. Decide (with
    counsel) what license claimants receive — e.g. personal, non-commercial read license;
    whether secondary resale of "editions" is permitted.
-5. **Naming/trademark checks:** final Solana ticker pick (WCC vs TWC — §3.2); check existing
-   "Amity"-named tokens; note that a book **title is not protected by copyright** (titles
+5. **Naming/trademark checks:** selected Solana identity TWC (§3.2), including a full
+   clearance search; check existing "Amity"-named tokens; note that a book **title is not protected by copyright** (titles
    and short phrases are excluded), so if "Crucible: The Satoshi Protocol" matters as a
    brand, that is a trademark question.
 
@@ -245,8 +255,8 @@ and again for the final version at (or within 3 months of) day-one publication.
 | # | Workstream | State | Blocking decisions |
 |---|---|---|---|
 | W1 | Manuscript & IP (title, formats, clearance) | Not started | Title; Naruto/D-Wave approach |
-| W2 | $OMEGA contracts (ERC-20, governor, staking, gate) | Not started | Ethereum network choice |
-| W3 | WCT token (SPL, metadata, distribution) | Not started | **Ticker rename** |
+| W2 | $OMEGA contracts (ERC-20, governor, staking, gate) | **Implemented locally; Sepolia deployment pending** — see [`../evm/`](../evm/) | Sepolia treasury/guardian addresses, test ETH, preflight, independent audit before any expansion |
+| W3 | TWC token (SPL, immutable metadata, distribution policy) | **Devnet-only `tTWC` issuer/verifier implemented locally; no mint deployed** | Authorized Devnet treasury/signer/funds/metadata, preflight, independent review; legal clearance before any mainnet/value-bearing step |
 | W4 | AMITY Taproot infra (litd/tapd, universe, issuance) | Not started | Ops/hosting budget |
 | W5 | Gates + key ceremony (3 gates, 1 key, dry-runs) | Not started | — |
 | W6 | Launch app (wallet connect + unlock page) | Not started — app is offline-only today | Which wallets to support |
@@ -258,12 +268,12 @@ and again for the final version at (or within 3 months of) day-one publication.
 
 **Now → T-10 weeks — decisions & derisking**
 
-- Decide Ethereum network (mainnet vs L2) and the WCT ticker.
+- Decide Ethereum network (mainnet vs L2); the Solana identity is selected as TWC, while legal/trademark clearance remains open.
 - Title the novel; begin IP clearance (longest legal lead).
 - Stand up AMITY testnet node (`tapd` on testnet) — derisk the heaviest leg.
 - Stage and seal the manuscript (`novel/seal.sh`); back up the key offline.
-- Begin $OMEGA contract development locally (per blueprint §15: local prototypes first).
-- Reconcile token naming across all docs (TOKAMAK → WCT? SOV/USE/CARE vs OMEGA/WCT/AMITY).
+- Run the `$OMEGA` local test suite and Sepolia preflight/deployment drill from [`../evm/`](../evm/) (the local pilot contracts are implemented; do not skip the review gates).
+- Reconcile token naming across all docs (TOKAMAK retired as Solana-token name; canonical TWC; legacy SOV/USE/CARE vs OMEGA/TWC/AMITY).
 
 **T-10 → T-6 — build**
 
@@ -288,7 +298,7 @@ and again for the final version at (or within 3 months of) day-one publication.
 **T-0 — day one**
 
 1. $OMEGA live (deployment + initial allocations per legal plan).
-2. WCT live on Solana.
+2. TWC live on Solana only after its separately approved mainnet specification, security review, legal clearance, and deployment decision.
 3. AMITY asset issued; Lightning distribution begins.
 4. Gates open; content key released through gates; claims live.
 5. Announcement with verification instructions (how to prove holding on each chain).
@@ -313,7 +323,7 @@ and again for the final version at (or within 3 months of) day-one publication.
 
 | # | Item | Severity | Notes |
 |---|---|---|---|
-| R1 | ~~WCT ticker collides with WalletConnect Token~~ | Resolved | WCT abandoned 2026-09-23; shortlist is WCC vs TWC (see R11) |
+| R1 | Historical WCT/WCC ticker collisions | Resolved for pilot identity | WCT and WCC were discarded; TWC is selected. This does not replace trademark/legal clearance (see R11). |
 | R2 | $OMEGA mainnet venue undecided | High | Sepolia testnet pilot decided; mainnet-day-one venue (L1 vs L2) still blocks the final deployment path |
 | R3 | Naruto / D-Wave IP in the novel | High | Clearance or rewrite before commercial release |
 | R4 | AMITY ops burden + thin retail wallet support | High | Start infra earliest; provide fallback verification |
@@ -321,18 +331,18 @@ and again for the final version at (or within 3 months of) day-one publication.
 | R6 | Gating is not DRM | Medium | Optional watermarking; treat gate as perk/ritual |
 | R7 | Content key custody | Medium | Ceremony, offline backups, no single holder |
 | R8 | Day-one ambition vs blueprint's audit-first phases | Medium | Either respect Phase 2 or document accepted risk explicitly |
-| R9 | Token naming inconsistency across docs | Medium | Canonical: C.A.R.E. Protocol umbrella; $OMEGA / WCC-or-TWC / AMITY; retire TOKAMAK as Solana-token name; reconcile whitepapers, blueprint, app copy |
+| R9 | Token naming inconsistency across docs | Medium | Canonical: C.A.R.E. Protocol umbrella; $OMEGA / TWC / AMITY; Devnet identities are `tOMEGA` / `tTWC`; TOKAMAK is retired as the Solana-token name. Reconcile remaining legacy whitepaper/app copy. |
 | R10 | Snapshot/claim abuse (sybil wallets just above threshold) | Medium | One-claim-per-wallet, per-token thresholds, monitoring |
-| R11 | WCC/TWC minor ticker collisions | Low | WCC: Wrapped Canton Coin live on BSC + dormant World Crypto Coin / Worldcore Coin. TWC: defunct Tiwi Cat meme coin only — **TWC is cleaner**. Final pick + trademark clearance with counsel |
+| R11 | TWC name/ticker collision and trademark risk | Medium | TWC was selected after historical comparison, but no availability conclusion is claimed. Obtain jurisdiction- and goods/services-specific trademark clearance and legal review before commercial/mainnet use. |
 | R12 | Manuscript not final | Low | Seal draft now for priority evidence; re-seal final at publication; re-register copyright for the final text (§6.1) |
 
 ## 11. Immediate next actions
 
 1. Decide the **$OMEGA mainnet venue** (Ethereum L1 vs an L2 such as Base/Arbitrum/OP) — Sepolia is already decided for the pilot.
-2. Pick the final Solana ticker: **WCC vs TWC** (TWC currently looks cleaner — §3.2).
+2. Complete TWC trademark/legal clearance and the Devnet-only `tTWC` preflight in [`../solana/README.md`](../solana/README.md); deploy only after the named treasury, external Devnet signer/funds, approved metadata URI/hash, and independent review are present.
 3. Deliver the manuscript file (`full-book.md` did not reach the repo on 2026-09-23 — re-attach), then run `novel/seal.sh`; verify the commitment; back up `novel/.release-key.txt` offline.
 4. Confirm the byline (legal name vs pen name) and file the **eCO copyright registration for the draft** (§6.1: $45, Literary Work, unpublished).
 5. Commission the IP review of the Naruto and D-Wave passages.
 6. Stand up the AMITY testnet node (longest lead item).
-7. Draft the $OMEGA ERC-20 and the gate contract; pilot on Sepolia (blueprint §15 order).
-8. Reconcile token naming across the whitepapers, blueprint, and app copy (C.A.R.E. Protocol / $OMEGA / WCC-or-TWC / AMITY).
+7. Complete the `$OMEGA` Sepolia pilot preflight in [`../evm/README.md`](../evm/README.md), deploy only valueless `tOMEGA` to Sepolia, and record the drill before commissioning an independent audit.
+8. Reconcile remaining legacy whitepaper and app copy (C.A.R.E. Protocol / $OMEGA / TWC / AMITY), retaining historical wording only where clearly labeled.

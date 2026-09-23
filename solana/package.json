@@ -1,0 +1,25 @@
+{
+  "name": "@omega/twc-solana-devnet",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Devnet-only Token of the World Citizen (tTWC) SPL token issuer and verifier.",
+  "license": "UNLICENSED",
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "test": "node --test",
+    "check": "npm test",
+    "deploy:devnet": "node scripts/deploy-devnet.mjs",
+    "verify:devnet": "node scripts/verify-devnet.mjs",
+    "metadata:hash": "node scripts/hash-metadata.mjs"
+  },
+  "dependencies": {
+    "@metaplex-foundation/mpl-token-metadata-kit": "0.0.3",
+    "@solana-program/system": "0.12.2",
+    "@solana-program/token": "0.13.0",
+    "@solana/kit": "6.5.0",
+    "dotenv": "16.6.1"
+  }
+}

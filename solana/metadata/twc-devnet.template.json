@@ -1,0 +1,25 @@
+{
+  "name": "Token of the World Citizen",
+  "symbol": "tTWC",
+  "description": "A valueless Solana Devnet pilot token for the C.A.R.E. Protocol. It is not a mainnet token, investment, payment instrument, or claim on any real-world asset or service.",
+  "image": "https://replace-with-an-immutable-image-uri.example/twc-devnet.png",
+  "external_url": "https://github.com/jakesdev1991/Omega_Theory_Everything",
+  "attributes": [
+    {
+      "trait_type": "network",
+      "value": "Solana Devnet"
+    },
+    {
+      "trait_type": "pilot",
+      "value": "valueless test token"
+    },
+    {
+      "trait_type": "canonical mainnet ticker",
+      "value": "TWC"
+    }
+  ],
+  "properties": {
+    "category": "fungible token",
+    "files": []
+  }
+}
