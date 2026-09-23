@@ -455,12 +455,6 @@ function ChapterIndex({ chapters }: { chapters: Chapter[] }) {
 function FirstChapterPreview({ chapter }: { chapter: Chapter }) {
   if (!chapter) return null;
 
-  const previewLines = chapter.html
-    .split("\n")
-    .filter((line): line is string => line.trim().length > 0)
-    .slice(0, 14)
-    .join("\n");
-
   return (
     <section style={{ padding: "72px 0 0", borderTop: "1px solid var(--color-border)" }}>
       <div style={{ maxWidth: "820px", margin: "0 auto", padding: "0 24px" }}>
@@ -475,7 +469,7 @@ function FirstChapterPreview({ chapter }: { chapter: Chapter }) {
             marginBottom: "18px",
           }}
         >
-          Read the first chapter
+          Chapter 1 — opening lines
         </p>
         <h2
           style={{
@@ -499,7 +493,8 @@ function FirstChapterPreview({ chapter }: { chapter: Chapter }) {
             fontFamily: "ui-serif, Georgia, Cambria, serif",
             lineHeight: 1.7,
             fontSize: "16px",
-            color: "var(--color-foreground)",
+            fontStyle: "italic",
+            color: "var(--color-muted-strong)",
           }}
         >
           <div
@@ -510,17 +505,19 @@ function FirstChapterPreview({ chapter }: { chapter: Chapter }) {
               letterSpacing: "0.08em",
               textTransform: "uppercase",
               marginBottom: "16px",
+              fontStyle: "normal",
             }}
           >
             {chapter.pov} — {chapter.setting}
           </div>
-          <div dangerouslySetInnerHTML={{ __html: previewLines }} />
+          &ldquo;The year was 2058, and the world was perfectly, terrifyingly
+          safe.&rdquo;
         </div>
 
         <div style={{ marginTop: "24px", display: "flex", gap: "14px", flexWrap: "wrap", alignItems: "center" }}>
-          <CallToAction label={`Continue reading — ${chapter.title}`} href={`/novel/${chapter.slug}`} />
+          <CallToAction label={`Open chapter 1 — ${chapter.title}`} href={`/novel/${chapter.slug}`} />
           <span style={{ fontSize: "13px", color: "var(--color-muted)" }}>
-            Full chapter unlocked on release day for all participants.
+            Full text served after wallet-signature verification.
           </span>
         </div>
       </div>

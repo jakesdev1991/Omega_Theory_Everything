@@ -168,3 +168,13 @@ a {
   transform: translateY(-1px);
 }
 
+.gate-panel {
+  margin-top: 8px;
+  padding: 24px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--color-muted-strong);
+  line-height: 1.6;
+}
+

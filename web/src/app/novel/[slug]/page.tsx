@@ -1,7 +1,6 @@
-import { notFound } from "next/navigation";
 import Link from "next/link";
-import { chapterBySlug, loadChapters } from "@/lib/book";
-import { CallToAction } from "@/components/CallToAction";
+import { loadChapters } from "@/lib/book";
+import { GatedChapter } from "@/components/GatedChapter";
 
 export async function generateStaticParams() {
   const chapters = loadChapters();
@@ -14,7 +13,8 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const chapter = chapterBySlug(slug);
+  const chapters = loadChapters();
+  const chapter = chapters.find((ch) => ch.slug === slug);
   if (!chapter) return {};
   return {
     title: `${chapter.number}. ${chapter.title} — Genesis Block`,
@@ -28,13 +28,20 @@ export default async function ChapterReaderPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const chapter = chapterBySlug(slug);
+  const chapters = loadChapters();
+  const chapter = chapters.find((ch) => ch.slug === slug);
 
   if (!chapter) {
-    notFound();
+    return (
+      <div style={{ padding: "140px 24px", textAlign: "center", color: "var(--color-muted)" }}>
+        <p>Chapter not found.</p>
+        <Link href="/novel" className="link-soft" style={{ color: "var(--color-accent)" }}>
+          Back to the novel
+        </Link>
+      </div>
+    );
   }
 
-  const chapters = loadChapters();
   const prevChapter = chapters.find((ch) => ch.number === chapter.number - 1);
   const nextChapter = chapters.find((ch) => ch.number === chapter.number + 1);
 
@@ -139,94 +146,9 @@ export default async function ChapterReaderPage({
           </p>
         </header>
 
-        <div
-          style={{
-            padding: "12px 0",
-            borderTop: "1px solid var(--color-border)",
-            borderBottom: "1px solid var(--color-border)",
-            marginBottom: "48px",
-            display: "flex",
-            gap: "8px",
-            flexWrap: "wrap",
-          }}
-        >
-          {["Genesis Block: The Satoshi Protocol", "Akash Varma"].map((tag) => (
-            <span
-              key={tag}
-              style={{
-                fontFamily: "ui-monospace, monospace",
-                fontSize: "11px",
-                color: "var(--color-muted)",
-                padding: "4px 10px",
-                border: "1px solid var(--color-border)",
-                borderRadius: "6px",
-              }}
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
+        {/* The actual gate: prose loads only after server-side signature verification */}
+        <GatedChapter slug={chapter.slug} number={chapter.number} />
 
-        <div
-          style={{
-            fontFamily: "ui-serif, Georgia, Cambria, serif",
-            lineHeight: 1.75,
-            fontSize: "clamp(16px, 1.5vw, 18px)",
-            color: "var(--color-foreground)",
-            padding: "8px 0",
-          }}
-          dangerouslySetInnerHTML={{ __html: chapter.html }}
-        />
-
-        {/* Unlock notice */}
-        <div
-          style={{
-            marginTop: "56px",
-            padding: "20px 22px",
-            border: "1px solid var(--color-unlock-soft)",
-            borderRadius: "12px",
-            background: "rgba(52,211,153,0.05)",
-            display: "flex",
-            gap: "14px",
-            alignItems: "flex-start",
-            flexWrap: "wrap",
-          }}
-        >
-          <div
-            style={{
-              width: "24px",
-              height: "24px",
-              borderRadius: "50%",
-              background: "var(--color-unlock)",
-              color: "#07080c",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontWeight: 700,
-              fontSize: "13px",
-              flexShrink: 0,
-              fontFamily: "ui-monospace, monospace",
-            }}
-          >
-            !
-          </div>
-          <div>
-            <p style={{ margin: 0, fontSize: "14px", lineHeight: 1.55, color: "var(--color-foreground)" }}>
-              This chapter is part of Genesis Block: The Satoshi Protocol. On
-              release day, this chapter unlocks for anyone who participates in the
-              Omega tri-token economy — by investing, purchasing, or holding any
-              token in the system.
-            </p>
-            <div style={{ marginTop: "12px", display: "flex", gap: "10px", flexWrap: "wrap", alignItems: "center" }}>
-              <CallToAction label="Join the economy" href="/invest" variant="ghost" />
-              <span style={{ fontSize: "13px", color: "var(--color-muted)" }}>
-                Full chapter unlocked on release day.
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Prev / next navigation */}
         <nav
           style={{
             marginTop: "40px",
