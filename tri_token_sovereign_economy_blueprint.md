@@ -398,7 +398,9 @@ Contract invariants:
 - administrators cannot bypass appeals through a hidden path;
 - upgrade authority is multisignature and publicly documented.
 
-No Solidity implementation is included yet. Before implementation, define storage layout, access control, event schemas, upgrade policy, formal invariants, and test vectors.
+A **Sepolia-only, valueless `$OMEGA` pilot suite** now lives in [`evm/`](evm/). It contains a fixed-supply `tOMEGA` ERC-20, non-transferable vote escrow, bounded time locking, an OpenZeppelin Governor + TimelockController, and a public claim-receipt gate. Its deployment guard rejects non-Sepolia networks; it does not implement a mainnet token, Solana asset, Taproot Asset, custody system, or sensitive CARE/PoUW flow. The suite is a local-test and testnet-pilot artifact only; its stated assets, authorities, residual risks, and required drills are in [`evm/THREAT_MODEL.md`](evm/THREAT_MODEL.md). It still requires independent audit, legal review, adversarial drills, and explicit approval before any value-bearing deployment.
+
+Before any production implementation, define and independently review storage layout, access control, event schemas, upgrade or redeployment policy, formal invariants, and adversarial test vectors.
 
 ## 10. Rust workspace specification
 
@@ -498,7 +500,7 @@ The next implementation artifacts should be produced in this order:
 2. a synthetic PoUW claim generator and dispute simulator;
 3. invariant/property tests;
 4. cadCAD-compatible simulation adapters;
-5. local-only Solidity prototypes;
-6. threat-model documentation and adversarial test vectors.
+5. a Sepolia-only, valueless `$OMEGA` pilot suite (implemented in [`evm/`](evm/));
+6. threat-model documentation and adversarial test vectors for that pilot and the remaining chain legs.
 
 This sequence intentionally postpones live deployment, monetary value, psychosocial inference, and telemetry-triggered economic action until the underlying claims and controls have been independently evaluated.

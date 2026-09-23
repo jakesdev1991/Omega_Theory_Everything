@@ -1,0 +1,14 @@
+# Dependencies, build, and test outputs
+node_modules/
+artifacts/
+cache/
+coverage/
+typechain-types/
+
+# Deployment secrets and run-specific manifests
+.env
+deployments/*.json
+!deployments/.gitkeep
+
+# Logs
+npm-debug.log*

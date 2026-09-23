@@ -45,7 +45,7 @@ Honest inventory as of this plan:
 | Component | State |
 |---|---|
 | Novel manuscript | Draft (author states not final); file not yet delivered to the repo — staging prepared in `novel/`; title, cover, ebook formats not produced |
-| Token contracts | **None exist.** No Solidity, no SPL program, no Taproot asset |
+| Token contracts | **Ethereum pilot implemented locally:** [`../evm/`](../evm/) contains a Sepolia-only, valueless `tOMEGA` fixed-supply token, vote escrow, locking, Governor + TimelockController, and claim gate. **Not deployed or independently audited.** No SPL program or Taproot asset exists yet. |
 | Rust core (`rust/`) | Deterministic ledger + PoUW claim lifecycle prototype with tests; no chain integration |
 | App (`app/`) | Offline, valueless mockup; no wallet connection of any kind |
 | Specs/whitepapers | Tri-token blueprint + 4 whitepapers ($OMEGA, TOKAMAK, C.A.R.E./AMITY, Lucifer–Hermes) |
@@ -80,6 +80,15 @@ Needed for this leg:
    duration_factor × bounded_commitment_factor`, with visible expiry and emergency exit.
 4. The **gate/claim contract** (see §4).
 5. **Sepolia pilot** (decided) → audit → mainnet deployment (venue decision pending).
+
+**Implementation status (2026-09-23):** the local, Sepolia-only pilot suite is in
+[`../evm/`](../evm/). It uses a plainly labelled `tOMEGA` test token, is guarded against
+non-Sepolia deployment, and includes fixed supply, non-transferable vote escrow, 7–365-day
+bounded locking, OpenZeppelin Governor + TimelockController, and an immutable-threshold
+claim-receipt gate. Its automated test suite passes locally; no Sepolia deployment, external
+audit, mainnet implementation, or value-bearing use is implied. Follow the preflight and
+post-deploy drills in [`../evm/README.md`](../evm/README.md) before sending any deployment
+transaction.
 
 ### 3.2 World Citizen Coin (WCC) / Token of the World Citizen (TWC) — Solana
 
@@ -245,7 +254,7 @@ and again for the final version at (or within 3 months of) day-one publication.
 | # | Workstream | State | Blocking decisions |
 |---|---|---|---|
 | W1 | Manuscript & IP (title, formats, clearance) | Not started | Title; Naruto/D-Wave approach |
-| W2 | $OMEGA contracts (ERC-20, governor, staking, gate) | Not started | Ethereum network choice |
+| W2 | $OMEGA contracts (ERC-20, governor, staking, gate) | **Implemented locally; Sepolia deployment pending** — see [`../evm/`](../evm/) | Sepolia treasury/guardian addresses, test ETH, preflight, independent audit before any expansion |
 | W3 | WCT token (SPL, metadata, distribution) | Not started | **Ticker rename** |
 | W4 | AMITY Taproot infra (litd/tapd, universe, issuance) | Not started | Ops/hosting budget |
 | W5 | Gates + key ceremony (3 gates, 1 key, dry-runs) | Not started | — |
@@ -262,7 +271,7 @@ and again for the final version at (or within 3 months of) day-one publication.
 - Title the novel; begin IP clearance (longest legal lead).
 - Stand up AMITY testnet node (`tapd` on testnet) — derisk the heaviest leg.
 - Stage and seal the manuscript (`novel/seal.sh`); back up the key offline.
-- Begin $OMEGA contract development locally (per blueprint §15: local prototypes first).
+- Run the `$OMEGA` local test suite and Sepolia preflight/deployment drill from [`../evm/`](../evm/) (the local pilot contracts are implemented; do not skip the review gates).
 - Reconcile token naming across all docs (TOKAMAK → WCT? SOV/USE/CARE vs OMEGA/WCT/AMITY).
 
 **T-10 → T-6 — build**
@@ -334,5 +343,5 @@ and again for the final version at (or within 3 months of) day-one publication.
 4. Confirm the byline (legal name vs pen name) and file the **eCO copyright registration for the draft** (§6.1: $45, Literary Work, unpublished).
 5. Commission the IP review of the Naruto and D-Wave passages.
 6. Stand up the AMITY testnet node (longest lead item).
-7. Draft the $OMEGA ERC-20 and the gate contract; pilot on Sepolia (blueprint §15 order).
+7. Complete the `$OMEGA` Sepolia pilot preflight in [`../evm/README.md`](../evm/README.md), deploy only valueless `tOMEGA` to Sepolia, and record the drill before commissioning an independent audit.
 8. Reconcile token naming across the whitepapers, blueprint, and app copy (C.A.R.E. Protocol / $OMEGA / WCC-or-TWC / AMITY).
