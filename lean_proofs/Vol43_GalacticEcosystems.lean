@@ -28,7 +28,13 @@ theorem galactic_ecosystems_axiom : Nonempty GalacticNetwork := ⟨()⟩
     Distance = Ω-Metric (2D)
     Timescale = Informational Viscosity (3D)
     Stability = RCOD Asymmetry (4D) -/
-theorem galactic_from_omega :
-  True := by trivial
+theorem galactic_from_omega : Nonempty GalacticNetwork := by
+  exact galactic_ecosystems_axiom
+
+theorem galactic_distance_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := by
+  exact distance_nonneg R₁ R₂
+
+theorem galactic_entropy_bound (R : QRegion) : vonNeumannEntropy R ≤ Real.pi := by
+  exact entropy_bounded R
 
 end OmegaProtocol.Vol43

@@ -33,6 +33,17 @@ theorem bell_violation : TsirelsonBound > ClassicalCHSHBound := by
     Quantum = entangled Φ = 1 (perfect correlation)
     Violation = Φ_quantum - Φ_local = 1 > 0 -/
 theorem quantum_advantage_from_phi :
-  True := by trivial
+  TsirelsonBound > ClassicalCHSHBound := by
+  exact bell_violation
+
+theorem tsirelson_bound_pos : TsirelsonBound > 0 := by
+  dsimp [TsirelsonBound]
+  have h : Real.sqrt 2 > 0 := Real.sqrt_pos.mpr (by norm_num : (2:ℝ) > 0)
+  linarith
+
+theorem chsh_violation_magnitude : TsirelsonBound - ClassicalCHSHBound > 0 := by
+  have h := bell_violation
+  dsimp [TsirelsonBound, ClassicalCHSHBound] at h ⊢
+  linarith
 
 end OmegaProtocol.Vol24

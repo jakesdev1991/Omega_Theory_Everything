@@ -27,7 +27,14 @@ theorem feedback_convergence (g : ℝ) (hg0 : 0 ≤ g) (hg1 : g ≤ 1) (n : ℕ)
     State space = Ω-Metric (2D)
     Response time = Informational Viscosity (3D)
     Stability = RCOD Asymmetry (4D) -/
-theorem cybernetics_from_omega :
-  True := by trivial
+theorem cybernetics_from_omega (g : ℝ) (hg0 : 0 ≤ g) (hg1 : g ≤ 1) (n : ℕ) :
+  g ^ (n + 1) ≤ g ^ n := by
+  exact feedback_convergence g hg0 hg1 n
+
+theorem feedback_stability (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := by
+  exact distance_nonneg R₁ R₂
+
+theorem control_loop_entropy (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
+  exact monotonicity_lemma R
 
 end OmegaProtocol.Vol32

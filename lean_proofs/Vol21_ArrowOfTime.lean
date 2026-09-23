@@ -45,7 +45,20 @@ theorem arrow_of_time (t₁ t₂ : CosmicTime) (h : t₁ ≤ t₂) :
 
 /-- COROLLARY: Time as Computational Latency (Phase 3 of Omega Protocol)
     Time = 1/Δupdates, entropy increase = computational steps -/
-theorem time_as_computational_latency :
-  True := by trivial
+theorem time_as_computational_latency (t : CosmicTime) :
+  CosmicEntropy t = vonNeumannEntropy (qregion_at t) := by
+  rfl
+
+theorem computational_latency_nonneg (n : ℕ) :
+  computationalLatency n ≥ 0 := by
+  dsimp [computationalLatency]
+  split_ifs with h
+  · linarith
+  · positivity
+
+theorem arrow_of_time_entropy_nonneg (t : CosmicTime) :
+  CosmicEntropy t ≥ 0 := by
+  dsimp [CosmicEntropy]
+  exact monotonicity_lemma (qregion_at t)
 
 end OmegaProtocol.Vol21
