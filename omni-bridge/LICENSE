@@ -1,0 +1,32 @@
+# Licensing index — split licensing
+
+This repository does **not** have one repository-wide license. This file is an index only; it is not a blanket grant of rights. The path-specific grants below apply only to material the rights holder is authorized to license. See [`docs/LICENSING.md`](docs/LICENSING.md) for scope, limitations, prior-version history, and commercial licensing information.
+
+## Open scientific materials — Apache-2.0
+
+The following materials are licensed under the Apache License, Version 2.0. Read the full terms in [`LICENSES/Apache-2.0.txt`](LICENSES/Apache-2.0.txt):
+
+- `Sim1_Emergent_Geometry.py` through `Sim5_Emergent_Gravity.py` and `sim6_v14_depletion.py`
+- `Omega_Theory_Laymans_Guide.md` and `Omega_Theory_v4.0_Technical.md`
+- all files in `lean_proofs/`, `latex_docs/`, and `txt_proofs/`
+- `README.md`, `requirements.txt`, `update_discovery.sh`, `.gitignore`, and `.github/`
+
+Apache-2.0 permits commercial use of these covered materials subject to its terms, including its attribution and patent provisions. It does not grant rights to project trademarks or to the proprietary product assets below.
+
+## Product materials — all rights reserved
+
+The following are proprietary and are **not** open-source licensed by this version of the repository:
+
+- all files in `app/`, `rust/`, and `cpp/`
+- `tri_token_sovereign_economy_blueprint.md`, `launch/novel_day_one_plan.md`, and all files in `novel/`
+- all files in `whitepapers/`
+
+These files are marked `LicenseRef-Omega-Product-Proprietary`. The notice at [`LICENSES/Omega-Product-Proprietary.txt`](LICENSES/Omega-Product-Proprietary.txt) reserves rights; it does not itself grant commercial-use permission. Commercial use may be considered only under a separate, signed written license with percentage-based compensation. The royalty rate and calculation base are not set in this repository.
+
+## Other files and third-party materials
+
+`LICENSE`, `LICENSES/` (except for the license texts it contains), `NOTICE`, `CONTRIBUTING.md`, and `docs/` are project-administration and legal-notice materials; they do not grant rights to product assets. Unless a file is expressly included above or carries its own license notice, no license is granted by this index beyond rights provided by applicable law. Third-party software, content, names, and other rights are excluded from the grants above and retain their own terms.
+
+## Historical MIT notice
+
+The prior public version at baseline commit `c717dc53bd20db4a6290734f09a3db5bb93fa287` included a repository-wide MIT notice. Its exact text is preserved in [`LICENSES/MIT-legacy.txt`](LICENSES/MIT-legacy.txt) for historical reference. See [`docs/LICENSING.md`](docs/LICENSING.md): this change cannot retroactively withdraw permissions already granted for copies received under the earlier MIT-licensed version.
