@@ -68,6 +68,13 @@ jobs:
   security-scan:
     name: Security Scan
     runs-on: ubuntu-latest
+    permissions:
+      # upload-sarif requires security-events: write. Without this
+      # block the job runs with the repo-default (read-only) token and
+      # the SARIF upload fails with "Resource not accessible by
+      # integration" on push and schedule events.
+      contents: read
+      security-events: write
     steps:
       - uses: actions/checkout@v4
       
@@ -80,7 +87,7 @@ jobs:
           output: 'trivy-results.sarif'
       
       - name: Upload Trivy results
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: 'trivy-results.sarif'
       
