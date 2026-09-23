@@ -1,3 +1,5 @@
+# Copyright (c) 2025-2026 Jacob See.
+# SPDX-License-Identifier: Apache-2.0
 name: CI
 
 on:
@@ -42,6 +44,26 @@ jobs:
           python Sim3_Dynamic_Scale.py --help || true
           python Sim4_Evolution.py --help || true
           python Sim5_Emergent_Gravity.py --help || true
+
+  rust-checks:
+    name: Rust Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust build
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: rust
+
+      - name: Build and test
+        run: |
+          cd rust
+          cargo build --workspace
+          cargo test --workspace
 
   security-scan:
     name: Security Scan

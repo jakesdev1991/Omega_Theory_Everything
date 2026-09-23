@@ -86,7 +86,7 @@ Restart Hermes Agent and the Omega tools appear as `mcp_omega_hub_*`.
 - Event log is the same append-only design the blueprint's acceptance criteria require before
   any real deployment.
 - For the agentic layer around this hub, see
-  [`whitepapers/lucifer_hermes_omni_bridge_whitepaper.md](../whitepapers/lucifer_hermes_omni_bridge_whitepaper.md`).
+  [`whitepapers/lucifer_hermes_omni_bridge_whitepaper.md](../whitepapers/lucifer_hermes_omni_bridge_whitepaper.md).
 
 ## License
 

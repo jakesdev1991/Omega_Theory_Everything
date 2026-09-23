@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2025-2026 Jacob See. Licensed under Apache-2.0. -->
+
 # Emergent Reality from Quantum Correlation: Life IS Quantum
 ## A Layman's Guide to the Omega Theory
 

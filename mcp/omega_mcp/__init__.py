@@ -23,7 +23,6 @@ from datetime import datetime, timezone
 from typing import Any
 
 from mcp.server import FastMCP
-from pydantic import BaseModel, Field
 
 # ---------------------------------------------------------------------------
 # Type aliases / helpers
@@ -109,7 +108,9 @@ class OmegaState:
         assert self.sov_balances[from_address] >= amount, "insufficient SOV"
         self.sov_balances[from_address] -= amount
         self.sov_supply -= amount
-        self.emit("SOV", "burn", {"from": from_address, "amount": amount, "reason": reason})
+        self.emit(
+            "SOV", "burn", {"from": from_address, "amount": amount, "reason": reason}
+        )
         return self.sov_snapshot()
 
     def sov_transfer(self, from_address: str, to: str, amount: int) -> Snapshot:
@@ -244,14 +245,18 @@ class OmegaState:
         claims = list(self.care_claims.values())
         return {
             "claims": claims,
-            "attestation_counts": {k: len(v) for k, v in self.care_attestations.items()},
+            "attestation_counts": {
+                k: len(v) for k, v in self.care_attestations.items()
+            },
             "appeals": {k: len(v) for k, v in self.care_appeals.items()},
             "version": self.next_version - 1,
         }
 
     # ---- AMITY ----
 
-    def amity_entitle(self, from_claim_id: str, to: str, amount: int, policy: str) -> Snapshot:
+    def amity_entitle(
+        self, from_claim_id: str, to: str, amount: int, policy: str
+    ) -> Snapshot:
         assert amount > 0, "amount must be positive"
         eid = _eid()
         entitlement: dict[str, Any] = {
@@ -282,7 +287,9 @@ class OmegaState:
         assert self.amity_balances[from_address] >= amount, "insufficient AMITY"
         self.amity_balances[from_address] -= amount
         self.amity_balances[to] += amount
-        self.emit("AMITY", "transfer", {"from": from_address, "to": to, "amount": amount})
+        self.emit(
+            "AMITY", "transfer", {"from": from_address, "to": to, "amount": amount}
+        )
         return self.amity_snapshot()
 
     def amity_snapshot(self) -> Snapshot:
@@ -304,7 +311,12 @@ class OmegaState:
         self.emit(
             "OMEGA",
             "mint",
-            {"to": to, "amount": amount, "reason": reason, "protocol_version": protocol_version},
+            {
+                "to": to,
+                "amount": amount,
+                "reason": reason,
+                "protocol_version": protocol_version,
+            },
         )
         return self.omega_snapshot()
 
@@ -328,7 +340,12 @@ class OmegaState:
         self.emit(
             "OMEGA",
             "lock",
-            {"lock_id": lock_id, "owner": owner, "amount": amount, "duration_blocks": duration_blocks},
+            {
+                "lock_id": lock_id,
+                "owner": owner,
+                "amount": amount,
+                "duration_blocks": duration_blocks,
+            },
         )
         return self.omega_snapshot()
 
@@ -350,19 +367,32 @@ class OmegaState:
             "created_at": _now_iso(),
         }
         self.omega_proposals[prop_id] = prop
-        self.emit("OMEGA", "proposal_draft", {"proposal_id": prop_id, "proposer": proposer})
+        self.emit(
+            "OMEGA", "proposal_draft", {"proposal_id": prop_id, "proposer": proposer}
+        )
         return self.omega_snapshot()
 
-    def omega_vote(self, proposal_id: str, voter: str, support: bool, weight: int) -> Snapshot:
+    def omega_vote(
+        self, proposal_id: str, voter: str, support: bool, weight: int
+    ) -> Snapshot:
         p = self.omega_proposals.get(proposal_id)
         assert p is not None, "proposal not found"
         assert p["status"] not in ("activated", "rejected"), "proposal already resolved"
         p["status"] = "vote"
-        self.omega_votes[proposal_id][voter] = {"support": support, "weight": weight, "voted_at": _now_iso()}
+        self.omega_votes[proposal_id][voter] = {
+            "support": support,
+            "weight": weight,
+            "voted_at": _now_iso(),
+        }
         self.emit(
             "OMEGA",
             "vote",
-            {"proposal_id": proposal_id, "voter": voter, "support": support, "weight": weight},
+            {
+                "proposal_id": proposal_id,
+                "voter": voter,
+                "support": support,
+                "weight": weight,
+            },
         )
         return self.omega_snapshot()
 
@@ -445,6 +475,7 @@ _state = OmegaState()
 
 # ---- SOV tools ----
 
+
 @mcp.tool()
 def sov_mint(to: str, amount: int, reason: str) -> dict[str, Any]:
     snap = _state.sov_mint(to=to, amount=amount, reason=reason)
@@ -475,6 +506,7 @@ def sov_snapshot() -> dict[str, Any]:
 
 
 # ---- USE tools ----
+
 
 @mcp.tool()
 def use_issue(
@@ -512,6 +544,7 @@ def use_snapshot() -> dict[str, Any]:
 
 
 # ---- CARE tools ----
+
 
 @mcp.tool()
 def care_submit(
@@ -554,8 +587,11 @@ def care_snapshot() -> dict[str, Any]:
 
 # ---- AMITY tools ----
 
+
 @mcp.tool()
-def amity_entitle(from_claim_id: str, to: str, amount: int, policy: str) -> dict[str, Any]:
+def amity_entitle(
+    from_claim_id: str, to: str, amount: int, policy: str
+) -> dict[str, Any]:
     try:
         snap = _state.amity_entitle(
             from_claim_id=from_claim_id, to=to, amount=amount, policy=policy
@@ -581,8 +617,11 @@ def amity_snapshot() -> dict[str, Any]:
 
 # ---- OMEGA tools ----
 
+
 @mcp.tool()
-def omega_mint(to: str, amount: int, reason: str, protocol_version: str = "0.1.0") -> dict[str, Any]:
+def omega_mint(
+    to: str, amount: int, reason: str, protocol_version: str = "0.1.0"
+) -> dict[str, Any]:
     snap = _state.omega_mint(
         to=to, amount=amount, reason=reason, protocol_version=protocol_version
     )
@@ -590,7 +629,9 @@ def omega_mint(to: str, amount: int, reason: str, protocol_version: str = "0.1.0
 
 
 @mcp.tool()
-def omega_lock(owner: str, amount: int, duration_blocks: int, reason: str) -> dict[str, Any]:
+def omega_lock(
+    owner: str, amount: int, duration_blocks: int, reason: str
+) -> dict[str, Any]:
     try:
         snap = _state.omega_lock(
             owner=owner, amount=amount, duration_blocks=duration_blocks, reason=reason
@@ -617,7 +658,9 @@ def omega_proposal(
 
 
 @mcp.tool()
-def omega_vote(proposal_id: str, voter: str, support: bool, weight: int) -> dict[str, Any]:
+def omega_vote(
+    proposal_id: str, voter: str, support: bool, weight: int
+) -> dict[str, Any]:
     try:
         snap = _state.omega_vote(
             proposal_id=proposal_id, voter=voter, support=support, weight=weight
@@ -633,6 +676,7 @@ def omega_snapshot() -> dict[str, Any]:
 
 
 # ---- house tools ----
+
 
 @mcp.tool()
 def ledger() -> dict[str, Any]:

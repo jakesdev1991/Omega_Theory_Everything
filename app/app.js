@@ -1,3 +1,4 @@
+/* Copyright (c) 2025-2026 Jacob See. SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary. */
 /* Amity app wiring — real wallet flows. */
 
 const views = document.querySelectorAll('.view');

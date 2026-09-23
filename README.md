@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2025-2026 Jacob See. Split licensing: this repository mixes Apache-2.0 science materials with all-rights-reserved product materials — see LICENSE and docs/LICENSING.md. -->
+
 # Omega Theory Everything
 
 ## Integrated systems blueprint
@@ -8,7 +10,15 @@ The blueprint is intentionally explicit about what is hypothetical, what require
 
 The expanded whitepaper set is in [`whitepapers/`](whitepapers/): $OMEGA, TOKAMAK, C.A.R.E./AMITY, and Lucifer–Hermes Omni-Bridge Prime.
 
-A local wallet-first social prototype is in [`app/`](app/). It is intentionally offline and valueless: it demonstrates the product flows without collecting keys or connecting to a chain.
+The Omega MCP Hub — a sovereign MCP (Model Context Protocol) server exposing 22 tools across the sov/use/care/amity/omega planes over stdio JSON-RPC — is in [`mcp/`](mcp/) (see [`mcp/README_MCP_HUB.md`](mcp/README_MCP_HUB.md); its smoke-test evidence is committed alongside it).
+
+The Omni-Bridge control-boundary implementation — the Hermes ⇄ Lucifer decision layer (APPA capability algebra, human-governed capabilities, hash-chained evidence ledger, T0–T5 sandbox tier selection), header-only C++23 with its acceptance suite — is in [`omni-bridge/`](omni-bridge/); implementation status, test evidence, and documented deviations are in [`omni-bridge/README.md`](omni-bridge/README.md). The CBwK shadow-price pacer (Lucifer–Hermes routing governor) is in [`cpp/`](cpp/).
+
+A wallet-first web prototype is in [`app/`](app/). It performs real client-side wallet flows — BIP-39 mnemonic creation and import, MetaMask connection, an encrypted local keystore — with keys never leaving the device; balance lookups use public Ethereum RPC endpoints (read-only). The site runs no backend of its own and collects nothing.
+
+The day-one launch plan for the token-gated release of the novel **Crucible: The Satoshi Protocol** under the C.A.R.E. Protocol ($OMEGA on Ethereum, World Citizen Coin/Token of the World Citizen on Solana, AMITY on Bitcoin Lightning via Taproot Assets) is in [`launch/novel_day_one_plan.md`](launch/novel_day_one_plan.md). The reading experience is implemented in [`web/`](web/): a Next.js site serving chapters through a signature-verified unlock gate (EIP-191 `personal_sign`; the server recovers the signer address from the signature itself, never trusting a client-supplied address). **Open release decision:** the manuscript the web app reads, `web/public/book/full-book.md`, is currently committed in plaintext, while the sealed-staging tooling in [`novel/`](novel/) (`seal.sh`; ciphertext + SHA-256 commitment) is not yet applied — sealing the book or accepting the public plaintext must be decided before launch day.
+
+An RCOD multi-scale optimizer-governor research prototype (Omega informational-geometry metrics as optimizer governors) with its label-noise-recovery benchmark is in [`rcod/`](rcod/) — the benchmark's honest verdict, including a negative result for the spec-as-written thresholds, is in [`rcod/RESULTS.md`](rcod/RESULTS.md).
 
 
 Complete implementation of the Omega Theory framework - a unified physics model deriving spacetime, gravity, and cosmology from quantum information principles.
@@ -79,6 +89,13 @@ Omega_Theory_Everything/
 ├── Sim4_Evolution.py
 ├── Sim5_Emergent_Gravity.py
 ├── sim6_v14_depletion.py
+├── rcod/                     # RCOD optimizer governor (research prototype + benchmark)
+├── cpp/                      # CBwK shadow-price pacer (Lucifer–Hermes routing governor, C++23)
+├── omni-bridge/              # Omni-Bridge control boundary (Hermes ⇄ Lucifer), C++23 + host audit kit
+├── mcp/                      # Omega MCP Hub server (sov/use/care/amity/omega planes, stdio JSON-RPC)
+├── web/                      # Next.js site: tri-token economy + token-gated novel chapters
+├── novel/                    # Novel release plan + sealed-manuscript staging
+├── launch/                   # Day-one launch plan documents
 ├── update_discovery.sh
 ├── requirements.txt
 └── *.md
@@ -113,6 +130,13 @@ cd lean_proofs && lake build
 pytest -v
 ```
 
-## License
+## License and intellectual property
 
-MIT License - see [LICENSE](LICENSE) for details.
+This repository uses a **split license**: the science is open; the product materials are proprietary.
+
+| Materials | Terms |
+|---|---|
+| Simulations, Omega theory notes, Lean proofs, LaTeX and text companions, and listed tooling | Apache-2.0 — see [`LICENSES/Apache-2.0.txt`](LICENSES/Apache-2.0.txt) |
+| `app/`, `rust/`, [`whitepapers/`](whitepapers/), and the [Tri-Token blueprint](tri_token_sovereign_economy_blueprint.md) | All rights reserved. Commercial licenses may be negotiated under a separate signed agreement with a percentage-based royalty; no rate or commercial permission is set by this repository. |
+
+See [`LICENSE`](LICENSE) for exact path scope and [`docs/LICENSING.md`](docs/LICENSING.md) for important limits, including the prior MIT license and public-disclosure history. Copyright does not generally make underlying ideas, methods, or systems exclusive. Patent status is not claimed; see [`docs/PATENT-POSTURE.md`](docs/PATENT-POSTURE.md). Project-name notices are in [`docs/TRADEMARKS.md`](docs/TRADEMARKS.md).

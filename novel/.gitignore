@@ -1,0 +1,3 @@
+# Never commit the key or the plaintext manuscript.
+.release-key.txt
+.plaintext/

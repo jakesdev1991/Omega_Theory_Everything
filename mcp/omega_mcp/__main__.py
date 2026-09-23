@@ -8,7 +8,9 @@ from omega_mcp import mcp
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(prog="omega-hub", description="Omega tri-token economy MCP hub")
+    parser = argparse.ArgumentParser(
+        prog="omega-hub", description="Omega tri-token economy MCP hub"
+    )
     parser.add_argument(
         "--transport",
         choices=["stdio", "streamable-http"],

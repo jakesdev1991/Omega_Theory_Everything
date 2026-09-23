@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2025-2026 Jacob See. SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary. -->
+
 # Lucifer–Hermes Omni-Bridge Prime Whitepaper
 
 **Version:** 0.1 research draft  

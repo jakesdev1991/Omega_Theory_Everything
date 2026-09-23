@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2025-2026 Jacob See. SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary. -->
+
 # C.A.R.E. / AMITY Protocol Whitepaper
 
 **Version:** 0.1 research draft  
