@@ -12,7 +12,7 @@
   <div class="app-shell">
     <aside class="sidebar">
       <div class="brand"><span class="brand-mark">✦</span><span>AMITY</span></div>
-      <div class="network-pill"><span class="pulse"></span> Prototype network</div>
+      <div class="network-pill"><span class="pulse"></span> <span id="network-label">Prototype network</span></div>
       <nav aria-label="Main navigation">
         <button class="nav-item active" data-view="home">⌂ <span>Home</span></button>
         <button class="nav-item" data-view="wallet">◈ <span>Wallet</span></button>
@@ -31,32 +31,124 @@
       <header class="topbar">
         <div class="mobile-brand">✦ AMITY</div>
         <div class="search"><span>⌕</span><input aria-label="Search" placeholder="Search people, projects, proofs" /></div>
-        <div class="top-actions"><button class="icon-btn" title="Notifications">♧</button><button class="avatar">J</button></div>
+        <div class="top-actions">
+          <button class="icon-btn" title="Notifications">♧</button>
+          <button class="avatar" id="top-avatar" title="Wallet">J</button>
+        </div>
       </header>
 
       <div class="view" id="home-view">
         <section class="hero">
-          <div><p class="eyebrow">WORLD CITIZEN ECONOMY · LOCAL MODE</p><h1>Build value.<br /><em>Keep humanity in it.</em></h1><p class="hero-copy">A wallet and social layer for useful work, care, and reality-based research. Every claim is reviewable. Every system is open to correction.</p><div class="hero-actions"><button class="primary" data-view="contribute">Submit a contribution <span>→</span></button><button class="text-btn" data-view="wallet">View wallet</button></div></div>
+          <div><p class="eyebrow">WORLD CITIZEN ECONOMY · LIVE WALLET</p><h1>Build value.<br /><em>Keep humanity in it.</em></h1><p class="hero-copy">A wallet and social layer for useful work, care, and reality-based research. Every claim is reviewable. Every system is open to correction.</p><div class="hero-actions"><button class="primary" data-view="contribute">Submit a contribution <span>→</span></button><button class="text-btn" data-view="wallet">View wallet</button></div></div>
           <div class="orbit-card"><div class="orbit orbit-1"></div><div class="orbit orbit-2"></div><div class="orbit-core">A<span>mity</span></div><div class="orbit-label label-a">CARE <b>protected</b></div><div class="orbit-label label-b">USE <b>earned</b></div><div class="orbit-label label-c">TRUST <b>human</b></div></div>
         </section>
 
         <section class="section-head"><div><p class="eyebrow">YOUR ECONOMY</p><h2>One wallet. Different kinds of value.</h2></div><button class="link-btn" data-view="wallet">Open full wallet →</button></section>
-        <section class="token-grid">
-          <article class="token-card omega"><div class="token-top"><span class="token-icon">Ω</span><span class="token-status">Governance</span></div><h3>OMEGA</h3><div class="token-value">12.40 <small>Ω</small></div><p>Macro governance & long-term stewardship</p><div class="token-bar"><span style="width:68%"></span></div></article>
-          <article class="token-card tokamak"><div class="token-top"><span class="token-icon">◌</span><span class="token-status">Research</span></div><h3>TOKAMAK</h3><div class="token-value">284.00 <small>TKM</small></div><p>Reality-to-measurement research utility</p><div class="token-bar"><span style="width:44%"></span></div></article>
-          <article class="token-card amity"><div class="token-top"><span class="token-icon">✦</span><span class="token-status">Exchange eligible</span></div><h3>AMITY</h3><div class="token-value">1,840.50 <small>AMY</small></div><p>Approved care & creator settlement</p><div class="token-bar"><span style="width:82%"></span></div></article>
-          <article class="token-card care"><div class="token-top"><span class="token-icon">♡</span><span class="token-status">Protected</span></div><h3>CARE</h3><div class="token-value">36 <small>proofs</small></div><p>Non-market proof-of-care record</p><div class="token-bar"><span style="width:58%"></span></div></article>
+        <section class="token-grid" id="token-grid">
+          <article class="token-card omega"><div class="token-top"><span class="token-icon">Ω</span><span class="token-status">Governance</span></div><h3>OMEGA</h3><div class="token-value" id="omega-value">— <small>Ω</small></div><p>Macro governance & long-term stewardship</p><div class="token-bar"><span style="width:68%"></span></div></article>
+          <article class="token-card tokamak"><div class="token-top"><span class="token-icon">◌</span><span class="token-status">Research</span></div><h3>TOKAMAK</h3><div class="token-value" id="tokamak-value">— <small>TKM</small></div><p>Reality-to-measurement research utility</p><div class="token-bar"><span style="width:44%"></span></div></article>
+          <article class="token-card amity"><div class="token-top"><span class="token-icon">✦</span><span class="token-status">Exchange eligible</span></div><h3>AMITY</h3><div class="token-value" id="amity-value">— <small>AMY</small></div><p>Approved care & creator settlement</p><div class="token-bar"><span style="width:82%"></span></div></article>
+          <article class="token-card care"><div class="token-top"><span class="token-icon">♡</span><span class="token-status">Protected</span></div><h3>CARE</h3><div class="token-value" id="care-value">— <small>proofs</small></div><p>Non-market proof-of-care record</p><div class="token-bar"><span style="width:58%"></span></div></article>
         </section>
 
         <div class="content-grid"><section><div class="section-head compact"><div><p class="eyebrow">FROM THE COMMUNITY</p><h2>Useful work in motion</h2></div><button class="link-btn">View feed →</button></div><div class="feed">
           <article class="post"><div class="post-head"><div class="post-avatar green">M</div><div><strong>Maya Chen <span class="verified">✓</span></strong><small>Researcher · 24m ago</small></div><span class="post-type">TOKAMAK</span></div><p>Released an open benchmark for uncertainty-aware climate models. The goal: make every number carry its assumptions with it.</p><div class="post-footer"><span>♡ 84</span><span>↗ 19</span><span>▧ 12 TKM pledged</span></div></article>
-          <article class="post"><div class="post-head"><div class="post-avatar peach">R</div><div><strong>Rafi’s Repair Co-op <span class="verified">✓</span></strong><small>Community · 1h ago</small></div><span class="post-type amy">AMITY</span></div><p>28 repaired appliances, zero landfill. Proof-of-useful-work batch #104 is open for review.</p><div class="post-footer"><span>♡ 126</span><span>↗ 31</span><span>▧ 240 AMY pending</span></div></article>
+          <article class="post"><div class="post-head"><div class="post-avatar peach">R</div><div><strong>Rafi's Repair Co-op <span class="verified">✓</span></strong><small>Community · 1h ago</small></div><span class="post-type amy">AMITY</span></div><p>28 repaired appliances, zero landfill. Proof-of-useful-work batch #104 is open for review.</p><div class="post-footer"><span>♡ 126</span><span>↗ 31</span><span>▧ 240 AMY pending</span></div></article>
         </div></section><aside class="side-panel"><div class="section-head compact"><div><p class="eyebrow">YOUR IMPACT</p><h2>This month</h2></div></div><div class="impact-number">+18.6 <small>trust</small></div><div class="impact-line"><span>Useful work</span><b>8 verified</b></div><div class="impact-line"><span>Care offered</span><b>4 proofs</b></div><div class="impact-line"><span>People reached</span><b>27</b></div><div class="progress-label"><span>Archangel path</span><span>Level 2 / 5</span></div><div class="progress"><span style="width:41%"></span></div><p class="fine-print">Influence grows through consistent, non-judgmental service. It cannot be bought.</p></aside></div>
       </div>
 
-      <div class="view hidden" id="wallet-view"><div class="page-title"><p class="eyebrow">WALLET · SIMULATION</p><h1>Your value, separated clearly.</h1><p>CARE proofs are not a tradable balance. AMITY is only eligible for exchange after verification and policy checks.</p></div><section class="wallet-total"><div><span class="eyebrow">TOTAL SIMULATED VALUE</span><div class="big-number">$2,481.20 <small>equivalent</small></div></div><button class="primary">Send value <span>→</span></button></section><div class="wallet-list"><div class="wallet-row"><span class="big-token omega-bg">Ω</span><div><strong>OMEGA</strong><small>Governance asset · 12.40</small></div><b>12.40 Ω</b><button class="row-action">Details</button></div><div class="wallet-row"><span class="big-token toka-bg">◌</span><div><strong>TOKAMAK</strong><small>Research utility · 284.00</small></div><b>284.00 TKM</b><button class="row-action">Details</button></div><div class="wallet-row"><span class="big-token amy-bg">✦</span><div><strong>AMITY</strong><small>Exchange eligible · 1,840.50</small></div><b>1,840.50 AMY</b><button class="row-action">Details</button></div><div class="wallet-row protected"><span class="big-token care-bg">♡</span><div><strong>CARE</strong><small>Protected proofs · 36</small></div><b>36 proofs</b><button class="row-action">View proofs</button></div></div></div>
+      <div class="view hidden" id="wallet-view">
+        <div class="page-title">
+          <p class="eyebrow">WALLET · REAL CRYPTOGRAPHY</p>
+          <h1>Your keys. Your signature. Your book.</h1>
+          <p>Create an Amity wallet (real BIP-39 mnemonic, encrypted locally), connect MetaMask, or import an existing key. Your private key never leaves this device.</p>
+        </div>
 
-      <div class="view hidden" id="contribute-view"><div class="page-title"><p class="eyebrow">CONTRIBUTE</p><h1>Turn useful work into a reviewable claim.</h1><p>Choose what you did. The protocol never promises approval; human and technical review comes first.</p></div><div class="contribute-grid"><div class="form-card"><label>Contribution type<select><option>Creator / app development</option><option>Public-good work</option><option>Care and support</option><option>Reality-to-measurement research</option></select></label><label>What did you make or do?<textarea placeholder="Describe the outcome, not just the effort..."></textarea></label><label>Evidence link<input placeholder="https://... or local evidence commitment" /></label><button class="primary full" id="submit-claim">Create reviewable claim <span>→</span></button><p class="fine-print">This creates a local prototype claim only. It does not mint tokens.</p></div><div class="info-card"><span class="feature-icon">✺</span><h3>How review works</h3><ol><li>Declare the work and its outcome</li><li>Attach reproducible evidence</li><li>Independent reviewers check legitimacy</li><li>Appeal or correct before finalization</li></ol></div></div></div>
+        <!-- Setup: create / import / connect -->
+        <section class="setup-panel" id="setup-panel">
+          <div class="setup-grid">
+            <div class="form-card">
+              <h3>Create a new wallet</h3>
+              <p class="fine-print">Generates a real 12-word BIP-39 mnemonic and 0x address (m/44'/60'/0'/0/0). The mnemonic is shown once.</p>
+              <label>Wallet label<input id="create-label" placeholder="My Amity wallet" /></label>
+              <label>Encryption password<input id="create-password" type="password" placeholder="Strong password — encrypts your keystore" /></label>
+              <label>Confirm password<input id="create-password2" type="password" placeholder="Repeat password" /></label>
+              <button class="primary full" id="btn-create">Generate wallet →</button>
+            </div>
+            <div class="form-card">
+              <h3>Import existing</h3>
+              <p class="fine-print">Restore from a mnemonic or private key. Same encryption, same local storage.</p>
+              <label>Secret type<select id="import-type"><option value="mnemonic">Mnemonic (12/24 words)</option><option value="privatekey">Private key</option></select></label>
+              <label>Secret<input id="import-secret" placeholder="word word word ... or 0x..." /></label>
+              <label>Encryption password<input id="import-password" type="password" placeholder="Strong password" /></label>
+              <button class="primary full" id="btn-import">Import wallet →</button>
+            </div>
+            <div class="form-card">
+              <h3>Connect MetaMask</h3>
+              <p class="fine-print">Use your browser wallet instead of a local key. Signing uses personal_sign; no transactions are ever sent.</p>
+              <button class="primary full" id="btn-connect-mm">🦊 Connect MetaMask</button>
+              <p class="fine-print" id="mm-status"></p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Active wallet dashboard -->
+        <section class="wallet-live hidden" id="wallet-live">
+          <div class="account-strip">
+            <div>
+              <span class="eyebrow">ACTIVE ACCOUNT</span>
+              <div class="account-address" id="account-address">—</div>
+              <div class="account-sub" id="account-label">—</div>
+            </div>
+            <div class="account-actions">
+              <button class="secondary" id="btn-refresh-balance">↻ Refresh balance</button>
+              <button class="secondary" id="btn-forget">Forget wallet</button>
+            </div>
+          </div>
+
+          <div class="balance-card">
+            <span class="eyebrow">MAINNET ETH</span>
+            <div class="big-number" id="eth-balance">—</div>
+            <div class="balance-status" id="balance-status">Not loaded</div>
+          </div>
+
+          <div class="wallet-list">
+            <div class="wallet-row"><span class="big-token omega-bg">Ω</span><div><strong>OMEGA</strong><small>Governance asset</small></div><b id="bal-omega">—</b><span class="row-note">Governance plane</span></div>
+            <div class="wallet-row"><span class="big-token toka-bg">◌</span><div><strong>TOKAMAK</strong><small>Research utility</small></div><b id="bal-tokamak">—</b><span class="row-note">Research plane</span></div>
+            <div class="wallet-row"><span class="big-token amy-bg">✦</span><div><strong>AMITY</strong><small>Exchange eligible</small></div><b id="bal-amity">—</b><span class="row-note">Exchange plane</span></div>
+            <div class="wallet-row protected"><span class="big-token care-bg">♡</span><div><strong>CARE</strong><small>Protected proofs</small></div><b id="bal-care">—</b><span class="row-note">Proof-of-care plane</span></div>
+          </div>
+
+          <!-- Release-day unlock signing -->
+          <div class="unlock-card">
+            <div class="unlock-head">
+              <span class="feature-icon">✦</span>
+              <div>
+                <h3>Release-day novel unlock</h3>
+                <p>Sign a statement of participation to unlock <em>Genesis Block: The Satoshi Protocol</em>. The signature is verified server-side against your address.</p>
+              </div>
+            </div>
+            <label>Tier<select id="unlock-tier">
+              <option value="tier-1">Tier 1 — Participate (hold any token)</option>
+              <option value="tier-2">Tier 2 — Hold (position through release day)</option>
+              <option value="tier-3">Tier 3 — Contribute (USE earned)</option>
+              <option value="tier-4">Tier 4 — Steward (CARE governance)</option>
+              <option value="tier-5">Tier 5 — Anchor ($OMEGA full unlock)</option>
+            </select></label>
+            <button class="primary full" id="btn-sign-unlock">Sign unlock statement →</button>
+            <div class="proof-result hidden" id="proof-result">
+              <p class="fine-print">Signed. Save this proof locally or copy it for the website:</p>
+              <textarea id="proof-json" readonly rows="6"></textarea>
+              <div class="proof-actions">
+                <button class="secondary" id="btn-copy-proof">Copy proof</button>
+                <a class="text-btn" id="btn-goto-novel" href="#">Open the novel →</a>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="view hidden" id="contribute-view"><div class="page-title"><p class="eyebrow">CONTRIBUTE</p><h1>Turn useful work into a reviewable claim.</h1><p>Choose what you did. The protocol never promises approval; human and technical review comes first.</p></div><div class="contribute-grid"><div class="form-card"><label>Contribution type<select><option>Creator / app development</option><option>Public-good work</option><option>Care and support</option><option>Reality-to-measurement research</option></select></label><label>What did you make or do?<textarea placeholder="Describe the outcome, not just the effort..."></textarea></label><label>Evidence link<input placeholder="https://... or local evidence commitment" /></label><button class="primary full" id="submit-claim">Create reviewable claim <span>→</span></button><p class="fine-print">Claims are signed by your wallet key before review.</p></div><div class="info-card"><span class="feature-icon">✺</span><h3>How review works</h3><ol><li>Declare the work and its outcome</li><li>Attach reproducible evidence</li><li>Independent reviewers check legitimacy</li><li>Appeal or correct before finalization</li></ol></div></div></div>
 
       <div class="view hidden" id="care-view"><div class="page-title"><p class="eyebrow">C.A.R.E. · HUMAN GOVERNED</p><h1>Care is a practice, not a score.</h1><p>CARE records protected proofs of service. AMITY is the separate, exchange-eligible representation of approved entitlements.</p></div><div class="care-banner"><span class="care-symbol">♡</span><div><strong>36 protected proofs</strong><p>Your care history is private by default. Nothing here is visible to an exchange.</p></div><button class="secondary">Manage consent</button></div><div class="care-grid"><div class="info-card"><span class="feature-icon">♧</span><h3>Randomized audit panel</h3><p>Claims are routed to a conflict-screened Archangel and independent AI reviewers. No single person or agent team can decide alone.</p><button class="text-btn">See verifier standards →</button></div><div class="info-card"><span class="feature-icon">✦</span><h3>Archangel path</h3><p>Stewardship grows through empathy, repair, and reliable non-judgmental service—not wealth alone.</p><button class="text-btn">View your path →</button></div><div class="info-card"><span class="feature-icon">↺</span><h3>Speak safely</h3><p>Share your own experience without naming others. Support is not adjudication: stories receive care, while factual claims use a separate review path.</p><button class="text-btn">Open support space →</button></div></div></div>
 
@@ -67,6 +159,8 @@
     </main>
   </div>
   <div class="toast" id="toast">Local prototype: no tokens were minted.</div>
+  <script src="vendor/ethers.umd.min.js"></script>
+  <script src="wallet.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

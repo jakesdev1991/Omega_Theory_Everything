@@ -1,0 +1,12 @@
+=== ASYNC CHECKS ===
+tool_count=22
+tools=sov_mint,sov_burn,sov_transfer,sov_snapshot,use_issue,use_revoke,use_snapshot,care_submit,care_attest,care_appeal,care_snapshot,amity_entitle,amity_transfer,amity_snapshot,omega_mint,omega_lock,omega_proposal,omega_vote,omega_snapshot,ledger,events_since,full_event_log
+plane.sov_balances=True
+plane.use_receipts=True
+plane.care_claims=True
+plane.amity_balances=True
+plane.omega_balances=True
+ledger_ok=true planes=['amity', 'care', 'event_count', 'next_version', 'omega', 'sov', 'use']
+
+=== ASYNC STDIO ROUNDTRIP ===
+roundtrip_ok line_count=2 last={"jsonrpc":"2.0","id":2,"result":{"content":[{"type":"text","text":"{\n  \"ok\": true,\n  \"snapshot\": {\n    \"sov\": {\n      \"balances\": {},\n      \"supply\": 0,\n      \"version\": 0\n    },\n    \"use\": {\n      \"receipts\": [],\n      \"version\": 0\n    },\n    \"care\": {\n      \"clai
