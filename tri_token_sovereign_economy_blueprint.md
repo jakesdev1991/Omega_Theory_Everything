@@ -5,7 +5,7 @@
 **Status:** Research and systems-design specification  
 **Version:** 0.1  
 **Repository:** Omega Theory Everything  
-**Implementation status:** Architecture only; no smart contracts, custody system, consensus network, or policy deployment is implied by this document.
+**Implementation status:** Research architecture. This document does not imply a production smart contract, custody system, consensus network, or policy deployment. The repository contains only bounded, valueless local/testnet pilot tooling for `$OMEGA` (Sepolia) and `tTWC` (Solana Devnet), neither deployed nor approved for mainnet/value-bearing use.
 
 > This document integrates the Omega mathematical-physics research program with a proposed three-token economic coordination system. The physics and psychosocial sections are hypotheses and design inputs, not experimentally validated facts. Any deployment involving money, identity, healthcare, employment, or public services requires independent legal, security, safety, and ethics review.
 
@@ -286,7 +286,7 @@ Greater visibility may improve earning and collaboration opportunities, but it c
 
 Every user’s agent or node runs on their own hardware, or on a custodian they explicitly choose. Other users cannot see, discover, call, or inspect it unless the owner publishes a narrowly scoped capability or temporary proof endpoint. Raw prompts, private memories, credentials, wallet secrets, local files, and sensor streams remain local by default.
 
-Creators may earn WCT/AMITY for approved work under published policies. CARE eligibility is not automatic: it requires a qualifying care action, consent, human verification, safeguarding review where necessary, and an appeal path. The first release must remain local and valueless, with no private-key collection and no automatic exchange settlement.
+Creators may earn TWC/AMITY only under published, independently reviewed policies. CARE eligibility is not automatic: it requires a qualifying care action, consent, human verification, safeguarding review where necessary, and an appeal path. The first release must remain local/testnet and valueless, with no private-key collection and no automatic exchange settlement.
 
 ## 9. Active inference and cadCAD simulation
 
@@ -398,7 +398,7 @@ Contract invariants:
 - administrators cannot bypass appeals through a hidden path;
 - upgrade authority is multisignature and publicly documented.
 
-A **Sepolia-only, valueless `$OMEGA` pilot suite** now lives in [`evm/`](evm/). It contains a fixed-supply `tOMEGA` ERC-20, non-transferable vote escrow, bounded time locking, an OpenZeppelin Governor + TimelockController, and a public claim-receipt gate. Its deployment guard rejects non-Sepolia networks; it does not implement a mainnet token, Solana asset, Taproot Asset, custody system, or sensitive CARE/PoUW flow. The suite is a local-test and testnet-pilot artifact only; its stated assets, authorities, residual risks, and required drills are in [`evm/THREAT_MODEL.md`](evm/THREAT_MODEL.md). It still requires independent audit, legal review, adversarial drills, and explicit approval before any value-bearing deployment.
+A **Sepolia-only, valueless `$OMEGA` pilot suite** now lives in [`evm/`](evm/). It contains a fixed-supply `tOMEGA` ERC-20, non-transferable vote escrow, bounded time locking, an OpenZeppelin Governor + TimelockController, and a public claim-receipt gate. A separate **Solana Devnet-only, valueless `tTWC` pilot issuer/verifier** now lives in [`solana/`](solana/): it uses the standard SPL Token Program, fixed one-time supply, null mint/freeze authorities, and immutable Metaplex fungible metadata. Neither pilot is deployed. Neither implements a mainnet token, Taproot Asset, custody system, or sensitive CARE/PoUW flow. Their assets, authorities, residual risks, and required drills are documented in [`evm/THREAT_MODEL.md`](evm/THREAT_MODEL.md) and [`solana/THREAT_MODEL.md`](solana/THREAT_MODEL.md). Both still require independent audit, legal review, adversarial drills, and explicit approval before any value-bearing deployment.
 
 Before any production implementation, define and independently review storage layout, access control, event schemas, upgrade or redeployment policy, formal invariants, and adversarial test vectors.
 
@@ -501,6 +501,7 @@ The next implementation artifacts should be produced in this order:
 3. invariant/property tests;
 4. cadCAD-compatible simulation adapters;
 5. a Sepolia-only, valueless `$OMEGA` pilot suite (implemented in [`evm/`](evm/));
-6. threat-model documentation and adversarial test vectors for that pilot and the remaining chain legs.
+6. a Solana Devnet-only, valueless `tTWC` SPL/Metaplex pilot issuer and verifier (implemented in [`solana/`](solana/));
+7. threat-model documentation and adversarial test vectors for those pilots and the remaining chain legs.
 
 This sequence intentionally postpones live deployment, monetary value, psychosocial inference, and telemetry-triggered economic action until the underlying claims and controls have been independently evaluated.

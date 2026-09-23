@@ -11,7 +11,7 @@ The broader three-chain plan remains deliberately split:
 | Leg | Status in this repository |
 | --- | --- |
 | `$OMEGA` / Ethereum | **Implemented here for a valueless Sepolia pilot** |
-| World Citizen Coin / Token of the World Citizen / Solana | Ticker still needs a final decision; no SPL mint is created here |
+| Token of the World Citizen (`TWC`) / Solana | A separate Devnet-only, valueless `tTWC` SPL issuer/verifier is in [`../solana/`](../solana/); no Devnet mint has been created and no mainnet/value-bearing use is approved. |
 | AMITY / Bitcoin Lightning Taproot Assets | Requires separate `litd`/`tapd` testnet infrastructure; no asset is created here |
 
 That scope follows the staged implementation requirement in the [tri-token blueprint](../tri_token_sovereign_economy_blueprint.md) and the `$OMEGA` workstream in the [day-one launch plan](../launch/novel_day_one_plan.md).

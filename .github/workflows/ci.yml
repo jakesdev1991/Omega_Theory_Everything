@@ -90,6 +90,31 @@ jobs:
         working-directory: evm
         run: npm audit --omit=dev --audit-level=high
 
+  solana-pilot:
+    name: Solana Devnet Pilot Checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: solana/package-lock.json
+
+      - name: Install locked dependencies
+        working-directory: solana
+        run: npm ci
+
+      - name: Run offline pilot tests
+        working-directory: solana
+        run: npm run check
+
+      - name: Check runtime dependency advisories
+        working-directory: solana
+        run: npm audit --omit=dev --audit-level=high
+
   security-scan:
     name: Security Scan
     runs-on: ubuntu-latest

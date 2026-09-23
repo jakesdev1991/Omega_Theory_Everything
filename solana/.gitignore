@@ -1,0 +1,13 @@
+# Dependencies and local secrets
+node_modules/
+.env
+keys/
+*.keypair.json
+
+# Generated deployment artifacts
+.deployments/
+deployments/*.json
+!deployments/.gitkeep
+
+# Logs
+npm-debug.log*

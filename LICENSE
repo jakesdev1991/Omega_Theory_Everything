@@ -17,7 +17,7 @@ Apache-2.0 permits commercial use of these covered materials subject to its term
 
 The following are proprietary and are **not** open-source licensed by this version of the repository:
 
-- all files in `app/`, `rust/`, `cpp/`, and `evm/`
+- all files in `app/`, `rust/`, `cpp/`, `evm/`, and `solana/`
 - `tri_token_sovereign_economy_blueprint.md`, `launch/novel_day_one_plan.md`, and all files in `novel/`
 - all files in `whitepapers/`
 

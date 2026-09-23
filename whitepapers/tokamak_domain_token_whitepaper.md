@@ -5,6 +5,8 @@
 **Version:** 0.2 research draft  
 **Status:** Experimental compute and measurement design; not a claim of fusion-reactor safety or a financial instrument.
 
+> **Naming status (2026-09-23):** `TOKAMAK` is retained here as the historical name of this research draft and is **retired as the Solana token identity**. The selected canonical Solana identity is **Token of the World Citizen (`TWC`)**; its Devnet-only, valueless pilot symbol is `tTWC`. This document does not authorize a token deployment or a value-bearing use.
+
 ## Abstract
 
 TOKAMAK is the proposed reality-to-measurement utility asset for work that decomposes real-world phenomena into numbers, models, simulations, measurements, and testable predictions. Plasma diagnostics and fusion research are an important domain, but not the boundary of the token. Climate, biology, infrastructure, economics, astronomy, materials, software observability, and other domains may qualify when the contribution is reproducible, useful, and open to correction.
