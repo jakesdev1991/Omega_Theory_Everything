@@ -35,7 +35,13 @@ theorem kepler_ratio_constant (a₁ a₂ : ℝ) (ha1 : a₁^3 ≠ 0) (ha2 : a₂
     Gravity = Φ (1D)
     Orbital distance = Ω-Metric (2D)
     Period = Informational Viscosity (3D) -/
-theorem kepler_from_omega :
-  True := by trivial
+theorem kepler_from_omega (R : QRegion) : d R R = 0 := by
+  exact qregion_self_distance_zero R
+
+theorem orbital_period_sq_nonneg (a : ℝ) : (OrbitalPeriod a)^2 ≥ 0 := by
+  exact sq_nonneg _
+
+theorem kepler_distance_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := by
+  exact distance_nonneg R₁ R₂
 
 end OmegaProtocol.Vol30

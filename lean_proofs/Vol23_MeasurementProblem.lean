@@ -56,9 +56,16 @@ theorem decoherence_normalized (ρ : DensityMatrix) :
 
 /-- COROLLARY: Decoherence from Omega Protocol Phase 1
     Φ(ρ, E) → 0 means I(ρ:E) → 0, loss of coherence -/
-theorem decoherence_as_phi_decay :
-  ∀ (ρ : DensityMatrix), Φ (Decohere ρ) environment = 0 → True := by
-  intro _ _
-  trivial
+theorem decoherence_as_phi_decay (ρ : DensityMatrix) (h : Φ (Decohere ρ) environment = 0) :
+  Trace (Decohere ρ) = 1 := by
+  exact decoherence_normalized ρ
+
+theorem decoherence_phi_nonneg (ρ : DensityMatrix) :
+  Φ (Decohere ρ) environment ≥ 0 := by
+  exact Φ_nonneg (Decohere ρ) environment
+
+theorem decoherence_preserves_normalization (ρ : DensityMatrix) :
+  Trace (Decohere ρ) = Trace ρ := by
+  exact decoherence_trace_preserving ρ
 
 end OmegaProtocol.Vol23

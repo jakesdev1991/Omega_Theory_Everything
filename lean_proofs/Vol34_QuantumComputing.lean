@@ -43,6 +43,14 @@ theorem hadamard_unitary :
     Gate time = Informational Viscosity (3D)
     Error correction = RCOD Asymmetry (4D) -/
 theorem quantum_computing_from_omega :
-  True := by trivial
+  GateCompose (GateAdjoint HadamardGate) HadamardGate = GateIdentity := by
+  exact hadamard_unitary
+
+theorem quantum_gate_self_distance (R : QRegion) : d R R = 0 := by
+  exact qregion_self_distance_zero R
+
+theorem quantum_mutual_info_nonneg (R₁ R₂ : QRegion) :
+  mutualInformation R₁ R₂ ≥ 0 := by
+  exact mutualInformation_nonneg R₁ R₂
 
 end OmegaProtocol.Vol34

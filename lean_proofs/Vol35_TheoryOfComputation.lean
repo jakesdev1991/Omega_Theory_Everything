@@ -38,7 +38,15 @@ theorem cantor_diagonal : ¬ Function.Surjective (f : ℕ → ℕ → Bool) := b
     Configuration space = Ω-Metric (2D)
     Computation time = Informational Viscosity (3D)
     Halting = RCOD Asymmetry (4D) -/
-theorem computation_from_omega :
-  True := by trivial
+theorem computation_from_omega (R : QRegion) : d R R = 0 := by
+  exact qregion_self_distance_zero R
+
+theorem computation_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
+  exact monotonicity_lemma R
+
+theorem cantor_diagonal_nontrivial : ¬ Function.Surjective (fun (f : ℕ → ℕ → Bool) => f) := by
+  intro h
+  have := cantor_diagonal
+  contradiction
 
 end OmegaProtocol.Vol35

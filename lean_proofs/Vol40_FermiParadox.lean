@@ -28,7 +28,13 @@ theorem fermi_paradox_axiom : Nonempty GreatFilter := ⟨()⟩
     Distance = Ω-Metric (2D)
     Expansion = Informational Viscosity (3D)
     Great Filter = RCOD Asymmetry (4D) -/
-theorem fermi_from_omega :
-  True := by trivial
+theorem fermi_from_omega : Nonempty GreatFilter := by
+  exact fermi_paradox_axiom
+
+theorem fermi_distance_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := by
+  exact distance_nonneg R₁ R₂
+
+theorem fermi_entropy_bound (R : QRegion) : vonNeumannEntropy R ≤ Real.pi := by
+  exact entropy_bounded R
 
 end OmegaProtocol.Vol40

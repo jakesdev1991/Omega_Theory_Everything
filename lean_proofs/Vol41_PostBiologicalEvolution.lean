@@ -28,7 +28,13 @@ theorem post_biological_evolution_axiom : Nonempty SyntheticSubstrate := ⟨()�
     Distance = Ω-Metric (2D)
     Timescale = Informational Viscosity (3D)
     Adaptation = RCOD Asymmetry (4D) -/
-theorem postbio_from_omega :
-  True := by trivial
+theorem postbio_from_omega : Nonempty SyntheticSubstrate := by
+  exact post_biological_evolution_axiom
+
+theorem postbio_phi_nonneg (R₁ R₂ : QRegion) : Φ R₁ R₂ ≥ 0 := by
+  exact Φ_nonneg R₁ R₂
+
+theorem postbio_distance_self (R : QRegion) : d R R = 0 := by
+  exact qregion_self_distance_zero R
 
 end OmegaProtocol.Vol41

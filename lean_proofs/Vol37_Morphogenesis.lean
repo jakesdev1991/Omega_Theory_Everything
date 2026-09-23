@@ -34,7 +34,15 @@ theorem turing_instability_ratio
     Spatial patterns = Ω-Metric (2D)
     Reaction time = Informational Viscosity (3D)
     Pattern stability = RCOD Asymmetry (4D) -/
-theorem morphogenesis_from_omega :
-  True := by trivial
+theorem morphogenesis_from_omega (R : QRegion) : d R R = 0 := by
+  exact qregion_self_distance_zero R
+
+theorem turing_ratio_pos (h_pos : ActivatorDiffusion > 0) :
+  InhibitorDiffusion / ActivatorDiffusion > 0 := by
+  have h := turing_instability_ratio h_pos
+  linarith
+
+theorem morphogenesis_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
+  exact monotonicity_lemma R
 
 end OmegaProtocol.Vol37

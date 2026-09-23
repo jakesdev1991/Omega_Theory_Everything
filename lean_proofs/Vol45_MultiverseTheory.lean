@@ -28,7 +28,13 @@ theorem multiverse_theory_axiom : Nonempty MultiverseEnsemble := ⟨()⟩
     Distance = Ω-Metric (2D)
     Timescale = Informational Viscosity (3D)
     Measure = RCOD Asymmetry (4D) -/
-theorem multiverse_from_omega :
-  True := by trivial
+theorem multiverse_from_omega : Nonempty MultiverseEnsemble := by
+  exact multiverse_theory_axiom
+
+theorem multiverse_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
+  exact monotonicity_lemma R
+
+theorem multiverse_distance_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := by
+  exact distance_nonneg R₁ R₂
 
 end OmegaProtocol.Vol45

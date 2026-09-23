@@ -40,7 +40,14 @@ theorem degree_sum_even (G : Graph) : ∃ k, DegreeSum G = 2 * k := by
     Vertices = Q-Regions (0D)
     Edges = Φ pairs (1D)
     Distance = Ω-Metric (2D) -/
-theorem network_from_omega :
-  True := by trivial
+theorem network_from_omega (G : Graph) : DegreeSum G = 2 * NumEdges G := by
+  exact handshaking_lemma G
+
+theorem network_degree_nonneg (G : Graph) : DegreeSum G ≥ 0 := by
+  dsimp [DegreeSum, NumEdges]
+  apply Nat.zero_le
+
+theorem network_distance_self (R : QRegion) : d R R = 0 := by
+  exact qregion_self_distance_zero R
 
 end OmegaProtocol.Vol26

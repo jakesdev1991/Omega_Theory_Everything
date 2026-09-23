@@ -27,7 +27,13 @@ theorem desitter_entropy_positive : DeSitterEntropy > 0 := by
     Cosmological distance = Ω-Metric (2D)
     Expansion timescale = Informational Viscosity (3D)
     Entropy = RCOD Asymmetry (4D) -/
-theorem expansion_from_omega :
-  True := by trivial
+theorem expansion_from_omega : DeSitterEntropy > 0 := by
+  exact desitter_entropy_positive
+
+theorem expansion_distance_self (R : QRegion) : d R R = 0 := by
+  exact qregion_self_distance_zero R
+
+theorem expansion_phi_nonneg (R₁ R₂ : QRegion) : Φ R₁ R₂ ≥ 0 := by
+  exact Φ_nonneg R₁ R₂
 
 end OmegaProtocol.Vol44

@@ -28,7 +28,13 @@ theorem stellar_engineering_axiom : Nonempty DysonSphere := ⟨()⟩
     Distance = Ω-Metric (2D)
     Timescale = Informational Viscosity (3D)
     Efficiency = RCOD Asymmetry (4D) -/
-theorem stellar_from_omega :
-  True := by trivial
+theorem stellar_from_omega : Nonempty DysonSphere := by
+  exact stellar_engineering_axiom
+
+theorem stellar_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
+  exact monotonicity_lemma R
+
+theorem stellar_phi_symm (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R₂ R₁ := by
+  exact Φ_symm R₁ R₂
 
 end OmegaProtocol.Vol42

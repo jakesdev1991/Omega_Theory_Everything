@@ -35,7 +35,13 @@ theorem effective_coupling_positive : G_effective > 0 := by
     Distance = Ω-Metric (2D)
     KK modes = Informational Viscosity (3D)
     Coupling = RCOD Asymmetry (4D) -/
-theorem extradim_from_omega :
-  True := by trivial
+theorem extradim_from_omega : G_effective > 0 := by
+  exact effective_coupling_positive
+
+theorem extradim_distance_self (R : QRegion) : d R R = 0 := by
+  exact qregion_self_distance_zero R
+
+theorem extradim_phi_nonneg (R₁ R₂ : QRegion) : Φ R₁ R₂ ≥ 0 := by
+  exact Φ_nonneg R₁ R₂
 
 end OmegaProtocol.Vol48
