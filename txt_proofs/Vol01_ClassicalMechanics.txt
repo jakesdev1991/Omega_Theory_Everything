@@ -2,163 +2,195 @@ import Mathlib
 import OmegaUnifiedFoundation
 /-
   Vol01_ClassicalMechanics.lean
-  REAL mathematical formalization of classical mechanics.
 
-  Genuinely proven theorems:
-  1. Newton's Second Law — F = ma as a definitional identity
-  2. Conservation of Energy — from time-translation invariance
-  3. Symplectic structure — non-degeneracy and closedness
-  4. Hamilton's equations structure
+  Classical mechanics, formalized with GENUINE proofs (no definitional
+  tautologies, no rigged `if` statements).
 
-  The theory's claim: Classical mechanics emerges from the
-  modular flow of a Type III₁ von Neumann algebra in the
-  macroscopic limit (ℏ → 0).
+  Proven theorems (from Mathlib calculus / algebra only):
+  1. The canonical symplectic form on ℝ² is antisymmetric, bilinear
+     and non-degenerate.
+  2. Newton's second law: for constant mass, d(m·v)/dt = m·a, and this
+     force is unique.
+  3. Conservation of energy: along any solution of Hamilton's equations
+     for H = p²/2m + V(q), dH/dt = 0, hence H is constant in time.
+  4. Canonical Poisson bracket: antisymmetric, {f,f} = 0, {q,p} = 1.
+  5. Discrete least action: for a free particle, the straight-line path
+     minimizes the discretized action among all paths with the same
+     endpoints.
 
-  The Poisson bracket is the classical limit of the commutator:
-    lim_{ℏ→0} (i/ℏ)[A,B] = {A,B}
+  Explicit physical postulates of the Omega framework (axioms, clearly
+  labelled — NOT theorems):
+  * commutator_limit : lim_{ℏ→0} (i/ℏ)[A,B] = {A,B}
+  * modular_spectrum_nonneg : the modular generator has non-negative
+    spectrum, so emergent masses are non-negative.
 
-  This limit is axiomatized because it requires the full
-  deformation quantization machinery (Kontsevich formality).
+  NOTE: written against Mathlib; not yet machine-checked in this repo's
+  CI (no Lean toolchain available when written).
 -/
-
 
 namespace OmegaProtocol.Vol01
 open OmegaProtocol
-open Classical
+open Finset BigOperators
 
 -- ============================================================
--- ALGEBRAIC INFRASTRUCTURE FOR OBSERVABLES
+-- 1. SYMPLECTIC GEOMETRY ON ℝ² (phase space of one degree of freedom)
 -- ============================================================
 
+/-- Canonical symplectic form ω((q,p),(q',p')) = q·p' − p·q'. -/
+def omega (X Y : ℝ × ℝ) : ℝ := X.1 * Y.2 - X.2 * Y.1
+
+theorem omega_antisymm (X Y : ℝ × ℝ) : omega X Y = -omega Y X := by
+  unfold omega; ring
+
+theorem omega_self (X : ℝ × ℝ) : omega X X = 0 := by
+  unfold omega; ring
+
+theorem omega_add_left (X X' Y : ℝ × ℝ) :
+    omega (X + X') Y = omega X Y + omega X' Y := by
+  unfold omega; simp only [Prod.fst_add, Prod.snd_add]; ring
+
+theorem omega_smul_left (c : ℝ) (X Y : ℝ × ℝ) :
+    omega (c • X) Y = c * omega X Y := by
+  unfold omega; simp only [Prod.smul_fst, Prod.smul_snd, smul_eq_mul]; ring
+
+/-- Non-degeneracy: if ω(X,·) ≡ 0 then X = 0. -/
+theorem omega_nondegenerate (X : ℝ × ℝ) (h : ∀ Y, omega X Y = 0) : X = 0 := by
+  have h1 := h (0, 1)
+  have h2 := h (1, 0)
+  unfold omega at h1 h2
+  simp at h1 h2
+  exact Prod.ext h1 h2
+
+-- ============================================================
+-- 2. NEWTON'S SECOND LAW (force = rate of change of momentum)
+-- ============================================================
+
+/-- For constant mass m, if v' = a then (m·v)' = m·a. -/
+theorem newtons_second_law (m : ℝ) (v a : ℝ → ℝ) (t : ℝ)
+    (hv : HasDerivAt v (a t) t) :
+    HasDerivAt (fun s => m * v s) (m * a t) t :=
+  hv.const_mul m
+
+/-- Any force F defined as dp/dt must equal m·a (uniqueness of derivative). -/
+theorem force_eq_mass_times_accel (m F : ℝ) (v a : ℝ → ℝ) (t : ℝ)
+    (hv : HasDerivAt v (a t) t)
+    (hF : HasDerivAt (fun s => m * v s) F t) :
+    F = m * a t :=
+  hF.unique (newtons_second_law m v a t hv)
+
+-- ============================================================
+-- 3. CONSERVATION OF ENERGY FROM HAMILTON'S EQUATIONS
+-- ============================================================
+
+/-- Energy H(q,p) = p²/2m + V(q) evaluated along a trajectory. -/
+noncomputable def energy (m : ℝ) (V : ℝ → ℝ) (q p : ℝ → ℝ) (t : ℝ) : ℝ :=
+  p t * p t / (2 * m) + V (q t)
+
+/-- dH/dt = 0 along solutions of q̇ = p/m, ṗ = −V'(q). -/
+theorem energy_deriv_zero (m : ℝ) (hm : m ≠ 0) (V V' q p : ℝ → ℝ)
+    (hV : ∀ x, HasDerivAt V (V' x) x)
+    (hq : ∀ t, HasDerivAt q (p t / m) t)
+    (hp : ∀ t, HasDerivAt p (-(V' (q t))) t) (t : ℝ) :
+    HasDerivAt (energy m V q p) 0 t := by
+  have h := (((hp t).mul (hp t)).div_const (2 * m)).add ((hV (q t)).comp t (hq t))
+  unfold energy
+  convert h using 1
+  first
+    | (field_simp; ring)
+    | field_simp
+    | ring
+
+/-- Energy is conserved: H(t₁) = H(t₂) for all times. -/
+theorem conservation_of_energy (m : ℝ) (hm : m ≠ 0) (V V' q p : ℝ → ℝ)
+    (hV : ∀ x, HasDerivAt V (V' x) x)
+    (hq : ∀ t, HasDerivAt q (p t / m) t)
+    (hp : ∀ t, HasDerivAt p (-(V' (q t))) t) (t₁ t₂ : ℝ) :
+    energy m V q p t₁ = energy m V q p t₂ := by
+  have hd := energy_deriv_zero m hm V V' q p hV hq hp
+  exact is_const_of_deriv_eq_zero
+    (fun t => (hd t).differentiableAt) (fun t => (hd t).deriv) t₁ t₂
+
+-- ============================================================
+-- 4. CANONICAL POISSON BRACKET
+-- ============================================================
+
+/-- ∂f/∂q at (q,p). -/
+noncomputable def dq (f : ℝ × ℝ → ℝ) (z : ℝ × ℝ) : ℝ :=
+  deriv (fun x => f (x, z.2)) z.1
+
+/-- ∂f/∂p at (q,p). -/
+noncomputable def dp (f : ℝ × ℝ → ℝ) (z : ℝ × ℝ) : ℝ :=
+  deriv (fun y => f (z.1, y)) z.2
+
+/-- {f,g} = ∂q f ∂p g − ∂p f ∂q g -/
+noncomputable def poisson (f g : ℝ × ℝ → ℝ) (z : ℝ × ℝ) : ℝ :=
+  dq f z * dp g z - dp f z * dq g z
+
+theorem poisson_antisymm (f g : ℝ × ℝ → ℝ) (z : ℝ × ℝ) :
+    poisson f g z = -poisson g f z := by
+  unfold poisson; ring
+
+theorem poisson_self (f : ℝ × ℝ → ℝ) (z : ℝ × ℝ) : poisson f f z = 0 := by
+  unfold poisson; ring
+
+/-- Canonical relation {q,p} = 1. -/
+theorem poisson_canonical (z : ℝ × ℝ) :
+    poisson (fun w => w.1) (fun w => w.2) z = 1 := by
+  unfold poisson dq dp
+  simp
+
+/-- PHYSICAL POSTULATE (Omega framework): the classical limit sends
+    commutators to Poisson brackets. Requires deformation quantization;
+    kept as an explicit axiom, not claimed as a theorem. -/
+axiom poisson_bracket {T : Type*} : T → T → T
 axiom Observable_mul_complex : Observable → ℂ → Observable
-@[default_instance] noncomputable instance : HMul ℂ Observable Observable where
+noncomputable instance : HMul ℂ Observable Observable where
   hMul c A := Observable_mul_complex A c
 axiom Observable_div_real : Observable → ℝ → Observable
-@[default_instance] noncomputable instance : HDiv Observable ℝ Observable where
+noncomputable instance : HDiv Observable ℝ Observable where
   hDiv A r := Observable_div_real A r
 
-axiom poisson_bracket {T : Type*} : T → T → T
-
--- ============================================================
--- PHASE SPACE (Symplectic Geometry)
--- ============================================================
-
-/-- A phase space is a symplectic manifold: a space equipped with
-    a closed, non-degenerate 2-form ω. This is the mathematical
-    arena for classical mechanics. -/
-structure PhaseSpace where
-  carrier : Type*
-  zero : carrier
-  symplectic_form : carrier → carrier → ℝ
-  -- Closedness: dω = 0 (cyclic sum vanishes)
-  symplectic_closed : ∀ (X Y Z : carrier),
-    symplectic_form X Y + symplectic_form Y Z + symplectic_form Z X = 0
-  -- Non-degeneracy: ω(X, ·) = 0 implies X = 0
-  symplectic_nondegenerate : ∀ (X : carrier),
-    (∀ (Y : carrier), symplectic_form X Y = 0) → X = zero
-  -- Hamiltonian vector field: H ↦ X_H where ω(X_H, ·) = dH
-  hamiltonian_vector_field : (carrier → ℝ) → (carrier → carrier)
-  -- Poisson bracket: {f,g} = ω(X_f, X_g)
-  poisson_bracket : (carrier → ℝ) → (carrier → ℝ) → (carrier → ℝ)
-
--- ============================================================
--- THEOREM 1: ANTISYMMETRY OF THE SYMPLECTIC FORM (GENUINE PROOF)
--- ω(X,Y) = -ω(Y,X)
--- Proof: From the closedness condition with Z = zero.
--- ============================================================
-
-theorem symplectic_antisymmetric (ps : PhaseSpace)
-  (h_zero_l : ∀ Y, ps.symplectic_form ps.zero Y = 0)
-  (h_zero_r : ∀ Y, ps.symplectic_form Y ps.zero = 0) :
-  ∀ (X Y : ps.carrier), ps.symplectic_form X Y = -(ps.symplectic_form Y X) := by
-  intro X Y
-  have h := ps.symplectic_closed X Y ps.zero
-  have h0r := h_zero_r X
-  have h0l := h_zero_l X  -- ω(0,X) = 0 not needed but available
-  -- h : ω(X,Y) + ω(Y,0) + ω(0,X) = 0
-  -- h0r : ω(X,0) = 0, but we need ω(Y,0)
-  have h0r' := h_zero_r Y
-  -- Actually use closedness with Y, X, zero:
-  have h2 := ps.symplectic_closed Y X ps.zero
-  -- h2 : ω(Y,X) + ω(X,0) + ω(0,Y) = 0
-  linarith [h_zero_r X, h_zero_l Y]
-
--- ============================================================
--- THEOREM 2: NEWTON'S SECOND LAW (GENUINE PROOF)
--- F = ma is a DEFINITION: force IS mass times acceleration.
--- This is mathematically honest — Newton's 2nd law defines force.
--- ============================================================
-
-structure Particle where
-  mass : ℝ
-  acceleration : ℝ
-
-/-- Force is defined as mass × acceleration -/
-noncomputable def Force (p : Particle) : ℝ := p.mass * p.acceleration
-
-/-- F = ma is true by definition -/
-theorem newtons_second_law (p : Particle) :
-  Force p = p.mass * p.acceleration := rfl
-
--- ============================================================
--- THEOREM 3: CONSERVATION OF ENERGY (GENUINE PROOF)
--- If the system has time-translation invariance (the Lagrangian
--- doesn't explicitly depend on time), then energy is conserved.
--- Formalized: if dH/dt depends only on ∂L/∂t, and ∂L/∂t = 0,
--- then dH/dt = 0.
--- ============================================================
-
-/-- A time-independent system has ∂L/∂t = 0 -/
-axiom ModularInvariant : StateSpace → Prop
-
-/-- Energy derivative: 0 if time-translation invariant, nonzero otherwise -/
-noncomputable def dHdt (ρ : StateSpace) : ℝ :=
-  if ModularInvariant ρ then 0 else 1
-
-theorem conservation_of_energy :
-  ∀ (ρ : StateSpace), ModularInvariant ρ → dHdt ρ = 0 := by
-  intro ρ h
-  dsimp [dHdt]
-  rw [if_pos h]
-
--- ============================================================
--- CLASSICAL LIMIT (ℏ → 0)
--- This is the theory's claim about how classical mechanics
--- EMERGES from quantum mechanics. These are axioms because
--- the deformation quantization proof is research-level.
--- ============================================================
-
-/-- The classical limit sends commutators to Poisson brackets -/
 axiom commutator_limit :
   ∀ (A B : Observable),
   lim_h_to_0 (fun ℏ => Complex.I * (commutator A B) / ↑ℏ) = poisson_bracket A B
 
-theorem poisson_bracket_from_commutator :
-  ∀ (A B : Observable),
-  lim_h_to_0 (fun ℏ => Complex.I * (commutator A B) / ↑ℏ) = poisson_bracket A B :=
-  commutator_limit
-
 -- ============================================================
--- MASS EMERGENCE
--- The theory claims mass emerges from the representation theory
--- of the modular automorphism group.
+-- 5. MASS FROM THE MODULAR GROUP (explicit postulate)
 -- ============================================================
 
 axiom RepresentationTheoryModularGroup : StateSpace → ℝ
 
+/-- PHYSICAL POSTULATE: the modular generator has non-negative spectrum. -/
+axiom modular_spectrum_nonneg : ∀ ρ, 0 ≤ RepresentationTheoryModularGroup ρ
+
+/-- Emergent masses are non-negative (follows from the postulate). -/
 theorem mass_emergence (ρ : StateSpace) :
-  ∃ (mass : ℝ), mass = RepresentationTheoryModularGroup ρ :=
-  ⟨RepresentationTheoryModularGroup ρ, rfl⟩
+    ∃ mass : ℝ, 0 ≤ mass ∧ mass = RepresentationTheoryModularGroup ρ :=
+  ⟨_, modular_spectrum_nonneg ρ, rfl⟩
 
 -- ============================================================
--- LEAST ACTION PRINCIPLE
--- The action functional is identified with the modular path integral.
+-- 6. DISCRETE LEAST ACTION FOR A FREE PARTICLE
 -- ============================================================
 
-axiom ModularPathIntegral : ℝ
-noncomputable def ClassicalAction : ℝ := ModularPathIntegral
+/-- Discretized free-particle action (positive constant m/2Δt dropped). -/
+def action (N : ℕ) (x : ℕ → ℝ) : ℝ :=
+  ∑ i in range N, (x (i + 1) - x i) ^ 2
 
-theorem least_action_principle :
-  ClassicalAction = ModularPathIntegral := rfl
+/-- The uniform-velocity (straight-line) path minimizes the action among
+    all paths with the same endpoints: S[x + η] ≥ S[x] when η(0)=η(N)=0. -/
+theorem least_action_principle (N : ℕ) (x η : ℕ → ℝ) (k : ℝ)
+    (hx : ∀ i, x (i + 1) - x i = k) (h0 : η 0 = 0) (hN : η N = 0) :
+    action N x ≤ action N (fun i => x i + η i) := by
+  unfold action
+  have hsplit : ∀ i, ((x (i + 1) + η (i + 1)) - (x i + η i)) ^ 2
+      = (x (i + 1) - x i) ^ 2 + 2 * k * (η (i + 1) - η i)
+        + (η (i + 1) - η i) ^ 2 := by
+    intro i; rw [← hx i]; ring
+  simp only [hsplit]
+  rw [Finset.sum_add_distrib, Finset.sum_add_distrib, ← Finset.mul_sum,
+    Finset.sum_range_sub η, hN, h0]
+  have hη : 0 ≤ ∑ i in range N, (η (i + 1) - η i) ^ 2 :=
+    Finset.sum_nonneg (fun i _ => sq_nonneg _)
+  linarith
 
 end OmegaProtocol.Vol01

@@ -70,22 +70,31 @@ open Vol05
 theorem macroscopic_limit_flow (R : QRegion) : d R R = 0 := by
   exact qregion_self_distance_zero R
 
-theorem conservation_of_energy (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
-  exact monotonicity_lemma R
+/-- Vol01: energy conservation from Hamilton's equations (genuine calculus proof). -/
+theorem conservation_of_energy (m : ℝ) (hm : m ≠ 0) (V V' q p : ℝ → ℝ)
+    (hV : ∀ x, HasDerivAt V (V' x) x)
+    (hq : ∀ t, HasDerivAt q (p t / m) t)
+    (hp : ∀ t, HasDerivAt p (-(V' (q t))) t) (t₁ t₂ : ℝ) :
+    Vol01.energy m V q p t₁ = Vol01.energy m V q p t₂ :=
+  Vol01.conservation_of_energy m hm V V' q p hV hq hp t₁ t₂
 
-theorem newtons_second_law (p : Vol01.Particle) : Vol01.Force p = p.mass * p.acceleration := by
-  exact Vol01.newtons_second_law p
+theorem newtons_second_law (m F : ℝ) (v a : ℝ → ℝ) (t : ℝ)
+    (hv : HasDerivAt v (a t) t) (hF : HasDerivAt (fun s => m * v s) F t) :
+    F = m * a t :=
+  Vol01.force_eq_mass_times_accel m F v a t hv hF
 
-theorem poisson_bracket_emergence (A B : Observable) :
-  lim_h_to_0 (fun ℏ => Complex.I * (commutator A B) / ↑ℏ) = Vol01.poisson_bracket A B := by
-  exact Vol01.commutator_limit A B
+theorem poisson_bracket_emergence (z : ℝ × ℝ) :
+    Vol01.poisson (fun w => w.1) (fun w => w.2) z = 1 :=
+  Vol01.poisson_canonical z
 
 theorem mass_emergence (ρ : StateSpace) :
-  ∃ (mass : ℝ), mass = Vol01.RepresentationTheoryModularGroup ρ := by
-  exact Vol01.mass_emergence ρ
+    ∃ mass : ℝ, 0 ≤ mass ∧ mass = Vol01.RepresentationTheoryModularGroup ρ :=
+  Vol01.mass_emergence ρ
 
-theorem least_action_principle : Vol01.ClassicalAction = Vol01.ModularPathIntegral := by
-  exact Vol01.least_action_principle
+theorem least_action_principle (N : ℕ) (x η : ℕ → ℝ) (k : ℝ)
+    (hx : ∀ i, x (i + 1) - x i = k) (h0 : η 0 = 0) (hN : η N = 0) :
+    Vol01.action N x ≤ Vol01.action N (fun i => x i + η i) :=
+  Vol01.least_action_principle N x η k hx h0 hN
 
 -- Vol 02: Electromagnetism
 theorem informational_bianchi (R₁ R₂ R₃ : QRegion) : d R₁ R₃ ≤ d R₁ R₂ + d R₂ R₃ := by
