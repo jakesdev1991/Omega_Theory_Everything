@@ -52,7 +52,7 @@ A local agent must not upload raw prompts, private memories, local files, creden
 
 The design may use control/data separation, capability-based tools, isolated child contexts, and WASI or stronger sandbox tiers. The parent process must not receive raw untrusted content when a lower-trust branch can safely sanitize it first.
 
-Privacy architecture does not provide immunity from lawful safety, labor, tax, financial, or regulatory duties. When disclosure is legally required, the system should provide a narrowly scoped, audited disclosure channel rather than broad visibility into the user or node.
+Privacy architecture does not provide immunity from lawful health, labor, tax, financial, or regulatory duties. If a deployment handles protected health information for a HIPAA-covered entity or business associate, HIPAA Privacy, Security, and Breach Notification requirements must be addressed in the operating model. When disclosure is legally required, the system should provide a narrowly scoped, audited disclosure channel rather than broad visibility into the user or node.
 
 The system must explicitly defend against:
 
