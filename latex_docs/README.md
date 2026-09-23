@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2025-2026 Jacob See. Licensed under Apache-2.0; see ../LICENSE. -->
+
 # LaTeX Documentation - Omega Theory
 
 This directory contains LaTeX-formatted mathematical documentation for each volume of the Omega Theory.

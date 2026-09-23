@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2025-2026 Jacob See. Licensed under Apache-2.0; see ../LICENSE. -->
+
 # Plain Text Proofs - Omega Theory
 
 This directory contains plain text versions of all Lean 4 proofs and LaTeX documents for accessibility, searchability, and archival purposes.

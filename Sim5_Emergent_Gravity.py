@@ -1,3 +1,6 @@
+# Copyright (c) 2025-2026 Jacob See.
+# SPDX-License-Identifier: Apache-2.0
+
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation

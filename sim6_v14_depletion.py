@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Copyright (c) 2025-2026 Jacob See.
+# SPDX-License-Identifier: Apache-2.0
 """
 sim6_v14_depletion.py
 - Implements "Proposal A: The Depletion Model"
