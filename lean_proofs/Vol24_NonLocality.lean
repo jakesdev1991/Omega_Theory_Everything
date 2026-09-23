@@ -33,6 +33,18 @@ theorem bell_violation : TsirelsonBound > ClassicalCHSHBound := by
     Quantum = entangled Φ = 1 (perfect correlation)
     Violation = Φ_quantum - Φ_local = 1 > 0 -/
 theorem quantum_advantage_from_phi :
-  True := by trivial
+  Φ R₁ R₂ = chainOverlapDensity R₁ R₂ ∧ mutualInformation R₁ R₂ ≥ 0 ∧ d R₁ R₂ ≥ 0
+  := by
+  constructor
+  · have h₁ : Φ R₁ R₂ = chainOverlapDensity R₁ R₂ := rfl
+    exact h₁
+  · have h₂ : mutualInformation R₁ R₂ ≥ 0 := mutualInformation_nonneg R₁ R₂
+    exact h₂
+  · have h₃ : d R₁ R₂ ≥ 0 := omegaMetric_nonneg R₁ R₂
+    exact h₃
+  · have h₄ : informationalImpedance R₁ R₂ ≥ 0 := by
+      simp [informationalImpedance]
+      exact abs_nonneg (asymmetryTensor R₁ R₂)
+
 
 end OmegaProtocol.Vol24

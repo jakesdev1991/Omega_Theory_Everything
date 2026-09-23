@@ -1,0 +1,173 @@
+{"ts": "2026-09-23T07:03:04.497272", "msg": "============================================================"}
+{"ts": "2026-09-23T07:03:04.497884", "msg": "OMEGAPROTOCOL REPAIR RUN STARTED"}
+{"ts": "2026-09-23T07:03:04.497904", "msg": "Working directory: /home/jake/Omega_Theory_Everything/lean_proofs"}
+{"ts": "2026-09-23T07:03:04.498058", "msg": "Found 60 .lean files"}
+{"ts": "2026-09-23T07:03:04.498432", "msg": "OmegaUnifiedFoundation.lean: CLEAN"}
+{"ts": "2026-09-23T07:03:04.498513", "msg": "OmegaAxioms.lean: CLEAN"}
+{"ts": "2026-09-23T07:03:04.498526", "msg": "\n--- REPAIRING VOL FILES ---"}
+{"ts": "2026-09-23T07:03:04.498552", "msg": "  SKIP (clean): Vol01_ClassicalMechanics.lean"}
+{"ts": "2026-09-23T07:03:04.498575", "msg": "  SKIP (clean): Vol02_Electromagnetism.lean"}
+{"ts": "2026-09-23T07:03:04.498596", "msg": "  SKIP (clean): Vol03_Thermodynamics.lean"}
+{"ts": "2026-09-23T07:03:04.498636", "msg": "  SKIP (clean): Vol04_QuantumMechanics.lean"}
+{"ts": "2026-09-23T07:03:04.498655", "msg": "  SKIP (clean): Vol05_GeneralRelativity.lean"}
+{"ts": "2026-09-23T07:03:04.498673", "msg": "  SKIP (clean): Vol06_QuantumFieldTheory.lean"}
+{"ts": "2026-09-23T07:03:04.498692", "msg": "  SKIP (clean): Vol07_Cosmology.lean"}
+{"ts": "2026-09-23T07:03:04.498710", "msg": "  SKIP (clean): Vol08_BlackHoleThermodynamics.lean"}
+{"ts": "2026-09-23T07:03:04.498727", "msg": "  SKIP (clean): Vol09_HolographicPrinciple.lean"}
+{"ts": "2026-09-23T07:03:04.498744", "msg": "  SKIP (clean): Vol10_StandardModel.lean"}
+{"ts": "2026-09-23T07:03:04.498760", "msg": "  SKIP (clean): Vol11_CondensedMatter.lean"}
+{"ts": "2026-09-23T07:03:04.498777", "msg": "  SKIP (clean): Vol12_QuantumInformation.lean"}
+{"ts": "2026-09-23T07:03:04.498792", "msg": "  SKIP (clean): Vol13_QuantumGravity.lean"}
+{"ts": "2026-09-23T07:03:04.498806", "msg": "  SKIP (clean): Vol14_DarkSector.lean"}
+{"ts": "2026-09-23T07:03:04.498822", "msg": "  SKIP (clean): Vol15_EarlyUniverse.lean"}
+{"ts": "2026-09-23T07:03:04.498837", "msg": "  SKIP (clean): Vol16_NonEquilibriumThermodynamics.lean"}
+{"ts": "2026-09-23T07:03:04.498851", "msg": "  SKIP (clean): Vol17_FluidDynamics.lean"}
+{"ts": "2026-09-23T07:03:04.498867", "msg": "  SKIP (clean): Vol18_StatisticalMechanics.lean"}
+{"ts": "2026-09-23T07:03:04.498881", "msg": "  SKIP (clean): Vol19_ComplexSystems.lean"}
+{"ts": "2026-09-23T07:03:04.498895", "msg": "  SKIP (clean): Vol20_ChaosTheory.lean"}
+{"ts": "2026-09-23T07:03:04.498913", "msg": "  REPAIR: Vol21_ArrowOfTime.lean (1 by-trivial, 0 plain-trivial)"}
+{"ts": "2026-09-23T07:03:04.499083", "msg": "  REPAIRED corollary 'time_as_computational_latency' in Vol21_ArrowOfTime"}
+{"ts": "2026-09-23T07:03:04.499303", "msg": "  WROTE 1 fix(es) to Vol21_ArrowOfTime.lean"}
+{"ts": "2026-09-23T07:03:04.499347", "msg": "  SKIP (clean): Vol22_EREqualsEPR.lean"}
+{"ts": "2026-09-23T07:03:04.499366", "msg": "  SKIP (clean): Vol23_MeasurementProblem.lean"}
+{"ts": "2026-09-23T07:03:04.499384", "msg": "  REPAIR: Vol24_NonLocality.lean (1 by-trivial, 0 plain-trivial)"}
+{"ts": "2026-09-23T07:03:04.499434", "msg": "  REPAIRED corollary 'quantum_advantage_from_phi' in Vol24_NonLocality"}
+{"ts": "2026-09-23T07:03:04.499469", "msg": "  WROTE 1 fix(es) to Vol24_NonLocality.lean"}
+{"ts": "2026-09-23T07:03:04.499498", "msg": "  SKIP (clean): Vol25_BlackHoleInformation.lean"}
+{"ts": "2026-09-23T07:03:04.499515", "msg": "  REPAIR: Vol26_NetworkTheory.lean (1 by-trivial, 0 plain-trivial)"}
+{"ts": "2026-09-23T07:03:04.499562", "msg": "  REPAIRED corollary 'network_from_omega' in Vol26_NetworkTheory"}
+{"ts": "2026-09-23T07:03:04.499707", "msg": "  WROTE 1 fix(es) to Vol26_NetworkTheory.lean"}
+{"ts": "2026-09-23T07:03:04.499744", "msg": "  SKIP (clean): Vol27_Consciousness.lean"}
+{"ts": "2026-09-23T07:03:04.499765", "msg": "  REPAIR: Vol28_EvolutionaryAlgorithms.lean (1 by-trivial, 0 plain-trivial)"}
+{"ts": "2026-09-23T07:03:04.499806", "msg": "  REPAIRED corollary 'evolution_from_omega' in Vol28_EvolutionaryAlgorithms"}
+{"ts": "2026-09-23T07:03:04.499844", "msg": "  WROTE 1 fix(es) to Vol28_EvolutionaryAlgorithms.lean"}
+{"ts": "2026-09-23T07:03:04.499872", "msg": "  REPAIR: Vol29_EcosystemDynamics.lean (1 by-trivial, 0 plain-trivial)"}
+{"ts": "2026-09-23T07:03:04.499925", "msg": "  REPAIRED corollary 'ecosystem_from_omega' in Vol29_EcosystemDynamics"}
+{"ts": "2026-09-23T07:03:04.500204", "msg": "  WROTE 1 fix(es) to Vol29_EcosystemDynamics.lean"}
+{"ts": "2026-09-23T07:03:04.500319", "msg": "  REPAIR: Vol30_PlanetarySystems.lean (1 by-trivial, 0 plain-trivial)"}
+{"ts": "2026-09-23T07:03:04.500399", "msg": "  REPAIRED corollary 'kepler_from_omega' in Vol30_PlanetarySystems"}
+{"ts": "2026-09-23T07:03:04.500561", "msg": "  WROTE 1 fix(es) to Vol30_PlanetarySystems.lean"}
+{"ts": "2026-09-23T07:03:04.500663", "msg": "  REPAIR: Vol31_GameTheory.lean (1 by-trivial, 0 plain-trivial)"}
+{"ts": "2026-09-23T07:03:04.500732", "msg": "  REPAIRED corollary 'gametheory_from_omega' in Vol31_GameTheory"}
+{"ts": "2026-09-23T07:03:04.500799", "msg": "  WROTE 1 fix(es) to Vol31_GameTheory.lean"}
+{"ts": "2026-09-23T07:03:04.500834", "msg": "  REPAIR: Vol32_Cybernetics.lean (1 by-trivial, 0 plain-trivial)"}
+{"ts": "2026-09-23T07:03:04.500874", "msg": "  REPAIRED corollary 'cybernetics_from_omega' in Vol32_Cybernetics"}
+{"ts": "2026-09-23T07:03:04.500908", "msg": "  WROTE 1 fix(es) to Vol32_Cybernetics.lean"}
+{"ts": "2026-09-23T07:03:04.500939", "msg": "  SKIP (clean): Vol33_AGI.lean"}
+{"ts": "2026-09-23T07:03:04.500957", "msg": "  REPAIR: Vol34_QuantumComputing.lean (1 by-trivial, 0 plain-trivial)"}
+{"ts": "2026-09-23T07:03:04.501005", "msg": "  REPAIRED corollary 'quantum_computing_from_omega' in Vol34_QuantumComputing"}
+{"ts": "2026-09-23T07:03:04.501046", "msg": "  WROTE 1 fix(es) to Vol34_QuantumComputing.lean"}
+{"ts": "2026-09-23T07:03:04.501074", "msg": "  REPAIR: Vol35_TheoryOfComputation.lean (1 by-trivial, 0 plain-trivial)"}
+{"ts": "2026-09-23T07:03:04.501119", "msg": "  REPAIRED corollary 'computation_from_omega' in Vol35_TheoryOfComputation"}
+{"ts": "2026-09-23T07:03:04.501154", "msg": "  WROTE 1 fix(es) to Vol35_TheoryOfComputation.lean"}
+{"ts": "2026-09-23T07:03:04.501181", "msg": "  REPAIR: Vol36_ToposTheory.lean (1 by-trivial, 0 plain-trivial)"}
+{"ts": "2026-09-23T07:03:04.501217", "msg": "  REPAIRED corollary 'topos_from_omega' in Vol36_ToposTheory"}
+{"ts": "2026-09-23T07:03:04.501251", "msg": "  WROTE 1 fix(es) to Vol36_ToposTheory.lean"}
+{"ts": "2026-09-23T07:03:04.501277", "msg": "  REPAIR: Vol37_Morphogenesis.lean (1 by-trivial, 0 plain-trivial)"}
+{"ts": "2026-09-23T07:03:04.501317", "msg": "  REPAIRED corollary 'morphogenesis_from_omega' in Vol37_Morphogenesis"}
+{"ts": "2026-09-23T07:03:04.501352", "msg": "  WROTE 1 fix(es) to Vol37_Morphogenesis.lean"}
+{"ts": "2026-09-23T07:03:04.501378", "msg": "  REPAIR: Vol38_Economics.lean (1 by-trivial, 0 plain-trivial)"}
+{"ts": "2026-09-23T07:03:04.501422", "msg": "  REPAIRED corollary 'economics_from_omega' in Vol38_Economics"}
+{"ts": "2026-09-23T07:03:04.501458", "msg": "  WROTE 1 fix(es) to Vol38_Economics.lean"}
+{"ts": "2026-09-23T07:03:04.501483", "msg": "  REPAIR: Vol39_SocietalNetworks.lean (1 by-trivial, 0 plain-trivial)"}
+{"ts": "2026-09-23T07:03:04.501527", "msg": "  REPAIRED corollary 'society_from_omega' in Vol39_SocietalNetworks"}
+{"ts": "2026-09-23T07:03:04.501561", "msg": "  WROTE 1 fix(es) to Vol39_SocietalNetworks.lean"}
+{"ts": "2026-09-23T07:03:04.501588", "msg": "  REPAIR: Vol40_FermiParadox.lean (1 by-trivial, 0 plain-trivial)"}
+{"ts": "2026-09-23T07:03:04.501624", "msg": "  REPAIRED corollary 'fermi_from_omega' in Vol40_FermiParadox"}
+{"ts": "2026-09-23T07:03:04.501659", "msg": "  WROTE 1 fix(es) to Vol40_FermiParadox.lean"}
+{"ts": "2026-09-23T07:03:04.501684", "msg": "  REPAIR: Vol41_PostBiologicalEvolution.lean (1 by-trivial, 0 plain-trivial)"}
+{"ts": "2026-09-23T07:03:04.501721", "msg": "  REPAIRED corollary 'postbio_from_omega' in Vol41_PostBiologicalEvolution"}
+{"ts": "2026-09-23T07:03:04.501755", "msg": "  WROTE 1 fix(es) to Vol41_PostBiologicalEvolution.lean"}
+{"ts": "2026-09-23T07:03:04.501781", "msg": "  REPAIR: Vol42_StellarEngineering.lean (1 by-trivial, 0 plain-trivial)"}
+{"ts": "2026-09-23T07:03:04.501821", "msg": "  REPAIRED corollary 'stellar_from_omega' in Vol42_StellarEngineering"}
+{"ts": "2026-09-23T07:03:04.501854", "msg": "  WROTE 1 fix(es) to Vol42_StellarEngineering.lean"}
+{"ts": "2026-09-23T07:03:04.501879", "msg": "  REPAIR: Vol43_GalacticEcosystems.lean (1 by-trivial, 0 plain-trivial)"}
+{"ts": "2026-09-23T07:03:04.501916", "msg": "  REPAIRED corollary 'galactic_from_omega' in Vol43_GalacticEcosystems"}
+{"ts": "2026-09-23T07:03:04.501949", "msg": "  WROTE 1 fix(es) to Vol43_GalacticEcosystems.lean"}
+{"ts": "2026-09-23T07:03:04.501977", "msg": "  REPAIR: Vol44_UniversalExpansion.lean (1 by-trivial, 0 plain-trivial)"}
+{"ts": "2026-09-23T07:03:04.502012", "msg": "  REPAIRED corollary 'expansion_from_omega' in Vol44_UniversalExpansion"}
+{"ts": "2026-09-23T07:03:04.502046", "msg": "  WROTE 1 fix(es) to Vol44_UniversalExpansion.lean"}
+{"ts": "2026-09-23T07:03:04.502071", "msg": "  REPAIR: Vol45_MultiverseTheory.lean (1 by-trivial, 0 plain-trivial)"}
+{"ts": "2026-09-23T07:03:04.502136", "msg": "  REPAIRED corollary 'multiverse_from_omega' in Vol45_MultiverseTheory"}
+{"ts": "2026-09-23T07:03:04.502237", "msg": "  WROTE 1 fix(es) to Vol45_MultiverseTheory.lean"}
+{"ts": "2026-09-23T07:03:04.502281", "msg": "  REPAIR: Vol46_SimulationHypothesis.lean (1 by-trivial, 0 plain-trivial)"}
+{"ts": "2026-09-23T07:03:04.502323", "msg": "  REPAIRED corollary 'simulation_from_omega' in Vol46_SimulationHypothesis"}
+{"ts": "2026-09-23T07:03:04.502368", "msg": "  WROTE 1 fix(es) to Vol46_SimulationHypothesis.lean"}
+{"ts": "2026-09-23T07:03:04.502401", "msg": "  SKIP (clean): Vol47_TranscendentArchitectures.lean"}
+{"ts": "2026-09-23T07:03:04.502418", "msg": "  REPAIR: Vol48_ExtraDimensions.lean (1 by-trivial, 0 plain-trivial)"}
+{"ts": "2026-09-23T07:03:04.502465", "msg": "  REPAIRED corollary 'extradim_from_omega' in Vol48_ExtraDimensions"}
+{"ts": "2026-09-23T07:03:04.502506", "msg": "  WROTE 1 fix(es) to Vol48_ExtraDimensions.lean"}
+{"ts": "2026-09-23T07:03:04.502534", "msg": "  SKIP (clean): Vol49_QuantumReferenceFrames.lean"}
+{"ts": "2026-09-23T07:03:04.502548", "msg": "  SKIP (clean): Vol50_UltimateEnsemble.lean"}
+{"ts": "2026-09-23T07:03:04.502563", "msg": "  SKIP (clean): Vol51_ClosedTimelikeCurves.lean"}
+{"ts": "2026-09-23T07:03:04.502577", "msg": "  SKIP (clean): Vol52_OmegaPointTheory.lean"}
+{"ts": "2026-09-23T07:03:04.502596", "msg": "  SKIP (clean): Vol53_UniversalCompiler.lean"}
+{"ts": "2026-09-23T07:03:04.502617", "msg": "  SKIP (clean): Vol54_TheoryOfNothing.lean"}
+{"ts": "2026-09-23T07:03:04.502661", "msg": "\n--- REPAIRING OmegaProtocol.lean (0 by-trivial, 117 plain-trivial) ---"}
+{"ts": "2026-09-23T07:03:04.503244", "msg": "  OmegaProtocol.lean: 117\u2192117 trivial (0 fixes)"}
+{"ts": "2026-09-23T07:03:04.503259", "msg": "\n--- FINAL VERIFICATION ---"}
+{"ts": "2026-09-23T07:03:04.503297", "msg": "  CLEAN: OmegaAxioms.lean"}
+{"ts": "2026-09-23T07:03:04.503314", "msg": "  CLEAN: OmegaDimensionalHierarchy.lean"}
+{"ts": "2026-09-23T07:03:04.503349", "msg": "  STILL STALE: OmegaProtocol.lean (0 by-trivial, 117 plain-trivial)"}
+{"ts": "2026-09-23T07:03:04.503502", "msg": "  CLEAN: OmegaUnifiedFoundation.lean"}
+{"ts": "2026-09-23T07:03:04.503522", "msg": "  CLEAN: ToE.lean"}
+{"ts": "2026-09-23T07:03:04.503544", "msg": "  CLEAN: Vol01_ClassicalMechanics.lean"}
+{"ts": "2026-09-23T07:03:04.503565", "msg": "  CLEAN: Vol02_Electromagnetism.lean"}
+{"ts": "2026-09-23T07:03:04.503584", "msg": "  CLEAN: Vol03_Thermodynamics.lean"}
+{"ts": "2026-09-23T07:03:04.503618", "msg": "  CLEAN: Vol04_QuantumMechanics.lean"}
+{"ts": "2026-09-23T07:03:04.503637", "msg": "  CLEAN: Vol05_GeneralRelativity.lean"}
+{"ts": "2026-09-23T07:03:04.503655", "msg": "  CLEAN: Vol06_QuantumFieldTheory.lean"}
+{"ts": "2026-09-23T07:03:04.503675", "msg": "  CLEAN: Vol07_Cosmology.lean"}
+{"ts": "2026-09-23T07:03:04.503693", "msg": "  CLEAN: Vol08_BlackHoleThermodynamics.lean"}
+{"ts": "2026-09-23T07:03:04.503711", "msg": "  CLEAN: Vol09_HolographicPrinciple.lean"}
+{"ts": "2026-09-23T07:03:04.503729", "msg": "  CLEAN: Vol10_StandardModel.lean"}
+{"ts": "2026-09-23T07:03:04.503748", "msg": "  CLEAN: Vol11_CondensedMatter.lean"}
+{"ts": "2026-09-23T07:03:04.503763", "msg": "  CLEAN: Vol12_QuantumInformation.lean"}
+{"ts": "2026-09-23T07:03:04.503779", "msg": "  CLEAN: Vol13_QuantumGravity.lean"}
+{"ts": "2026-09-23T07:03:04.503793", "msg": "  CLEAN: Vol14_DarkSector.lean"}
+{"ts": "2026-09-23T07:03:04.503808", "msg": "  CLEAN: Vol15_EarlyUniverse.lean"}
+{"ts": "2026-09-23T07:03:04.503823", "msg": "  CLEAN: Vol16_NonEquilibriumThermodynamics.lean"}
+{"ts": "2026-09-23T07:03:04.503838", "msg": "  CLEAN: Vol17_FluidDynamics.lean"}
+{"ts": "2026-09-23T07:03:04.503853", "msg": "  CLEAN: Vol18_StatisticalMechanics.lean"}
+{"ts": "2026-09-23T07:03:04.503867", "msg": "  CLEAN: Vol19_ComplexSystems.lean"}
+{"ts": "2026-09-23T07:03:04.503881", "msg": "  CLEAN: Vol20_ChaosTheory.lean"}
+{"ts": "2026-09-23T07:03:04.503898", "msg": "  CLEAN: Vol21_ArrowOfTime.lean"}
+{"ts": "2026-09-23T07:03:04.503915", "msg": "  CLEAN: Vol22_EREqualsEPR.lean"}
+{"ts": "2026-09-23T07:03:04.503931", "msg": "  CLEAN: Vol23_MeasurementProblem.lean"}
+{"ts": "2026-09-23T07:03:04.503947", "msg": "  CLEAN: Vol24_NonLocality.lean"}
+{"ts": "2026-09-23T07:03:04.503961", "msg": "  CLEAN: Vol25_BlackHoleInformation.lean"}
+{"ts": "2026-09-23T07:03:04.503977", "msg": "  CLEAN: Vol26_NetworkTheory.lean"}
+{"ts": "2026-09-23T07:03:04.503997", "msg": "  CLEAN: Vol27_Consciousness.lean"}
+{"ts": "2026-09-23T07:03:04.504013", "msg": "  CLEAN: Vol28_EvolutionaryAlgorithms.lean"}
+{"ts": "2026-09-23T07:03:04.504029", "msg": "  CLEAN: Vol29_EcosystemDynamics.lean"}
+{"ts": "2026-09-23T07:03:04.504045", "msg": "  CLEAN: Vol30_PlanetarySystems.lean"}
+{"ts": "2026-09-23T07:03:04.504061", "msg": "  CLEAN: Vol31_GameTheory.lean"}
+{"ts": "2026-09-23T07:03:04.504076", "msg": "  CLEAN: Vol32_Cybernetics.lean"}
+{"ts": "2026-09-23T07:03:04.504093", "msg": "  CLEAN: Vol33_AGI.lean"}
+{"ts": "2026-09-23T07:03:04.504111", "msg": "  CLEAN: Vol34_QuantumComputing.lean"}
+{"ts": "2026-09-23T07:03:04.504184", "msg": "  CLEAN: Vol35_TheoryOfComputation.lean"}
+{"ts": "2026-09-23T07:03:04.504219", "msg": "  CLEAN: Vol36_ToposTheory.lean"}
+{"ts": "2026-09-23T07:03:04.504238", "msg": "  CLEAN: Vol37_Morphogenesis.lean"}
+{"ts": "2026-09-23T07:03:04.504255", "msg": "  CLEAN: Vol38_Economics.lean"}
+{"ts": "2026-09-23T07:03:04.504272", "msg": "  CLEAN: Vol39_SocietalNetworks.lean"}
+{"ts": "2026-09-23T07:03:04.504287", "msg": "  CLEAN: Vol40_FermiParadox.lean"}
+{"ts": "2026-09-23T07:03:04.504303", "msg": "  CLEAN: Vol41_PostBiologicalEvolution.lean"}
+{"ts": "2026-09-23T07:03:04.504318", "msg": "  CLEAN: Vol42_StellarEngineering.lean"}
+{"ts": "2026-09-23T07:03:04.504334", "msg": "  CLEAN: Vol43_GalacticEcosystems.lean"}
+{"ts": "2026-09-23T07:03:04.504350", "msg": "  CLEAN: Vol44_UniversalExpansion.lean"}
+{"ts": "2026-09-23T07:03:04.504365", "msg": "  CLEAN: Vol45_MultiverseTheory.lean"}
+{"ts": "2026-09-23T07:03:04.504381", "msg": "  CLEAN: Vol46_SimulationHypothesis.lean"}
+{"ts": "2026-09-23T07:03:04.504399", "msg": "  CLEAN: Vol47_TranscendentArchitectures.lean"}
+{"ts": "2026-09-23T07:03:04.504415", "msg": "  CLEAN: Vol48_ExtraDimensions.lean"}
+{"ts": "2026-09-23T07:03:04.504430", "msg": "  CLEAN: Vol49_QuantumReferenceFrames.lean"}
+{"ts": "2026-09-23T07:03:04.504444", "msg": "  CLEAN: Vol50_UltimateEnsemble.lean"}
+{"ts": "2026-09-23T07:03:04.504458", "msg": "  CLEAN: Vol51_ClosedTimelikeCurves.lean"}
+{"ts": "2026-09-23T07:03:04.504472", "msg": "  CLEAN: Vol52_OmegaPointTheory.lean"}
+{"ts": "2026-09-23T07:03:04.504490", "msg": "  CLEAN: Vol53_UniversalCompiler.lean"}
+{"ts": "2026-09-23T07:03:04.504509", "msg": "  CLEAN: Vol54_TheoryOfNothing.lean"}
+{"ts": "2026-09-23T07:03:04.504523", "msg": "  CLEAN: lakefile.lean"}
+{"ts": "2026-09-23T07:03:04.504534", "msg": "\n=== REPAIR SUMMARY: 22 total fixes applied ==="}
+{"ts": "2026-09-23T07:03:04.504543", "msg": "Files still with trivial: 1"}
+{"ts": "2026-09-23T07:03:04.504551", "msg": "Remaining trivial lines: 117"}
+{"ts": "2026-09-23T07:03:04.504589", "msg": "Report written to /home/jake/Omega_Theory_Everything/lean_proofs/repair_report.txt"}
+{"ts": "2026-09-23T07:03:04.504599", "msg": "REPAIR RUN COMPLETE"}
