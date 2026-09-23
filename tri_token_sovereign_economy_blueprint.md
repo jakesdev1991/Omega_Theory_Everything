@@ -239,7 +239,24 @@ The app must separate:
 - **social layer:** posts, projects, collaboration, and creator profiles;
 - **contribution layer:** PoUW submissions, evidence, reviewers, and appeals;
 - **care layer:** protected CARE proofs, consent, human verifiers, and Archangel oversight;
-- **research layer:** reality-to-measurement claims, models, reproducibility, and corrections.
+- **research layer:** reality-to-measurement claims, models, reproducibility, and corrections;
+- **privacy layer:** anonymity, visibility controls, local agents, and scoped disclosures.
+
+### Anonymous-by-default participation
+
+A user is anonymous or pseudonymous by default. Visibility is granular and independently opt-in for identity, profile, location, work history, care history, contactability, and agent capabilities. A suggested ladder is:
+
+```text
+L0 private local participation
+L1 pseudonymous public handle
+L2 approved contribution visibility
+L3 community profile and collaboration
+L4 identity disclosure to a named authorized party
+```
+
+Greater visibility may improve earning and collaboration opportunities, but it cannot be required for basic access and cannot be treated as a measure of human worth. Each disclosure must explain who receives it, why, for how long, and how to withdraw it.
+
+Every user’s agent or node runs on their own hardware, or on a custodian they explicitly choose. Other users cannot see, discover, call, or inspect it unless the owner publishes a narrowly scoped capability or temporary proof endpoint. Raw prompts, private memories, credentials, wallet secrets, local files, and sensor streams remain local by default.
 
 Creators may earn WCT/AMITY for approved work under published policies. CARE eligibility is not automatic: it requires a qualifying care action, consent, human verification, safeguarding review where necessary, and an appeal path. The first release must remain local and valueless, with no private-key collection and no automatic exchange settlement.
 

@@ -82,9 +82,25 @@ Slashing must be:
 - unavailable to a single administrator;
 - recorded as a reasoned event.
 
-## Privacy and safety
+## Privacy, anonymity, and safety
 
-C.A.R.E. requires informed and revocable consent, purpose limitation, encryption, short retention, access logs, correction, deletion where required, and non-digital access. Participation must not be required to access ordinary legal rights or essential services.
+C.A.R.E. is anonymous or pseudonymous by default. A participant may choose a disclosure level independently for identity, profile, work history, care history, location, and agent availability. Greater visibility may unlock more collaboration or earning opportunities, but it is never required for basic participation and never proves that a person is more valuable.
+
+Suggested visibility levels are:
+
+```text
+L0  fully private: local wallet and local agent only
+L1  pseudonymous: public handle, no legal identity
+L2  contribution-visible: approved work and aggregate outcomes
+L3  community-visible: profile, projects, and contact preferences
+L4  verified disclosure: identity shared only with a specific authorized party
+```
+
+Each level requires a separate, plain-language opt-in. Opting out must be easier than opting in. Consent must be revocable where legally and operationally possible, and a withdrawal must not erase an immutable public event; instead, public records should be minimized, detached, or replaced with a privacy-preserving revocation marker.
+
+A user’s personal agent and node run on hardware controlled by that user or a clearly designated custodian. They are not discoverable, callable, or visible to other users by default. A user may selectively publish an agent capability, accept a task, or expose a proof endpoint for a limited period. Private keys, raw prompts, private memories, sensor streams, and local files never belong in the public social layer.
+
+C.A.R.E. requires informed consent, purpose limitation, encryption, short retention, access logs, correction, deletion where required, and non-digital access. Privacy is not a mechanism for evading lawful workplace, health, tax, financial, or public-safety duties. Where a legally required safety disclosure exists, the protocol should disclose the minimum necessary information through a scoped, audited channel rather than expose a user’s entire identity or agent state.
 
 ## Human governance: Archangels
 

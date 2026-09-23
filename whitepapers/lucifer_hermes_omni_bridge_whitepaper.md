@@ -33,9 +33,26 @@ proposal -> typed schema validation -> deterministic checks
 
 Lean, property tests, and contract tests may verify formal invariants. They do not establish that an empirical claim is true, and “zero hallucination” is not a valid blanket system guarantee.
 
+## Privacy-first node model
+
+Each participant’s agent is local-first: it runs on hardware controlled by the participant or an explicitly chosen custodian. The node is private and non-discoverable by default. The public network receives only the minimum signed commitment or proof needed for a chosen task.
+
+Agent exposure is capability-scoped and opt-in:
+
+```text
+private local agent -> temporary proof endpoint -> selected capability
+                    -> selected counterpart -> explicit revocation
+```
+
+The owner may choose whether to reveal a public handle, contribution history, agent capabilities, legal identity to a designated party, or nothing beyond a zero-knowledge-style commitment. More visibility can improve collaboration and earning opportunities, but the protocol must not pressure users to reveal more than they need.
+
+A local agent must not upload raw prompts, private memories, local files, credentials, sensor streams, or wallet secrets merely to participate. Remote tasks must be sandboxed, time-limited, and auditable. A user can opt out of discovery without losing access to basic wallet, contribution, or appeal functions.
+
 ## Security model
 
 The design may use control/data separation, capability-based tools, isolated child contexts, and WASI or stronger sandbox tiers. The parent process must not receive raw untrusted content when a lower-trust branch can safely sanitize it first.
+
+Privacy architecture does not provide immunity from lawful safety, labor, tax, financial, or regulatory duties. When disclosure is legally required, the system should provide a narrowly scoped, audited disclosure channel rather than broad visibility into the user or node.
 
 The system must explicitly defend against:
 

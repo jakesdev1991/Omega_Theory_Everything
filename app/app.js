@@ -16,5 +16,17 @@ document.getElementById('submit-claim')?.addEventListener('click', () => {
   toastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
 });
 
+document.querySelectorAll('.privacy-level').forEach(level => level.addEventListener('click', () => {
+  const toggle = level.querySelector('.toggle');
+  if (!toggle || level.classList.contains('active-level')) return;
+  toggle.classList.toggle('on');
+  toast.textContent = toggle.classList.contains('on')
+    ? 'Visibility preference staged locally. Nothing was published.'
+    : 'Visibility preference withdrawn locally.';
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
+}));
+
 // Keep the prototype explicitly offline: no wallet provider, chain, or account API is touched.
 console.info('Amity local prototype loaded. No keys, tokens, or personal data are connected.');
