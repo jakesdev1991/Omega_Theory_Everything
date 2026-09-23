@@ -1,0 +1,99 @@
+{
+  "mcp-version": "1.0.0",
+  "name": "omega-hub",
+  "version": "0.1.0",
+  "description": "Sovereign MCP hub for the Omega tri-token economy — SOV accounting, USE contribution receipts, CARE stewardship, AMITY exchange entitlements, and OMEGA macro-governance.",
+  "publisher": "Jacob M. See",
+  "repository": "https://github.com/jakesdev1991/Omega_Theory_Everything",
+  "license": "MIT",
+  "tools": [
+    {
+      "name": "sov_mint",
+      "description": "Mint SOV to an address (simulated ledger)."
+    },
+    {
+      "name": "sov_burn",
+      "description": "Burn SOV from an address."
+    },
+    {
+      "name": "sov_transfer",
+      "description": "Transfer SOV between addresses."
+    },
+    {
+      "name": "sov_snapshot",
+      "description": "Current SOV balances, supply, and ledger version."
+    },
+    {
+      "name": "use_issue",
+      "description": "Issue a proof-of-useful-work receipt (non-transferable by default)."
+    },
+    {
+      "name": "use_revoke",
+      "description": "Revoke a USE receipt by ID with a reason."
+    },
+    {
+      "name": "use_snapshot",
+      "description": "All USE receipts and attestation counts."
+    },
+    {
+      "name": "care_submit",
+      "description": "Submit a Proof-of-Care claim in proposed state."
+    },
+    {
+      "name": "care_attest",
+      "description": "Attest a CARE claim; two independent attestations move it to final."
+    },
+    {
+      "name": "care_appeal",
+      "description": "File an appeal on a finalized or attested CARE claim."
+    },
+    {
+      "name": "care_snapshot",
+      "description": "CARE claims, attestation counts, and open appeals."
+    },
+    {
+      "name": "amity_entitle",
+      "description": "Convert a finalized CARE claim into an eligible AMITY entitlement under a published policy."
+    },
+    {
+      "name": "amity_transfer",
+      "description": "Transfer AMITY between addresses."
+    },
+    {
+      "name": "amity_snapshot",
+      "description": "AMITY balances, supply, and entitlements."
+    },
+    {
+      "name": "omega_mint",
+      "description": "Mint OMEGA to an address with a reason and protocol version."
+    },
+    {
+      "name": "omega_lock",
+      "description": "Lock OMEGA for a duration in blocks; returns a governance weight."
+    },
+    {
+      "name": "omega_proposal",
+      "description": "Draft a governance proposal with change set, simulation reference, and rollback plan."
+    },
+    {
+      "name": "omega_vote",
+      "description": "Vote on a proposal by voter, support flag, and weight."
+    },
+    {
+      "name": "omega_snapshot",
+      "description": "OMEGA balances, supply, locks, and proposals."
+    },
+    {
+      "name": "ledger",
+      "description": "Full deterministic ledger snapshot across all planes plus event count."
+    },
+    {
+      "name": "events_since",
+      "description": "All events after a given version for replay."
+    },
+    {
+      "name": "full_event_log",
+      "description": "Complete append-only event log."
+    }
+  ]
+}
