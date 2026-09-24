@@ -29,7 +29,7 @@ def FlowDivergence (_ : FluidTime) : ℝ := 0
 
 theorem continuity_equation (t : FluidTime) :
   FluidTimeDeriv FluidDensity t + FluidDensity t * FlowDivergence t = 0 := by
-  rfl
+  simp [FluidTimeDeriv, FluidDensity, FlowDivergence]
 
 /-- THEOREM: Incompressible Flow Density Conservation (GENUINE PROOF)
     If the flow is incompressible (∇·v = 0), then the fluid density 
