@@ -80,6 +80,29 @@ Each volume formalizes a major domain of physics:
 lake build
 ```
 
+## Security-gate proofs and tactic search
+
+`APPA_Context_Branching.lean` is a self-contained, axiom-free proof of the
+parent non-tainting, child capability bounding, and declassification-gate
+invariants. `CBwK_Budget_Pacer.lean` contains the three small budget-pacer
+invariants used by the search harness.
+
+`leandojo_tactic_harness.py` is the repository boundary for a LeanDojo REPL
+integration. It performs bounded best-first tactic discovery and then invokes
+`lake env lean` for the authoritative kernel check. It never reports a static
+search result as a proof when Lean is unavailable:
+
+```bash
+python3 leandojo_tactic_harness.py --json
+python3 leandojo_tactic_harness.py --require-lean
+```
+
+The legacy volume bridges now use explicit concrete model values or theorem
+hypotheses instead of declaration-level axioms. `audit_axioms.py` enforces
+that policy lexically, while Lean's kernel remains authoritative for the final
+build. This distinction keeps a security proof from being presented as
+stronger than its formal model.
+
 ## Companion Files
 
 - **LaTeX versions**: `../latex_docs/` - Mathematical notation for each volume

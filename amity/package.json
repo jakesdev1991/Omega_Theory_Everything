@@ -10,6 +10,7 @@
   },
   "scripts": {
     "test": "node --test",
+    "test:fixture": "node scripts/run-fixture-harness.mjs",
     "check": "npm test",
     "preflight:testnet": "node scripts/preflight-testnet.mjs",
     "manifest:testnet": "node scripts/write-manifest-testnet.mjs"

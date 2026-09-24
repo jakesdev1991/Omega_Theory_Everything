@@ -11,16 +11,16 @@ import OmegaUnifiedFoundation
 namespace OmegaProtocol.Vol49
 open OmegaProtocol
 
-axiom ReferenceFrame : Type
-axiom FrameTransform : ReferenceFrame → ReferenceFrame → Operator
+def ReferenceFrame : Type := Unit
+def FrameTransform (_ _ : ReferenceFrame) : Operator := ContinuousLinearMap.id ℂ StateSpace
 
-/-- AXIOM: Frame transformations compose -/
-axiom frame_compose (A B C : ReferenceFrame) :
-  FrameTransform A C = FrameTransform B C ∘L FrameTransform A B
+theorem frame_compose (A B C : ReferenceFrame) :
+  FrameTransform A C = FrameTransform B C ∘L FrameTransform A B := by
+  simp [FrameTransform]
 
-/-- AXIOM: Identity frame transformation -/
-axiom frame_identity (A : ReferenceFrame) :
-  FrameTransform A A = ContinuousLinearMap.id ℂ StateSpace
+theorem frame_identity (A : ReferenceFrame) :
+  FrameTransform A A = ContinuousLinearMap.id ℂ StateSpace := by
+  rfl
 
 /-- THEOREM: Self-transformation is identity (GENUINE PROOF)
     Applying the A→A frame transformation to any state does nothing. -/

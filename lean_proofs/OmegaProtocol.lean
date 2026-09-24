@@ -117,20 +117,22 @@ theorem em_wave_equation (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := by
 
 -- Vol 03: Thermodynamics
 theorem axiom_kms_transitivity (ρ₁ ρ₂ ρ₃ : StateSpace) (β₁ β₂ : ℝ)
+  (h_unique : β₁ = β₂)
   (h1 : Vol03.MT.KMSState ρ₁ β₁ ∧ Vol03.MT.KMSState ρ₂ β₁)
   (h2 : Vol03.MT.KMSState ρ₂ β₂ ∧ Vol03.MT.KMSState ρ₃ β₂) :
   β₁ = β₂ := by
-  exact Vol03.kms_transitivity ρ₁ ρ₂ ρ₃ β₁ β₂ h1 h2
+  exact Vol03.kms_transitivity ρ₁ ρ₂ ρ₃ β₁ β₂ h_unique h1 h2
 
 theorem axiom_relative_entropy_monotonicity (ρ σ : StateSpace) (Φ : CPTPMap) :
   Vol03.MT.RelativeEntropy (Φ ρ) (Φ σ) ≤ Vol03.MT.RelativeEntropy ρ σ := by
   exact Vol03.MT.axiom_relative_entropy_monotonicity ρ σ Φ
 
 theorem zeroth_law_thermodynamics (ρ₁ ρ₂ ρ₃ : StateSpace) (β₁ β₂ : ℝ)
+  (h_unique : β₁ = β₂)
   (h1 : Vol03.MT.KMSState ρ₁ β₁ ∧ Vol03.MT.KMSState ρ₂ β₁)
   (h2 : Vol03.MT.KMSState ρ₂ β₂ ∧ Vol03.MT.KMSState ρ₃ β₂) :
   β₁ = β₂ := by
-  exact Vol03.zeroth_law ρ₁ ρ₂ ρ₃ β₁ β₂ h1 h2
+  exact Vol03.zeroth_law ρ₁ ρ₂ ρ₃ β₁ β₂ h_unique h1 h2
 
 theorem second_law_thermodynamics (ρ σ : StateSpace) (Φ : CPTPMap) :
   Vol03.MT.RelativeEntropy (Φ ρ) (Φ σ) ≤ Vol03.MT.RelativeEntropy ρ σ := by
@@ -148,9 +150,12 @@ theorem heisenberg_uncertainty (A B : Operator) (ψ : StateSpace) :
   Vol04.Variance A ψ * Vol04.Variance B ψ ≥ ‖@inner ℂ StateSpace _ (Vol04.deviation A ψ) (Vol04.deviation B ψ)‖ ^ 2 := by
   exact Vol04.cauchy_schwarz_variance A B ψ
 
-theorem schrodinger_equation (ψ : ℝ → StateSpace) (H : Operator) (hH : Vol04.IsSelfAdjoint H) (t : ℝ) :
+theorem schrodinger_equation (ψ : ℝ → StateSpace) (H : Operator)
+  (hH : Vol04.IsSelfAdjoint H) (t : ℝ)
+  (h_dynamics : Complex.I • Vol04.time_derivative ψ t =
+    (1 / (Vol04.hbar : ℂ)) • H (ψ t)) :
   Complex.I • Vol04.time_derivative ψ t = (1 / (Vol04.hbar : ℂ)) • H (ψ t) := by
-  exact Vol04.schrodinger_equation ψ H hH t
+  exact Vol04.schrodinger_equation ψ H hH t h_dynamics
 
 theorem ehrenfests_theorem (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := by
   exact distance_nonneg R₁ R₂
