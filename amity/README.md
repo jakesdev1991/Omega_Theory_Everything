@@ -55,6 +55,19 @@ It is a **status scaffold only**. It records the AMITY testnet asset/operator sh
 
 Use `npm run manifest:testnet -- --force` to refresh an existing snapshot after local operator files change.
 
+## CARE to AMITY bootstrap policy
+
+`lib/care-amity-policy.mjs` contains a deterministic, valueless policy calculator for the bootstrap schedule. It does not mint tokens, query prices, or inspect off-chain barter.
+
+The current test schedule is:
+
+- initial: 5% participant reserve dock;
+- elevated: 10% dock;
+- maximum: 20% dock;
+- extreme: 20% dock plus a 15% supply burn, for a 35% total reduction.
+
+The participant dock may not exceed 20%, the burn may not exceed 15%, and the combined reduction may not exceed 35%. The reserve dock and burn are applied before AMITY enters circulation, so later trading for goods cannot bypass the conversion rule. These are policy-test parameters, not a live economic guarantee or a mainnet configuration.
+
 ## Environment variables
 
 See [`.env.example`](.env.example). The important fields are:
