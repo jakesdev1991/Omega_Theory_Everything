@@ -10,25 +10,25 @@ export default function EconomyPage() {
     <>
       <Hero />
       <Section
-        eyebrow="The Tri-Token Economy"
-        title="A sovereign economy, built from first principles"
-        subtitle="Every token in the Omega economy has one job, one reason to exist, and one way to unlock value. Nothing here is decorative — every token is engineered to solve a specific problem in operating a multi-agent, multi-stakeholder economy."
+        eyebrow="Three-currency economy"
+        title="The economy has three currencies"
+        subtitle="The public economy is three-currency: $OMEGA on the EVM rail, TWC on Solana, and AMITY on Bitcoin / Lightning / Taproot. Only two rails are wired into the live wallet-to-web unlock flow today, but the economic structure is already three-currency."
       >
-        <TokenShowcase />
+        <TokenShowcase variant="economy" />
       </Section>
 
       <Section
-        eyebrow="How the tokens fit together"
-        title="The flow of the economy"
-        subtitle="Money of account → proof of work → stewardship → exchange → scarcity anchor. Each token feeds the next, and together they form a closed loop that can be operated by an AI hub, governed by token holders, and expanded by contributors."
+        eyebrow="Live unlock rails"
+        title="Two currencies are wired into the current release build"
+        subtitle="$OMEGA and TWC are the two release-day currencies currently connected from wallet proof creation to server-side verification. AMITY remains a separate Bitcoin / Lightning / Taproot workstream until holder verification exists."
       >
         <EconomyFlow />
       </Section>
 
       <Section
-        eyebrow="Whitepapers"
-        title="The documents behind the economy"
-        subtitle="Genesis Block: The Satoshi Protocol is the novel. The tri-token sovereign economy blueprint is the spec. The Omega protocol whitepaper is the operating model. Read them in any order — they are designed to be read together."
+        eyebrow="Documents"
+        title="The documents behind the current build"
+        subtitle="Genesis Block: The Satoshi Protocol is the novel. The launch plan records the release-day decisions. The broader sovereign-economy blueprint remains the long-form systems spec behind the project."
       >
         <WhitepaperCards />
         <div style={{ marginTop: "40px" }}>
@@ -37,9 +37,17 @@ export default function EconomyPage() {
       </Section>
 
       <Section
+        eyebrow="Economic culture"
+        title="A humane economy is part of the design"
+        subtitle="This project is not supposed to be a judgment machine. It should help people earn while they learn to become safer, wiser, and more useful to one another. Anonymity is a right. Transparency is a choice fueled by emotional security."
+      >
+        <PrinciplesGrid />
+      </Section>
+
+      <Section
         eyebrow="Governance"
-        title="Who decides what happens next"
-        subtitle="CARE holders vote on protocol upgrades and treasury allocation. $OMEGA holders hold macro-governance rights over the entire economy. The Omega MCP Hub executes approved proposals automatically — the technology enforces what the token holders decide."
+        title="What the current release rails imply"
+        subtitle="$OMEGA is the explicit EVM-side macro-governance currency in the current build, while TWC is the Solana-side release currency. AMITY expands the long-term economy toward Bitcoin / Lightning / Taproot, but it is not wired into the unlock flow yet."
       >
         <GovernancePreview />
       </Section>
@@ -71,7 +79,7 @@ function Hero() {
             marginBottom: "22px",
           }}
         >
-          The Tri-Token Economy
+          The Economy
         </p>
         <h1
           style={{
@@ -85,9 +93,9 @@ function Hero() {
             maxWidth: "920px",
           }}
         >
-          Five tokens.
+          Three currencies.
           <br />
-          One sovereign operating layer.
+          One humane economy.
         </h1>
         <p
           style={{
@@ -98,9 +106,10 @@ function Hero() {
             margin: "0 0 0",
           }}
         >
-          SOV records the state. USE proves useful work. CARE governs the future.
-          AMITY makes stewardship liquid. $OMEGA anchors the whole thing with fixed
-          scarcity. The Omega MCP Hub runs it all.
+          The economy has three currencies: $OMEGA on the EVM rail, TWC on
+          Solana, and AMITY on Bitcoin / Lightning / Taproot. Today, only the
+          $OMEGA and TWC rails are wired from wallet signature to web unlock
+          verification.
         </p>
       </div>
     </section>
@@ -122,33 +131,15 @@ function EconomyFlow() {
       {[
         {
           step: "01",
-          title: "SOV — Money of account",
-          body: "SOv settles what happened. It is the ledger that holds the economy's state, so every other token can reference a position.",
-          color: "var(--color-sov)",
+          title: "$OMEGA — EVM release rail",
+          body: "$OMEGA is the EVM-side currency currently wired into the wallet and web app. Its signed proof path unlocks the full novel.",
+          color: "var(--color-omega)",
         },
         {
           step: "02",
-          title: "USE — Proof of useful work",
-          body: "USE signs a receipt that someone did something useful for the economy. Non-transferable, earned not bought — the basis for gating the novel.",
-          color: "var(--color-use)",
-        },
-        {
-          step: "03",
-          title: "CARE — Stewardship",
-          body: "CARE holders vote on the protocol's future. They allocate treasury, approve upgrades, and decide what gets built next.",
-          color: "var(--color-care)",
-        },
-        {
-          step: "04",
-          title: "AMITY — Exchange-eligible care",
-          body: "AMITY is CARE's liquid twin. It lets stewardship participate in external markets without giving up the underlying CARE weight.",
-          color: "var(--color-amity)",
-        },
-        {
-          step: "05",
-          title: "$OMEGA — Macro-governance anchor",
-          body: "Fixed supply. Full macro-governance rights. The novel unlocks to $OMEGA holders on release day — all 16 chapters, uncut.",
-          color: "var(--color-omega)",
+          title: "TWC — Solana release rail",
+          body: "TWC is the Solana-side currency currently wired into the wallet and web app. Its signed proof path also unlocks the full novel.",
+          color: "var(--color-twc)",
         },
       ].map((item, i) => (
         <li
@@ -242,7 +233,7 @@ function WhitepaperCards() {
         {
           title: "Tri-Token Sovereign Economy Blueprint",
           type: "Blueprint",
-          desc: "The full spec for SOV, USE, CARE, AMITY, and $OMEGA — their roles, their mechanics, and how they fit together.",
+          desc: "The larger systems spec behind the project, including the broader economy that extends beyond the two currently wired release currencies.",
           href: "/economy",
           color: "var(--color-use)",
         },
@@ -254,9 +245,9 @@ function WhitepaperCards() {
           color: "var(--color-care)",
         },
         {
-          title: "CARE / AMITY Protocol Whitepaper",
-          type: "Whitepaper",
-          desc: "The stewardship and exchange layer: how CARE governs, how AMITY represents CARE in markets, and how the two interact.",
+          title: "Launch Plan and Release Docs",
+          type: "Planning",
+          desc: "The release-day decisions, current pilot status, and the staged path from local proofs to live deployments.",
           href: "/economy",
           color: "var(--color-amity)",
         },
@@ -335,6 +326,68 @@ function WhitepaperCards() {
   );
 }
 
+function PrinciplesGrid() {
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+        gap: "16px",
+      }}
+    >
+      {[
+        {
+          title: "No judgment at the door",
+          body: "Participation should begin with dignity. People do not need to be finished products to start contributing.",
+          color: "var(--color-care)",
+        },
+        {
+          title: "Earn while you learn",
+          body: "The economy should reward repair, service, contribution, and self-improvement instead of forcing people to choose between growth and survival.",
+          color: "var(--color-use)",
+        },
+        {
+          title: "Anonymity is a right",
+          body: "Pseudonymous participation is not a loophole here. It is part of how people stay safe enough to begin.",
+          color: "var(--color-amity)",
+        },
+        {
+          title: "Transparency is a choice",
+          body: "Disclosure should be invited by trust, emotional security, and demonstrated care — not demanded as the entry fee for belonging.",
+          color: "var(--color-omega)",
+        },
+      ].map((item) => (
+        <div
+          key={item.title}
+          style={{
+            padding: "22px 20px",
+            border: "1px solid var(--color-border)",
+            borderRadius: "14px",
+            background: "rgba(255,255,255,0.012)",
+          }}
+        >
+          <div
+            style={{
+              width: "34px",
+              height: "34px",
+              borderRadius: "9px",
+              background: item.color,
+              marginBottom: "14px",
+              boxShadow: `0 0 18px ${item.color}55`,
+            }}
+          />
+          <h3 style={{ fontFamily: "ui-serif, Georgia, Cambria, serif", fontSize: "18px", fontWeight: 500, margin: "0 0 10px", color: "var(--color-foreground)" }}>
+            {item.title}
+          </h3>
+          <p style={{ margin: 0, color: "var(--color-muted-strong)", fontSize: "14px", lineHeight: 1.6 }}>
+            {item.body}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function GovernancePreview() {
   return (
     <div
@@ -346,25 +399,25 @@ function GovernancePreview() {
     >
       {[
         {
-          token: "CARE",
-          color: "var(--color-care)",
-          role: "Protocol governance",
+          token: "$OMEGA",
+          color: "var(--color-omega)",
+          role: "Current explicit governance rail",
           examples: [
-            "Treasury allocation proposals",
-            "Protocol upgrade ratification",
-            "Chapter release schedule votes",
-            "Stewardship council elections",
+            "Economy-wide parameter changes",
+            "Release-policy updates",
+            "Foundation stewardship votes",
+            "Open-source roadmap ratification",
           ],
         },
         {
-          token: "$OMEGA",
-          color: "var(--color-omega)",
-          role: "Macro-governance",
+          token: "TWC",
+          color: "var(--color-twc)",
+          role: "Current Solana release rail",
           examples: [
-            "Economy-wide parameter changes",
-            "Novel unlock tier adjustments",
-            "Foundation stewardship votes",
-            "Open-source roadmap ratification",
+            "Solana-side holder verification",
+            "Release-day novel access",
+            "Cross-chain launch coordination",
+            "Pilot-to-mainnet transition planning",
           ],
         },
       ].map((group) => (
@@ -500,9 +553,10 @@ function FinalCta() {
             margin: "0 0 32px",
           }}
         >
-          The tri-token economy is the key. The novel is the reward. The MCP hub is
-          the operating layer. All of it is open source, all of it is here, and all
-          of it unlocks for anyone who participates on release day.
+          The current public build wires two currencies into the unlock flow. The
+          novel is the reward. The MCP hub is the operating layer. The broader
+          economy remains documented here, but the wallet and web app now center on
+          $OMEGA and TWC first.
         </p>
         <div
           style={{

@@ -46,11 +46,11 @@ export default function McpPage() {
               margin: "0 0 40px",
             }}
           >
-            Omega MCP Hub is a FastMCP server with 22 tools across five token
-            planes. It runs the economy: it settles accounts, verifies useful work,
-            executes governance, manages exchange representation, and anchors
-            macro-governance. Built to be driven by AI agents — and open source, so
-            anyone can extend it.
+            Omega MCP Hub is a FastMCP server with 22 tools supporting a
+            three-currency economy. It runs the economy: it settles accounts,
+            verifies useful work, executes governance, supports participation, and
+            anchors release-day coordination. Built to be driven by AI agents —
+            and open source, so anyone can extend it.
           </p>
 
           <div
@@ -91,10 +91,10 @@ export default function McpPage() {
                   lineHeight: 1,
                 }}
               >
-                5
+                3
               </div>
               <div style={{ fontSize: "13px", color: "var(--color-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
-                Token planes
+                Economy currencies
               </div>
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
@@ -138,7 +138,7 @@ export default function McpPage() {
       <Section
         eyebrow="Architecture"
         title="How the hub is built"
-        subtitle="Omega MCP Hub is a single FastMCP stdio server, packaged as a Python package, with a manifest for distribution. It is designed to be the backbone of the Omega tri-token economy — and to be extended by anyone who wants to add tools, planes, or integrations."
+        subtitle="Omega MCP Hub is a single FastMCP stdio server, packaged as a Python package, with a manifest for distribution. It is designed to be the backbone of the Omega three-currency economy — and to be extended by anyone who wants to add tools, internal domains, or integrations."
       >
         <div
           style={{
@@ -229,11 +229,11 @@ export default function McpPage() {
       </Section>
 
       <Section
-        eyebrow="Tools by plane"
-        title="22 tools across five planes"
-        subtitle="Every tool in the hub lives in a plane — SOv, USE, CARE, AMITY, or OMEGA. Together they cover the full operating surface of the tri-token economy: from ledger settlement to macro-governance."
+        eyebrow="Economy support"
+        title="22 tools supporting three currencies"
+        subtitle="Publicly, the economy is three-currency: $OMEGA on EVM, TWC on Solana, and AMITY on Bitcoin / Lightning / Taproot. Under the hood, the MCP package uses several internal operating domains to serve that economy."
       >
-        <TokenShowcase />
+        <TokenShowcase variant="economy" />
         <div style={{ marginTop: "48px" }}>
           <ToolList />
         </div>
@@ -254,7 +254,7 @@ export default function McpPage() {
       <Section
         eyebrow="Connect"
         title="Run your own hub"
-        subtitle="Spin up Omega MCP Hub locally, connect it to your MCP client, and start operating the economy with AI agents. The server is stdio-first — drop it into any MCP-compatible toolchain."
+        subtitle="Spin up Omega MCP Hub locally, connect it to your MCP client, and start operating a three-currency economy with AI agents. The server is stdio-first — drop it into any MCP-compatible toolchain."
       >
         <RunCard />
         <div style={{ marginTop: "40px", display: "flex", gap: "14px", flexWrap: "wrap" }}>
@@ -319,8 +319,9 @@ function Hero() {
             margin: "0",
           }}
         >
-          A FastMCP server with 22 tools across five token planes — operated by AI
-          agents, governed by token holders, and open source for anyone to extend.
+          A FastMCP server with 22 tools supporting a three-currency economy —
+          operated by AI agents, governed by human choice, and open source for
+          anyone to extend.
         </p>
       </div>
     </section>

@@ -2,13 +2,14 @@
 
 import { Section } from "@/components/Section";
 import { CallToAction } from "@/components/CallToAction";
-import { TOKENS } from "@/lib/types";
+import { TOKENS, WIRED_TOKENS } from "@/lib/types";
 import Link from "next/link";
 
 export default function InvestPage() {
   return (
     <>
       <Hero />
+      <ParticipationPrinciples />
       <UnlockTiers />
       <TokenParticipate />
       <HowItWorks />
@@ -63,16 +64,18 @@ function Hero() {
             color: "var(--color-muted-strong)",
             fontSize: "clamp(16px, 1.5vw, 19px)",
             lineHeight: 1.7,
-            maxWidth: "660px",
+            maxWidth: "760px",
             margin: "0 0 36px",
           }}
         >
-          The Omega tri-token economy is open for participation on release day.
-          Invest, purchase, or hold any token to unlock{" "}
+          This economy is meant to help people earn while they learn to become
+          better people. The current release build wires two live rails into the
+          wallet and web app, inside a larger three-currency economy. Sign with
+          either live rail to unlock{" "}
           <em style={{ color: "var(--color-accent-soft)" }}>
             Genesis Block: The Satoshi Protocol
           </em>{" "}
-          by Akash Varma — chapter by chapter, proof by proof.
+          by Akash Varma.
         </p>
         <div
           style={{
@@ -82,7 +85,7 @@ function Hero() {
           }}
         >
           <CallToAction label="Start participating" href="#tokens" />
-          <CallToAction label="See the unlock tiers" href="#tiers" variant="ghost" />
+          <CallToAction label="See the unlock rails" href="#tiers" variant="ghost" />
         </div>
 
         <div
@@ -106,10 +109,27 @@ function Hero() {
                 lineHeight: 1,
               }}
             >
-              5 tokens
+              {TOKENS.length} currencies
             </div>
             <div style={{ fontSize: "13px", color: "var(--color-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
-              One economy
+              In the economy
+            </div>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+            <div
+              style={{
+                fontFamily: "ui-serif, Georgia, serif",
+                fontSize: "36px",
+                fontWeight: 500,
+                color: "var(--color-foreground)",
+                letterSpacing: "-0.02em",
+                lineHeight: 1,
+              }}
+            >
+              {WIRED_TOKENS.length} live rails
+            </div>
+            <div style={{ fontSize: "13px", color: "var(--color-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+              Wired today
             </div>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
@@ -140,27 +160,10 @@ function Hero() {
                 lineHeight: 1,
               }}
             >
-              22 tools
+              Your choice
             </div>
             <div style={{ fontSize: "13px", color: "var(--color-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
-              In the MCP hub
-            </div>
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-            <div
-              style={{
-                fontFamily: "ui-serif, Georgia, serif",
-                fontSize: "36px",
-                fontWeight: 500,
-                color: "var(--color-foreground)",
-                letterSpacing: "-0.02em",
-                lineHeight: 1,
-              }}
-            >
-              1 novel
-            </div>
-            <div style={{ fontSize: "13px", color: "var(--color-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
-              Unlocked on release day
+              Anonymity first, transparency optional
             </div>
           </div>
         </div>
@@ -169,67 +172,81 @@ function Hero() {
   );
 }
 
+
+function ParticipationPrinciples() {
+  return (
+    <Section
+      eyebrow="Economic culture"
+      title="Come in without judgment"
+      subtitle="The point is not to shame people into becoming better. The point is to create conditions where people can learn, contribute, recover, and choose greater visibility when they actually feel safe enough to do so."
+    >
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+          gap: "16px",
+        }}
+      >
+        {[
+          {
+            title: "No judgment at the door",
+            body: "Participation should begin with dignity. You do not need to arrive as a finished person to begin contributing.",
+            color: "var(--color-care)",
+          },
+          {
+            title: "Earn while you learn",
+            body: "Useful work, care, stewardship, and repair should become paths toward both livelihood and character growth.",
+            color: "var(--color-use)",
+          },
+          {
+            title: "Anonymity is a right",
+            body: "People should be able to start pseudonymously. Privacy is part of safety, not evidence of bad intent.",
+            color: "var(--color-amity)",
+          },
+          {
+            title: "Transparency is a choice",
+            body: "Disclosure should grow from emotional security and trust. Coerced transparency only teaches fear.",
+            color: "var(--color-omega)",
+          },
+        ].map((item) => (
+          <div
+            key={item.title}
+            style={{
+              padding: "22px 20px",
+              border: "1px solid var(--color-border)",
+              borderRadius: "14px",
+              background: "rgba(255,255,255,0.012)",
+            }}
+          >
+            <div
+              style={{
+                width: "34px",
+                height: "34px",
+                borderRadius: "9px",
+                background: item.color,
+                marginBottom: "14px",
+                boxShadow: `0 0 18px ${item.color}55`,
+              }}
+            />
+            <h3 style={{ fontFamily: "ui-serif, Georgia, Cambria, serif", fontSize: "18px", fontWeight: 500, color: "var(--color-foreground)", margin: "0 0 10px" }}>
+              {item.title}
+            </h3>
+            <p style={{ margin: 0, color: "var(--color-muted-strong)", fontSize: "14px", lineHeight: 1.6 }}>
+              {item.body}
+            </p>
+          </div>
+        ))}
+      </div>
+    </Section>
+  );
+}
+
 function UnlockTiers() {
   const tiers = [
     {
       tier: "1",
-      title: "Participate",
-      requirement: "Invest, purchase, or hold any token",
-      unlocks: "Chapter 1 onward — start reading the novel",
-      color: "var(--color-accent)",
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-          <circle cx="12" cy="12" r="3" />
-        </svg>
-      ),
-    },
-    {
-      tier: "2",
-      title: "Hold",
-      requirement: "Keep a position through release day",
-      unlocks: "Chapters 1–6 — The Observer and the Spoof through The Steganographic Genesis",
-      color: "var(--color-use)",
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
-          <line x1="3" x2="21" y1="9" y2="9" />
-          <line x1="9" x2="9" y1="9" y2="21" />
-        </svg>
-      ),
-    },
-    {
-      tier: "3",
-      title: "Contribute",
-      requirement: "Earn USE through useful work for the economy",
-      unlocks: "Chapters 7–12 — The Botnet and the Botnet Through The Pizza Theory",
-      color: "var(--color-care)",
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-          <circle cx="9" cy="7" r="4" />
-          <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-        </svg>
-      ),
-    },
-    {
-      tier: "4",
-      title: "Steward",
-      requirement: "Hold CARE and vote on governance proposals",
-      unlocks: "Chapters 13–15 — The Merge, The Art, and The Inflection",
-      color: "var(--color-amity)",
-      icon: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M12 20h9" />
-          <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
-        </svg>
-      ),
-    },
-    {
-      tier: "5",
-      title: "Anchor",
-      requirement: "Hold $OMEGA for full macro-governance access",
+      title: "$OMEGA",
+      requirement: "Sign an EVM-side release proof from the wired $OMEGA wallet flow",
       unlocks: "All 16 chapters, uncut — including The Final Hybrid and Epilogue",
       color: "var(--color-omega)",
       icon: (
@@ -238,13 +255,27 @@ function UnlockTiers() {
         </svg>
       ),
     },
+    {
+      tier: "2",
+      title: "TWC",
+      requirement: "Sign a Solana-side release proof from the wired TWC wallet flow",
+      unlocks: "All 16 chapters, uncut — including The Final Hybrid and Epilogue",
+      color: "var(--color-twc)",
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M8 12h8" />
+          <path d="M12 8v8" />
+        </svg>
+      ),
+    },
   ];
 
   return (
     <Section
       eyebrow="The Unlock"
-      title="Your participation unlocks the novel — tier by tier"
-      subtitle="The more you participate, the more you read. Every participant starts at Tier 1. $OMEGA holders unlock the whole novel. This is the release-day model for Genesis Block: The Satoshi Protocol."
+      title="Two wired currencies unlock the novel"
+      subtitle="The current release build does not use five chapter tiers. Instead, either of the two wired currencies — $OMEGA or TWC — can sign a proof that unlocks the full novel."
       id="tiers"
     >
       <div
@@ -315,7 +346,7 @@ function UnlockTiers() {
                   fontWeight: 600,
                 }}
               >
-                Tier {tier.tier}
+                Rail {tier.tier}
               </span>
             </div>
 
@@ -389,8 +420,8 @@ function TokenParticipate() {
   return (
     <Section
       eyebrow="Tokens"
-      title="Choose how you participate"
-      subtitle="Five tokens, five ways to join the economy. You don't need all of them — you need the one that fits how you want to participate. Every token unlocks something in Genesis Block."
+      title="Choose which wired currency you use"
+      subtitle="Two currencies are connected end to end today. You do not need both — a verified $OMEGA proof or a verified TWC proof unlocks Genesis Block in full."
       id="tokens"
     >
       <div
@@ -546,32 +577,32 @@ function HowItWorks() {
   const steps = [
     {
       step: "01",
-      title: "Connect your wallet",
-      body: "Link your wallet to the Omega MCP Hub. No account, no KYC — just a wallet that can hold tokens.",
+      title: "Enter without judgment",
+      body: "Start with a wallet, not a confession booth. No account and no KYC are required for the current proof flow.",
       color: "var(--color-sov)",
     },
     {
       step: "02",
-      title: "Choose a token",
-      body: "Invest in SOV, purchase USE through contribution, acquire CARE, trade AMITY, or anchor with $OMEGA.",
+      title: "Choose a live rail",
+      body: "Use the wired $OMEGA EVM flow or the wired TWC Solana flow. Both currently issue a signed full-unlock proof.",
       color: "var(--color-use)",
     },
     {
       step: "03",
       title: "Unlock the novel",
-      body: "On release day, your position unlocks chapters of Genesis Block. More participation = more chapters.",
+      body: "On release day, a verified $OMEGA or TWC proof unlocks the full text of Genesis Block.",
       color: "var(--color-care)",
     },
     {
       step: "04",
-      title: "Govern the future",
-      body: "Vote on protocol upgrades, treasury allocation, and the future of the novel's ecosystem with your tokens.",
+      title: "Grow into the wider economy",
+      body: "The broader economy is three-currency: $OMEGA, TWC, and AMITY. The live release build starts with two rails and expands from there.",
       color: "var(--color-amity)",
     },
     {
       step: "05",
-      title: "Operate via the MCP hub",
-      body: "The Omega MCP Hub lets AI agents operate the economy on your behalf — 22 tools across five token planes.",
+      title: "Choose your visibility",
+      body: "Anonymity is a right. Transparency should happen because trust and emotional security have been earned, not because people were pressured into exposure.",
       color: "var(--color-omega)",
     },
   ];
@@ -580,7 +611,7 @@ function HowItWorks() {
     <Section
       eyebrow="How it works"
       title="From participation to unlock"
-      subtitle="Five steps from wallet to novel. Simple, sovereign, and operated by an open-source AI hub."
+      subtitle="Five steps from dignified entry to verified access. Simple, sovereign, and built around choice instead of coercion."
     >
       <ol style={{ listStyle: "none", margin: "0", padding: "0", display: "flex", flexDirection: "column", gap: "0" }}>
         {steps.map((s, i) => (
@@ -655,7 +686,7 @@ function WalletSection() {
     <Section
       eyebrow="Wallet"
       title="What you need to participate"
-      subtitle="A wallet is all you need. No account. No KYC. No friction. Just a wallet, a token, and a novel waiting to be unlocked."
+      subtitle="A wallet is all you need. No account. No KYC. Start privately if you want. Just bring a wallet, choose one of the two wired currencies, and decide later how visible you want to become."
     >
       <div
         style={{
@@ -667,22 +698,22 @@ function WalletSection() {
         {[
           {
             title: "Wallet",
-            desc: "Any wallet that can hold tokens. ETH, SOL, or Lightning — the Omega MCP Hub supports multiple chains.",
+            desc: "Use an Ethereum wallet for $OMEGA or a Solana wallet for TWC. Those are the two release currencies currently wired into the app.",
             color: "var(--color-sov)",
           },
           {
             title: "Tokens",
-            desc: "Invest in SOV, earn USE, hold CARE, trade AMITY, or anchor with $OMEGA. Pick your participation tier.",
+            desc: "Choose the $OMEGA Ethereum rail or the TWC Solana rail. Both currently sign a full-unlock proof for the novel.",
             color: "var(--color-use)",
           },
           {
             title: "Release day",
-            desc: "On release day, your position unlocks chapters of Genesis Block. The novel opens to the economy.",
+            desc: "On release day, your signed $OMEGA or TWC proof unlocks Genesis Block. The current release flow opens the whole novel.",
             color: "var(--color-care)",
           },
           {
             title: "MCP hub",
-            desc: "Operate your position via the Omega MCP Hub — 22 tools across five token planes, driven by AI agents.",
+            desc: "Operate your position via the Omega MCP Hub — 22 tools supporting a three-currency economy, driven by AI agents.",
             color: "var(--color-omega)",
           },
         ].map((item) => (
@@ -758,9 +789,10 @@ function FinalCta() {
           The novel opens on release day.
         </h2>
         <p style={{ color: "var(--color-muted-strong)", fontSize: "17px", lineHeight: 1.6, margin: "0 0 32px" }}>
-          The Omega tri-token economy is the key. Genesis Block is the reward. The
-          MCP hub is the operating layer. All of it is open source. All of it unlocks
-          for anyone who participates.
+          Two currencies are wired in today: $OMEGA and TWC. Genesis Block is the
+          reward. The MCP hub is the operating layer. The broader economy is still
+          larger than this build, but the wallet-to-web unlock path already works
+          across both current rails.
         </p>
         <div style={{ display: "flex", gap: "14px", justifyContent: "center", flexWrap: "wrap" }}>
           <CallToAction label="Participate now" href="#tokens" />

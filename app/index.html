@@ -4,14 +4,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Amity — a local prototype for the World Citizen economy." />
-  <title>Amity · World Citizen Wallet</title>
+  <meta name="description" content="Omega release wallet prototype for $OMEGA on the EVM rail and TWC on Solana. AMITY remains a separate Bitcoin/Lightning/Taproot workstream." />
+  <title>Omega · Release Wallet Prototype</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="app-shell">
     <aside class="sidebar">
-      <div class="brand"><span class="brand-mark">✦</span><span>AMITY</span></div>
+      <div class="brand"><span class="brand-mark">✦</span><span>OMEGA</span></div>
       <div class="network-pill"><span class="pulse"></span> <span id="network-label">Prototype network</span></div>
       <nav aria-label="Main navigation">
         <button class="nav-item active" data-view="home">⌂ <span>Home</span></button>
@@ -29,7 +29,7 @@
 
     <main class="main">
       <header class="topbar">
-        <div class="mobile-brand">✦ AMITY</div>
+        <div class="mobile-brand">✦ OMEGA</div>
         <div class="search"><span>⌕</span><input aria-label="Search" placeholder="Search people, projects, proofs" /></div>
         <div class="top-actions">
           <button class="icon-btn" title="Notifications">♧</button>
@@ -40,15 +40,13 @@
       <div class="view" id="home-view">
         <section class="hero">
           <div><p class="eyebrow">WORLD CITIZEN ECONOMY · LIVE WALLET</p><h1>Build value.<br /><em>Keep humanity in it.</em></h1><p class="hero-copy">A wallet and social layer for useful work, care, and reality-based research. Every claim is reviewable. Every system is open to correction.</p><div class="hero-actions"><button class="primary" data-view="contribute">Submit a contribution <span>→</span></button><button class="text-btn" data-view="wallet">View wallet</button></div></div>
-          <div class="orbit-card"><div class="orbit orbit-1"></div><div class="orbit orbit-2"></div><div class="orbit-core">A<span>mity</span></div><div class="orbit-label label-a">CARE <b>protected</b></div><div class="orbit-label label-b">USE <b>earned</b></div><div class="orbit-label label-c">TRUST <b>human</b></div></div>
+          <div class="orbit-card"><div class="orbit orbit-1"></div><div class="orbit orbit-2"></div><div class="orbit-core">Ω<span>mega</span></div><div class="orbit-label label-a">CARE <b>protected</b></div><div class="orbit-label label-b">USE <b>earned</b></div><div class="orbit-label label-c">TRUST <b>human</b></div></div>
         </section>
 
-        <section class="section-head"><div><p class="eyebrow">YOUR ECONOMY</p><h2>One wallet. Different kinds of value.</h2></div><button class="link-btn" data-view="wallet">Open full wallet →</button></section>
+        <section class="section-head"><div><p class="eyebrow">YOUR ECONOMY</p><h2>Two currencies are wired into the wallet today.</h2></div><button class="link-btn" data-view="wallet">Open full wallet →</button></section>
         <section class="token-grid" id="token-grid">
-          <article class="token-card omega"><div class="token-top"><span class="token-icon">Ω</span><span class="token-status">Governance</span></div><h3>OMEGA</h3><div class="token-value" id="omega-value">— <small>Ω</small></div><p>Macro governance & long-term stewardship</p><div class="token-bar"><span style="width:68%"></span></div></article>
-          <article class="token-card tokamak"><div class="token-top"><span class="token-icon">◌</span><span class="token-status">Research</span></div><h3>TOKAMAK</h3><div class="token-value" id="tokamak-value">— <small>TKM</small></div><p>Reality-to-measurement research utility</p><div class="token-bar"><span style="width:44%"></span></div></article>
-          <article class="token-card amity"><div class="token-top"><span class="token-icon">✦</span><span class="token-status">Exchange eligible</span></div><h3>AMITY</h3><div class="token-value" id="amity-value">— <small>AMY</small></div><p>Approved care & creator settlement</p><div class="token-bar"><span style="width:82%"></span></div></article>
-          <article class="token-card care"><div class="token-top"><span class="token-icon">♡</span><span class="token-status">Protected</span></div><h3>CARE</h3><div class="token-value" id="care-value">— <small>proofs</small></div><p>Non-market proof-of-care record</p><div class="token-bar"><span style="width:58%"></span></div></article>
+          <article class="token-card omega"><div class="token-top"><span class="token-icon">Ω</span><span class="token-status">EVM</span></div><h3>$OMEGA</h3><div class="token-value" id="omega-value">— <small>Sepolia</small></div><p>EVM-side macro-governance proof rail for release-day novel unlocks.</p><div class="token-bar"><span style="width:68%"></span></div></article>
+          <article class="token-card amity"><div class="token-top"><span class="token-icon">◎</span><span class="token-status">Solana</span></div><h3>TWC</h3><div class="token-value" id="twc-value">— <small>Devnet</small></div><p>Token of the World Citizen proof rail for the Solana unlock path. AMITY stays separate on Bitcoin/Lightning/Taproot.</p><div class="token-bar"><span style="width:54%"></span></div></article>
         </section>
 
         <div class="content-grid"><section><div class="section-head compact"><div><p class="eyebrow">FROM THE COMMUNITY</p><h2>Useful work in motion</h2></div><button class="link-btn">View feed →</button></div><div class="feed">
@@ -61,7 +59,7 @@
         <div class="page-title">
           <p class="eyebrow">WALLET · REAL CRYPTOGRAPHY</p>
           <h1>Your keys. Your signature. Your book.</h1>
-          <p>Create an Amity wallet (real BIP-39 mnemonic, encrypted locally), connect MetaMask, or import an existing key. Your private key never leaves this device.</p>
+          <p>Create an Omega wallet (real BIP-39 mnemonic, encrypted locally) for the $OMEGA EVM rail, connect MetaMask, or connect Phantom for TWC on Solana. AMITY remains separate on Bitcoin/Lightning/Taproot.</p>
         </div>
 
         <!-- Setup: create / import / connect -->
@@ -70,7 +68,7 @@
             <div class="form-card">
               <h3>Create a new wallet</h3>
               <p class="fine-print">Generates a real 12-word BIP-39 mnemonic and 0x address (m/44'/60'/0'/0/0). The mnemonic is shown once.</p>
-              <label>Wallet label<input id="create-label" placeholder="My Amity wallet" /></label>
+              <label>Wallet label<input id="create-label" placeholder="My Omega wallet" /></label>
               <label>Encryption password<input id="create-password" type="password" placeholder="Strong password — encrypts your keystore" /></label>
               <label>Confirm password<input id="create-password2" type="password" placeholder="Repeat password" /></label>
               <button class="primary full" id="btn-create">Generate wallet →</button>
@@ -84,10 +82,12 @@
               <button class="primary full" id="btn-import">Import wallet →</button>
             </div>
             <div class="form-card">
-              <h3>Connect MetaMask</h3>
-              <p class="fine-print">Use your browser wallet instead of a local key. Signing uses personal_sign; no transactions are ever sent.</p>
-              <button class="primary full" id="btn-connect-mm">🦊 Connect MetaMask</button>
+              <h3>Connect browser wallets</h3>
+              <p class="fine-print">Two proof rails are currently wired in: $OMEGA on the EVM rail and TWC on Solana. Use MetaMask for $OMEGA proofs and Phantom for TWC proofs. AMITY remains separate on Bitcoin/Lightning/Taproot. No transactions are ever sent.</p>
+              <button class="primary full" id="btn-connect-mm">🦊 Connect MetaMask ($OMEGA)</button>
               <p class="fine-print" id="mm-status"></p>
+              <button class="secondary full" id="btn-connect-phantom" style="margin-top:12px;">◎ Connect Phantom (TWC)</button>
+              <p class="fine-print" id="phantom-status"></p>
             </div>
           </div>
         </section>
@@ -113,10 +113,8 @@
           </div>
 
           <div class="wallet-list">
-            <div class="wallet-row"><span class="big-token omega-bg">Ω</span><div><strong>OMEGA</strong><small>Governance asset</small></div><b id="bal-omega">—</b><span class="row-note">Governance plane</span></div>
-            <div class="wallet-row"><span class="big-token toka-bg">◌</span><div><strong>TOKAMAK</strong><small>Research utility</small></div><b id="bal-tokamak">—</b><span class="row-note">Research plane</span></div>
-            <div class="wallet-row"><span class="big-token amy-bg">✦</span><div><strong>AMITY</strong><small>Exchange eligible</small></div><b id="bal-amity">—</b><span class="row-note">Exchange plane</span></div>
-            <div class="wallet-row protected"><span class="big-token care-bg">♡</span><div><strong>CARE</strong><small>Protected proofs</small></div><b id="bal-care">—</b><span class="row-note">Proof-of-care plane</span></div>
+            <div class="wallet-row"><span class="big-token omega-bg">Ω</span><div><strong>$OMEGA</strong><small>EVM / Sepolia proof rail</small></div><b id="bal-omega">—</b><span class="row-note">MetaMask or local keystore</span></div>
+            <div class="wallet-row"><span class="big-token amy-bg">◎</span><div><strong>TWC</strong><small>Solana / Devnet proof rail</small><small id="solana-address">No Phantom wallet connected yet</small></div><b id="bal-twc">—</b><span class="row-note" id="twc-status">Phantom not connected</span></div>
           </div>
 
           <!-- Release-day unlock signing -->
@@ -125,17 +123,14 @@
               <span class="feature-icon">✦</span>
               <div>
                 <h3>Release-day novel unlock</h3>
-                <p>Sign a statement of participation to unlock <em>Genesis Block: The Satoshi Protocol</em>. The signature is verified server-side against your address.</p>
+                <p>Sign a statement with one of the two currently wired currencies — <em>$OMEGA</em> on the EVM rail or <em>TWC</em> on Solana. The signature is verified server-side against your wallet address.</p>
               </div>
             </div>
-            <label>Tier<select id="unlock-tier">
-              <option value="tier-1">Tier 1 — Participate (hold any token)</option>
-              <option value="tier-2">Tier 2 — Hold (position through release day)</option>
-              <option value="tier-3">Tier 3 — Contribute (USE earned)</option>
-              <option value="tier-4">Tier 4 — Steward (CARE governance)</option>
-              <option value="tier-5">Tier 5 — Anchor ($OMEGA full unlock)</option>
+            <label>Currency<select id="unlock-currency">
+              <option value="OMEGA">$OMEGA — EVM / Sepolia proof rail</option>
+              <option value="TWC">TWC — Solana / Devnet proof rail</option>
             </select></label>
-            <button class="primary full" id="btn-sign-unlock">Sign unlock statement →</button>
+            <button class="primary full" id="btn-sign-unlock">Sign full-unlock statement →</button>
             <div class="proof-result hidden" id="proof-result">
               <p class="fine-print">Signed. Save this proof locally or copy it for the website:</p>
               <textarea id="proof-json" readonly rows="6"></textarea>
@@ -155,7 +150,7 @@
       <div class="view hidden" id="research-view"><div class="page-title"><p class="eyebrow">TOKAMAK · REALITY TO MEASUREMENT</p><h1>Measure reality. Stay open to correction.</h1><p>TOKAMAK is broader than plasma physics: any reproducible work that breaks a real-world question into numbers, models, and testable predictions may qualify.</p></div><div class="research-cards"><div class="research-card featured"><span class="eyebrow">OPEN CALL</span><h2>What can be measured better?</h2><p>Submit a dataset, model, benchmark, or correction that makes a real-world phenomenon more legible and testable.</p><button class="primary" data-view="contribute">Propose research <span>→</span></button></div><div class="research-card"><div class="metric">72%</div><h3>Reproducible submissions</h3><p>Prototype target for claims with public methods and repeatable outputs.</p></div><div class="research-card"><div class="metric">0.7</div><h3>Research signal threshold</h3><p>Placeholder only—thresholds require domain validation and versioned evidence.</p></div></div></div>
 
       <div class="view hidden" id="governance-view"><div class="page-title"><p class="eyebrow">GOVERNANCE</p><h1>Humans stay in the loop.</h1><p>Agents recommend. Verifiers review. Governors authorize. Every high-impact action is appealable and auditable.</p></div><div class="governance-card"><div class="gov-step"><span>01</span><div><strong>Agent recommendation</strong><p>Models can route, summarize, and flag missing evidence.</p></div></div><div class="gov-step"><span>02</span><div><strong>Human verification</strong><p>CARE Verifiers and domain reviewers assess legitimacy.</p></div></div><div class="gov-step"><span>03</span><div><strong>Archangel oversight</strong><p>Senior human stewards review high-impact disputes and safety.</p></div></div><div class="gov-step"><span>04</span><div><strong>Deterministic settlement</strong><p>Only authorized protocol rules can finalize a token event.</p></div></div></div></div>
-      <div class="view hidden" id="settings-view"><div class="page-title"><p class="eyebrow">PRIVACY · LOCAL FIRST</p><h1>You choose what becomes visible.</h1><p>Amity starts private. More visibility can make collaboration and earning easier, but no one has to reveal more to participate.</p></div><div class="privacy-card"><div class="privacy-level active-level"><div><span class="privacy-code">L0</span><strong>Private local participation</strong><p>Your agent, wallet, prompts, files, and care records stay on your hardware.</p></div><span class="toggle on"></span></div><div class="privacy-level"><div><span class="privacy-code">L1</span><strong>Pseudonymous public handle</strong><p>Show a chosen name without linking it to legal identity.</p></div><span class="toggle"></span></div><div class="privacy-level"><div><span class="privacy-code">L2</span><strong>Contribution visibility</strong><p>Show approved work and aggregate outcomes to collaborators.</p></div><span class="toggle"></span></div><div class="privacy-level"><div><span class="privacy-code">L3</span><strong>Community profile</strong><p>Let people discover your projects and selected capabilities.</p></div><span class="toggle"></span></div><div class="privacy-level"><div><span class="privacy-code">L4</span><strong>Named disclosure</strong><p>Share identity with one named authorized party for a specific purpose.</p></div><span class="toggle"></span></div></div><p class="fine-print privacy-note">Legal and privacy obligations still apply. If the app handles protected health information for a HIPAA-covered organization, additional HIPAA controls are required. If disclosure is legally required, the system should share the minimum necessary information through an audited channel—not your whole node.</p></div>
+      <div class="view hidden" id="settings-view"><div class="page-title"><p class="eyebrow">PRIVACY · LOCAL FIRST</p><h1>You choose what becomes visible.</h1><p>This wallet starts private. More visibility can make collaboration and earning easier, but no one has to reveal more to participate.</p></div><div class="privacy-card"><div class="privacy-level active-level"><div><span class="privacy-code">L0</span><strong>Private local participation</strong><p>Your agent, wallet, prompts, files, and care records stay on your hardware.</p></div><span class="toggle on"></span></div><div class="privacy-level"><div><span class="privacy-code">L1</span><strong>Pseudonymous public handle</strong><p>Show a chosen name without linking it to legal identity.</p></div><span class="toggle"></span></div><div class="privacy-level"><div><span class="privacy-code">L2</span><strong>Contribution visibility</strong><p>Show approved work and aggregate outcomes to collaborators.</p></div><span class="toggle"></span></div><div class="privacy-level"><div><span class="privacy-code">L3</span><strong>Community profile</strong><p>Let people discover your projects and selected capabilities.</p></div><span class="toggle"></span></div><div class="privacy-level"><div><span class="privacy-code">L4</span><strong>Named disclosure</strong><p>Share identity with one named authorized party for a specific purpose.</p></div><span class="toggle"></span></div></div><p class="fine-print privacy-note">Legal and privacy obligations still apply. If the app handles protected health information for a HIPAA-covered organization, additional HIPAA controls are required. If disclosure is legally required, the system should share the minimum necessary information through an audited channel—not your whole node.</p></div>
     </main>
   </div>
   <div class="toast" id="toast">Local prototype: no tokens were minted.</div>

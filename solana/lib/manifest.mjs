@@ -10,6 +10,7 @@ import {
   PILOT_TOKEN_DECIMALS,
   PILOT_TOKEN_NAME,
   PILOT_TOKEN_SYMBOL,
+  STANDARD_TOKEN_PROGRAM_ADDRESS,
 } from "./constants.mjs";
 
 function assert(condition, message) {
@@ -45,7 +46,7 @@ export function createManifest({
       decimals: PILOT_TOKEN_DECIMALS,
       initialSupplyTokens: deploymentConfig.initialSupplyTokens,
       initialSupplyBaseUnits: deploymentConfig.initialSupplyBaseUnits,
-      tokenProgram: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+      tokenProgram: STANDARD_TOKEN_PROGRAM_ADDRESS,
       mintAuthority: null,
       freezeAuthority: null,
     },

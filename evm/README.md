@@ -93,11 +93,12 @@ The test suite covers:
 
    Optional inputs are listed in [`.env.example`](.env.example). Amounts are decimal token amounts; times are Unix seconds. The script rejects an invalid address, invalid number, threshold larger than supply, non-Sepolia network, or a missing deployer key.
 
-4. Compile and deploy:
+4. Run a non-broadcasting preflight first, then deploy only after review:
 
    ```bash
    npm ci
    npm run compile
+   npm run preflight:sepolia
    npm run deploy:sepolia
    ```
 

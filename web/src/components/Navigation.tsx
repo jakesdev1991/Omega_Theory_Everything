@@ -9,6 +9,7 @@ const NAV_LINKS = [
   { href: "/novel", label: "The Novel" },
   { href: "/invest", label: "Invest" },
   { href: "/mcp", label: "MCP Hub" },
+  { href: "/ops", label: "Ops" },
 ];
 
 export function Navigation() {
