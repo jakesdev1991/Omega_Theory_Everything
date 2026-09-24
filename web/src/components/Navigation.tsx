@@ -6,6 +6,7 @@ import Link from "next/link";
 const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/economy", label: "Economy" },
+  { href: "/care", label: "C.A.R.E." },
   { href: "/novel", label: "The Novel" },
   { href: "/invest", label: "Invest" },
   { href: "/mcp", label: "MCP Hub" },
