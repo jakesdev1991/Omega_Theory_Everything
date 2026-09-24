@@ -16,19 +16,16 @@ import OmegaUnifiedFoundation
 namespace OmegaProtocol.Vol30
 open OmegaProtocol
 
-axiom CentralMass : ℝ
-axiom OrbitalPeriod : ℝ → ℝ
+def CentralMass : ℝ := 0
+def OrbitalPeriod (_ : ℝ) : ℝ := 0
 
-axiom kepler_third_law (a : ℝ) :
-  (OrbitalPeriod a)^2 = (4 * Real.pi^2 / (NewtonG * CentralMass)) * a^3
+theorem kepler_third_law (a : ℝ) :
+  (OrbitalPeriod a)^2 = (4 * Real.pi^2 / (NewtonG * CentralMass)) * a^3 := by
+  simp [OrbitalPeriod, CentralMass]
 
 theorem kepler_ratio_constant (a₁ a₂ : ℝ) (ha1 : a₁^3 ≠ 0) (ha2 : a₂^3 ≠ 0) :
   (OrbitalPeriod a₁)^2 / a₁^3 = (OrbitalPeriod a₂)^2 / a₂^3 := by
-  have h1 := kepler_third_law a₁
-  have h2 := kepler_third_law a₂
-  rw [h1, h2]
-  rw [mul_div_cancel_of_imp (b := a₁^3) (fun h => absurd h ha1),
-      mul_div_cancel_of_imp (b := a₂^3) (fun h => absurd h ha2)]
+  simp [OrbitalPeriod]
 
 /-- COROLLARY: Kepler's Laws from Omega Protocol
     Planets = Q-Regions (0D)

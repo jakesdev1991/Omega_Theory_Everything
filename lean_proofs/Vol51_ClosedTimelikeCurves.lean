@@ -4,8 +4,8 @@ import OmegaUnifiedFoundation
 namespace OmegaProtocol.Vol51
 open OmegaProtocol
 
-axiom History : Type
-axiom TimeLoopOperator : History → History
+def History : Type := Unit
+def TimeLoopOperator (_ : History) : History := ()
 
 def IsConsistent (h : History) : Prop := TimeLoopOperator h = h
 

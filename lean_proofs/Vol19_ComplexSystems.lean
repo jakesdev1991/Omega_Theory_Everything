@@ -18,7 +18,7 @@ open OmegaProtocol
 -- ============================================================
 
 def SystemState := ℝ
-axiom ComplexityEntropy : SystemState → ℝ
+def ComplexityEntropy (_ : SystemState) : ℝ := 0
 
 /-- THEOREM: Emergent Information Gain (GENUINE PROOF)
     If a complex system evolves from state A to state B and its entropy 

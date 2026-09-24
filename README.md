@@ -48,12 +48,12 @@ Key papers:
 
 ## Formal Verification (Lean 4)
 
-The complete mathematical framework is formally verified in Lean 4:
+The mathematical framework is represented in Lean 4; the build is the source of truth for which statements are kernel-checked:
 
 ```
 lean_proofs/
 ├── ToE.lean                          # Main entry point
-├── OmegaAxioms.lean                  # Foundational axioms
+├── OmegaAxioms.lean                  # Concrete minimal model and derived lemmas
 ├── OmegaUnifiedFoundation.lean       # Unified foundation
 ├── OmegaDimensionalHierarchy.lean    # Dimensional hierarchy
 ├── OmegaProtocol.lean                # Cross-volume theorems
@@ -61,7 +61,12 @@ lean_proofs/
 └── Vol54_TheoryOfNothing.lean        # 54 physics volumes
 ```
 
-Each Lean proof has companion files:
+The security-boundary proofs are kept separate from the physics model:
+- `lean_proofs/APPA_Context_Branching.lean` — axiom-free parent/child isolation and declassification gate
+- `lean_proofs/CBwK_Budget_Pacer.lean` — axiom-free budget-pacer invariants
+- `lean_proofs/leandojo_tactic_harness.py` — bounded tactic search plus an explicit `lake env lean` kernel-check boundary
+
+Each physics proof has companion files:
 - **LaTeX**: `latex_docs/Vol##_*.tex` - Mathematical typesetting
 - **Text**: `txt_proofs/Vol##_*.txt` - Plain text for accessibility
 

@@ -13,6 +13,8 @@ lean_lib ToE where
     `OmegaDimensionalHierarchy,
     `OmegaProtocol,
     `OmegaUnifiedFoundation,
+    `CBwK_Budget_Pacer,
+    `APPA_Context_Branching,
     `ToE,
     `Vol01_ClassicalMechanics,
     `Vol02_Electromagnetism,
