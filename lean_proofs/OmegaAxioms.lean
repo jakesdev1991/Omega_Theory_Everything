@@ -156,7 +156,6 @@ theorem data_processing_inequality_multiplicative :
     mutualInformation R₁ R₃ ≤ mutualInformation R₁ R₂ * mutualInformation R₂ R₃ / maxMutualInformation := by
   intros
   simp [mutualInformation, maxMutualInformation]
-  exact le_rfl
 
 theorem monotonicity_lemma :
   ∀ (R : QRegion), vonNeumannEntropy R ≥ 0 := by
@@ -178,7 +177,6 @@ theorem mutualInformation_bounded :
   ∀ (R₁ R₂ : QRegion), mutualInformation R₁ R₂ ≤ maxMutualInformation := by
   intros
   simp [mutualInformation, maxMutualInformation]
-  norm_num
 
 theorem log_ratio_nonpos :
   ∀ (R₁ R₂ : QRegion), mutualInformation R₁ R₂ > 0 →
