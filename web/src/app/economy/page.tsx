@@ -3,6 +3,7 @@
 import { Section } from "@/components/Section";
 import { TokenShowcase } from "@/components/TokenShowcase";
 import { CallToAction } from "@/components/CallToAction";
+import { MultiTokenWorkbench } from "@/components/MultiTokenWorkbench";
 import Link from "next/link";
 
 export default function EconomyPage() {
@@ -15,6 +16,14 @@ export default function EconomyPage() {
         subtitle="The public economy is three-currency: $OMEGA on the EVM rail, TWC on Solana, and AMITY on Bitcoin / Lightning / Taproot. Only two rails are wired into the live wallet-to-web unlock flow today, but the economic structure is already three-currency."
       >
         <TokenShowcase variant="economy" />
+      </Section>
+
+      <Section
+        eyebrow="Interactive Plane Verification"
+        title="Cross-Plane State Engine & Adapters"
+        subtitle="Simulate and verify the 4 planes (C.A.R.E., TWC, $OMEGA, AMITY) running under shared domain state machines, verifier adapters, and fail-closed policies."
+      >
+        <MultiTokenWorkbench />
       </Section>
 
       <Section

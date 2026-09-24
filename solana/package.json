@@ -14,6 +14,7 @@
     "deploy:devnet": "node scripts/deploy-devnet.mjs",
     "verify:devnet": "node scripts/verify-devnet.mjs",
     "verify:holder": "node scripts/verify-holder-devnet.mjs",
+    "test:fixture": "node scripts/run-fixture-harness.mjs",
     "metadata:hash": "node scripts/hash-metadata.mjs"
   },
   "dependencies": {

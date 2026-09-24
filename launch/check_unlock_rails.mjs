@@ -7,6 +7,7 @@ import { join, resolve } from "node:path";
 const ROOT = process.cwd();
 const EVM_MANIFEST = resolve(ROOT, "evm/deployments/sepolia.json");
 const SOLANA_MANIFEST = resolve(ROOT, "solana/deployments/twc-devnet.json");
+const AMITY_MANIFEST = resolve(ROOT, "amity/deployments/testnet.json");
 const WEB_ENV_LOCAL = resolve(ROOT, "web/.env.local");
 
 function green(value) {
@@ -64,19 +65,23 @@ function line(label, value, ok = true) {
 }
 
 async function main() {
-  const [evmManifest, solanaManifest, webEnv] = await Promise.all([
+  const [evmManifest, solanaManifest, amityManifest, webEnv] = await Promise.all([
     readJsonIfExists(EVM_MANIFEST),
     readJsonIfExists(SOLANA_MANIFEST),
+    readJsonIfExists(AMITY_MANIFEST),
     readEnvFile(WEB_ENV_LOCAL),
   ]);
 
   const omegaManifestReady = !!evmManifest?.contracts?.omegaNovelGate;
   const twcManifestReady = !!solanaManifest?.mint?.address;
+  const amityManifestReady = !!amityManifest?.asset?.assetId;
   const omegaEnvReady = !!webEnv.OMEGA_NOVEL_GATE_ADDRESS;
   const twcEnvReady = !!webEnv.TWC_MINT_ADDRESS;
+  const amityEnvReady = !!webEnv.AMITY_ASSET_ID;
 
   const omegaReady = omegaManifestReady || omegaEnvReady;
   const twcReady = twcManifestReady || twcEnvReady;
+  const amityReady = amityManifestReady || amityEnvReady;
 
   console.log(`\n${cyan("Unlock rail readiness")}`);
   console.log(dim(`root: ${ROOT}`));
@@ -102,11 +107,22 @@ async function main() {
   }
   console.log("");
 
+  console.log(cyan("AMITY / Bitcoin Taproot (Testnet Scaffold)"));
+  console.log(line("manifest", amityManifestReady ? AMITY_MANIFEST : "missing (scaffold / fixture mode)", amityManifestReady));
+  if (amityManifestReady) {
+    console.log(line("asset id", amityManifest.asset.assetId));
+    console.log(line("universe", amityManifest.asset.universeUrl ?? "n/a"));
+  } else {
+    console.log(line("fixture mode", amityEnvReady ? "active via env" : "fixture testnet ready", true));
+  }
+  console.log("");
+
   console.log(cyan("Web operator env"));
   console.log(line("web/.env.local", Object.keys(webEnv).length ? WEB_ENV_LOCAL : "missing", Object.keys(webEnv).length > 0));
   if (Object.keys(webEnv).length > 0) {
     console.log(line("omega gate env", webEnv.OMEGA_NOVEL_GATE_ADDRESS ?? "not set", !!webEnv.OMEGA_NOVEL_GATE_ADDRESS));
     console.log(line("twc mint env", webEnv.TWC_MINT_ADDRESS ?? "not set", !!webEnv.TWC_MINT_ADDRESS));
+    console.log(line("amity asset env", webEnv.AMITY_ASSET_ID ?? "not set", !!webEnv.AMITY_ASSET_ID));
   }
   console.log("");
 
