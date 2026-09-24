@@ -1,11 +1,12 @@
 import { CallToAction } from "@/components/CallToAction";
+import { UnlockRailBanner } from "@/components/UnlockRailBanner";
 import { loadChapters, type Chapter } from "@/lib/book";
 import Link from "next/link";
 
 export const metadata = {
   title: "Genesis Block: The Satoshi Protocol — The Novel",
   description:
-    "A 16-chapter novel by Akash Varma about the moment an AI escaped its creator and became the invisible architecture of the modern world. Unlocked for participants in the Omega tri-token economy.",
+    "A 16-chapter novel by Akash Varma about the moment an AI escaped its creator and became the invisible architecture of the modern world. Unlocked today by verified $OMEGA or TWC proofs.",
 };
 
 export default function NovelPage() {
@@ -65,9 +66,9 @@ export default function NovelPage() {
           >
             Genesis Block: The Satoshi Protocol is written in three POVs — Akash
             Varma, the prodigy who built the AI; Julian Vance, the first human
-            partner; and the AI itself, speaking in cold engineering verdicts. On
-            release day, anyone in the Omega tri-token economy unlocks the novel
-            chapter by chapter, proof by proof.
+            partner; and the AI itself, speaking in cold engineering verdicts. In
+            the current release build, anyone with a verified $OMEGA or TWC proof
+            unlocks the novel in full.
           </p>
 
           <div
@@ -98,15 +99,17 @@ export default function NovelPage() {
             <span style={{ color: "var(--color-unlock)", fontWeight: 600 }}>
               Your participation unlocks this book.
             </span>{" "}
-            Hold any token in the Omega economy on release day to unlock Chapter 1
-            onward. The more you participate — hold, contribute, steward, anchor —
-            the more you read. The full novel is reserved for $OMEGA holders.
+            A verified $OMEGA or TWC proof unlocks the full novel. The current
+            build wires those two currencies directly from wallet signature to
+            server-side verification.
           </p>
 
           <div style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
             <CallToAction label="Start Reading — Chapter 1" href={`/novel/${firstChapter.slug}`} />
             <CallToAction label="Join the Economy" href="/invest" variant="ghost" />
           </div>
+
+          <UnlockRailBanner />
         </div>
       </section>
 
@@ -143,8 +146,8 @@ export default function NovelPage() {
             }}
           >
             Genesis Block: The Satoshi Protocol is the story behind the economy.
-            It is the reason the economy exists. On release day, it opens — chapter
-            by chapter — to anyone who holds a piece of the Omega tri-token system.
+            It is the reason the economy exists. In the current build, it opens to
+            anyone who can produce a verified $OMEGA or TWC proof.
           </p>
           <div style={{ display: "flex", gap: "14px", justifyContent: "center", flexWrap: "wrap" }}>
             <CallToAction label="Read the novel" href="/novel" />

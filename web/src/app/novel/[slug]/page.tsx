@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { loadChapters } from "@/lib/book";
 import { GatedChapter } from "@/components/GatedChapter";
+import { UnlockRailBanner } from "@/components/UnlockRailBanner";
 
 export async function generateStaticParams() {
   const chapters = loadChapters();
@@ -145,6 +146,8 @@ export default async function ChapterReaderPage({
             {chapter.pov} — {chapter.setting}
           </p>
         </header>
+
+        <UnlockRailBanner />
 
         {/* The actual gate: prose loads only after server-side signature verification */}
         <GatedChapter slug={chapter.slug} number={chapter.number} />

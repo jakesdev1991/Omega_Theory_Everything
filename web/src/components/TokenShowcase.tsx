@@ -1,18 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { TOKENS, TokenInfo } from "@/lib/types";
+import { TOKENS, TokenInfo, WIRED_TOKENS } from "@/lib/types";
 
-const TOKEN_ORDER: TokenInfo["role"][] = [
-  "sovereign",
-  "proof-of-work",
-  "governance",
-  "exchange",
-  "macro",
-];
+const TOKEN_ORDER: TokenInfo["role"][] = ["macro", "world", "amity"];
 
-export function TokenShowcase() {
+export function TokenShowcase({ variant = "wired" }: { variant?: "wired" | "economy" }) {
   const [hovered, setHovered] = useState<string | null>(null);
+  const source = variant === "economy" ? TOKENS : WIRED_TOKENS;
+  const ordered = TOKEN_ORDER.map((role) => source.find((token) => token.role === role)).filter(Boolean) as TokenInfo[];
 
   return (
     <div
@@ -22,13 +18,12 @@ export function TokenShowcase() {
         gap: "16px",
       }}
     >
-      {TOKEN_ORDER.map((role) => {
-        const t = TOKENS.find((tok) => tok.role === role)!;
-        const isHovered = hovered === t.id;
+      {ordered.map((token) => {
+        const isHovered = hovered === token.id;
 
         return (
           <button
-            key={t.id}
+            key={token.id}
             style={{
               textAlign: "left",
               cursor: "pointer",
@@ -43,7 +38,7 @@ export function TokenShowcase() {
               position: "relative",
               overflow: "hidden",
             }}
-            onMouseEnter={() => setHovered(t.id)}
+            onMouseEnter={() => setHovered(token.id)}
             onMouseLeave={() => setHovered(null)}
           >
             <div
@@ -51,24 +46,24 @@ export function TokenShowcase() {
                 width: "38px",
                 height: "38px",
                 borderRadius: "10px",
-                background: t.color,
+                background: token.color,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 marginBottom: "14px",
-                boxShadow: `0 0 24px ${t.color}33`,
+                boxShadow: `0 0 24px ${token.color}33`,
               }}
             >
               <span
                 style={{
                   color: "#07080c",
                   fontWeight: 700,
-                  fontSize: "14px",
+                  fontSize: token.symbol.length > 6 ? "11px" : "14px",
                   fontFamily: "ui-monospace, monospace",
                   letterSpacing: "0.02em",
                 }}
               >
-                {t.symbol}
+                {token.symbol}
               </span>
             </div>
 
@@ -81,7 +76,7 @@ export function TokenShowcase() {
                 color: "var(--color-foreground)",
               }}
             >
-              {t.name}
+              {token.name}
             </h3>
 
             <p
@@ -91,12 +86,12 @@ export function TokenShowcase() {
                 lineHeight: 1.55,
                 margin: "0 0 12px",
                 display: "-webkit-box",
-                WebkitLineClamp: 2,
+                WebkitLineClamp: 3,
                 WebkitBoxOrient: "vertical",
                 overflow: "hidden",
               }}
             >
-              {t.purpose}
+              {token.purpose}
             </p>
 
             <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
@@ -105,26 +100,26 @@ export function TokenShowcase() {
                   fontSize: "11px",
                   padding: "3px 8px",
                   borderRadius: "6px",
-                  background: "rgba(255,255,255,0.04)",
-                  color: "var(--color-muted-strong)",
+                  background: token.availability === "wired" ? "rgba(52,211,153,0.1)" : "rgba(167,139,250,0.12)",
+                  color: token.availability === "wired" ? "var(--color-unlock)" : "var(--color-amity)",
                   fontFamily: "ui-monospace, monospace",
                   letterSpacing: "0.03em",
                 }}
               >
-                {t.transferable ? "Transferable" : "Non-transferable"}
+                {token.availability === "wired" ? "Live rail" : "Separate scaffold"}
               </span>
               <span
                 style={{
                   fontSize: "11px",
                   padding: "3px 8px",
                   borderRadius: "6px",
-                  background: `${t.color}18`,
-                  color: t.color,
+                  background: `${token.color}18`,
+                  color: token.color,
                   fontFamily: "ui-monospace, monospace",
                   letterSpacing: "0.03em",
                 }}
               >
-                {t.role.replace("-", " ")}
+                {token.network}
               </span>
             </div>
           </button>

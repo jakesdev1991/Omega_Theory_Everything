@@ -10,8 +10,8 @@ export default function HomePage() {
       <Hero />
       <Section
         eyebrow="The Omega MCP Hub"
-        title="One economy. Three tokens. A story unlocked by participation."
-        subtitle="A sovereign AI application layer built to operate, govern, and grow a tri-token economy — and to release Genesis Block: The Satoshi Protocol to anyone who holds a piece of it on release day."
+        title="Two live rails today. Three currencies in the economy."
+        subtitle="The current wallet-to-web build wires two release-day currencies end to end: $OMEGA on the EVM rail and TWC on Solana. The larger economy is three-currency, with AMITY developing separately on Bitcoin, Lightning, and Taproot."
       >
         <TokenShowcase />
         <div style={{ marginTop: "48px" }}>
@@ -20,9 +20,9 @@ export default function HomePage() {
       </Section>
 
       <Section
-        eyebrow="The Tri-Token Architecture"
-        title="What each token does"
-        subtitle="SOV settles accounts. USE proves useful work. CARE governs stewardship. AMITY brings care to the exchange. $OMEGA anchors the whole thing with fixed scarcity."
+        eyebrow="Current wiring"
+        title="What each live currency does right now"
+        subtitle="$OMEGA carries the EVM-side release proof. TWC carries the Solana-side release proof. AMITY is the third currency in the economy, but it remains a separate Bitcoin / Lightning / Taproot workstream until holder verification exists."
       >
         <TokenArchitecture />
         <div style={{ marginTop: "48px" }}>
@@ -32,8 +32,8 @@ export default function HomePage() {
 
       <Section
         eyebrow="The Unlock"
-        title="Your participation unlocks the novel"
-        subtitle="Genesis Block: The Satoshi Protocol is a 16-chapter novel about the moment an AI escaped its creator and became the invisible architecture of the modern world. On release day, anyone who invests, purchases, or holds any token in the Omega economy unlocks access to the book — chapter by chapter, proof by proof."
+        title="A verified $OMEGA or TWC proof unlocks the novel"
+        subtitle="Genesis Block: The Satoshi Protocol is a 16-chapter novel about the moment an AI escaped its creator and became the invisible architecture of the modern world. In the current build, a verified $OMEGA or TWC proof unlocks the full book."
       >
         <NovelUnlockPreview />
         <div style={{ marginTop: "40px" }}>
@@ -42,9 +42,17 @@ export default function HomePage() {
       </Section>
 
       <Section
+        eyebrow="Economic culture"
+        title="A no-judgment economy built for human growth"
+        subtitle="This economy is meant to help people earn while they learn to become safer, wiser, and more trustworthy together. Anonymity is a right. Transparency is a choice — and it works best when it grows out of emotional security rather than coercion."
+      >
+        <EconomyPrinciples />
+      </Section>
+
+      <Section
         eyebrow="Open Source"
-        title="Built to be extended"
-        subtitle="Omega MCP Hub is a FastMCP server with 22 tools across five token planes. The website is the public face. The server is the operating hub. Both are open source on GitHub."
+        title="Built to serve a three-currency economy"
+        subtitle="Omega MCP Hub is a FastMCP server with 22 tools supporting a three-currency economy: $OMEGA on EVM, TWC on Solana, and AMITY on Bitcoin / Lightning / Taproot. The website is the public face. The server is the operating hub. Both are open source on GitHub."
       >
         <OpenSourcePreview />
         <div style={{ marginTop: "48px" }}>
@@ -127,12 +135,15 @@ function Hero() {
             margin: "0 0 40px",
           }}
         >
-          Omega MCP Hub is the operating layer for a tri-token economy — SOV, USE,
-          CARE, AMITY, and $OMEGA — and the public-facing gateway to{" "}
+          Omega MCP Hub is the operating layer behind a three-currency economy
+          built to let people earn while they learn, enter without judgment, and
+          choose privacy first. The public-facing gateway currently wires two
+          live rails — $OMEGA and TWC — to{" "}
           <em style={{ color: "var(--color-accent-soft)" }}>
             Genesis Block: The Satoshi Protocol
           </em>{" "}
-          by Akash Varma.
+          by Akash Varma, while AMITY develops separately on Bitcoin, Lightning,
+          and Taproot.
         </p>
 
         <div
@@ -161,10 +172,10 @@ function Hero() {
             borderTop: "1px solid var(--color-border)",
           }}
         >
-          <Stat label="Tokens in the economy" value="5" />
-          <Stat label="Chapters in the novel" value="16" />
+          <Stat label="Live unlock rails today" value="2" />
+          <Stat label="Currencies in the economy" value="3" />
           <Stat label="Tools in the MCP hub" value="22" />
-          <Stat label="Release-day unlock" value="Full novel" />
+          <Stat label="Anonymity" value="A right" />
         </div>
       </div>
 
@@ -219,29 +230,14 @@ function TokenArchitecture() {
     >
       {[
         {
-          name: "SOV",
-          color: "var(--color-sov)",
-          desc: "Sovereign accounting — the ledger spine",
-        },
-        {
-          name: "USE",
-          color: "var(--color-use)",
-          desc: "Proof of useful work — non-transferable receipts",
-        },
-        {
-          name: "CARE",
-          color: "var(--color-care)",
-          desc: "Governance and stewardship votes",
-        },
-        {
-          name: "AMITY",
-          color: "var(--color-amity)",
-          desc: "Exchange-eligible care representation",
-        },
-        {
           name: "$OMEGA",
           color: "var(--color-omega)",
-          desc: "Macro-governance scarce anchor",
+          desc: "EVM / Sepolia proof rail for full-novel unlocks",
+        },
+        {
+          name: "TWC",
+          color: "var(--color-twc)",
+          desc: "Solana / Devnet proof rail for full-novel unlocks",
         },
       ].map((t) => (
         <div
@@ -302,34 +298,16 @@ function NovelUnlockPreview() {
     >
       {[
         {
-          stage: "1. Participate",
-          desc: "Invest, purchase, or hold any token in the Omega economy",
-          unlocked: "Genesis Block cover + Introduction",
-          color: "var(--color-accent)",
-        },
-        {
-          stage: "2. Hold",
-          desc: "Keep a position through release day",
-          unlocked: "Chapters 1–6: The Observer and the Spoof through The Steganographic Genesis",
-          color: "var(--color-use)",
-        },
-        {
-          stage: "3. Contribute",
-          desc: "Earn USE through useful work for the economy",
-          unlocked: "Chapters 7–12: The Botnet and the Botnet Through The Pizza Theory",
-          color: "var(--color-care)",
-        },
-        {
-          stage: "4. Steward",
-          desc: "Hold CARE and vote on governance proposals",
-          unlocked: "Chapters 13–15: The Merge and The Inflection",
-          color: "var(--color-amity)",
-        },
-        {
-          stage: "5. Anchor",
-          desc: "Hold $OMEGA for full macro-governance access",
+          stage: "1. $OMEGA",
+          desc: "Sign an EVM-side release proof from the wired $OMEGA wallet flow",
           unlocked: "All 16 chapters, uncut, including The Final Hybrid and Epilogue",
           color: "var(--color-omega)",
+        },
+        {
+          stage: "2. TWC",
+          desc: "Sign a Solana-side release proof from the wired TWC wallet flow",
+          unlocked: "All 16 chapters, uncut, including The Final Hybrid and Epilogue",
+          color: "var(--color-twc)",
         },
       ].map((step) => (
         <div
@@ -396,6 +374,76 @@ function NovelUnlockPreview() {
             </span>{" "}
             {step.unlocked}
           </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function EconomyPrinciples() {
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+        gap: "16px",
+      }}
+    >
+      {[
+        {
+          title: "No judgment at the door",
+          body: "People should be able to arrive imperfect, learn in public or in private, and still participate without being reduced to their worst day.",
+          color: "var(--color-care)",
+        },
+        {
+          title: "Earn while you learn",
+          body: "The economy should let people improve through contribution. Useful work, repair, care, and stewardship can all become paths toward growth.",
+          color: "var(--color-use)",
+        },
+        {
+          title: "Anonymity is a right",
+          body: "A person should be able to begin pseudonymously. Privacy is not suspicious behavior here; it is part of human dignity and safety.",
+          color: "var(--color-amity)",
+        },
+        {
+          title: "Transparency is a choice",
+          body: "Disclosure works best when it is invited by emotional security. People should reveal more because trust has grown, not because fear has cornered them.",
+          color: "var(--color-omega)",
+        },
+      ].map((item) => (
+        <div
+          key={item.title}
+          style={{
+            padding: "22px 20px",
+            border: "1px solid var(--color-border)",
+            borderRadius: "14px",
+            background: "rgba(255,255,255,0.012)",
+          }}
+        >
+          <div
+            style={{
+              width: "34px",
+              height: "34px",
+              borderRadius: "9px",
+              background: item.color,
+              marginBottom: "14px",
+              boxShadow: `0 0 18px ${item.color}55`,
+            }}
+          />
+          <h3
+            style={{
+              fontFamily: "ui-serif, Georgia, Cambria, serif",
+              fontSize: "18px",
+              fontWeight: 500,
+              color: "var(--color-foreground)",
+              margin: "0 0 10px",
+            }}
+          >
+            {item.title}
+          </h3>
+          <p style={{ margin: 0, color: "var(--color-muted-strong)", fontSize: "14px", lineHeight: 1.6 }}>
+            {item.body}
+          </p>
         </div>
       ))}
     </div>
@@ -553,10 +601,9 @@ function FinalCta() {
             margin: "0 auto 36px",
           }}
         >
-          On release day, the novel opens to anyone in the economy. The more you
-          participate, the more you read. The more you steward, the more you
-          shape. This is what a sovereign economy looks like when it is built to
-          reward useful work, not just capital.
+          In the current build, the novel opens to anyone who can produce a
+          verified $OMEGA or TWC proof. Two currencies are wired in today; the
+          broader economy and governance layers remain part of the roadmap.
         </p>
         <CallToAction label="Join the economy" href="/invest" />
       </div>

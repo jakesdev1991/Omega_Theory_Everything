@@ -3,13 +3,14 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-const STORAGE_KEY = "amity.unlock.proof";
+const STORAGE_KEY = "omega.unlock.proof";
 
 type State =
   | { status: "checking" }
   | { status: "locked" }
-  | { status: "unlocked"; address: string; tier: string; unlocked: number }
-  | { status: "denied"; address: string; unlocked: number; error: string };
+  | { status: "error"; error: string }
+  | { status: "unlocked"; address: string; currency: string; network: string; unlocked: number }
+  | { status: "denied"; address: string; currency?: string; network?: string; unlocked: number; error: string };
 
 function readStagedProof(): {
   message: string;
@@ -48,25 +49,37 @@ export function GatedChapter({ slug, number }: { slug: string; number: number })
           setState({
             status: "unlocked",
             address: data.address,
-            tier: data.tier,
+            currency: data.currency,
+            network: data.network,
             unlocked: data.unlocked,
           });
-        } else {
+        } else if (data.address && typeof data.unlocked === "number") {
           setState({
             status: "denied",
             address: data.address,
+            currency: data.currency,
+            network: data.network,
             unlocked: data.unlocked,
             error: data.error,
           });
+        } else if (data.error) {
+          setState({ status: "error", error: data.error });
+        } else {
+          setState({ status: "locked" });
         }
       })
-      .catch(() => setState({ status: "locked" }));
+      .catch((error) =>
+        setState({
+          status: "error",
+          error: error instanceof Error ? error.message : "Unable to contact the unlock verifier.",
+        }),
+      );
   }, [slug]);
 
   if (state.status === "checking") {
     return (
       <div className="gate-panel">
-        Verifying wallet signature against the ledger…
+        Verifying $OMEGA / TWC wallet proof and on-chain eligibility…
       </div>
     );
   }
@@ -86,7 +99,7 @@ export function GatedChapter({ slug, number }: { slug: string; number: number })
             fontFamily: "ui-monospace, monospace",
           }}
         >
-          UNLOCKED · signer {state.address} · {state.tier} · {state.unlocked}/16 chapters
+          UNLOCKED · {state.currency} · {state.network} · signer {state.address} · {state.unlocked}/16 chapters
         </div>
         <div
           style={{
@@ -105,12 +118,28 @@ export function GatedChapter({ slug, number }: { slug: string; number: number })
     return (
       <div className="gate-panel" style={{ borderColor: "var(--color-care)" }}>
         <div style={{ fontWeight: 600, marginBottom: "8px", color: "var(--color-care)" }}>
-          Verified signer, chapter above tier
+          Verified signer, proof did not unlock this chapter
         </div>
         <p style={{ margin: "0 0 12px", fontSize: "14px" }}>
           {state.error} Your address ({state.address}) has {state.unlocked} of 16
-          chapters open. Raise your participation tier in the Amity wallet and sign
-          again to read further.
+          chapters open for this proof. Refresh your signed $OMEGA or TWC proof and
+          try again.
+        </p>
+        <Link href="/novel" className="link-soft" style={{ color: "var(--color-accent)", fontSize: "14px" }}>
+          Back to chapter list
+        </Link>
+      </div>
+    );
+  }
+
+  if (state.status === "error") {
+    return (
+      <div className="gate-panel" style={{ borderColor: "var(--color-care)" }}>
+        <div style={{ fontWeight: 600, marginBottom: "8px", color: "var(--color-care)" }}>
+          Verification could not complete
+        </div>
+        <p style={{ margin: "0 0 12px", fontSize: "14px" }}>
+          {state.error}
         </p>
         <Link href="/novel" className="link-soft" style={{ color: "var(--color-accent)", fontSize: "14px" }}>
           Back to chapter list
@@ -126,9 +155,10 @@ export function GatedChapter({ slug, number }: { slug: string; number: number })
       </div>
       <p style={{ margin: "0 0 12px", fontSize: "14px", color: "var(--color-muted-strong)" }}>
         Chapter {number} of <em>Genesis Block: The Satoshi Protocol</em> is released to
-        verified participants of the Omega tri-token economy. Open the Amity wallet,
-        sign the release-day unlock statement, and return here — the chapter prose is
-        served only after your signature verifies on the server.
+        verified $OMEGA and TWC participants. Open the wallet, sign a release-day
+        unlock statement for one of the two wired currencies, and return here — the
+        chapter prose is served only after your signature verifies and the server
+        independently confirms the configured on-chain rail.
       </p>
       <Link href="/novel" className="link-soft" style={{ color: "var(--color-accent)", fontSize: "14px" }}>
         Back to chapter list

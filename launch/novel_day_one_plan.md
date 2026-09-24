@@ -25,18 +25,18 @@ participation:
 | Release asset | **Crucible: The Satoshi Protocol** (novel; draft complete through Ch. 16, author states it is not final) | ✅ Titled |
 | Gate mechanism | Token-gated unlock (hold to unlock) | ✅ Locked |
 | Umbrella protocol name | **The C.A.R.E. Protocol** (whole ecosystem) | ✅ Locked |
-| $OMEGA | Ethereum — **pilot on Sepolia testnet**; mainnet-day-one venue (Ethereum L1 vs L2) **still open** — see §3.1 | ⚠️ Partial |
+| $OMEGA | EVM — **current pilot on Ethereum Sepolia testnet**; mainnet-day-one venue (Ethereum L1 vs EVM L2) **still open** — see §3.1 | ⚠️ Partial |
 | Solana token name | **Token of the World Citizen (`TWC`)**; Devnet pilot identity is `tTWC` | ✅ Selected; Devnet-only issuer/verifier implemented locally, no mint deployed |
-| AMITY | Bitcoin, Lightning via Taproot Assets | ✅ Locked |
+| AMITY | Bitcoin/Lightning with Taproot Assets | ✅ Locked |
 | Day-one rule | Holding ≥ published threshold of any one token unlocks the novel | ✅ Locked |
 | Copyright | Author holds copyright automatically on creation; US registration of the draft via copyright.gov eCO planned (see §6.1) | 🔄 In progress |
 
 **Important clarification on "Sepolia":** Sepolia is an Ethereum **testnet**. It is exactly
 where the $OMEGA contracts should be piloted (blueprint Phase 2), and that is now the plan
-of record. But "mainnet day one" requires the token to ultimately live on Ethereum mainnet
-or an L2 — Sepolia test ETH carries no value and cannot back a real launch. The mainnet
-venue decision (Ethereum L1 vs Base/Arbitrum/OP-style L2) remains open; §3.1 keeps the
-recommendation of an L2 for cheap gate/claim interactions.
+of record. But "mainnet day one" requires the token to ultimately live on an EVM mainnet
+venue — whether Ethereum L1 or an EVM L2 — because Sepolia test ETH carries no value and
+cannot back a real launch. The mainnet venue decision (Ethereum L1 vs Base/Arbitrum/OP-style
+EVM L2) remains open; §3.1 keeps the recommendation of an L2 for cheap gate/claim interactions.
 
 ## 2. Where things stand today
 
@@ -45,9 +45,9 @@ Honest inventory as of this plan:
 | Component | State |
 |---|---|
 | Novel manuscript | Draft (author states not final); file not yet delivered to the repo — staging prepared in `novel/`; title, cover, ebook formats not produced |
-| Token contracts | **Ethereum pilot implemented locally:** [`../evm/`](../evm/) contains a Sepolia-only, valueless `tOMEGA` fixed-supply token, vote escrow, locking, Governor + TimelockController, and claim gate. **Solana pilot implemented locally:** [`../solana/`](../solana/) contains a Devnet-only, valueless `tTWC` standard SPL mint issuer/verifier with immutable Metaplex fungible metadata and null mint/freeze authorities. **Neither is deployed or independently audited.** No Taproot asset exists yet. |
+| Token contracts | **Ethereum pilot implemented locally:** [`../evm/`](../evm/) contains a Sepolia-only, valueless `tOMEGA` fixed-supply token, vote escrow, locking, Governor + TimelockController, and claim gate. **Solana pilot implemented locally:** [`../solana/`](../solana/) contains a Devnet-only, valueless `tTWC` standard SPL mint issuer/verifier with immutable Metaplex fungible metadata and null mint/freeze authorities. **AMITY scaffold implemented locally:** [`../amity/`](../amity/) contains a testnet-only operator/configuration scaffold, canonical holder-challenge formatting, and a non-broadcasting preflight for the future Taproot Assets leg. **None is deployed or independently audited.** No Taproot asset exists yet. |
 | Rust core (`rust/`) | Deterministic ledger + PoUW claim lifecycle prototype with tests; no chain integration |
-| App (`app/`) | Offline, valueless mockup; no wallet connection of any kind |
+| App (`app/`) | Local-first wallet prototype with real client-side signing flows; **currently wires two release currencies into the unlock path**: `$OMEGA` (Ethereum) and `TWC` (Solana) |
 | Specs/whitepapers | Tri-token blueprint + 4 whitepapers ($OMEGA, TOKAMAK, C.A.R.E./AMITY, Lucifer–Hermes) |
 | Naming consistency | The ecosystem/protocol is **the C.A.R.E. Protocol**; pilot identities are **`tOMEGA`** (Ethereum Sepolia), **`tTWC`** (Solana Devnet), and AMITY remains a separate Bitcoin/Lightning workstream. The canonical future Solana identity is **Token of the World Citizen (`TWC`)**. `TOKAMAK` is retired as the Solana-token name; blueprint SOV/USE/CARE remain legacy local-simulation names. Trademark/legal clearance remains open. |
 | Audits, legal, testnet | No independent audit, legal review, or public testnet deployment has started |
@@ -111,11 +111,14 @@ Needed for this leg:
 2. A separate reviewed distribution policy before any future issuance beyond a test pilot; no sale,
    allocation, or economic claim is implemented here.
 3. Gate: signed-message verification — wallet signs a challenge, service independently verifies
-   an SPL balance or claim event via RPC. The existing client-supplied tier flow is not adequate.
+   an SPL balance or claim event via RPC. A local Devnet holder-verifier helper now exists in
+   [`../solana/`](../solana/) for signed-proof + balance checks against a deployed mint manifest,
+   but the production-facing web/nonced challenge flow still needs to be integrated; the existing
+   client-supplied tier flow is not adequate.
 4. Independent security review, legal approval, and a separate mainnet specification before any
    mainnet-beta deployment.
 
-### 3.3 AMITY — Bitcoin, Lightning via Taproot Assets
+### 3.3 AMITY — Bitcoin/Lightning with Taproot Assets
 
 Feasibility (as of mid-2026): **viable and production-grade.** Taproot Assets is at v0.8;
 Lightning transport has been live since v0.4 (July 2024); Tether's USDT rides Lightning via
@@ -257,9 +260,9 @@ and again for the final version at (or within 3 months of) day-one publication.
 | W1 | Manuscript & IP (title, formats, clearance) | Not started | Title; Naruto/D-Wave approach |
 | W2 | $OMEGA contracts (ERC-20, governor, staking, gate) | **Implemented locally; Sepolia deployment pending** — see [`../evm/`](../evm/) | Sepolia treasury/guardian addresses, test ETH, preflight, independent audit before any expansion |
 | W3 | TWC token (SPL, immutable metadata, distribution policy) | **Devnet-only `tTWC` issuer/verifier implemented locally; no mint deployed** | Authorized Devnet treasury/signer/funds/metadata, preflight, independent review; legal clearance before any mainnet/value-bearing step |
-| W4 | AMITY Taproot infra (litd/tapd, universe, issuance) | Not started | Ops/hosting budget |
+| W4 | AMITY Taproot infra (litd/tapd, universe, issuance) | **Started:** local testnet-only operator scaffold + preflight now exist in [`../amity/`](../amity/); no node, asset, or Universe server yet | Ops/hosting budget |
 | W5 | Gates + key ceremony (3 gates, 1 key, dry-runs) | Not started | — |
-| W6 | Launch app (wallet connect + unlock page) | Not started — app is offline-only today | Which wallets to support |
+| W6 | Launch app (wallet connect + unlock page) | **In progress:** wallet/web flow now wires `$OMEGA` and `TWC` proofs end to end, and the web app can independently check the configured Sepolia/Devnet pilot rails when manifests or equivalent env vars are present; AMITY is now operator-visible as a separate scaffold status surface only, and broader deployment hardening remains pending | Which additional wallets to support beyond MetaMask + Phantom |
 | W7 | Testnet drills + audits | Not started | Audit firm selection |
 | W8 | Legal & compliance (securities, ToS, privacy, claims) | Not started | Counsel engagement |
 | W9 | Ops & day-0 runbook (multisig, monitoring, pause) | Not started | — |

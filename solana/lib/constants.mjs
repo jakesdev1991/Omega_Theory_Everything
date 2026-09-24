@@ -10,6 +10,7 @@ export const DEFAULT_MANIFEST_PATH = join(DEPLOYMENTS_DIRECTORY, "twc-devnet.jso
 export const DEVNET_CLUSTER = "devnet";
 export const DEVNET_DEFAULT_RPC_URL = "https://api.devnet.solana.com";
 export const DEVNET_GENESIS_HASH = "EtWTRABZaYq6iMfeYKouRu166VU2xqa1wcaWoxPkrZBG";
+export const STANDARD_TOKEN_PROGRAM_ADDRESS = "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA";
 
 // This is intentionally a pilot identity. The canonical, future-mainnet identity
 // remains Token of the World Citizen (TWC), subject to legal/trademark clearance.
@@ -25,6 +26,11 @@ export const MIN_DEPLOYER_BALANCE_LAMPORTS = 50_000_000n; // 0.05 Devnet SOL
 export const MAX_METADATA_BYTES = 262_144;
 export const MAX_METADATA_URI_BYTES = 200;
 export const MANIFEST_VERSION = 1;
+export const FULL_NOVEL_UNLOCK_CHAPTERS = 16;
+export const HOLDER_PROOF_NETWORK = DEVNET_CLUSTER;
+export const HOLDER_PROOF_PREAMBLE = "OMEGA TWC DEVNET PILOT - RELEASE-DAY NOVEL UNLOCK";
+export const HOLDER_PROOF_PURPOSE = "Verify current tTWC pilot holdings for release-day novel unlock.";
+export const HOLDER_PROOF_MAX_MESSAGE_BYTES = 1232;
 
 export const DEPLOYMENT_CONFIRMATION_VALUE = "DEVNET_TWC_PILOT";
 

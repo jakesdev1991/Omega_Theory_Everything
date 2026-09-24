@@ -1,0 +1,17 @@
+{
+  "name": "@omega/amity-testnet",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Testnet-only AMITY Taproot Assets operator scaffold.",
+  "license": "UNLICENSED",
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "test": "node --test",
+    "check": "npm test",
+    "preflight:testnet": "node scripts/preflight-testnet.mjs",
+    "manifest:testnet": "node scripts/write-manifest-testnet.mjs"
+  }
+}

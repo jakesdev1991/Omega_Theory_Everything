@@ -97,6 +97,31 @@ npm run verify:devnet
 
 Verification fails closed if the RPC is not Devnet, a mint/freeze authority remains, supply or treasury balance differs, the standard program/PDA differs, metadata is mutable or malformed, or the public JSON no longer matches the committed SHA-256.
 
+## Holder-signature gate helper
+
+This directory now also includes a **Devnet-only holder verifier helper** for the later novel-unlock gate. It does **not** replace a web service, nonce store, wallet UI, legal review, or a release process; it is a reusable verifier that checks two things independently:
+
+1. the holder signed the exact challenge bytes with the private key for the claimed Solana address; and
+2. that address currently holds a positive `tTWC` balance for the deployed mint on Devnet.
+
+A proof JSON file has this shape:
+
+```json
+{
+  "address": "<holder wallet>",
+  "message": "OMEGA TWC DEVNET PILOT - RELEASE-DAY NOVEL UNLOCK\nAddress: ...\nMint: ...\nNetwork: devnet\nOrigin: ...\nNonce: ...\nIssued At: ...\nPurpose: Verify current tTWC pilot holdings for release-day novel unlock.",
+  "signature": "<base58 detached signature>"
+}
+```
+
+The signed message must name the deployed mint, the Devnet network, an origin string, a nonce, and a canonical UTC `Issued At` timestamp. Once a pilot exists and a service has collected a signed proof, verify it against the ignored deployment manifest:
+
+```bash
+npm run verify:holder -- path/to/proof.json --manifest /path/to/twc-devnet.json --origin https://omega.example/novel --max-age-minutes 15
+```
+
+The verifier refuses zero-balance holders, wrong origins, stale proofs (when a max age is supplied), non-Devnet RPCs, malformed signatures, and messages whose mint/network do not match the deployment manifest. On success it returns a JSON receipt including the verified address and current token balance. In the current release design, any positively verified TWC holder unlocks the **full novel**; this helper therefore reports a full-unlock receipt rather than a client-claimed tier.
+
 ## Operating limits and handoff
 
 - `tTWC` is a valueless test artifact. Do not advertise it, list it, sell it, bridge it, or treat it as a right to a product, payment, governance power, or real-world service.
