@@ -12,6 +12,7 @@
     "compile": "hardhat compile",
     "size": "node scripts/check-contract-size.js",
     "test": "hardhat test",
+    "test:fixture": "hardhat run scripts/run-fixture-harness.js",
     "check": "npm run compile && npm run size && npm test",
     "preflight:sepolia": "hardhat run scripts/preflight-sepolia.js --network sepolia",
     "deploy:sepolia": "hardhat run scripts/deploy-sepolia.js --network sepolia",
