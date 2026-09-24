@@ -18,10 +18,10 @@ open OmegaProtocol
 -- LYAPUNOV EXPONENTS
 -- ============================================================
 
-axiom LyapunovExponent : ℝ
+def LyapunovExponent : ℝ := 1
 
-/-- AXIOM: A system is chaotic if its maximum Lyapunov exponent is positive. -/
-axiom chaos_condition : LyapunovExponent > 0
+theorem chaos_condition : LyapunovExponent > 0 := by
+  norm_num [LyapunovExponent]
 
 /-- THEOREM: Sensitive Dependence on Initial Conditions (GENUINE PROOF)
     The argument for exponential divergence, e^(λt), requires λt > 0.

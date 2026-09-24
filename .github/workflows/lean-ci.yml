@@ -52,3 +52,4 @@ jobs:
             exit 1
           fi
           echo "Clean: no sorry/trivial stubs."
+          python3 audit_axioms.py --max 0

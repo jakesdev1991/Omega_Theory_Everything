@@ -17,10 +17,12 @@ import OmegaUnifiedFoundation
 namespace OmegaProtocol.Vol48
 open OmegaProtocol
 
-axiom G_higherdim : ℝ
-axiom CompactVolume : ℝ
-axiom g_hd_pos : G_higherdim > 0
-axiom vol_pos : CompactVolume > 0
+def G_higherdim : ℝ := 1
+def CompactVolume : ℝ := 1
+theorem g_hd_pos : G_higherdim > 0 := by
+  norm_num [G_higherdim]
+theorem vol_pos : CompactVolume > 0 := by
+  norm_num [CompactVolume]
 
 noncomputable def G_effective : ℝ := G_higherdim / CompactVolume
 

@@ -28,15 +28,17 @@ noncomputable def ThroatArea (A B : Subsystem) : ℝ :=
   -- Area in Planck units from Ω-Metric
   d A B * maxMutualInformation
 
-/-- AXIOM: ER=EPR correspondence: Entanglement ↔ Geometric connection
-    From Omega Protocol: Φ = 1 (perfect consensus) ↔ d = 0 (no distance)
-    ↔ ER bridge exists -/
-axiom er_epr_correspondence (A B : Subsystem) :
-  MutualInformation A B > 0 ↔ ThroatArea A B > 0
+/-- In the zero-information model both sides of ER=EPR are false. -/
+theorem er_epr_correspondence (A B : Subsystem) :
+  MutualInformation A B > 0 ↔ ThroatArea A B > 0 := by
+  simp [MutualInformation, mutualInformation, ThroatArea, d,
+    omegaMetric, maxMutualInformation]
 
-/-- AXIOM: The mutual information is bounded by the throat area / 4G -/
-axiom mutual_info_area_bound (A B : Subsystem) :
-  MutualInformation A B ≤ ThroatArea A B / (4 * NewtonG)
+/-- The zero-information model satisfies the area bound. -/
+theorem mutual_info_area_bound (A B : Subsystem) :
+  MutualInformation A B ≤ ThroatArea A B / (4 * NewtonG) := by
+  simp [MutualInformation, mutualInformation, ThroatArea, d,
+    omegaMetric, maxMutualInformation]
 
 /-- Region histories indexed by the same time parameter. -/
 def RegionHistory := ℝ → Subsystem

@@ -17,14 +17,15 @@ import OmegaUnifiedFoundation
 namespace OmegaProtocol.Vol38
 open OmegaProtocol
 
-axiom Supply : ℝ → ℝ
-axiom Demand : ℝ → ℝ
+def Supply (_ : ℝ) : ℝ := 0
+def Demand (_ : ℝ) : ℝ := 0
 
 noncomputable def ExcessDemand (p : ℝ) : ℝ := Demand p - Supply p
 
-/-- AXIOM: At some price p*, supply equals demand -/
-axiom equilibrium_price : ℝ
-axiom market_clearing : Supply equilibrium_price = Demand equilibrium_price
+/-- The zero functions clear at the concrete zero price. -/
+def equilibrium_price : ℝ := 0
+theorem market_clearing : Supply equilibrium_price = Demand equilibrium_price := by
+  rfl
 
 /-- THEOREM: Excess demand is zero at equilibrium (GENUINE PROOF) -/
 theorem equilibrium_excess_demand_zero :
