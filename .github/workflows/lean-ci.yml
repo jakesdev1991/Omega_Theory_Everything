@@ -53,14 +53,19 @@ jobs:
           set +e
           lake build ToE > /tmp/lake-build.log 2>&1
           rc=$?
-          echo "lake build exited with $rc"
-          grep -E '\.lean:[0-9]+:[0-9]+' /tmp/lake-build.log | head -n 40 | while IFS= read -r line; do
+          if [ "$rc" -eq 0 ]; then
+            echo "::notice::lake build re-run exited 0 (original failure was transient)"
+          else
+            echo "::error::lake build re-run exited $rc"
+          fi
+          grep -E '\.lean:[0-9]+:[0-9]+' /tmp/lake-build.log | grep -E 'error|warning' | head -n 25 | while IFS= read -r line; do
             msg=$(printf '%s' "$line" | tr -d '\r' | sed 's/"/\\"/g' | cut -c1-600)
             echo "::error::$msg"
           done
-          echo "::group::lake build log (tail)"
-          tail -n 120 /tmp/lake-build.log
-          echo "::endgroup::"
+          tail -n 25 /tmp/lake-build.log | while IFS= read -r line; do
+            msg=$(printf 'LOG| %s' "$line" | tr -d '\r' | sed 's/"/\\"/g' | cut -c1-600)
+            echo "::error::$msg"
+          done
 
       - name: Gate - no sorry / trivial stubs in sources
         working-directory: lean_proofs
