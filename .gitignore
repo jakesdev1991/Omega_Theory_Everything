@@ -6,3 +6,14 @@ __pycache__/
 
 # Lean build artifacts
 .lake/
+
+# Rust build artifacts
+target/
+**/target/
+
+# Node / JS build artifacts
+node_modules/
+**/node_modules/
+.next/
+**/dist/
+**/build/
