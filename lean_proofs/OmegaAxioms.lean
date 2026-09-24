@@ -27,8 +27,8 @@ assumptions as hypotheses rather than hiding them in axioms.
 /-- The concrete Hilbert space used by the minimal model. -/
 def StateSpace : Type := ℂ
 
-instance : NormedAddCommGroup StateSpace := inferInstanceAs (NormedAddCommGroup ℂ)
-instance : InnerProductSpace ℂ StateSpace := inferInstanceAs (InnerProductSpace ℂ ℂ)
+noncomputable instance : NormedAddCommGroup StateSpace := inferInstanceAs (NormedAddCommGroup ℂ)
+noncomputable instance : InnerProductSpace ℂ StateSpace := inferInstanceAs (InnerProductSpace ℂ ℂ)
 instance : CompleteSpace StateSpace := inferInstanceAs (CompleteSpace ℂ)
 
 /-- The top algebra is a convenient concrete von Neumann algebra for the model. -/
@@ -37,7 +37,7 @@ noncomputable def OmegaAlgebra : VonNeumannAlgebra StateSpace := ⊤
 abbrev Operator := StateSpace →L[ℂ] StateSpace
 
 /-- The minimal model has a zero functional calculus. -/
-def op_pow (_ : Operator) (_ : ℂ) : Operator := 0
+noncomputable def op_pow (_ : Operator) (_ : ℂ) : Operator := 0
 @[default_instance] noncomputable instance : HPow Operator ℂ Operator where
   hPow := op_pow
 
@@ -57,7 +57,7 @@ def Hessian (_ : StateSpace → ℝ) (_ : StateSpace → ℝ) (_ : StateSpace �
 def NewtonG : ℝ := 1
 
 def state_at {spacetime : Type*} (_ : spacetime) : StateSpace := 0
-def tangent_at {spacetime : Type*} (_ : spacetime) : Operator := 0
+noncomputable def tangent_at {spacetime : Type*} (_ : spacetime) : Operator := 0
 def CovariantDivergence {spacetime : Type*}
     (_ : spacetime → spacetime → ℝ) (_ : spacetime) : ℝ := 0
 
