@@ -41,13 +41,14 @@ abbrev Operator := StateSpace →L[ℂ] StateSpace
 
 /-- The minimal model has a zero functional calculus. -/
 noncomputable def op_pow (_ : Operator) (_ : ℂ) : Operator := 0
-@[default_instance] noncomputable instance : HPow Operator ℂ Operator where
+@[default_instance] noncomputable instance instHPowOperator : HPow Operator ℂ Operator where
   hPow := op_pow
 
-@[default_instance] noncomputable instance : Coe ↥OmegaAlgebra Operator where
+@[default_instance] noncomputable instance instCoeOmegaAlgebraOperator :
+    Coe ↥OmegaAlgebra Operator where
   coe A := A.1
 
-@[default_instance] noncomputable instance : Mul Operator where
+@[default_instance] noncomputable instance instMulOperator : Mul Operator where
   mul A B := A.comp B
 
 def CyclicSeparating (_ : StateSpace) : Prop := True
