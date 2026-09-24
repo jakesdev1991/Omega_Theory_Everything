@@ -25,38 +25,26 @@ jobs:
     name: Lean build (mathlib cache)
     runs-on: ubuntu-latest
     timeout-minutes: 120
-    defaults:
-      run:
-        working-directory: lean_proofs
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install elan + Lean toolchain
-        run: |
-          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-          elan toolchain install $(cat lean-toolchain)
-
-      - name: Cache mathlib packages and oleans
-        uses: actions/cache@v4
+      # Official Lean action: installs elan + pinned toolchain, fetches
+      # prebuilt mathlib oleans, and runs `lake build ToE` in lean_proofs/.
+      - uses: leanprover/lean-action@v1
         with:
-          path: |
-            lean_proofs/.lake/packages
-            ~/.cache/mathlib
-          key: lean-${{ runner.os }}-mathlib-${{ hashFiles('lean_proofs/lakefile.lean', 'lean_proofs/lean-toolchain') }}
-          restore-keys: |
-            lean-${{ runner.os }}-mathlib-
-
-      - name: Resolve dependencies
-        run: lake update
-
-      - name: Fetch prebuilt mathlib oleans
-        run: lake exe cache get
-
-      - name: Build all volumes
-        run: lake build ToE
+          lake-package-directory: lean_proofs
+          auto-config: false
+          use-github-cache: true
+          use-mathlib-cache: true
+          build: true
+          build-args: "ToE"
+          test: false
+          lint: false
 
       - name: Gate - no sorry / trivial stubs in sources
+        working-directory: lean_proofs
         run: |
           set -e
           if grep -rn --include='*.lean' -E '\bsorry\b|: True :=|:= by trivial' . ; then
