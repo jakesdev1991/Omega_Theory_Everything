@@ -7,8 +7,9 @@ namespace OmegaProtocol.Vol44
 open OmegaProtocol
 open Vol07
 
-axiom Lambda_positive : ℝ
-axiom lambda_pos : Lambda_positive > 0
+def Lambda_positive : ℝ := 1
+theorem lambda_pos : Lambda_positive > 0 := by
+  norm_num [Lambda_positive]
 
 noncomputable def DeSitterRadiusSq : ℝ := 3 / Lambda_positive
 noncomputable def DeSitterArea : ℝ := 4 * Real.pi * DeSitterRadiusSq

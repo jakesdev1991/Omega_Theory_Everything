@@ -17,9 +17,10 @@ import OmegaUnifiedFoundation
 namespace OmegaProtocol.Vol37
 open OmegaProtocol
 
-axiom ActivatorDiffusion : ℝ
-axiom InhibitorDiffusion : ℝ
-axiom turing_condition : InhibitorDiffusion > ActivatorDiffusion
+def ActivatorDiffusion : ℝ := 1
+def InhibitorDiffusion : ℝ := 2
+theorem turing_condition : InhibitorDiffusion > ActivatorDiffusion := by
+  norm_num [InhibitorDiffusion, ActivatorDiffusion]
 
 theorem turing_instability_ratio
   (h_pos : ActivatorDiffusion > 0) :

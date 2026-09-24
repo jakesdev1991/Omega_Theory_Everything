@@ -1,0 +1,107 @@
+{
+  "policyVersion": "care-architecture-v2-draft",
+  "status": "research-draft",
+  "mainnetApproved": false,
+  "invariants": {
+    "permanentMoralExile": false,
+    "vagueEconomicOffenses": false,
+    "hardshipDurationCap": null,
+    "hardshipCountCap": null,
+    "forcedHardshipExpiry": false,
+    "hiddenDeviceUse": false,
+    "automaticAgentPunishment": false,
+    "personalEnforcementProfit": false,
+    "unbackedValueCreation": false,
+    "unrelatedBalanceConfiscation": false
+  },
+  "assets": {
+    "CARE": {
+      "role": "protected_internal_care_and_support_entitlement",
+      "marketFacing": false
+    },
+    "AMITY": {
+      "role": "external_market_facing_risk_bearing_asset",
+      "marketFacing": true
+    },
+    "TWC": {
+      "role": "useful_work_and_resource_contribution_settlement",
+      "marketFacing": "policy_dependent"
+    },
+    "OMEGA": {
+      "role": "governance_treasury_and_protocol_accountability",
+      "marketFacing": "policy_dependent"
+    }
+  },
+  "weeklyDistribution": {
+    "mode": "fixed_pool_pro_rata",
+    "poolAmount": null,
+    "epochSeconds": 604800,
+    "earlyParticipationAdvantage": true,
+    "hiddenAuthenticityScore": false
+  },
+  "careAmityConversion": {
+    "initialParticipantDockBps": 500,
+    "maximumParticipantDockBps": 2000,
+    "extremeUnissuedHoldbackBps": 1500,
+    "baseBurnBps": 0,
+    "maximumTotalReductionBps": 3500,
+    "conversionRequest": "available_anytime_subject_to_funded_settlement",
+    "usesArbitraryItemValueOracle": false
+  },
+  "walletResources": {
+    "defaultDeviceBudgetBps": 200,
+    "minimumQuota": null,
+    "quotaEpochSeconds": 604800,
+    "userCanPause": true,
+    "delegatedContributionAllowed": true,
+    "silentBackgroundUse": false
+  },
+  "hardship": {
+    "duration": "unbounded",
+    "count": "unbounded",
+    "assistance": "unbounded",
+    "debtCreated": false,
+    "publicReasonRequired": false,
+    "sponsorBonusRequiresVerifiedResourceContribution": true,
+    "unfundedNeedCreatesUnbackedAssets": false
+  },
+  "roles": {
+    "levels": ["participant", "X1", "X2", "archangel"],
+    "archangelCap": {
+      "mode": "floor_active_participants_divided_by_denominator",
+      "denominator": 500,
+      "smallCommunityFallback": "shared_regional_pool"
+    },
+    "archangelGovernancePoolBps": null,
+    "purchasableWithTokens": false
+  },
+  "integritySanctions": {
+    "appliesOnlyToFinalAdjudicatedRules": true,
+    "founderShareBps": 0,
+    "firstOffense": {
+      "recoverUnauthorizedDeltaBps": 10000,
+      "preserveUnrelatedLegitimateBalances": true,
+      "roleRestriction": true
+    },
+    "secondOffense": {
+      "removeOrLeaveUnissuedIllicitDeltaBps": 7500,
+      "securityRestitutionReserveBps": 1500,
+      "independentAuditBountyFundBps": 1000
+    },
+    "thirdOffense": {
+      "repeatSecondOffenseFinancialRule": true,
+      "exclusion": "indefinite_temporary_reviewable",
+      "permanentMoralExile": false
+    },
+    "responsibleDisclosureSafeHarbor": true
+  },
+  "agentBoundaries": {
+    "maySummarizeEvidence": true,
+    "mayReproduceDeterministicCalculations": true,
+    "mayRouteCases": true,
+    "mayCreateOffenseCategories": false,
+    "mayFinalizeHighImpactSanctionAlone": false,
+    "mayMintOrTransferValue": false,
+    "mayDiagnose": false
+  }
+}

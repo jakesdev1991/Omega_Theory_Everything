@@ -10,9 +10,10 @@ This directory is the **first local scaffold** for the AMITY leg of the C.A.R.E.
 
 - a strict **testnet-only** operator config parser;
 - a canonical **AMITY holder unlock challenge** builder/parser for the future proof-of-holdings gate;
+- a source-neutral holder-proof policy boundary with an explicitly test-only fixture adapter;
 - a non-broadcasting **preflight** command for local operator setup;
 - a local **status-manifest scaffold** generator for operator/web visibility; and
-- offline tests for config, manifest, and challenge format.
+- offline tests for config, manifest, challenge format, and invalid/stale/wrong-asset proof cases.
 
 This is meant to derisk the shape of the AMITY operator workflow before wiring a real `litd` / `tapd` stack into the release path.
 
@@ -21,7 +22,12 @@ This is meant to derisk the shape of the AMITY operator workflow before wiring a
 ```bash
 cd amity
 npm test
+npm run test:fixture
 ```
+
+`npm run test:fixture` runs a non-networking holder-claim harness. It exercises the exact testnet, asset-ID, Universe, origin, freshness, positive-balance, and signed-claim bindings through an injected fixture source. The fixture uses a real secp256k1 ECDSA test key, so tampering with the signed claim is detected. The fixture public key is not bound to a wallet address, however, so this is **not** a Taproot wallet Schnorr signature or a real asset-ownership proof.
+
+Fixture proofs are rejected by the verifier unless `allowFixture: true` is passed explicitly. The fixture source is not used by the web app and cannot make AMITY eligible for unlocks.
 
 ## Preflight
 
@@ -48,6 +54,19 @@ That command writes the ignored local snapshot:
 It is a **status scaffold only**. It records the AMITY testnet asset/operator shape that the future web status surface can display, but it does **not** imply issuance, proof verification, or a third live unlock rail. The wallet/web unlock flow in this repository still accepts only **two wired currencies so far: `$OMEGA` and `TWC`**.
 
 Use `npm run manifest:testnet -- --force` to refresh an existing snapshot after local operator files change.
+
+## CARE to AMITY bootstrap policy
+
+`lib/care-amity-policy.mjs` contains a deterministic, valueless policy calculator for the bootstrap schedule. It does not mint tokens, query prices, or inspect off-chain barter.
+
+The current test schedule is:
+
+- initial: 5% participant reserve dock;
+- elevated: 10% dock;
+- maximum: 20% dock;
+- extreme: 20% dock plus a 15% supply burn, for a 35% total reduction.
+
+The participant dock may not exceed 20%, the burn may not exceed 15%, and the combined reduction may not exceed 35%. The reserve dock and burn are applied before AMITY enters circulation, so later trading for goods cannot bypass the conversion rule. These are policy-test parameters, not a live economic guarantee or a mainnet configuration.
 
 ## Environment variables
 
@@ -77,12 +96,15 @@ Issued At: <canonical UTC timestamp>
 Purpose: Verify current AMITY testnet Taproot Asset holdings for release-day novel unlock.
 ```
 
-This directory does **not yet** implement Bitcoin/Lightning/Taproot holder verification or live Universe proof validation.
+The fixture policy boundary does **not** implement Bitcoin/Lightning/Taproot ownership verification, Taproot wallet Schnorr verification, or live Universe proof validation. A successful fixture run must never be interpreted as a live holding or as an unlock authorization.
 
-## Intended next steps
+## Intended live-test path
 
 1. stand up `litd` + `tapd` on **testnet**;
-2. issue a valueless AMITY test asset;
-3. publish a Universe endpoint;
-4. add a live holder verifier that checks a signed proof against asset ownership/proofs; and
-5. only then consider wiring AMITY into the web unlock app alongside `$OMEGA` and `TWC`.
+2. issue a valueless AMITY test asset and record its asset ID;
+3. publish or configure a trusted Universe endpoint;
+4. implement the injected source adapter using real `tapd`/Universe proof responses and verify the wallet's supported signature scheme (including Schnorr where applicable);
+5. add integration tests against that adapter for invalid, stale, wrong-asset, wrong-holder, and insufficient-balance proofs; and
+6. only then consider wiring AMITY into the web unlock app alongside `$OMEGA` and `TWC`.
+
+Until those steps have real infrastructure and evidence, the manifest and web status surface must continue to report `holderVerificationReady=false` and `wiredIntoWebUnlock=false`.

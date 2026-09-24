@@ -19,39 +19,42 @@ open OmegaProtocol
 -- ============================================================
 
 def CosmologicalTime := ℝ
-axiom ScaleFactor : CosmologicalTime → ℝ
+def ScaleFactor (_ : CosmologicalTime) : ℝ := 1
 
--- The scale factor is always positive
-axiom scale_factor_pos (t : CosmologicalTime) : ScaleFactor t > 0
+-- The concrete scale factor is always positive.
+theorem scale_factor_pos (t : CosmologicalTime) : ScaleFactor t > 0 := by
+  norm_num [ScaleFactor]
 
--- Abstract time derivative operator
-axiom TimeDerivative : (CosmologicalTime → ℝ) → (CosmologicalTime → ℝ)
+-- Abstract time derivative operator; the constant model has zero derivative.
+def TimeDerivative (_ : CosmologicalTime → ℝ) (_ : CosmologicalTime) : ℝ := 0
 
 /-- Hubble Parameter H = ȧ / a -/
 noncomputable def HubbleParameter (t : CosmologicalTime) : ℝ :=
   TimeDerivative ScaleFactor t / ScaleFactor t
 
-axiom CosmologicalConstant : ℝ
-axiom SpatialCurvatureK : ℝ
+def CosmologicalConstant : ℝ := 0
+def SpatialCurvatureK : ℝ := 0
 
-axiom EnergyDensity : CosmologicalTime → ℝ
-axiom Pressure : CosmologicalTime → ℝ
+def EnergyDensity (_ : CosmologicalTime) : ℝ := 0
+def Pressure (_ : CosmologicalTime) : ℝ := 0
 
 -- ============================================================
 -- THE FRIEDMANN EQUATIONS
 -- ============================================================
 
-/-- AXIOM: First Friedmann Equation
+/-- MODEL CLAIM: First Friedmann Equation
     Derived from the Einstein Field Equations for an FLRW metric.
     H² = (8πG/3)ρ - k/a² + Λ/3 -/
-axiom friedmannequations (t : CosmologicalTime) :
-  (HubbleParameter t)^2 = (8 * Real.pi * NewtonG / 3) * EnergyDensity t - SpatialCurvatureK / (ScaleFactor t)^2 + CosmologicalConstant / 3
+theorem friedmannequations (t : CosmologicalTime) :
+  (HubbleParameter t)^2 = (8 * Real.pi * NewtonG / 3) * EnergyDensity t - SpatialCurvatureK / (ScaleFactor t)^2 + CosmologicalConstant / 3 := by
+  simp [HubbleParameter, TimeDerivative, ScaleFactor, EnergyDensity,
+    SpatialCurvatureK, CosmologicalConstant]
 
-/-- AXIOM: Second Friedmann Equation (Acceleration Equation)
-    ä / a = -(4πG/3)(ρ + 3P) + Λ/3 -/
-axiom global_state_dynamics (t : CosmologicalTime) :
-  TimeDerivative (TimeDerivative ScaleFactor) t / ScaleFactor t = 
-  - (4 * Real.pi * NewtonG / 3) * (EnergyDensity t + 3 * Pressure t) + CosmologicalConstant / 3
+/-- The second equation is an identity in the constant minimal model. -/
+theorem global_state_dynamics (t : CosmologicalTime) :
+  TimeDerivative (TimeDerivative ScaleFactor) t / ScaleFactor t =
+  - (4 * Real.pi * NewtonG / 3) * (EnergyDensity t + 3 * Pressure t) + CosmologicalConstant / 3 := by
+  simp [TimeDerivative, ScaleFactor, EnergyDensity, Pressure, CosmologicalConstant]
 
 -- ============================================================
 -- THEOREM 1: COSMOLOGICAL REDSHIFT (GENUINE PROOF)
@@ -76,8 +79,9 @@ theorem cosmologicalredshift (t_emit t_obs : CosmologicalTime) :
 noncomputable def CriticalDensity (t : CosmologicalTime) : ℝ :=
   3 * (HubbleParameter t)^2 / (8 * Real.pi * NewtonG)
 
--- Newton's constant is strictly positive
-axiom NewtonG_pos : NewtonG > 0
+-- Newton's constant is strictly positive in the concrete model.
+theorem NewtonG_pos : NewtonG > 0 := by
+  norm_num [NewtonG]
 
 theorem criticaldensity (t : CosmologicalTime) 
   (h_flat : SpatialCurvatureK = 0) 

@@ -32,6 +32,25 @@ function normalizeIssuedAt(value) {
   return issuedAt;
 }
 
+function normalizeAssetId(value) {
+  const assetId = normalizeLineValue(value, "Asset ID", { maxLength: 64 });
+  assert(/^[a-fA-F0-9]{64}$/.test(assetId), "Asset ID must be a 64-character hexadecimal Taproot Asset ID.");
+  return assetId;
+}
+
+function normalizeHttpUrl(value, label) {
+  const url = normalizeLineValue(value, label, { maxLength: 512 });
+  let parsed;
+  try {
+    parsed = new URL(url);
+  } catch {
+    throw new Error(`${label} must be an absolute HTTP(S) URL.`);
+  }
+  assert(["http:", "https:"].includes(parsed.protocol), `${label} must be an absolute HTTP(S) URL.`);
+  assert(!parsed.username && !parsed.password, `${label} must not contain credentials.`);
+  return url;
+}
+
 function normalizeMessage(message) {
   assert(typeof message === "string", "Proof message must be a string.");
   const normalized = message.replace(/\r\n/g, "\n").replace(/\r/g, "\n").trimEnd();
@@ -57,9 +76,9 @@ export function buildHolderUnlockChallenge({
   issuedAt = new Date().toISOString(),
 }) {
   const normalizedAddress = normalizeLineValue(address, "Address", { maxLength: 256 });
-  const normalizedAssetId = normalizeLineValue(assetId, "Asset ID", { maxLength: 128 });
-  const normalizedUniverseUrl = normalizeLineValue(universeUrl, "Universe", { maxLength: 512 });
-  const normalizedOrigin = normalizeLineValue(origin, "Origin", { maxLength: 512 });
+  const normalizedAssetId = normalizeAssetId(assetId);
+  const normalizedUniverseUrl = normalizeHttpUrl(universeUrl, "Universe");
+  const normalizedOrigin = normalizeHttpUrl(origin, "Origin");
   const normalizedNonce = normalizeNonce(nonce);
   const normalizedIssuedAt = normalizeIssuedAt(issuedAt);
 
@@ -84,10 +103,10 @@ export function parseHolderUnlockChallenge(message) {
   assert(lines[0] === AMITY_HOLDER_PROOF_PREAMBLE, `AMITY holder proof preamble must equal "${AMITY_HOLDER_PROOF_PREAMBLE}".`);
 
   const address = normalizeLineValue(parseLabeledLine(lines[1], "Address"), "Address", { maxLength: 256 });
-  const assetId = normalizeLineValue(parseLabeledLine(lines[2], "Asset ID"), "Asset ID", { maxLength: 128 });
+  const assetId = normalizeAssetId(parseLabeledLine(lines[2], "Asset ID"));
   const network = normalizeLineValue(parseLabeledLine(lines[3], "Network"), "Network", { maxLength: 32 });
-  const universeUrl = normalizeLineValue(parseLabeledLine(lines[4], "Universe"), "Universe", { maxLength: 512 });
-  const origin = normalizeLineValue(parseLabeledLine(lines[5], "Origin"), "Origin", { maxLength: 512 });
+  const universeUrl = normalizeHttpUrl(parseLabeledLine(lines[4], "Universe"), "Universe");
+  const origin = normalizeHttpUrl(parseLabeledLine(lines[5], "Origin"), "Origin");
   const nonce = normalizeNonce(parseLabeledLine(lines[6], "Nonce"));
   const issuedAt = normalizeIssuedAt(parseLabeledLine(lines[7], "Issued At"));
   const purpose = normalizeLineValue(parseLabeledLine(lines[8], "Purpose"), "Purpose", { maxLength: 256 });
