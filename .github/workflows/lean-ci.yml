@@ -54,7 +54,7 @@ jobs:
         run: lake exe cache get
 
       - name: Build all volumes
-        run: lake build
+        run: lake build ToE
 
       - name: Gate - no sorry / trivial stubs in sources
         run: |
