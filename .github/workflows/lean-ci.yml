@@ -1,0 +1,66 @@
+name: Lean CI
+
+# Temporary gate: kernel-checks the Omega Protocol Lean formalization.
+# Path-filtered so non-Lean pushes don't pay for it.
+# Delete this file to remove the job.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'lean_proofs/**'
+      - '.github/workflows/lean-ci.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'lean_proofs/**'
+      - '.github/workflows/lean-ci.yml'
+
+concurrency:
+  group: lean-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lean-build:
+    name: Lean build (mathlib cache)
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    defaults:
+      run:
+        working-directory: lean_proofs
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install elan + Lean toolchain
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          elan toolchain install $(cat lean-toolchain)
+
+      - name: Cache mathlib packages and oleans
+        uses: actions/cache@v4
+        with:
+          path: |
+            lean_proofs/.lake/packages
+            ~/.cache/mathlib
+          key: lean-${{ runner.os }}-mathlib-${{ hashFiles('lean_proofs/lakefile.lean', 'lean_proofs/lean-toolchain') }}
+          restore-keys: |
+            lean-${{ runner.os }}-mathlib-
+
+      - name: Resolve dependencies
+        run: lake update
+
+      - name: Fetch prebuilt mathlib oleans
+        run: lake exe cache get
+
+      - name: Build all volumes
+        run: lake build
+
+      - name: Gate - no sorry / trivial stubs in sources
+        run: |
+          set -e
+          if grep -rn --include='*.lean' -E '\bsorry\b|: True :=|:= by trivial' . ; then
+            echo "::error::Found sorry or trivial stubs in lean sources"
+            exit 1
+          fi
+          echo "Clean: no sorry/trivial stubs."

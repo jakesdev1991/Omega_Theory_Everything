@@ -92,13 +92,26 @@ theorem energy_deriv_zero (m : ℝ) (hm : m ≠ 0) (V V' q p : ℝ → ℝ)
     (hq : ∀ t, HasDerivAt q (p t / m) t)
     (hp : ∀ t, HasDerivAt p (-(V' (q t))) t) (t : ℝ) :
     HasDerivAt (energy m V q p) 0 t := by
-  have h := (((hp t).mul (hp t)).div_const (2 * m)).add ((hV (q t)).comp t (hq t))
+  -- d/dt(p²/2m) = p·ṗ/m and d/dt V(q(t)) = V'(q)·q̇ = V'(q)·p/m
+  have h1 : HasDerivAt (fun s => p s * p s)
+      (-(V' (q t)) * p t + p t * -(V' (q t))) t :=
+    (hp t).mul (hp t)
+  have h2 : HasDerivAt (fun s => p s * p s / (2 * m))
+      ((-(V' (q t)) * p t + p t * -(V' (q t))) / (2 * m)) t :=
+    h1.div_const (2 * m)
+  have hVq : HasDerivAt (fun s => V (q s)) (V' (q t) * (p t / m)) t :=
+    (hV (q t)).comp t (hq t)
+  have h : HasDerivAt (fun s => p s * p s / (2 * m) + V (q s))
+      ((-(V' (q t)) * p t + p t * -(V' (q t))) / (2 * m)
+        + V' (q t) * (p t / m)) t :=
+    h2.add hVq
+  have hval : (-(V' (q t)) * p t + p t * -(V' (q t))) / (2 * m)
+      + V' (q t) * (p t / m) = 0 := by
+    field_simp
+    ring
+  rw [hval] at h
   unfold energy
-  convert h using 1
-  first
-    | (field_simp; ring)
-    | field_simp
-    | ring
+  exact h
 
 /-- Energy is conserved: H(t₁) = H(t₂) for all times. -/
 theorem conservation_of_energy (m : ℝ) (hm : m ≠ 0) (V V' q p : ℝ → ℝ)
@@ -174,7 +187,7 @@ theorem mass_emergence (ρ : StateSpace) :
 
 /-- Discretized free-particle action (positive constant m/2Δt dropped). -/
 def action (N : ℕ) (x : ℕ → ℝ) : ℝ :=
-  ∑ i in range N, (x (i + 1) - x i) ^ 2
+  ∑ i ∈ range N, (x (i + 1) - x i) ^ 2
 
 /-- The uniform-velocity (straight-line) path minimizes the action among
     all paths with the same endpoints: S[x + η] ≥ S[x] when η(0)=η(N)=0. -/
@@ -189,7 +202,7 @@ theorem least_action_principle (N : ℕ) (x η : ℕ → ℝ) (k : ℝ)
   simp only [hsplit]
   rw [Finset.sum_add_distrib, Finset.sum_add_distrib, ← Finset.mul_sum,
     Finset.sum_range_sub η, hN, h0]
-  have hη : 0 ≤ ∑ i in range N, (η (i + 1) - η i) ^ 2 :=
+  have hη : 0 ≤ ∑ i ∈ range N, (η (i + 1) - η i) ^ 2 :=
     Finset.sum_nonneg (fun i _ => sq_nonneg _)
   linarith
 
@@ -271,14 +284,17 @@ theorem omega_coordinates (X : ℝ × ℝ) :
 theorem free_particle_velocity_constant (v : ℝ → ℝ)
     (hv : ∀ t, HasDerivAt v 0 t) : ∀ s t, v s = v t := by
   intro s t
-  exact (hv s).eq_of_sub_eq_zero (hv t)
+  exact is_const_of_deriv_eq_zero
+    (fun z => (hv z).differentiableAt) (fun z => (hv z).deriv) s t
 
 /-- Galilean boosts do not change acceleration: adding a constant velocity
     to a trajectory leaves its second derivative unchanged. -/
 theorem galilean_boost_acceleration (x : ℝ → ℝ) (u : ℝ) (t : ℝ)
     (hx : HasDerivAt x (deriv x t) t) :
     HasDerivAt (fun s => x s + u * s) (deriv x t + u) t := by
-  convert (hx.add ((hasDerivAt_id t).const_mul u)) using 1 <;> ring
+  have hu : HasDerivAt (fun s => u * s) u t := by
+    simpa [mul_one] using ((hasDerivAt_id t).const_mul u)
+  exact hx.add hu
 
 /-- A stationary free-particle action has no nonzero endpoint-fixed
     perturbation with zero discrete kinetic energy. -/
@@ -291,7 +307,9 @@ theorem least_action_strict (N : ℕ) (η : ℕ → ℝ)
   | zero => exact h0
   | succ i ih =>
     have hs := hzero i (by exact mem_range.mpr (Nat.lt_of_succ_le hi))
-    linarith
+    have : η (i + 1) = η i := by linarith
+    rw [this]
+    exact ih (Nat.le_of_lt (Nat.lt_of_succ_le hi))
 
 /-- Uniform gravity is the constant-force special case of Newton's law. -/
 theorem uniform_gravity_force (m g : ℝ) (q : ℝ → ℝ) (t : ℝ)
@@ -304,7 +322,8 @@ theorem uniform_gravity_force (m g : ℝ) (q : ℝ → ℝ) (t : ℝ)
 theorem time_independent_hamiltonian_conserved (H : ℝ → ℝ)
     (hH : ∀ t, HasDerivAt H 0 t) : ∀ s t, H s = H t := by
   intro s t
-  exact (hH s).eq_of_sub_eq_zero (hH t)
+  exact is_const_of_deriv_eq_zero
+    (fun z => (hH z).differentiableAt) (fun z => (hH z).deriv) s t
 
 
 end OmegaProtocol.Vol01

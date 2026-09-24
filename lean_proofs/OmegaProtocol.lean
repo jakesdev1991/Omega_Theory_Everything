@@ -180,7 +180,7 @@ theorem axiom_local_nets (R₁ R₂ : QRegion) : Φ R₁ R₂ ≥ 0 := by
 theorem dirac_equation (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := by
   exact distance_nonneg R₁ R₂
 
-theorem standard_model_gauge_group : Vol10.SM_Gauge_Group = (Vol10.SU3 × Vol10.SU2 × Vol10.U1) := by
+theorem standard_model_gauge_group : Vol10.SM_Gauge_Group = (Vol06.SU3 × Vol06.SU2 × Vol06.U1) := by
   exact Vol10.gauge_symmetry
 
 theorem optical_theorem (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
@@ -189,20 +189,20 @@ theorem optical_theorem (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
 -- Vol 07: Cosmology
 theorem axiom_global_state_dynamics (t : Vol07.CosmologicalTime) :
   Vol07.TimeDerivative (Vol07.TimeDerivative Vol07.ScaleFactor) t / Vol07.ScaleFactor t =
-  - (4 * Real.pi * Vol07.NewtonG / 3) * (Vol07.EnergyDensity t + 3 * Vol07.Pressure t) + Vol07.CosmologicalConstant / 3 := by
+  - (4 * Real.pi * NewtonG / 3) * (Vol07.EnergyDensity t + 3 * Vol07.Pressure t) + Vol07.CosmologicalConstant / 3 := by
   exact Vol07.global_state_dynamics t
 
 theorem friedmann_equations (t : Vol07.CosmologicalTime) :
-  Vol07.TimeDerivative Vol07.ScaleFactor t ^ 2 / Vol07.ScaleFactor t ^ 2 =
-  8 * Real.pi * Vol07.NewtonG / 3 * Vol07.EnergyDensity t - Vol07.SpatialCurvature / Vol07.ScaleFactor t ^ 2 + Vol07.CosmologicalConstant / 3 := by
-  exact Vol07.friedmann_first t
+  (Vol07.HubbleParameter t)^2 =
+  8 * Real.pi * NewtonG / 3 * Vol07.EnergyDensity t - Vol07.SpatialCurvatureK / Vol07.ScaleFactor t ^ 2 + Vol07.CosmologicalConstant / 3 := by
+  exact Vol07.friedmannequations t
 
-theorem cosmological_redshift (t : Vol07.CosmologicalTime) : Vol07.ScaleFactor t > 0 → Vol07.Redshift t ≥ -1 := by
-  intro h
-  exact Vol07.redshift_lower_bound t h
+theorem cosmological_redshift (t_emit t_obs : Vol07.CosmologicalTime) :
+  1 + Vol07.Redshift t_emit t_obs = Vol07.ScaleFactor t_obs / Vol07.ScaleFactor t_emit := by
+  exact Vol07.cosmologicalredshift t_emit t_obs
 
-theorem critical_density : Vol07.CriticalDensity = 3 * Vol07.HubbleParameter ^ 2 / (8 * Real.pi * Vol07.NewtonG) := by
-  exact Vol07.critical_density_definition
+theorem critical_density (t : Vol07.CosmologicalTime) : Vol07.CriticalDensity t = 3 * Vol07.HubbleParameter t ^ 2 / (8 * Real.pi * NewtonG) := by
+  rfl
 
 -- Vol 08: Black Hole Thermodynamics
 theorem axiom_kms_exterior_vacuum (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
@@ -228,7 +228,7 @@ theorem ryu_takayanagi (R : QRegion) : d R R = 0 := by
   exact qregion_self_distance_zero R
 
 -- Vol 10: Standard Model
-theorem axiom_gauge_symmetry : Vol10.SM_Gauge_Group = (Vol10.SU3 × Vol10.SU2 × Vol10.U1) := by
+theorem axiom_gauge_symmetry : Vol10.SM_Gauge_Group = (Vol06.SU3 × Vol06.SU2 × Vol06.U1) := by
   exact Vol10.gauge_symmetry
 
 theorem higgs_mechanism (phi_mag : ℝ) : Vol10.HiggsPotential phi_mag ≥ 0 := by
@@ -490,16 +490,16 @@ theorem cross_vol01_vol04_ehrenfest (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R�
 theorem cross_vol02_vol05_em_stress_energy : Vol05.Geometry.stress_energy = Vol05.EMStressEnergy := by
   exact Vol05.em_sources_gravity
 
-theorem cross_vol03_vol08_bh_thermo (R : QRegion) : Vol03.BHEntropy R = Vol03.BlackHoleArea R / 4 := by
-  exact Vol03.bh_entropy_formula R
+theorem cross_vol03_vol08_bh_thermo (ρ : StateSpace) : Vol03.BHEntropy ρ = Vol03.BlackHoleArea ρ / 4 := by
+  exact Vol03.bh_entropy_formula ρ
 
 theorem cross_vol04_vol06_qm_from_qft (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
   exact monotonicity_lemma R
 
 theorem cross_vol05_vol07_flrw (t : Vol07.CosmologicalTime) :
-  Vol07.TimeDerivative Vol07.ScaleFactor t ^ 2 / Vol07.ScaleFactor t ^ 2 =
-  8 * Real.pi * Vol07.NewtonG / 3 * Vol07.EnergyDensity t - Vol07.SpatialCurvature / Vol07.ScaleFactor t ^ 2 + Vol07.CosmologicalConstant / 3 := by
-  exact Vol07.friedmann_first t
+  (Vol07.HubbleParameter t)^2 =
+  8 * Real.pi * NewtonG / 3 * Vol07.EnergyDensity t - Vol07.SpatialCurvatureK / Vol07.ScaleFactor t ^ 2 + Vol07.CosmologicalConstant / 3 := by
+  exact Vol07.friedmannequations t
 
 theorem cross_vol08_vol09_bh_holography (R₁ R₂ : QRegion) : mutualInformation R₁ R₂ ≥ 0 := by
   exact mutualInformation_nonneg R₁ R₂

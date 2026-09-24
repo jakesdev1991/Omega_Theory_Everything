@@ -44,9 +44,11 @@ theorem computation_from_omega (R : QRegion) : d R R = 0 := by
 theorem computation_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
   exact monotonicity_lemma R
 
-theorem cantor_diagonal_nontrivial : ¬ Function.Surjective (fun (f : ℕ → ℕ → Bool) => f) := by
-  intro h
-  have := cantor_diagonal
-  contradiction
+theorem cantor_diagonal_nontrivial :
+    ∀ e : ℕ → (ℕ → Bool), ¬ Function.Surjective e := by
+  intro e hs
+  obtain ⟨k, hk⟩ := hs (fun n => !(e n n))
+  have hkk : e k k = !(e k k) := congrFun hk k
+  exact (Bool.eq_not_self (e k k)).mp hkk
 
 end OmegaProtocol.Vol35
