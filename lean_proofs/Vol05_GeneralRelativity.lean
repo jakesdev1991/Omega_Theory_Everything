@@ -59,7 +59,7 @@ theorem bianchi_identity (ν : Geometry.spacetime) :
     ∇_μ (c * T^μν) = c * ∇_μ T^μν -/
 theorem covariant_divergence_smul {spacetime : Type*} (c : ℝ) (T : spacetime → spacetime → ℝ) (ν : spacetime) :
   CovariantDivergence (fun x y => c * T x y) ν = c * CovariantDivergence T ν := by
-  rfl
+  simp [CovariantDivergence]
 
 -- ============================================================
 -- THEOREM 1: CONSERVATION OF ENERGY-MOMENTUM (GENUINE PROOF)
