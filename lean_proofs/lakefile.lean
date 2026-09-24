@@ -69,5 +69,6 @@ lean_lib ToE where
     `Vol51_ClosedTimelikeCurves,
     `Vol52_OmegaPointTheory,
     `Vol53_UniversalCompiler,
-    `Vol54_TheoryOfNothing
+    `Vol54_TheoryOfNothing,
+    `InformationPhysics
   ]

@@ -12,6 +12,9 @@ This directory contains the complete formal verification of the Omega Theory fra
 - `OmegaUnifiedFoundation.lean` - Unified mathematical foundation
 - `OmegaDimensionalHierarchy.lean` - Dimensional hierarchy structure
 - `OmegaProtocol.lean` - Protocol definitions and cross-volume theorems
+- `InformationPhysics.lean` - Landauer–Einstein bridge: information-mass-energy
+  equivalence and conservation of total state energy during mass↔information
+  conversion
 
 ### Physics Volumes (1-54)
 Each volume formalizes a major domain of physics:
