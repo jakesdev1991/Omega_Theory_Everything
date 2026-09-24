@@ -145,7 +145,7 @@ theorem appa_branching_security_guarantee
 end APPA
 
 /-- Compatibility namespace for clients that keep all Omega protocol modules
-    under `OmegaProtocol`. -/
+    under the OmegaProtocol naming convention. -/
 namespace OmegaProtocol.APPA
 
 abbrev IntegrityLabel := _root_.APPA.IntegrityLabel
