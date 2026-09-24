@@ -4,12 +4,14 @@ from __future__ import annotations
 
 import asyncio
 import json
+import os
 import sys
 
-# Point at the repo-local package so we don't depend on a global install.
-sys.path.insert(0, "/tmp/omwga/mcp")
+mcp_dir = os.path.dirname(os.path.abspath(__file__))
+if mcp_dir not in sys.path:
+    sys.path.insert(0, mcp_dir)
 
-from omega_mcp import OmegaState, mcp
+from omega_mcp import OmegaState, mcp  # noqa: E402
 
 
 async def async_checks() -> list[str]:
@@ -41,11 +43,7 @@ async def async_checks() -> list[str]:
 
 
 async def run_stdio_serve_then_stop() -> str:
-    """Spin the stdio server for one tool-call round trip and report the result.
-
-    We run a second process so the server's event loop is real, then speak MCP over
-    stdin/stdout using the JSON-RPC payload the stdio transport expects.
-    """
+    """Spin the stdio server for one tool-call round trip and report the result."""
     import subprocess
 
     proc = subprocess.Popen(
@@ -53,11 +51,10 @@ async def run_stdio_serve_then_stop() -> str:
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        cwd="/tmp/omwga/mcp",
+        cwd=mcp_dir,
         text=True,
     )
     try:
-        # MCP stdio initialization + tool call in one batch.
         init = {
             "jsonrpc": "2.0",
             "id": 1,
@@ -103,6 +100,11 @@ async def run_stdio_serve_then_stop() -> str:
     except Exception as exc:  # noqa: BLE001
         proc.kill()
         return f"roundtrip_error={exc!r}"
+
+
+def test_smoke() -> None:
+    out = asyncio.run(async_checks())
+    assert any("ledger_ok=true" in line for line in out)
 
 
 async def main() -> None:
