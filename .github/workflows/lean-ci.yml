@@ -53,19 +53,14 @@ jobs:
           set +e
           lake build ToE > /tmp/lake-build.log 2>&1
           rc=$?
+          # Consolidate the raw log tail into a few annotations first:
+          # GitHub caps per-job annotations, so the important context leads.
+          tail -n 30 /tmp/lake-build.log | awk 'BEGIN{RS="\n"; ORS=""} {buf = buf $0 "\\n"; n++; if (n % 10 == 0) {print "::error::LOGTAIL>> " substr(buf, 1, 8000) "\n"; buf=""}} END{if (buf != "") print "::error::LOGTAIL>> " substr(buf, 1, 8000)}'
           if [ "$rc" -eq 0 ]; then
             echo "::notice::lake build re-run exited 0 (original failure was transient)"
           else
             echo "::error::lake build re-run exited $rc"
           fi
-          grep -E '\.lean:[0-9]+:[0-9]+' /tmp/lake-build.log | grep -E 'error|warning' | head -n 25 | while IFS= read -r line; do
-            msg=$(printf '%s' "$line" | tr -d '\r' | sed 's/"/\\"/g' | cut -c1-600)
-            echo "::error::$msg"
-          done
-          tail -n 25 /tmp/lake-build.log | while IFS= read -r line; do
-            msg=$(printf 'LOG| %s' "$line" | tr -d '\r' | sed 's/"/\\"/g' | cut -c1-600)
-            echo "::error::$msg"
-          done
 
       - name: Gate - no sorry / trivial stubs in sources
         working-directory: lean_proofs
