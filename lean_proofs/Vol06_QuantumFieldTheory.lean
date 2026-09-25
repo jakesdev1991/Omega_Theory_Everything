@@ -1,6 +1,8 @@
 import Mathlib
 import OmegaUnifiedFoundation
 
+noncomputable section
+
 namespace OmegaProtocol.Vol06
 open OmegaProtocol
 
@@ -19,7 +21,7 @@ theorem local_nets_isotony (O₁ O₂ : SpacetimeRegion) (h : subset_region O₁
   LocalNet O₁ ⊆ LocalNet O₂ := by
   exact False.elim h
 
-noncomputable theorem local_nets_microcausality (O₁ O₂ : SpacetimeRegion) (h : spacelike_separated O₁ O₂) :
+theorem local_nets_microcausality (O₁ O₂ : SpacetimeRegion) (h : spacelike_separated O₁ O₂) :
   ∀ (A B : ↥OmegaAlgebra), A ∈ LocalNet O₁ → B ∈ LocalNet O₂ → A * B = B * A := by
   exact False.elim h
 
