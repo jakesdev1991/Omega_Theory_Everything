@@ -30,25 +30,25 @@ structure DysonSphere where
 theorem stellar_engineering_axiom : Nonempty DysonSphere :=
   ⟨⟨1, 1⟩⟩
 
-/-- Cumulative collecting area: shell `k` contributes `2^k` base units. -/
+/-- Cumulative collecting area: shell `k` contributes `2^k` base units,
+    equivalently the doubling recurrence `A(n+1) = 2·A(n) + base`. -/
 def shellArea : ℕ → ℕ → ℕ
   | 0, _ => 0
-  | n + 1, base => 2 ^ n * base + shellArea n base
+  | n + 1, base => 2 * shellArea n base + base
 
-/-- The newest shell dominates the recurrence explicitly. -/
+/-- The recurrence, made explicit. -/
 theorem shellArea_step (n base : ℕ) :
-    shellArea (n + 1) base = 2 ^ n * base + shellArea n base := rfl
+    shellArea (n + 1) base = 2 * shellArea n base + base := rfl
 
 /-- Cumulative area is monotone in the number of shells. -/
 theorem shellArea_monotone (n base : ℕ) :
     shellArea n base ≤ shellArea (n + 1) base := by
   simp only [shellArea]
-  exact Nat.le_add_left _ _
+  omega
 
 /-- Adding shells with positive base area strictly increases capacity. -/
 theorem shellArea_strict_growth (n : ℕ) (base : ℕ) (hb : base > 0) :
     shellArea (n + 1) base > shellArea n base := by
-  have hpos : 2 ^ n * base > 0 := Nat.mul_pos (Nat.pow_pos (by omega) n) hb
   simp only [shellArea]
   omega
 
