@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     template: "%s | Omega MCP Hub",
   },
   description:
-    "Omega MCP Hub currently wires two release-day currencies into the wallet-to-web unlock flow: $OMEGA on the EVM rail and TWC on Solana. Sign a verified proof and unlock Genesis Block: The Satoshi Protocol.",
+    "Omega MCP Hub currently wires two release-day currencies into the wallet-to-web unlock flow: $OMEGA on the EVM rail and TWC on Solana. Sign a verified proof and unlock Crucible: The Satoshi Protocol.",
   icons: {
     icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
   },
@@ -38,7 +38,7 @@ function Footer() {
           Omega MCP Hub — Open-source AI operating hub for a three-currency economy.
         </p>
         <p className="text-xs">
-          Genesis Block: The Satoshi Protocol —{" "}
+          Crucible: The Satoshi Protocol —{" "}
           <span className="font-mono text-foreground/60">
             Akash Varma&apos;s novel
           </span>

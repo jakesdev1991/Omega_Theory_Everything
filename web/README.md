@@ -1,6 +1,6 @@
 # Omega web unlock app
 
-This Next.js app is the public reading and release surface for **Genesis Block: The Satoshi Protocol**.
+This Next.js app is the public reading and release surface for **Crucible: The Satoshi Protocol**.
 
 ## Current wired currencies
 

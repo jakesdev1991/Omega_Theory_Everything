@@ -73,7 +73,7 @@ function Hero() {
           wallet and web app, inside a larger three-currency economy. Sign with
           either live rail to unlock{" "}
           <em style={{ color: "var(--color-accent-soft)" }}>
-            Genesis Block: The Satoshi Protocol
+            Crucible: The Satoshi Protocol
           </em>{" "}
           by Akash Varma.
         </p>

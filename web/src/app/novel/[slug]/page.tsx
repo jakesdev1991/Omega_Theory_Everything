@@ -69,7 +69,7 @@ export default async function ChapterReaderPage({
               marginBottom: "20px",
             }}
           >
-            Genesis Block: The Satoshi Protocol — Chapter {chapter.number}
+            Crucible: The Satoshi Protocol — Chapter {chapter.number}
           </p>
         </div>
       </header>
