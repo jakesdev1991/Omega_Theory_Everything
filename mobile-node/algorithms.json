@@ -2,6 +2,7 @@
   "sandboxArgv": [],
   "sandboxNote": "On the Pixel 8a set sandboxArgv to [\"proot-distro\", \"run\", \"debian\", \"--\"] (or your Droid@Debian entrypoint) so every allowlisted algorithm executes inside the Debian sandbox. Empty means local execution for bench testing.",
   "maxParamsBytes": 65536,
+  "licenseNote": "Per-algorithm \"license\" block: access \"operators\" (default — only LUCIFER_OPERATORS may run it) or \"licensed\" (operators plus holders of a valid kind 31335 license from LUCIFER_LICENSE_ISSUERS). See docs/store/LICENSE-PROTOCOL.md.",
   "algorithms": [
     {
       "id": "radial-metric-sim",
@@ -37,7 +38,14 @@
       "workClass": "engineering_protocol",
       "argv": ["cat"],
       "timeoutMs": 5000,
-      "maxOutputBytes": 65536
+      "maxOutputBytes": 65536,
+      "license": {
+        "access": "licensed",
+        "terms": "omega-store-eula-1.0",
+        "tiers": ["trial", "standard", "pro"],
+        "spdx": "LicenseRef-Omega-Product-Proprietary",
+        "price": "Free self-test; license issued on request"
+      }
     }
   ]
 }

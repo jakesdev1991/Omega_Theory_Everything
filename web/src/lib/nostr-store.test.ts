@@ -1,3 +1,5 @@
+// Copyright (c) 2025-2026 Jacob See.
+// SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
 import test from "node:test";
 import assert from "node:assert/strict";
 
@@ -21,10 +23,10 @@ const demoRoot = getPublicKey(demoSecret);
 
 test("Directory events parse into listings, and foreign kinds are ignored", () => {
   const events = demoListings(demoRoot);
-  assert.equal(events.length, 3);
+  assert.equal(events.length, 4);
 
   const listings = events.map(parseListingEvent).filter((listing) => listing !== null);
-  assert.equal(listings.length, 3);
+  assert.equal(listings.length, 4);
 
   const byId = Object.fromEntries(listings.map((listing) => [listing.appId, listing]));
   assert.equal(byId["radial-metric-sim"].jobKind, 5001, "k tag wins");
@@ -51,7 +53,7 @@ test("Dedupe keeps the newest parameterized-replaceable entry per publisher", ()
   const deduped = dedupeListings([...listings, older]);
   const radial = deduped.find((listing) => listing.appId === "radial-metric-sim");
   assert.equal(radial?.name, "Radial Metric Simulator");
-  assert.equal(deduped.length, 3);
+  assert.equal(deduped.length, 4);
 });
 
 test("Job requests carry the NIP-90 correlation tags and sign verifiably", () => {

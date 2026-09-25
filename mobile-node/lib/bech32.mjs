@@ -1,3 +1,5 @@
+// Copyright (c) 2025-2026 Jacob See.
+// SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
 /**
  * Minimal bech32 (BIP-173) codec for npub/nsec handling on the mobile node.
  * Deliberately tiny: encode/decode only, no checksum-less variants.

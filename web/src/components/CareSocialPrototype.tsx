@@ -1,3 +1,5 @@
+// Copyright (c) 2025-2026 Jacob See.
+// SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
 "use client";
 
 import { useMemo, useState, type FormEvent } from "react";

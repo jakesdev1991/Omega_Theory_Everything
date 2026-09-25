@@ -1,3 +1,5 @@
+// Copyright (c) 2025-2026 Jacob See.
+// SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
 import test from "node:test";
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
@@ -7,6 +9,7 @@ import { fileURLToPath } from "node:url";
 import { WebSocketServer } from "ws";
 
 import { getPublicKeyHex, signEvent, verifyEventStrict } from "../lib/events.mjs";
+import { buildLicenseTemplate } from "../lib/license.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const nodeRoot = resolve(here, "..");
@@ -96,30 +99,81 @@ test("The daemon executes allowlisted jobs over a relay and refuses strangers", 
     assert.ok(result.tags.some((tag) => tag[0] === "status" && tag[1] === "success"));
     assert.match(result.content, /pong/);
 
-    // 2. Stranger job is refused with an error result, never executed.
-    const strangerRequest = signEvent(
-      {
-        kind: 5099,
-        created_at: Math.floor(Date.now() / 1000),
-        tags: [],
-        content: JSON.stringify({ app: "echo", params: {} }),
-      },
-      STRANGER_SECRET,
-    );
-    for (const socket of connections) socket.send(JSON.stringify(["EVENT", "lucifer-store-jobs", strangerRequest]));
+    const resultFor = (requestId, label) =>
+      waitFor(
+        () =>
+          received.find(
+            (message) =>
+              message[0] === "EVENT" &&
+              message[1]?.kind >= 6000 &&
+              message[1].tags.some((tag) => tag[0] === "e" && tag[1] === requestId),
+          ),
+        { label },
+      );
+    const statusOf = (message) => message[1].tags.find((tag) => tag[0] === "status")?.[1];
+    const sendJob = (secret, kind, content) => {
+      const event = signEvent({ kind, created_at: Math.floor(Date.now() / 1000), tags: [], content: JSON.stringify(content) }, secret);
+      for (const socket of connections) socket.send(JSON.stringify(["EVENT", "lucifer-store-jobs", event]));
+      return event;
+    };
 
-    const refusal = await waitFor(
-      () =>
-        received.find(
-          (message) =>
-            message[0] === "EVENT" &&
-            message[1]?.kind === 6099 &&
-            message[1].tags.some((tag) => tag[0] === "e" && tag[1] === strangerRequest.id),
-        ),
-      { label: "stranger refusal" },
-    );
-    assert.ok(refusal[1].tags.some((tag) => tag[0] === "status" && tag[1] === "error"));
+    // The daemon subscribes to licenses issued by its own key (default issuer).
+    await waitFor(() => received.some((message) => message[0] === "REQ" && message[1] === "lucifer-store-licenses"), {
+      label: "license subscription",
+    });
+    const licenseReq = received.find((message) => message[0] === "REQ" && message[1] === "lucifer-store-licenses");
+    assert.deepEqual(licenseReq[2], { kinds: [31335], authors: [getPublicKeyHex(SERVER_SECRET)] });
+
+    // 2. Stranger on an operator-only algorithm is refused with an error, never executed.
+    const operatorOnly = sendJob(STRANGER_SECRET, 5001, { app: "radial-metric-sim", params: {} });
+    const refusal = await resultFor(operatorOnly.id, "operator-only refusal");
+    assert.equal(statusOf(refusal), "error");
     assert.match(refusal[1].content, /not an operator/);
+
+    // 3. Stranger on a licensed algorithm without a license → payment-required.
+    const unlicensed = sendJob(STRANGER_SECRET, 5099, { app: "echo", params: {} });
+    const paymentRequired = await resultFor(unlicensed.id, "payment-required");
+    assert.equal(statusOf(paymentRequired), "payment-required");
+    assert.match(paymentRequired[1].content, /omega-store-eula-1\.0/);
+
+    // 4. With a license signed by the node key attached, the job executes.
+    const now = Math.floor(Date.now() / 1000);
+    const license = signEvent(
+      buildLicenseTemplate({
+        issuerPubkey: getPublicKeyHex(SERVER_SECRET),
+        licenseePubkey: getPublicKeyHex(STRANGER_SECRET),
+        appId: "echo",
+        tier: "trial",
+        terms: "omega-store-eula-1.0",
+        expiresAt: now + 3600,
+        createdAt: now - 5,
+      }),
+      SERVER_SECRET,
+    );
+    const licensed = sendJob(STRANGER_SECRET, 5099, { app: "echo", params: { licensed: "yes" }, license });
+    const licensedResult = await resultFor(licensed.id, "licensed result");
+    assert.equal(statusOf(licensedResult), "success");
+    assert.match(licensedResult[1].content, /licensed/);
+
+    // 5. A revocation seen on the relay beats the stale license still attached.
+    const revocation = signEvent(
+      buildLicenseTemplate({
+        issuerPubkey: getPublicKeyHex(SERVER_SECRET),
+        licenseePubkey: getPublicKeyHex(STRANGER_SECRET),
+        appId: "echo",
+        tier: "trial",
+        status: "revoked",
+        terms: "omega-store-eula-1.0",
+        createdAt: now,
+      }),
+      SERVER_SECRET,
+    );
+    for (const socket of connections) socket.send(JSON.stringify(["EVENT", "lucifer-store-licenses", revocation]));
+    await waitFor(() => daemonLog.includes("license update"), { label: "revocation ingested" });
+    const afterRevoke = sendJob(STRANGER_SECRET, 5099, { app: "echo", params: {}, license });
+    const revokedResult = await resultFor(afterRevoke.id, "revoked refusal");
+    assert.equal(statusOf(revokedResult), "payment-required");
+    assert.match(revokedResult[1].content, /revoked/);
   } finally {
     child.kill("SIGTERM");
     for (const socket of connections) socket.terminate();

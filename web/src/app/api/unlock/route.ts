@@ -1,3 +1,5 @@
+// Copyright (c) 2025-2026 Jacob See.
+// SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
 import { NextRequest, NextResponse } from "next/server";
 import { verifyUnlockProofOnChain } from "@/lib/unlock-server";
 

@@ -1,3 +1,5 @@
+// Copyright (c) 2025-2026 Jacob See.
+// SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
 import { CallToAction } from "@/components/CallToAction";
 import { UnlockRailBanner } from "@/components/UnlockRailBanner";
 import { loadChapters, type Chapter } from "@/lib/book";

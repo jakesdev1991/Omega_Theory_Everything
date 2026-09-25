@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2025-2026 Jacob See. SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary. -->
 # Omega web unlock app
 
 This Next.js app is the public reading and release surface for **Genesis Block: The Satoshi
@@ -44,6 +45,7 @@ npm run dev                  # predev syncs the wallet GUI into public/omega-wal
 | `/economy` | Three-currency economy explainer + cross-plane workbench |
 | `/wallet` | **Wallet GUI hub**: launch the GUI in-browser, live preview, per-file SHA-256 |
 | `/wallet/download` | **Downloads**: offline bundle (ZIP + checksums + launchers), installable PWA, native build status |
+| `/store/terms` | Store Terms of Use & End-User License, and the Publisher Agreement template |
 | `/store` | **App Store**: static frontend over the Nostr backplane — directory from kinds 31990/30017, NIP-90 job requests to the mobile node, settlement into TWC |
 | `/testnet` | **Economy Test Console**: readiness, scenario suite, faucet, action runner, audit exports, Nostr surface |
 | `/care` | C.A.R.E. social prototype |
@@ -95,6 +97,13 @@ The store is a static frontend over the Nostr backplane managed by
 - Demo mode: fixture listings + an in-page responder test the entire flow with zero relays.
 - Strict verification everywhere: event ids are recomputed before signature checks, because
   nostr-tools' `verifyEvent` alone does not recompute the id from content/tags.
+- Licensing: listings advertise `access` (`operators` | `licensed`), `terms` and SPDX `license`
+  tags. Licensed apps accept any key holding a signed **kind 31335** license from the store key,
+  which the storefront attaches to the job request and the node re-verifies (issuer, licensee,
+  tier, terms, expiry, live revocations). Users accept the Store Terms (`omega-store-eula-1.0`,
+  rendered at **`/store/terms`** from `public/legal/store-terms.md`) before obtaining a license.
+  Demo mode can issue and revoke a demo license locally. Spec:
+  [`../docs/store/LICENSE-PROTOCOL.md`](../docs/store/LICENSE-PROTOCOL.md).
 
 ## Economy Test Console (`/testnet`)
 

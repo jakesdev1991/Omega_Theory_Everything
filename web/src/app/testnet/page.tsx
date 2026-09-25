@@ -1,3 +1,5 @@
+// Copyright (c) 2025-2026 Jacob See.
+// SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
 import type { Metadata } from "next";
 
 import { EconomyTestConsole } from "@/components/EconomyTestConsole";

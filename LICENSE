@@ -18,10 +18,12 @@ Apache-2.0 permits commercial use of these covered materials subject to its term
 The following are proprietary and are **not** open-source licensed by this version of the repository:
 
 - all files in `app/`, `rust/`, `cpp/`, `evm/`, and `solana/`
-- `tri_token_sovereign_economy_blueprint.md`, `launch/novel_day_one_plan.md`, and all files in `novel/`
+- all files in `web/` (website, wallet hub, and the Nostr App Store storefront), `mobile-node/` (App Store execution node and license tooling), `desktop/`, `amity/`, `omni-bridge/`, and `launch/`
+- `tri_token_sovereign_economy_blueprint.md` and all files in `novel/`
 - all files in `whitepapers/`
+- the App Store legal texts in `web/public/legal/` (Store Terms of Use & End-User License, and the Publisher Agreement template) and the App Store protocol documentation in `docs/store/`
 
-These files are marked `LicenseRef-Omega-Product-Proprietary`. The notice at [`LICENSES/Omega-Product-Proprietary.txt`](LICENSES/Omega-Product-Proprietary.txt) reserves rights; it does not itself grant commercial-use permission. Commercial use may be considered only under a separate, signed written license with percentage-based compensation. The royalty rate and calculation base are not set in this repository.
+These files are marked `LicenseRef-Omega-Product-Proprietary`, either by a per-file SPDX header or by this path-level designation. Files that cannot hold comments, such as JSON, are covered by the path-level designation. Apps distributed through the Nostr App Store are proprietary unless their listing states otherwise. End users may run them only under a license issued under the Store Terms (`omega-store-eula-1.0`), and third-party publishers list them only under a signed Publisher Agreement. See `docs/LICENSING.md` § "Nostr App Store licensing". The notice at [`LICENSES/Omega-Product-Proprietary.txt`](LICENSES/Omega-Product-Proprietary.txt) reserves rights; it does not itself grant commercial-use permission. Commercial use may be considered only under a separate, signed written license with percentage-based compensation. The royalty rate and calculation base are not set in this repository.
 
 ## Other files and third-party materials
 

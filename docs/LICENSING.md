@@ -9,7 +9,8 @@ The project is split between **open scientific materials** and **proprietary pro
 | Scope | License / status | What it means |
 |---|---|---|
 | Scientific simulations, theory notes, formal proofs, typeset and plain-text proof companions, and listed project tooling | Apache License 2.0 | Commercial use is permitted under the license terms, including attribution, change-notice, and its express contributor patent-license provisions. No royalty is charged for use of these covered files under Apache-2.0. |
-| `app/`, `rust/`, `evm/`, `solana/`, the Tri-Token blueprint, `whitepapers/`, `cpp/`, `rcod/`, and `omni-bridge/` | All rights reserved; `LicenseRef-Omega-Product-Proprietary` | No new general permission to copy, modify, distribute, or commercially exploit these materials is granted by this repository version. Commercial licenses may be negotiated under a separate signed agreement with a percentage-based royalty. |
+| `app/`, `rust/`, `evm/`, `solana/`, the Tri-Token blueprint, `whitepapers/`, `cpp/`, `omni-bridge/`, `web/` (including the Nostr App Store), `mobile-node/`, `desktop/`, `amity/`, `launch/`, `novel/`, and `docs/store/` | All rights reserved; `LicenseRef-Omega-Product-Proprietary` | No new general permission to copy, modify, distribute, or commercially exploit these materials is granted by this repository version. Commercial licenses may be negotiated under a separate signed agreement with a percentage-based royalty. |
+| Nostr App Store apps and licenses | Proprietary; end users use apps under per-key license records (kind 31335) issued under the Store Terms `omega-store-eula-1.0`; publishers list apps under a signed Publisher Agreement | See [Nostr App Store licensing](#nostr-app-store-licensing) below. |
 | Project administration and legal notices | No separate product or source-code license | These documents explain the policy; they do not expand the grants above or license the product architecture. |
 
 ## Exact path scope
@@ -18,8 +19,8 @@ The project is split between **open scientific materials** and **proprietary pro
 
 The Apache-2.0 grant applies to these repository paths, to the extent the rights holder is authorized to license them:
 
-- `Sim1_Emergent_Geometry.py`, `Sim2_Cosmology.py`, `Sim3_Dynamic_Scale.py`, `Sim4_Evolution.py`, `Sim5_Emergent_Gravity.py`, and `sim6_v14_depletion.py`;
-- `Omega_Theory_Laymans_Guide.md` and `Omega_Theory_v4.0_Technical.md`;
+- `Sim1_Emergent_Geometry.py`, `Sim2_Cosmology.py`, `Sim3_Dynamic_Scale.py`, `Sim4_Evolution.py`, `Sim5_Emergent_Gravity.py`, `Sim7_Radial_Metric.py`, and `sim6_v14_depletion.py`;
+- `Omega_Theory_Laymans_Guide.md`, `Omega_Theory_v4.0_Technical.md`, and `Omega_Theory_v4.0_Radial_Metric.md`;
 - all files in `lean_proofs/`, `latex_docs/`, and `txt_proofs/`;
 - `README.md`, `requirements.txt`, `update_discovery.sh`, `.gitignore`, and `.github/`.
 
@@ -27,11 +28,34 @@ The full license is [`LICENSES/Apache-2.0.txt`](../LICENSES/Apache-2.0.txt). The
 
 ### All-rights-reserved product materials
 
-The product scope is `app/**`, `rust/**`, `evm/**`, `solana/**`, `whitepapers/**`, `tri_token_sovereign_economy_blueprint.md`, `cpp/**`, `rcod/**`, and `omni-bridge/**`. These files carry or inherit the proprietary identifier `LicenseRef-Omega-Product-Proprietary`; see [`LICENSES/Omega-Product-Proprietary.txt`](../LICENSES/Omega-Product-Proprietary.txt).
+The product scope is `app/**`, `rust/**`, `evm/**`, `solana/**`, `whitepapers/**`, `tri_token_sovereign_economy_blueprint.md`, `cpp/**`, `omni-bridge/**`, `web/**`, `mobile-node/**`, `desktop/**`, `amity/**`, `launch/**`, `novel/**`, and `docs/store/**`. (`rcod/**` and `mcp/**` are open items; see [Unresolved scope conflicts](#unresolved-scope-conflicts).) These files carry or inherit the proprietary identifier `LicenseRef-Omega-Product-Proprietary`; see [`LICENSES/Omega-Product-Proprietary.txt`](../LICENSES/Omega-Product-Proprietary.txt).
 
 The intended commercial route is an **advance, signed written license with percentage-based compensation payable to Jacob See**. This repository does not set a rate, royalty base (for example, gross or net receipts), minimum, term, reporting/audit terms, territory, sublicensing rights, or other deal terms. Those must be negotiated and written into the separate agreement. Until a suitable agreement is signed, this notice grants no commercial-use permission. Do not infer permission from the fact that the files are publicly viewable or downloadable.
 
 For a commercial licensing inquiry, contact the rights holder through [github.com/jakesdev1991](https://github.com/jakesdev1991). Do not post confidential deal terms in a public issue. No email address is stated here because none has been verified for publication.
+
+## Nostr App Store licensing
+
+The App Store has three layers of licensing. Each is covered by a different instrument:
+
+| Layer | Instrument | Where |
+|---|---|---|
+| Store software: the storefront (`web/src/components/AppStore.tsx`, `web/src/lib/nostr-store.ts`, `web/src/lib/store-license.ts`) and the execution node (`mobile-node/`) | All rights reserved (`LicenseRef-Omega-Product-Proprietary`) | This document; per-file SPDX headers |
+| End users running listed apps | **Store Terms of Use & End-User License**, terms ID `omega-store-eula-1.0` (limited, personal, non-transferable, revocable right to run an app through the store; no source rights) | [`web/public/legal/store-terms.md`](../web/public/legal/store-terms.md), shown at `/store/terms` |
+| Third-party publishers listing apps | **Publisher Agreement** template `omega-store-publisher-1.0` (listing licence to the Store Operator, publisher warranties, percentage revenue share payable to Jacob See; rate set per publisher in Schedule A) | [`web/public/legal/publisher-agreement.md`](../web/public/legal/publisher-agreement.md). **Not in force until completed and signed** |
+
+**Technical enforcement.** Each end-user license is a signed Nostr event (kind 31335, provisional) issued by the store key to the user's public key. It records app, tier, terms ID, expiry, status and an optional payment reference. The mobile node runs apps marked `license.access: "licensed"` only for its operator keys, or for requesters that attach a valid license from a trusted issuer. It follows newer revocations live from relays and answers missing or revoked licenses with NIP-90 `payment-required`. Apps without that marking stay operator-only. Licenses are issued and revoked with `mobile-node/issue-license.mjs`. The full specification is [`docs/store/LICENSE-PROTOCOL.md`](store/LICENSE-PROTOCOL.md).
+
+**Payment is not wired in yet.** Licenses are currently granted by the publisher out of band (`payment` tag: `manual` or a free-form reference). The protocol leaves room for Lightning zap receipts or C.A.R.E. token payments later. No paid tier should be sold until the refund policy, governing law and other bracketed items in the Store Terms have been completed by counsel.
+
+**Limits.** A license record proves that the store key authorized a key to run an app. It does not by itself create enforceable contract terms against an anonymous key holder. Enforceability of click-through acceptance, of the restrictions, and of the liability limits varies by jurisdiction. Have counsel review both documents before relying on them for revenue.
+
+## Unresolved scope conflicts
+
+These files carry markings that conflict with the path lists above. They need a decision from the rights holder; this document does not resolve them:
+
+- **`rcod/`**: previous versions of this document listed `rcod/` as proprietary, but `rcod/README.md`, `rcod/rcod_optimizer.py` and `rcod/benchmark_noise_recovery.py` carry `SPDX-License-Identifier: Apache-2.0` headers. Recipients of those files may reasonably rely on the Apache-2.0 headers. Either confirm Apache-2.0 (and add `rcod/` to the open list) or change the headers going forward. A change cannot withdraw Apache-2.0 rights already granted for copies distributed with those headers.
+- **`mcp/`**: `mcp/pyproject.toml` and `mcp/server.json` declare `"license": "MIT"`, and neither the root `LICENSE` nor this document lists `mcp/`. If the MCP server has been published under MIT, those rights cannot be withdrawn for published copies. Decide whether `mcp/` is MIT (and add a `LICENSE` file there) or proprietary (and update the metadata before the next release).
 
 ## Important limits on the royalty goal
 

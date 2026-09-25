@@ -1,3 +1,5 @@
+// Copyright (c) 2025-2026 Jacob See.
+// SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
 import { getAddress, isAddress, verifyMessage } from "ethers";
 import bs58 from "bs58";
 import nacl from "tweetnacl";

@@ -1,3 +1,5 @@
+// Copyright (c) 2025-2026 Jacob See.
+// SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
 import Link from "next/link";
 import { loadChapters } from "@/lib/book";
 import { GatedChapter } from "@/components/GatedChapter";

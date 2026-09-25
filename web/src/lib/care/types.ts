@@ -1,3 +1,5 @@
+// Copyright (c) 2025-2026 Jacob See.
+// SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
 export type CarePrivacyLevel = "P0" | "P1" | "P2" | "P3";
 export type CareRole = "participant" | "X1" | "X2" | "archangel";
 export type CareFeed = "circle" | "requests" | "projects";

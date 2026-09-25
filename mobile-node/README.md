@@ -33,12 +33,13 @@ STATIC FRONTEND (/store)          PUBLIC RELAY POOL            PIXEL 8a (this da
 mobile-node/
 ├── lucifer-daemon.mjs        relay loop, policy gate, sandbox exec, result publish
 ├── publish-directory.mjs     publishes kind 31990 listings for algorithms.json (root key)
+├── issue-license.mjs         issue / renew / revoke kind 31335 app licenses (root key)
 ├── algorithms.json           THE code allowlist: id, kind, argv, timeout, output cap
 ├── algorithms/               bundled allowlisted algorithms (stdin JSON → stdout JSON)
 │   ├── radial_metric.py      g_rr(Φ) finite-chain toy evaluation
 │   ├── lean_audit.py         sorry/axiom inventory over lean_proofs/
 │   └── rcod_benchmark.py     honest noise-recovery verdict
-├── lib/                      bech32, NIP-01 events (strict), policy, executor
+├── lib/                      bech32, NIP-01 events (strict), policy, license, executor
 ├── test/                     unit + daemon↔relay integration suite (node --test)
 └── termux-install.sh         Termux bootstrap + key env file + wake-lock recipe
 ```
@@ -61,7 +62,7 @@ LUCIFER_RELAYS=wss://nos.lol \
 LUCIFER_SECRET=<nsec-or-hex> \
 LUCIFER_OPERATORS=<your-npub> \
 npm start
-npm test                                # 11 tests incl. daemon↔relay integration
+npm test                                # unit + licensing + daemon↔relay integration
 ```
 
 ## Pairing with the website
@@ -74,9 +75,35 @@ npm test                                # 11 tests incl. daemon↔relay integrat
 4. **Settle result as TWC work** posts the verified job into the economy ledger as an audited
    work receipt (`/testnet` shows it), keeping the ledger's double-entry invariants intact.
 
+## Licensing apps
+
+By default every algorithm is **operator-only**. To sell or share an app, add a `license` block
+to it in `algorithms.json` (the bundled `echo` self-test is licensed as an example):
+
+```json
+"license": { "access": "licensed", "terms": "omega-store-eula-1.0", "tiers": ["trial", "standard", "pro"] }
+```
+
+Re-run `publish-directory.mjs` so the listing advertises `access`/`terms`/`license` tags, then
+issue licenses to buyers' npubs (the key stays on the device):
+
+```bash
+node issue-license.mjs issue  --app echo --to npub1buyer… --tier standard --days 30 --payment manual
+node issue-license.mjs revoke --app echo --to npub1buyer…
+```
+
+The daemon honours licenses signed by `LUCIFER_LICENSE_ISSUERS` (default: its own key), follows
+revocations live from relays, and answers unlicensed requests with NIP-90 `payment-required`.
+Licenses record the Store Terms version the buyer accepted (`/store/terms` on the website).
+Full spec: [`../docs/store/LICENSE-PROTOCOL.md`](../docs/store/LICENSE-PROTOCOL.md). Third-party
+apps may only be listed under a signed Publisher Agreement (`web/public/legal/publisher-agreement.md`).
+
 ## Security model
 
 - Relays are untrusted transport. Nothing executes without passing all five policy gates.
+- Non-operators can run only algorithms explicitly marked `licensed`, and only with a valid,
+  unexpired, unrevoked license from a trusted issuer. Per-licensee rate limits are not yet
+  implemented; keep licensed algorithms cheap until they are.
 - `algorithms.json` is the only code path: adding capability means editing the allowlist in git,
   never relay content.
 - Parameters arrive on stdin as JSON; argv is a fixed array; no `sh -c` anywhere; env is scrubbed.

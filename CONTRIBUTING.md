@@ -8,7 +8,11 @@ Contributions to Apache-2.0-covered scientific paths must be your original work 
 
 ## Proprietary product materials
 
-Do **not** submit pull requests, patches, designs, or other contributions for `app/`, `rust/`, `whitepapers/`, or `tri_token_sovereign_economy_blueprint.md` unless you first have a separate written agreement with the rights holder covering ownership, licensing, and compensation for your contribution. A pull request, issue, or direct message is not a substitute for that agreement. No contributor agreement is currently in force in this repository.
+Do **not** submit pull requests, patches, designs, or other contributions for proprietary product paths (`app/`, `rust/`, `cpp/`, `evm/`, `solana/`, `web/`, `mobile-node/`, `desktop/`, `amity/`, `omni-bridge/`, `launch/`, `novel/`, `whitepapers/`, `docs/store/`, or `tri_token_sovereign_economy_blueprint.md`; see [`LICENSE`](LICENSE) for the authoritative list) unless you first have a separate written agreement with the rights holder covering ownership, licensing, and compensation for your contribution. A pull request, issue, or direct message is not a substitute for that agreement. No contributor agreement is currently in force in this repository.
+
+## Publishing apps in the Nostr App Store
+
+Listing an app in the App Store is not a code contribution. It requires a signed [Publisher Agreement](web/public/legal/publisher-agreement.md) (template `omega-store-publisher-1.0`) that sets the revenue share and other commercial terms. Do not open a pull request that adds your app to `mobile-node/algorithms.json` without one.
 
 ## Questions and sensitive material
 

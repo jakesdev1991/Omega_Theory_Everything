@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Copyright (c) 2025-2026 Jacob See.
+# SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
 """Lean Axiom Audit — allowlisted algorithm for the Lucifer mobile node.
 
 Counts `sorry` occurrences and `axiom` declarations in a named lean_proofs

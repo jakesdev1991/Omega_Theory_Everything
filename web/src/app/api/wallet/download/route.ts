@@ -1,3 +1,5 @@
+// Copyright (c) 2025-2026 Jacob See.
+// SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
 import { NextResponse } from "next/server";
 
 import { buildWalletBundle, WALLET_BUNDLE_FILE_NAME } from "@/lib/wallet-artifacts";
