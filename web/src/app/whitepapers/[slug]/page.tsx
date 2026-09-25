@@ -3,24 +3,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { DocReader, DocToc } from "@/components/DocReader";
-import { adjacentDocs, docExists, getDoc } from "@/lib/docs";
+import { adjacentDocs, DOC_REGISTRY, docExists, getDoc } from "@/lib/docs";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
 export function generateStaticParams(): { slug: string }[] {
-  // All registry slugs; pages that fail to load content are handled at runtime.
-  const slugs = [
-    "care_economy_manifesto",
-    "care_economy_whitepaper",
-    "care_amity_protocol_whitepaper",
-    "omega_protocol_whitepaper",
-    "lucifer_hermes_omni_bridge_whitepaper",
-    "tokamak_domain_token_whitepaper",
-    "tri_token_sovereign_economy_blueprint",
-  ];
-  return slugs.map((slug) => ({ slug }));
+  return DOC_REGISTRY.map((doc) => ({ slug: doc.slug }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

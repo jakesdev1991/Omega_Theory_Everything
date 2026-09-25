@@ -489,7 +489,7 @@ function RepoCard() {
             "whitepapers/ — tri-token economy spec",
             "tri_token_sovereign_economy_blueprint.md",
             "app/ — customer-facing site source",
-            "Genesis Block novel draft",
+            "Crucible novel draft",
           ].map((item) => (
             <div
               key={item}

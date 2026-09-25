@@ -59,13 +59,13 @@ export interface Doc {
  */
 export const DOC_REGISTRY: DocMeta[] = [
   {
-    slug: "care_economy_manifesto",
+    slug: "sovereign_economy_manifesto",
     kind: "Manifesto",
-    title: "The C.A.R.E. Economy — A Manifesto",
+    title: "Manifesto for a Sovereign Agentic Economy",
     shortTitle: "The Manifesto",
     accent: "var(--color-care)",
     summary:
-      "The vision in first person: the judgment economy we are leaving, the eight promises of the C.A.R.E. Economy, what we refuse to build, and the invitation.",
+      "The canonical manifesto: a sovereign economy owned by its participants, an agentic framework that stewards rather than rules, and C.A.R.E. — Call About Resuscitating Everyone — as the protected social layer of the whole economy.",
     order: 0,
   },
   {
@@ -79,6 +79,26 @@ export const DOC_REGISTRY: DocMeta[] = [
     order: 1,
   },
   {
+    slug: "care_economy_manifesto",
+    kind: "Manifesto",
+    title: "The C.A.R.E. Economy — Naming and Promises",
+    shortTitle: "C.A.R.E. Naming & Promises",
+    accent: "var(--color-care)",
+    summary:
+      "Companion statement: what C.A.R.E. stands for (Call About Resuscitating Everyone), the eight promises, and what the economy refuses to build. The canonical manifesto is the Sovereign Agentic Economy manifesto.",
+    order: 2,
+  },
+  {
+    slug: "twc_whitepaper",
+    kind: "Whitepaper",
+    title: "Token of the World Citizen (TWC) Whitepaper",
+    shortTitle: "TWC Whitepaper",
+    accent: "var(--color-twc)",
+    summary:
+      "Useful-work receipts, class-specific verification, appeals, privacy, and the Solana Devnet tTWC boundary. TWC supports the entire crypto world — not one chain or faction.",
+    order: 3,
+  },
+  {
     slug: "care_amity_protocol_whitepaper",
     kind: "Whitepaper",
     title: "C.A.R.E. / AMITY Protocol Whitepaper",
@@ -86,7 +106,7 @@ export const DOC_REGISTRY: DocMeta[] = [
     accent: "var(--color-amity)",
     summary:
       "The protocol detail under the exchange boundary: Proof of Care, CARE Verifiers, Archangels and the 80/20 rule, the thought-virus model, privacy, arbitration, and deployment gates.",
-    order: 2,
+    order: 4,
   },
   {
     slug: "omega_protocol_whitepaper",
@@ -96,7 +116,7 @@ export const DOC_REGISTRY: DocMeta[] = [
     accent: "var(--color-omega)",
     summary:
       "The operating model for $OMEGA: macro-governance, staking, supply, and the governance plane of the economy.",
-    order: 3,
+    order: 5,
   },
   {
     slug: "lucifer_hermes_omni_bridge_whitepaper",
@@ -106,17 +126,17 @@ export const DOC_REGISTRY: DocMeta[] = [
     accent: "var(--color-use)",
     summary:
       "Agentic routing, verification, sandboxing, audit, and governance boundaries — how agents are allowed to act inside a human-governed economy.",
-    order: 4,
+    order: 6,
   },
   {
     slug: "tokamak_domain_token_whitepaper",
     kind: "Whitepaper",
     title: "TOKAMAK Domain Token Whitepaper",
     shortTitle: "TOKAMAK (legacy)",
-    accent: "var(--color-twc)",
+    accent: "var(--color-muted)",
     summary:
       "Legacy plasma-domain computation, telemetry boundaries, and scientific Proof-of-Useful-Work research. TOKAMAK is retired as the Solana token identity.",
-    order: 5,
+    order: 7,
   },
   {
     slug: "tri_token_sovereign_economy_blueprint",
@@ -126,7 +146,7 @@ export const DOC_REGISTRY: DocMeta[] = [
     accent: "var(--color-unlock)",
     summary:
       "The original systems specification the C.A.R.E. Economy whitepaper builds on: token model, ledger boundaries, PoUW, simulation, clearing, contracts, governance, and delivery plan.",
-    order: 6,
+    order: 8,
   },
 ];
 

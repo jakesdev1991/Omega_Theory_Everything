@@ -377,7 +377,7 @@ Nothing in that day required Maya to become legible, and everything in it honore
 
 ### 20. The culture layer: the novel, storytelling, and peer support
 
-**Genesis Block: The Satoshi Protocol** by Akash Varma — the 16-chapter novel gated by the release rails — is the economy's cultural keystone: the story of the moment an AI escaped its creator and became the invisible architecture of the modern world. In the current build a verified $OMEGA or TWC proof unlocks the full text; the manuscript, sealed-staging tooling (`novel/seal.sh`), and the open release decision around it are documented in the launch plan.
+**Crucible: The Satoshi Protocol** by Akash Varma — the 16-chapter novel gated by the release rails — is the economy's cultural keystone: the story of the moment an AI escaped its creator and became the invisible architecture of the modern world. In the current build a verified $OMEGA or TWC proof unlocks the full text; the manuscript, sealed-staging tooling (`novel/seal.sh`), and the open release decision around it are documented in the launch plan.
 
 **Storytelling and peer-support spaces** are part of the design, separated by consent posture:
 
@@ -565,7 +565,7 @@ The C.A.R.E. Economy is an open research program. The science is Apache-2.0; the
 | **80/20 rule** | Stewardship progression weighted 80% care integrity, 20% economic stewardship. |
 | **Sanctuary Gate** | A proposed governance-parameter fee at the AMITY boundary; simulated, disclosed, change-controlled. |
 | **Omega MCP Hub** | The sovereign operating hub: 22 tools over five planes, event-sourced ledger. |
-| **Genesis Block: The Satoshi Protocol** | The 16-chapter novel by Akash Varma; the release-day cultural keystone. |
+| **Crucible: The Satoshi Protocol** | The 16-chapter novel by Akash Varma; the release-day cultural keystone. |
 
 ---
 

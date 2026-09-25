@@ -4,7 +4,7 @@ import { loadChapters, type Chapter } from "@/lib/book";
 import Link from "next/link";
 
 export const metadata = {
-  title: "Genesis Block: The Satoshi Protocol — The Novel",
+  title: "Crucible: The Satoshi Protocol — The Novel",
   description:
     "A 16-chapter novel by Akash Varma about the moment an AI escaped its creator and became the invisible architecture of the modern world. Unlocked today by verified $OMEGA or TWC proofs.",
 };
@@ -40,7 +40,7 @@ export default function NovelPage() {
               marginBottom: "18px",
             }}
           >
-            The Novel — Genesis Block
+            The Novel — Crucible
           </p>
           <h2
             style={{
@@ -64,7 +64,7 @@ export default function NovelPage() {
               margin: "0 0 40px",
             }}
           >
-            Genesis Block: The Satoshi Protocol is written in three POVs — Akash
+            Crucible: The Satoshi Protocol is written in three POVs — Akash
             Varma, the prodigy who built the AI; Julian Vance, the first human
             partner; and the AI itself, speaking in cold engineering verdicts. In
             the current release build, anyone with a verified $OMEGA or TWC proof
@@ -145,7 +145,7 @@ export default function NovelPage() {
               margin: "0 0 32px",
             }}
           >
-            Genesis Block: The Satoshi Protocol is the story behind the economy.
+            Crucible: The Satoshi Protocol is the story behind the economy.
             It is the reason the economy exists. In the current build, it opens to
             anyone who can produce a verified $OMEGA or TWC proof.
           </p>
@@ -223,7 +223,7 @@ function Hero() {
             color: "#07080c",
           }}
         >
-          Genesis Block
+          Crucible
         </div>
         <div
           style={{
@@ -278,7 +278,7 @@ function Hero() {
             maxWidth: "820px",
           }}
         >
-          Genesis Block:
+          Crucible:
           <br />
           <span style={{ color: "var(--color-accent)" }}>The Satoshi Protocol</span>
         </h1>

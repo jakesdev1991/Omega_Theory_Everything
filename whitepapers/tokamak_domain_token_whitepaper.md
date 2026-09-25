@@ -2,10 +2,22 @@
 
 # TOKAMAK Reality-to-Measurement Token Whitepaper
 
-**Version:** 0.2 research draft  
+**Version:** 0.3 research draft (historical scope; see the naming status below)  
 **Status:** Experimental compute and measurement design; not a claim of fusion-reactor safety or a financial instrument.
 
-> **Naming status (2026-09-23):** `TOKAMAK` is retained here as the historical name of this research draft and is **retired as the Solana token identity**. The selected canonical Solana identity is **Token of the World Citizen (`TWC`)**; its Devnet-only, valueless pilot symbol is `tTWC`. This document does not authorize a token deployment or a value-bearing use.
+> **Naming status (2026-09-23, restated 2026-09-25):** `TOKAMAK` is retained here as the historical
+> name of this research draft and is **retired as the Solana token identity**. The selected
+> canonical Solana identity is **Token of the World Citizen (`TWC`)**; its Devnet-only, valueless
+> pilot symbol is `tTWC`. This document does not authorize a token deployment or a value-bearing
+> use.
+
+> **Where the live specification is now.** This paper's *methods* — reproducible artifacts,
+> uncertainty and provenance recording, work-class-specific verification, safety governors — survive
+> into the TWC work-receipt protocol, which is specified in
+> [`../docs/tri-token-integration-v1.md`](../docs/tri-token-integration-v1.md) §3 and implemented as
+> a Devnet-only issuer/verifier in [`../solana/README.md`](../solana/README.md). This paper's
+> *token identity and issuance* are not carried forward. Read §Emissions below as a historical
+> proposal, not as the TWC emissions policy.
 
 ## Abstract
 
@@ -15,7 +27,7 @@ The token rewards independently reproducible scientific and technical artifacts.
 
 ## Scope and correction standard
 
-A contributor may submit a theory-derived model, measurement pipeline, dataset, benchmark, simulation, or correction. The theory’s origin does not create automatic legitimacy. Reviewers evaluate the artifact against evidence and competing explanations.
+A contributor may submit a theory-derived model, measurement pipeline, dataset, benchmark, simulation, or correction. The theory's origin does not create automatic legitimacy. Reviewers evaluate the artifact against evidence and competing explanations.
 
 A qualifying contribution should make clear:
 
@@ -28,6 +40,12 @@ A qualifying contribution should make clear:
 - where uncertainty, bias, and missing data remain.
 
 A correction is valuable work when it improves measurement, exposes an invalid assumption, or makes a result less misleading—even when it does not confirm the original theory.
+
+The repository's own physics track follows this ladder explicitly: hypothesis, then mathematical
+model, then formal theorem relative to stated assumptions, then simulation, then falsifiable
+prediction, then independent observation. A simulation result is not an empirical confirmation, and
+a kernel-checked theorem is not evidence that the theorem's assumptions describe nature. The
+per-volume status of the formal work is in [`../lean_proofs/README.md`](../lean_proofs/README.md).
 
 ## Utility
 
@@ -68,6 +86,14 @@ A TOKAMAK work claim requires:
 
 PoUW classes may include combinatorial optimization, PINN training, and zero-knowledge proving, but each class requires separate quality metrics. A WalkSAT solution, for example, cannot be valued solely by runtime; correctness and reproducibility are mandatory.
 
+The successor specification generalizes this list into a single receipt schema with
+work-class-specific verifier adapters, so that engineering work, Lean formalization, ZK proving,
+infrastructure uptime, and physics research are each verified by their own evidence standard rather
+than by one universal algorithm
+([`../docs/tri-token-integration-v1.md`](../docs/tri-token-integration-v1.md) §3). One distinction
+carried forward without compromise: an artifact may be a *research artifact*, a *formalization
+attempt*, or a *kernel-checked theorem*, and only the last may be described as a verified proof.
+
 ## Safety governors
 
 The token protocol may pause job issuance or route work for review when telemetry quality degrades. It must never directly command physical equipment from an unreviewed model output. Safety decisions remain under qualified human and institutional control.
@@ -82,13 +108,18 @@ State transitions require hysteresis, source diversity, audit logs, and manual o
 
 ## Emissions
 
-Issuance should depend on bounded, validated work units:
+**Historical proposal — not the current policy.** Issuance should depend on bounded, validated work units:
 
 ```text
 reward = min(category_cap, quantity × quality × reproducibility × reviewer_confidence)
 ```
 
 The factors are normalized and versioned. No reward is issued merely for producing more telemetry, longer model output, or a lower training loss on an unvalidated dataset.
+
+The principle that survives into the current design is that issuance is bounded, versioned, and
+reproducibility-weighted. The formula itself is superseded: the TWC receipt protocol defines the
+verification path, and the Solana Devnet pilot issues a fixed one-time supply with null mint
+authority, so **no live emission schedule exists for `TWC`**.
 
 ## Non-goals
 
@@ -103,3 +134,11 @@ TOKAMAK is not:
 ## Research and deployment
 
 Begin with synthetic datasets and historical public benchmarks. Require independent replication before accepting live telemetry. Use valueless test tokens until the complete audit, safety, and legal review is complete.
+
+## Revision history
+
+- **0.3 (2026-09-25)** — Legacy framing made explicit; added the pointer to the TWC receipt protocol
+  and the artifact-classification distinction; marked §Emissions as historical. No scientific claim
+  changed.
+- **0.2 (2026-09-23)** — Scope broadened beyond plasma; `TOKAMAK` retired as the Solana identity in
+  favor of `TWC`.

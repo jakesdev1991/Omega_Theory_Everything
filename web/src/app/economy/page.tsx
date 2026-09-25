@@ -577,7 +577,7 @@ function FinalCta() {
             flexWrap: "wrap",
           }}
         >
-          <CallToAction label="Read Genesis Block" href="/novel" />
+          <CallToAction label="Read Crucible" href="/novel" />
           <CallToAction label="Read the whitepapers" href="/whitepapers" />
           <CallToAction label="Join the MCP Hub" href="/mcp" />
         </div>

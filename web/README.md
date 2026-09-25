@@ -1,6 +1,6 @@
 # Omega web unlock app
 
-This Next.js app is the public reading and release surface for **Genesis Block: The Satoshi
+This Next.js app is the public reading and release surface for **Crucible: The Satoshi
 Protocol**, the home of the **Omega Wallet GUI**, and the **Economy Test Console** used for
 complete offline testing of the four-plane crypto economy.
 

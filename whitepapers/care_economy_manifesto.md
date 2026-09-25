@@ -2,7 +2,7 @@
 
 # The C.A.R.E. Economy — A Manifesto
 
-*Version 1.0 · A statement of vision and intent. This is the "why." The "how" lives in the [extensive whitepaper](care_economy_whitepaper.md).*
+*Version 1.0 · Companion naming-and-promises statement for **Call About Resuscitating Everyone.** The canonical manifesto of the sovereign agentic economy is [`docs/sovereign_economy_manifesto.md`](../docs/sovereign_economy_manifesto.md). The "how" lives in the [extensive whitepaper](care_economy_whitepaper.md).*
 
 ---
 
@@ -85,7 +85,7 @@ An economy is defined as much by what it won't do.
 We are not writing a press release for a future we can't show. The build is public, and honest about its edges:
 
 - A **wallet** where the keys are generated on your device and never leave it.
-- A **web gateway** that carries the vision, the manifesto, the whitepapers, and a token-gated novel — *Genesis Block: The Satoshi Protocol* — with verified proofs, not accounts.
+- A **web gateway** that carries the vision, the manifesto, the whitepapers, and a token-gated novel — *Crucible: The Satoshi Protocol* — with verified proofs, not accounts.
 - An **operating hub** — the Omega MCP Hub — running all five planes on a replayable, event-sourced ledger you can audit yourself.
 - **Test consoles** that rehearse the entire economy offline: scenario suites, faucets, audited action runs.
 - **Rails in pilot**: $OMEGA on Ethereum Sepolia, TWC on Solana Devnet, AMITY toward Bitcoin, Lightning, and Taproot — valueless by design until the gates in the roadmap are passed.

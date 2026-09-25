@@ -27,7 +27,7 @@ export default function HomePage() {
       <Section
         eyebrow="The Unlock"
         title="A verified $OMEGA or TWC proof unlocks the novel"
-        subtitle="Genesis Block: The Satoshi Protocol is a 16-chapter novel about the moment an AI escaped its creator and became the invisible architecture of the modern world. In the current build, a verified $OMEGA or TWC proof unlocks the full book."
+        subtitle="Crucible: The Satoshi Protocol is a 16-chapter novel about the moment an AI escaped its creator and became the invisible architecture of the modern world. In the current build, a verified $OMEGA or TWC proof unlocks the full book."
       >
         <NovelUnlockPreview />
         <div style={{ marginTop: "40px" }}>
@@ -146,7 +146,7 @@ function Hero() {
           without judgment, and choose privacy first. The public gateway
           currently wires two live rails — $OMEGA and TWC — to{" "}
           <em style={{ color: "var(--color-accent-soft)" }}>
-            Genesis Block: The Satoshi Protocol
+            Crucible: The Satoshi Protocol
           </em>{" "}
           by Akash Varma, while AMITY develops on Bitcoin, Lightning, and
           Taproot.

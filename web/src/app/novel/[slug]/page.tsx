@@ -18,7 +18,7 @@ export async function generateMetadata({
   const chapter = chapters.find((ch) => ch.slug === slug);
   if (!chapter) return {};
   return {
-    title: `${chapter.number}. ${chapter.title} — Genesis Block`,
+    title: `${chapter.number}. ${chapter.title} — Crucible`,
     description: chapter.setting,
   };
 }
@@ -69,7 +69,7 @@ export default async function ChapterReaderPage({
               marginBottom: "20px",
             }}
           >
-            Genesis Block: The Satoshi Protocol — Chapter {chapter.number}
+            Crucible: The Satoshi Protocol — Chapter {chapter.number}
           </p>
         </div>
       </header>

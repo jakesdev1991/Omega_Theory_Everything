@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     template: "%s | The C.A.R.E. Economy",
   },
   description:
-    "The C.A.R.E. Economy: Call About Resuscitating Everyone. A sovereign, three-currency economy built on care. Read the manifesto and the extensive whitepaper, run the wallet, and test the whole economy. Currently wires $OMEGA (EVM) and TWC (Solana) release proofs to the token-gated novel Genesis Block: The Satoshi Protocol.",
+    "The C.A.R.E. Economy: Call About Resuscitating Everyone. A sovereign, three-currency economy built on care. Read the manifesto and the extensive whitepaper, run the wallet, and test the whole economy. Currently wires $OMEGA (EVM) and TWC (Solana) release proofs to the token-gated novel Crucible: The Satoshi Protocol.",
   icons: {
     icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
   },
@@ -39,7 +39,7 @@ function Footer() {
           by the open-source Omega MCP Hub.
         </p>
         <p className="text-xs">
-          Genesis Block: The Satoshi Protocol —{" "}
+          Crucible: The Satoshi Protocol —{" "}
           <span className="font-mono text-foreground/60">
             Akash Varma&apos;s novel
           </span>

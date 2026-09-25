@@ -4,7 +4,7 @@
 
 ## Integrated systems blueprint
 
-The economy described by this repository is named **the C.A.R.E. Economy** — **Call About Resuscitating Everyone.** Care is the base layer of the entire system. Its vision is stated in [`whitepapers/care_economy_manifesto.md`](whitepapers/care_economy_manifesto.md) (the manifesto) and fully specified in [`whitepapers/care_economy_whitepaper.md`](whitepapers/care_economy_whitepaper.md) (the extensive whitepaper). The website carries both: `/vision`, `/manifesto`, and a `/whitepapers` reader.
+The economy described by this repository is named **the C.A.R.E. Economy** — **Call About Resuscitating Everyone.** Care is the base layer of the entire system. Its vision is stated in [`docs/sovereign_economy_manifesto.md`](docs/sovereign_economy_manifesto.md) (the manifesto) and fully specified in [`whitepapers/care_economy_whitepaper.md`](whitepapers/care_economy_whitepaper.md) (the extensive whitepaper). The website carries both: `/vision`, `/manifesto`, and a `/whitepapers` reader. The novel's canonical title is **Crucible: The Satoshi Protocol**.
 
 The repository also includes [`tri_token_sovereign_economy_blueprint.md`](tri_token_sovereign_economy_blueprint.md), a research-and-systems specification for a proposed Tri-Token Sovereign Economy. It connects the Omega research program to Proof of Useful Work, C.A.R.E. privacy and arbitration, active-inference simulation, telemetry safeguards, asymmetric AMM/FINN clearing, governance, and staged implementation.
 

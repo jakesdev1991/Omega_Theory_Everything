@@ -25,6 +25,7 @@ const TARGET_DIR = join(webRoot, "content", "docs");
 const DOC_FILES = [
   "care_economy_whitepaper.md",
   "care_economy_manifesto.md",
+  "twc_whitepaper.md",
   "omega_protocol_whitepaper.md",
   "tokamak_domain_token_whitepaper.md",
   "care_amity_protocol_whitepaper.md",
@@ -33,6 +34,7 @@ const DOC_FILES = [
 
 const EXTRA_FILES = [
   { from: join(repoRoot, "tri_token_sovereign_economy_blueprint.md"), to: "tri_token_sovereign_economy_blueprint.md" },
+  { from: join(repoRoot, "docs", "sovereign_economy_manifesto.md"), to: "sovereign_economy_manifesto.md" },
 ];
 
 mkdirSync(TARGET_DIR, { recursive: true });

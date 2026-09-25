@@ -7,11 +7,11 @@ import { getDoc } from "@/lib/docs";
 export const metadata: Metadata = {
   title: "The Manifesto",
   description:
-    "The manifesto of the C.A.R.E. Economy: the judgment economy we are leaving, the eight promises, what we refuse to build, and the invitation.",
+    "Manifesto for a Sovereign Agentic Economy: Call About Resuscitating Everyone, participant sovereignty, agentic stewardship, and the invitation.",
 };
 
 export default function ManifestoPage() {
-  const doc = getDoc("care_economy_manifesto");
+  const doc = getDoc("sovereign_economy_manifesto");
 
   if (!doc) {
     return (

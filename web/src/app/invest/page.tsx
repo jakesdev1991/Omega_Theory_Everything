@@ -74,7 +74,7 @@ function Hero() {
           one base layer: care. Sign with
           either live rail to unlock{" "}
           <em style={{ color: "var(--color-accent-soft)" }}>
-            Genesis Block: The Satoshi Protocol
+            Crucible: The Satoshi Protocol
           </em>{" "}
           by Akash Varma.
         </p>
@@ -422,7 +422,7 @@ function TokenParticipate() {
     <Section
       eyebrow="Tokens"
       title="Choose which wired currency you use"
-      subtitle="Two currencies are connected end to end today. You do not need both — a verified $OMEGA proof or a verified TWC proof unlocks Genesis Block in full."
+      subtitle="Two currencies are connected end to end today. You do not need both — a verified $OMEGA proof or a verified TWC proof unlocks Crucible in full."
       id="tokens"
     >
       <div
@@ -591,7 +591,7 @@ function HowItWorks() {
     {
       step: "03",
       title: "Unlock the novel",
-      body: "On release day, a verified $OMEGA or TWC proof unlocks the full text of Genesis Block.",
+      body: "On release day, a verified $OMEGA or TWC proof unlocks the full text of Crucible.",
       color: "var(--color-care)",
     },
     {
@@ -709,7 +709,7 @@ function WalletSection() {
           },
           {
             title: "Release day",
-            desc: "On release day, your signed $OMEGA or TWC proof unlocks Genesis Block. The current release flow opens the whole novel.",
+            desc: "On release day, your signed $OMEGA or TWC proof unlocks Crucible. The current release flow opens the whole novel.",
             color: "var(--color-care)",
           },
           {
@@ -790,7 +790,7 @@ function FinalCta() {
           The novel opens on release day.
         </h2>
         <p style={{ color: "var(--color-muted-strong)", fontSize: "17px", lineHeight: 1.6, margin: "0 0 32px" }}>
-          Two currencies are wired in today: $OMEGA and TWC. Genesis Block is the
+          Two currencies are wired in today: $OMEGA and TWC. Crucible is the
           reward, the MCP hub is the operating layer, and the C.A.R.E. Economy is
           the whole design — its manifesto and extensive whitepaper are readable
           on this site. The wallet-to-web unlock path already works across both
