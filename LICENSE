@@ -6,8 +6,8 @@ This repository does **not** have one repository-wide license. This file is an i
 
 The following materials are licensed under the Apache License, Version 2.0. Read the full terms in [`LICENSES/Apache-2.0.txt`](LICENSES/Apache-2.0.txt):
 
-- `Sim1_Emergent_Geometry.py` through `Sim5_Emergent_Gravity.py` and `sim6_v14_depletion.py`
-- `Omega_Theory_Laymans_Guide.md` and `Omega_Theory_v4.0_Technical.md`
+- `Sim1_Emergent_Geometry.py` through `Sim5_Emergent_Gravity.py`, `Sim7_Radial_Metric.py` and `sim6_v14_depletion.py`
+- `Omega_Theory_Laymans_Guide.md`, `Omega_Theory_v4.0_Technical.md` and `Omega_Theory_v4.0_Radial_Metric.md`
 - all files in `lean_proofs/`, `latex_docs/`, and `txt_proofs/`
 - `README.md`, `requirements.txt`, `update_discovery.sh`, `.gitignore`, and `.github/`
 

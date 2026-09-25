@@ -18,10 +18,12 @@ The Only Observable: Between any two regions $i$ and $j$, the only fundamental p
 $$I_{ij} = S(\rho_i) + S(\rho_j) - S(\rho_{ij})$$
 1.2 Chain Overlap Density ($\Phi$)
 To transition from a discrete graph to a continuous field theory, we define the Chain Overlap Density field, $\Phi(x)$. This is the "master variable" of the theory8888.
-Definition: $\Phi(x) \in (0,1]$ represents the local density of shared correlations (redundancy) in the network.
-$\Phi \approx 1$ (Vacuum): Maximal Overlap. The network is in high consensus. Correlations are strong, so "distance" is minimal9.
-$\Phi < 1$ (Matter): Reduced Overlap. A "knot" of unique, decorrelated information. This asymmetry creates what we perceive as mass10101010.
-$\Phi \to 0$ (Horizon): Information reaches zero. The network is severed11.
+Definition: $\Phi(x) \in [0,1]$ represents the local density of shared correlations (redundancy) in the network.
+$\Phi = 0$ (Vacuum): No shared state. The network carries no redundancy, so there is nothing to render: the operational scale sits at its relaxed baseline $\ell_{P0}$ (§2.2) and spacetime is asymptotically flat9.
+$0 < \Phi < 1$ (Matter): Partial overlap. A "knot" of correlated information. The asymmetry between this knot and the surrounding vacuum is what we perceive as mass10101010.
+$\Phi \to 1$ (Horizon): Total overlap. The states have merged, the information that distinguished them reaches zero, and the network is severed11.
+
+*Note on the orientation.* Earlier drafts read $\Phi$ the other way round ($\Phi\approx1$ vacuum, $\Phi\to0$ horizon). The orientation above is the one used by the kernel-checked profile of §2.2 (`lean_proofs/DynamicCODScale.lean`) and by `Sim3_Dynamic_Scale.py`. A metric needs a single reading, because $g_{rr}\to1$ must hold at the vacuum end and $g_{rr}\to\infty$ at a horizon.
 
 2. Emergent Geometry: The Logarithmic Metric
 How does a number ($I_{ij}$) become a physical distance ($d_{ij}$)?
@@ -46,7 +48,7 @@ To make the theory compatible with standard physics, we promote $\Phi$ to a dyna
 We posit that the universe evolves to minimize computational cost. The action $S_\Phi$ is18181818:
 $$S_\Phi = \int d^4x \sqrt{-g} \left[ \underbrace{\frac{1}{2} Z(\Phi) g^{\mu\nu} \nabla_\mu \Phi \nabla_\nu \Phi}_{\text{Kinetic: Cost of Gradients}} - \underbrace{V(\Phi)}_{\text{Potential: Cost of State}} \right]$$
 $Z(\Phi)$: The Stiffness Function. It determines how hard it is to create a gradient in $\Phi$.
-$V(\Phi)$: The Consensus Potential. It has a minimum at $\Phi=1$ (Vacuum), forcing the universe to tend toward maximal overlap19.
+$V(\Phi)$: The Consensus Potential. It has a minimum at $\Phi=0$ (Vacuum), forcing the universe to relax toward the unshared baseline19.
 3.2 Deriving Stress-Energy ($T_{\mu\nu}$)
 Varying the action with respect to the metric $g_{\mu\nu}$ yields the Stress-Energy Tensor exactly20202020:
 $$\boxed{T_{\mu\nu}^\Phi = Z(\Phi)\nabla_\mu\Phi \nabla_\nu\Phi - g_{\mu\nu}\mathcal{L}_\Phi}$$

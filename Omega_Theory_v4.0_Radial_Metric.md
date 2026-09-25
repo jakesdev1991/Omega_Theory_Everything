@@ -14,7 +14,7 @@ Every formula is checked numerically, and where noted symbolically (SymPy), by [
 
 ## 0. Summary
 
-1. **Convention conflict (blocking).** The repository uses two opposite readings of $\Phi$ (§1). A metric needs exactly one, because $g_{rr}\to1$ must hold at the vacuum end and $g_{rr}\to\infty$ at a horizon. These notes use the convention of the kernel-checked profile (`DynamicCODScale.lean`): $\Phi=0$ is the vacuum and $\Phi\to1$ the bound-state/horizon end. In that convention, Sim3's $V(\Phi)=\tfrac12m^2(1-\Phi)^2$ makes the horizon end the attractor and gives $V'(0)=-m^2\neq0$, so the vacuum is not a static solution.
+1. **Convention: settled.** The repository used to carry two opposite readings of $\Phi$ (§1); they are now reconciled on the reading of the kernel-checked profile (`DynamicCODScale.lean`), $\Phi=0$ being the vacuum and $\Phi\to1$ the bound-state/horizon end. A metric needs exactly one reading, because $g_{rr}\to1$ must hold at the vacuum end and $g_{rr}\to\infty$ at a horizon. The consensus potential is now $V=\tfrac12m^2\Phi^2$, so the vacuum is a static solution ($V(0)=V'(0)=0$) and the horizon end is not an attractor. Under the *other* reading ($\Phi=1$ vacuum, as in earlier drafts of §1.2), $\ell_P(\text{vacuum})=\ell_P(1)=0$, which no metric can use.
 2. **$g_{\mu\nu}=\delta S_{\rm ent}/\delta\rho$ is not a well-formed tensor equation** (§2). The Omega axioms already contain a well-defined route: the §2.1 logarithmic metric.
 3. **[Derived] Two-factor law** (§3). Markov factorization, additivity and locality give $ds=\ell_P(\Phi)\,d\sigma$ with $d\sigma=-d\ln K$. Hence $h_{ij}=\ell_P(\Phi)^2\gamma_{ij}$, and along a radial chain $g_{rr}=\ell_P(\Phi)^2\kappa^2$. Microscopic contraction and macroscopic dilation are compatible. The open item reduces to one unknown: the correlation-decay metric $\gamma$ (radial rate $\kappa$).
 4. **[Derived] Obstruction** (§4). Suppose $\ell_P(\Phi)$ were the only $\Phi$-dependence of the spatial metric, with a harmonic profile $\Phi=A/\rho$. Then $g_{RR}=(1-\Phi^2)^2\le1$ (contraction), the ADM mass is zero, the Misner–Sharp mass is negative, and the "horizon" has zero area. The canonical profile cannot by itself produce gravitational attraction.
@@ -28,18 +28,20 @@ Every formula is checked numerically, and where noted symbolically (SymPy), by [
 
 | Location | Vacuum | Bound matter / horizon |
 |---|---|---|
-| Technical note §1.2 | $\Phi\approx1$ ("maximal overlap") | $\Phi<1$ matter; $\Phi\to0$ horizon ("network severed") |
-| Technical note §3.1 | $V$ minimal at $\Phi=1$ "(Vacuum)" | — |
-| `Sim5_Emergent_Gravity.py` | `PHI_VACUUM = 1.0` | matter 0.4, black hole 0.1 |
+| Technical note §1.2 | $\Phi=0$ ("no shared state") | $0<\Phi<1$ matter; $\Phi\to1$ horizon ("states merged") |
+| Technical note §3.1 | $V=\tfrac12m^2\Phi^2$, minimum at $\Phi=0$ | — |
+| `Sim5_Emergent_Gravity.py` | `PHI_VACUUM = 0.0` | matter 0.4, black hole 0.9 |
 | Technical note §2.2, `DynamicCODScale.lean`, Sim3's $\ell_P$ | $\Phi=0$ ("unshared vacuum") | $\Phi\to1$ ("bound-mass core or horizon") |
-| Sim3's potential $V=\tfrac12m^2(1-\Phi)^2$ | minimum at $\Phi=1$, taken from §3.1 | Sim3 stops at $\Phi=1$ as "horizon reached" |
 
-Consequences:
+The repository now reads $\Phi$ one way only. The change that resolved it: §1.2 and §3.1 of the technical note were flipped to the Lean reading, Sim3's consensus potential became $V=\tfrac12m^2\Phi^2$, and Sim5 was re-based on the COD profile with `PHI_VACUUM = 0.0`, matter at $\Phi>0$ and the black hole at $\Phi=0.9$. Sim5's earlier `exp((1-\Phi)/\phi_c)` profile was dropped for the Lean-proven $\sqrt{1-\Phi^2}$, which is bounded and so keeps the black hole visible.
 
-- **Lean convention.** $V'(0)=-m^2\neq0$, so $\Phi=0$ is not a static solution, and the global attractor is $\Phi=1$, where $\ell_P=0$. Sim3's default run reaches only $\Phi\approx0.24$ by $t=40$ because of strong Hubble damping. An asymptotically flat vacuum at $\Phi=0$ needs $V(0)=V'(0)=0$. Examples: $V=\tfrac12m^2\Phi^2$, which is Yukawa-screened with $\Phi\propto e^{-m\rho}/\rho$, or $V\equiv0$.
-- **§1.2 convention.** The potential is fine, but $\ell_P(\text{vacuum})=\ell_P(1)=0$.
+Why this reading and not the other one:
 
-Either way, one set of files has to change. The formulas below use the Lean convention; §6 gives the §1.2 translation where it matters. **This needs a decision from the author.**
+- **It is the one that is kernel-checked.** $\ell_P=\ell_{P0}\sqrt{1-\Phi^2}$ is proved in `DynamicCODScale.lean` with the vacuum at $\Phi=0$; the opposite reading would make $\ell_P(\text{vacuum})=0$.
+- **The potential then works.** $V=\tfrac12m^2\Phi^2$ has $V(0)=V'(0)=0$, so $\Phi=0$ is a static, asymptotically flat vacuum, and it is Yukawa-screened ($\Phi\propto e^{-m\rho}/\rho$). Sim3's default run relaxes from its initial kick back toward $\Phi=0$ (peak 0.153, still 0.138 at $t=40$ under Hubble damping) and never reaches the horizon.
+- **The other reading would need the Lean profile relabelled**, e.g. $\ell_P=\ell_{P0}\sqrt{1-(1-\Phi)^2}$, and would then make $g_{rr}\propto1/\Phi$ natural. It was rejected because it discards a kernel-checked module to save an unverified guess.
+
+The formulas below use this convention throughout; §6 gives the §1.2 translation where it matters.
 
 ## 2. Why not $g_{\mu\nu}=\delta S_{\rm ent}/\delta\rho$
 
@@ -149,7 +151,7 @@ The isotropic choice is preferred here because only there is the static field eq
 
 This form is exactly Schwarzschild in areal gauge, but *in the §1.2 convention* ($\Phi=-g_{tt}=1-r_s/R$: vacuum at 1, horizon at 0). In the Lean convention it diverges at the vacuum ($\Phi\to0$), so it is not asymptotically flat, and it stays finite at the horizon. Sim7 check 4 tabulates both conditions for every candidate form.
 
-Hence $g_{rr}\propto1/\Phi$ and $\ell_P=\ell_{P0}\sqrt{1-\Phi^2}$ cannot both hold for the same $\Phi$. Keeping it out of §2.2 was right. It should come back only if the convention flips, which would also require relabelling the Lean profile, e.g. to $\ell_P=\ell_{P0}\sqrt{1-(1-\Phi)^2}$.
+Hence $g_{rr}\propto1/\Phi$ and $\ell_P=\ell_{P0}\sqrt{1-\Phi^2}$ cannot both hold for the same $\Phi$. Keeping it out of §2.2 was right, and it stays out: with the convention now fixed at $\Phi=0$ vacuum, $g_{rr}\propto1/\Phi$ is not asymptotically flat and is not a candidate. The form that *is* Schwarzschild in this convention is the isotropic dictionary of §5.
 
 ## 7. No-hair caveat: geometry or matter?
 
@@ -168,7 +170,7 @@ $$1-\Phi^2=\Phi^*(1-2t)-t^2\;\le\;\Phi^*(1-2t)\;\le\;\Phi^*e^{-2t},$$
 
 using $e^x\ge1+x$ in the last step. Hence $e^{2\Phi}(1-\Phi^2)\le\Phi^*e^{2\Phi^*}$ for every real $\Phi$, with equality if and only if $\Phi=\Phi^*$.
 
-So the disformal bound $e^{-\Phi}/(\sqrt\beta\sqrt{1-\Phi^2})$ has its unique global minimum on $(-1,1)$ at $\Phi^*$. The minimum value is $e^{-\Phi^*}/\sqrt{\beta\Phi^*}\approx0.6856/\sqrt\beta$. The proof needs no calculus, which makes it a short Lean formalization (via `Real.add_one_le_exp`).
+So the disformal bound $e^{-\Phi}/(\sqrt\beta\sqrt{1-\Phi^2})$ has its unique global minimum on $(-1,1)$ at $\Phi^*$. The minimum value is $e^{-\Phi^*}/\sqrt{\beta\Phi^*}\approx0.6856/\sqrt\beta$. The proof needs no calculus, and it is now formalized: `RadialMetric.golden_bottleneck_bound` in `lean_proofs/RadialMetric.lean` proves the inequality via `Real.add_one_le_exp` and is kernel-checked by the Lean CI job.
 
 **Robustness.** For $C=e^{-2a\Phi}$ and $D\propto(1-\Phi^2)^p$, the tightest point is
 
@@ -182,11 +184,11 @@ Caveat: the bound constrains $\dot\Phi$ only. For static profiles the disformal 
 
 ## 9. What would turn this into a derivation
 
-1. Fix the convention across §1.2, §2.2 and §3.1 of the technical note, Sim3's potential and Sim5, plus the Lean docstrings if the convention flips.
+1. ~~Fix the convention across §1.2, §2.2 and §3.1 of the technical note, Sim3's potential and Sim5, plus the Lean docstrings if the convention flips.~~ **Done:** the whole repository now uses $\Phi=0$ as the vacuum (§1).
 2. Build an explicit Q-region model in which $\Phi$ is defined from the $I_{ij}$, and test $\kappa(\Phi)$ against $(1+\Phi)^2/\sqrt{1-\Phi^2}$. A Gaussian or free-fermion lattice, where mutual information is computable, is one option.
 3. Obtain the transverse/areal structure from Q-region data, e.g. area-law entanglement across shells, so that $g_{tt}g_{RR}=-1$ is *tested* rather than imposed.
 4. Decide $\Phi$'s role (§7) and re-derive §3.2 accordingly. Its static limit should reduce to the Lichnerowicz form of §5.
-5. Lean: formalize the golden-ratio minimum (§8), the finite-chain two-factor law (§3) and the $\Phi$-form Schwarzschild identities (§5), so that CI can kernel-check them in a PR.
+5. ~~Lean: formalize the golden-ratio minimum (§8), the finite-chain two-factor law (§3) and the $\Phi$-form Schwarzschild identities (§5).~~ **Done:** `lean_proofs/RadialMetric.lean` proves all three and is kernel-checked by the Lean CI job.
 
 ## References
 

@@ -30,7 +30,8 @@ What is checked
    g_RR = ((1+Phi)/(1-Phi))^2, horizon at Phi = 1, and the correlation-decay
    rate it requires, kappa / kappa_0 = (1+Phi)^2 / sqrt(1-Phi^2).
 4. Convention checks: g_rr ~ 1/Phi is not asymptotically flat in this
-   convention; Sim3's potential V = m^2 (1-Phi)^2 / 2 has V'(0) = -m^2 != 0.
+   convention; the consensus potential V = m^2 Phi^2 / 2 has its minimum at
+   the vacuum Phi = 0, so Phi = 1 is not a static solution (V'(1) = m^2 != 0).
 5. Golden-ratio bottleneck: an elementary global-minimum inequality and the
    generalisation Phi* = (sqrt(p^2 + 4 a^2) - p) / (2 a) for C = exp(-2 a Phi),
    D ~ (1 - Phi^2)^p (golden only when a = p).
@@ -267,12 +268,18 @@ def check_conventions(m: float = 0.1) -> list[tuple[str, bool, bool]]:
     assert verdict["((1+Phi)/(1-Phi))^2 (isotropic)"] == (True, True)
     assert verdict["(1-Phi^2)^2      (l_P alone)"] == (True, False)
 
-    def v_sim3(p: float) -> float:
-        return 0.5 * m**2 * (1.0 - p) ** 2
+    # Consensus potential of Sim3 / Technical section 3.1: V = m^2 Phi^2 / 2.
+    # Its minimum is the vacuum Phi = 0, so the horizon end is not an
+    # attractor and Phi = 1 is not a static solution.
+    def v_consensus(p: float) -> float:
+        return 0.5 * m**2 * p**2
 
     h = 1e-6
-    dv0 = (v_sim3(h) - v_sim3(-h)) / (2 * h)
-    assert math.isclose(dv0, -(m**2), rel_tol=1e-6)  # Phi=0 not a static solution
+    dv1 = (v_consensus(1.0 + h) - v_consensus(1.0 - h)) / (2 * h)
+    assert math.isclose(dv1, m**2, rel_tol=1e-6)  # Phi=1 not a static solution
+    assert math.isclose(v_consensus(0.0), 0.0)  # V(0) = 0
+    # V is quadratic with no linear term: V(Phi) / Phi^2 -> m^2 / 2 as Phi -> 0.
+    assert math.isclose(v_consensus(h) / h**2, 0.5 * m**2, rel_tol=1e-6)
     return rows
 
 
@@ -410,7 +417,10 @@ def report(results: dict[str, float]) -> None:
     print("  4. candidate g_RR(Phi): asymptotically flat at 0? horizon at 1?")
     for name, flat, hor in check_conventions():
         print(f"     {name:<40} flat={flat!s:<5} horizon={hor}")
-    print("     Sim3 potential m^2 (1-Phi)^2/2: V'(0) = -m^2 -> Phi=0 is not static")
+    print(
+        "     Sim3 potential m^2 Phi^2/2: V'(1) = m^2 -> Phi=1 is not static;"
+        " minimum is the vacuum Phi = 0"
+    )
     print("  5. golden bottleneck")
     print(f"     min bound * sqrt(beta) = {results['min_bound_sqrt_beta']:.4f}")
     print(
