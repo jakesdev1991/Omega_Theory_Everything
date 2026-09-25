@@ -12,7 +12,7 @@ namespace OmegaProtocol.Vol49
 open OmegaProtocol
 
 def ReferenceFrame : Type := Unit
-def FrameTransform (_ _ : ReferenceFrame) : Operator := ContinuousLinearMap.id ℂ StateSpace
+noncomputable def FrameTransform (_ _ : ReferenceFrame) : Operator := ContinuousLinearMap.id ℂ StateSpace
 
 theorem frame_compose (A B C : ReferenceFrame) :
   FrameTransform A C = FrameTransform B C ∘L FrameTransform A B := by

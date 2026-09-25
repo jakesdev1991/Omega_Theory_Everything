@@ -19,7 +19,7 @@ theorem local_nets_isotony (O₁ O₂ : SpacetimeRegion) (h : subset_region O₁
   LocalNet O₁ ⊆ LocalNet O₂ := by
   exact False.elim h
 
-theorem local_nets_microcausality (O₁ O₂ : SpacetimeRegion) (h : spacelike_separated O₁ O₂) :
+noncomputable theorem local_nets_microcausality (O₁ O₂ : SpacetimeRegion) (h : spacelike_separated O₁ O₂) :
   ∀ (A B : ↥OmegaAlgebra), A ∈ LocalNet O₁ → B ∈ LocalNet O₂ → A * B = B * A := by
   exact False.elim h
 
@@ -64,8 +64,8 @@ theorem standard_model_gauge_group : GaugeSymmetry = (SU3 × SU2 × U1) := rfl
 -- ============================================================
 
 def OperatorAdjoint (A : Operator) : Operator := A
-def SMatrix : Operator := 1
-def TMatrix : Operator := 0
+noncomputable def SMatrix : Operator := 1
+noncomputable def TMatrix : Operator := 0
 
 theorem optical_expansion :
   OperatorAdjoint SMatrix * SMatrix = (1 : Operator) + Complex.I • TMatrix - Complex.I • OperatorAdjoint TMatrix + OperatorAdjoint TMatrix * TMatrix := by
