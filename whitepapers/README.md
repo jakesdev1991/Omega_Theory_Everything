@@ -28,7 +28,7 @@ visibly test-only Devnet symbol `tTWC`. The TWC paper is now [`twc_whitepaper.md
 - [`../docs/TRADEMARKS.md`](../docs/TRADEMARKS.md) — the naming decision and its unresolved
   trademark-clearance status.
 
-Do not read the absence of a TWC paper as an endorsement of `TWC` as a value-bearing asset, and do
+Do not read the existence of a TWC paper as an endorsement of `TWC` as a value-bearing asset, and do
 not read the `TOKAMAK` draft as its specification.
 
 ## How these papers relate to the rest of the repository
