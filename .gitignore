@@ -6,3 +6,6 @@ __pycache__/
 
 # Lean build artifacts
 .lake/
+
+# JS/Node dependencies (mobile-node, desktop tooling)
+node_modules/

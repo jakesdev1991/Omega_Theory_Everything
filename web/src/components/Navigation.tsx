@@ -7,6 +7,7 @@ const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/economy", label: "Economy" },
   { href: "/wallet", label: "Wallet" },
+  { href: "/store", label: "Store" },
   { href: "/testnet", label: "Testnet" },
   { href: "/care", label: "C.A.R.E." },
   { href: "/novel", label: "The Novel" },

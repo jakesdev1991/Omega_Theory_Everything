@@ -24,6 +24,16 @@ export const ECONOMY_NOSTR_KINDS = {
   governanceProposal: 31333,
   /** Provisional: engine audit event export (operator channel only). */
   auditEvent: 31334,
+  /** App store directory: NIP-89 handler announcements published by the root key. */
+  storeHandler: 31990,
+  /** App store directory: NIP-99 generic classified listings (fallback index). */
+  storeListing: 30017,
+  /** NIP-90 Data Vending Machine job request range (store → mobile node). */
+  dvmRequestMin: 5000,
+  dvmRequestMax: 5999,
+  /** NIP-90 job result range: result kind = request kind + 1000. */
+  dvmResultMin: 6000,
+  dvmResultMax: 6999,
 } as const;
 
 export type EconomyNostrKind = (typeof ECONOMY_NOSTR_KINDS)[keyof typeof ECONOMY_NOSTR_KINDS];
@@ -34,6 +44,7 @@ export interface NostrIntegrationStatus {
   relays: string[];
   publisherNpub: string | null;
   nip05Domain: string | null;
+  storeRootNpub: string | null;
   kinds: typeof ECONOMY_NOSTR_KINDS;
   requiredFromClient: string[];
   notes: string[];
@@ -55,6 +66,7 @@ export function getNostrIntegrationStatus(): NostrIntegrationStatus {
     .filter((relay) => relay.startsWith("wss://"));
   const publisherNpub = process.env.NOSTR_PUBLISHER_NPUB?.trim() || null;
   const nip05Domain = process.env.NOSTR_NIP05_DOMAIN?.trim() || null;
+  const storeRootNpub = process.env.NOSTR_STORE_ROOT_NPUB?.trim() || null;
 
   const configured = relays.length > 0;
 
@@ -64,6 +76,7 @@ export function getNostrIntegrationStatus(): NostrIntegrationStatus {
     relays,
     publisherNpub,
     nip05Domain,
+    storeRootNpub,
     kinds: ECONOMY_NOSTR_KINDS,
     requiredFromClient: [...NOSTR_CLIENT_REQUIREMENTS],
     notes: [
@@ -73,7 +86,11 @@ export function getNostrIntegrationStatus(): NostrIntegrationStatus {
       publisherNpub
         ? `Publisher identity configured: ${publisherNpub}.`
         : "No publisher npub configured (set NOSTR_PUBLISHER_NPUB) — events will be signed by the user's own client key.",
+      storeRootNpub
+        ? `App store root key configured: ${storeRootNpub}. The /store page lists handlers announced by this key.`
+        : "No store root npub configured (set NOSTR_STORE_ROOT_NPUB) — /store lets you paste one per session.",
       "Provisional kinds 31331-31334 are placeholders pending a NIP allocation; they are namespaced to avoid collisions.",
+      "The mobile execution node lives in mobile-node/ (Termux daemon): it answers NIP-90 job requests from /store and only runs allowlisted algorithms for operator keys.",
     ],
   };
 }

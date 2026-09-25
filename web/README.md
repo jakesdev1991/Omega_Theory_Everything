@@ -44,6 +44,7 @@ npm run dev                  # predev syncs the wallet GUI into public/omega-wal
 | `/economy` | Three-currency economy explainer + cross-plane workbench |
 | `/wallet` | **Wallet GUI hub**: launch the GUI in-browser, live preview, per-file SHA-256 |
 | `/wallet/download` | **Downloads**: offline bundle (ZIP + checksums + launchers), installable PWA, native build status |
+| `/store` | **App Store**: static frontend over the Nostr backplane — directory from kinds 31990/30017, NIP-90 job requests to the mobile node, settlement into TWC |
 | `/testnet` | **Economy Test Console**: readiness, scenario suite, faucet, action runner, audit exports, Nostr surface |
 | `/care` | C.A.R.E. social prototype |
 | `/novel`, `/novel/[slug]` | Token-gated reading experience |
@@ -76,6 +77,24 @@ public/omega-wallet/
   artifacts are listed in `desktop/releases.json` (empty today — the download page says so).
 - **Mount-agnostic**: all generated PWA paths are relative, so the same bundle runs from the
   website mount or from any local port/directory.
+
+## App Store (`/store`) and the mobile node
+
+The store is a static frontend over the Nostr backplane managed by
+[`../mobile-node`](../mobile-node):
+
+- Directory: parameterized replaceable events **31990** (NIP-89 handler announcements, preferred)
+  and **30017** (NIP-99 listings), published by `NOSTR_STORE_ROOT_NPUB`
+  (`mobile-node/publish-directory.mjs` generates them from `algorithms.json`).
+- Execution: **Run** signs a NIP-90 job request (kind 5000–5999, default 5001) with a browser-local
+  operator key; the Termux daemon verifies it against its five-gate policy, executes an allowlisted
+  algorithm in the Debian sandbox, and answers with a job result (request kind + 1000) correlated by
+  `["e", requestId]` / `["p", requester]`.
+- Settlement: **Settle result as TWC work** posts the verified job into the economy ledger as an
+  audited work receipt.
+- Demo mode: fixture listings + an in-page responder test the entire flow with zero relays.
+- Strict verification everywhere: event ids are recomputed before signature checks, because
+  nostr-tools' `verifyEvent` alone does not recompute the id from content/tags.
 
 ## Economy Test Console (`/testnet`)
 
@@ -114,7 +133,7 @@ no bootstrap voting power, no test credits.
 | `/api/economy/audit` | GET | Filterable audit trail, JSON/CSV/NDJSON |
 | `/api/wallet/manifest` | GET | Wallet versions, hashes, bundle + desktop status |
 | `/api/wallet/download` | GET | Deterministic offline bundle ZIP |
-| `/api/social/status` | GET | Nostr integration surface |
+| `/api/social/status` | GET | Nostr integration surface incl. store root key and DVM kinds |
 
 ## On-chain verification sources
 

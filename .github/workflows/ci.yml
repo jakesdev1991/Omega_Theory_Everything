@@ -149,6 +149,27 @@ jobs:
         working-directory: web
         run: npm run build
 
+  mobile-node:
+    name: Mobile Node Tests (NIP-90 daemon)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: mobile-node/package-lock.json
+
+      - name: Install locked dependencies
+        working-directory: mobile-node
+        run: npm ci
+
+      - name: Run daemon, policy, executor, and integration tests
+        working-directory: mobile-node
+        run: npm test
+
   security-scan:
     name: Security Scan
     runs-on: ubuntu-latest

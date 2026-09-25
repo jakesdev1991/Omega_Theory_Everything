@@ -1,0 +1,16 @@
+{
+  "name": "omega-mobile-node",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Sovereign NIP-90 execution node for Termux/Droid@Debian: answers app-store job requests from the static web frontend.",
+  "scripts": {
+    "start": "node lucifer-daemon.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "@noble/curves": "^1.6.0",
+    "@noble/hashes": "^1.5.0",
+    "ws": "^8.18.0"
+  }
+}

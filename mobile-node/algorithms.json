@@ -1,0 +1,43 @@
+{
+  "sandboxArgv": [],
+  "sandboxNote": "On the Pixel 8a set sandboxArgv to [\"proot-distro\", \"run\", \"debian\", \"--\"] (or your Droid@Debian entrypoint) so every allowlisted algorithm executes inside the Debian sandbox. Empty means local execution for bench testing.",
+  "maxParamsBytes": 65536,
+  "algorithms": [
+    {
+      "id": "radial-metric-sim",
+      "kind": 5001,
+      "name": "Radial Metric Simulator",
+      "workClass": "physics_simulation",
+      "argv": ["python3", "algorithms/radial_metric.py"],
+      "timeoutMs": 60000,
+      "maxOutputBytes": 262144
+    },
+    {
+      "id": "lean-audit",
+      "kind": 5002,
+      "name": "Lean Axiom Audit",
+      "workClass": "lean_formalization",
+      "argv": ["python3", "algorithms/lean_audit.py"],
+      "timeoutMs": 120000,
+      "maxOutputBytes": 262144
+    },
+    {
+      "id": "rcod-benchmark",
+      "kind": 5003,
+      "name": "RCOD Noise Recovery",
+      "workClass": "engineering_protocol",
+      "argv": ["python3", "algorithms/rcod_benchmark.py"],
+      "timeoutMs": 120000,
+      "maxOutputBytes": 262144
+    },
+    {
+      "id": "echo",
+      "kind": 5099,
+      "name": "Echo (pipeline self-test)",
+      "workClass": "engineering_protocol",
+      "argv": ["cat"],
+      "timeoutMs": 5000,
+      "maxOutputBytes": 65536
+    }
+  ]
+}
