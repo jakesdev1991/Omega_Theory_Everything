@@ -28,10 +28,10 @@ fundamental primitive of Omega Theory:
 
 ## Model assumptions (stated, not derived)
 * The profile `ℓ_P(Φ) = ℓ_P0 · √(1 − Φ²)` is a phenomenological choice, not a
-  consequence of the Omega axioms. It is a different parametrisation from the
-  `Φ`-profile `ℓ_P0 · exp((1 − Φ)/φ_c)` of the v4.0 technical note (§2.2), and it
-  points the *opposite* way: that profile stretches the scale as `Φ` falls, this one
-  contracts it as `Φ` rises.
+  consequence of the Omega axioms. It is the canonical form adopted in §2.2 of the
+  v4.0 technical note and in `Sim3_Dynamic_Scale.py`. It supersedes the earlier
+  `ℓ_P0 · exp((1 − Φ)/φ_c)` heuristic, which pointed the *opposite* way (stretching
+  the scale as `Φ` falls); the relation to that macroscopic picture is an open item.
 * The definition is total on `ℝ` (Mathlib's `Real.sqrt` is `0` on negative inputs), but
   the theorems below only claim anything on the physical range `0 ≤ Φ ≤ 1`.
 -/

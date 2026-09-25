@@ -33,8 +33,9 @@ Model assumptions (definitions, not derivations):
 - `ρ = m(I) / V`, with `m(I) = I · k_B · T · ln 2 / c²` from `InformationPhysics`.
 
 This density profile is a phenomenological choice. It is not derived from the
-Omega axioms, and it is a different parametrisation from the `Φ`-dependent
-profile `ℓ_P(Φ) = ℓ_P0 · exp((1 − Φ)/φ_c)` of the v4.0 technical note.
+Omega axioms, and it is a different parametrisation from the canonical
+`Φ`-dependent profile `ℓ_P(Φ) = ℓ_P0 · √(1 − Φ²)` of `DynamicCODScale` and
+§2.2 of the v4.0 technical note (both contract the scale in dense/high-overlap regions).
 -/
 
 namespace DynamicGeometry

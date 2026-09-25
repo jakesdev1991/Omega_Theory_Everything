@@ -35,8 +35,10 @@ $$\boxed{d_{ij} = -\ell_P(\Phi) \ln\left( \frac{I_{ij}}{I_{\max}} \right)}$$
 This proves that Distance is Correlation Deficit14141414. Space is simply the bookkeeping cost of information loss.
 2.2 Dynamic Planck Length
 The scaling factor $\ell_P(\Phi)$ is not constant. It is the Informational Stiffness of the vacuum15.
-$$\ell_P(\Phi) = \ell_{P0} \, \exp\left( \frac{1 - \Phi}{\phi_c} \right)$$
-In regions of low $\Phi$ (mass), the "grid" of reality stretches. This local variation in scale is curvature16161616.
+$$\ell_P(\Phi) = \ell_{P0} \, \sqrt{1 - \Phi^2}, \qquad 0 \le \Phi \le 1$$
+This is the canonical form: it is the profile formally verified in `lean_proofs/DynamicCODScale.lean` and used by `Sim3_Dynamic_Scale.py`. At $\Phi = 0$ (unshared vacuum) the scale is the relaxed baseline $\ell_{P0}$; as $\Phi \to 1$ (maximal state overlap, e.g. a bound-mass core or horizon) the operational distance between the overlapping states collapses to zero, strictly monotonically in between. This local variation in scale is curvature16161616.
+
+*Note on an earlier form.* Previous drafts used $\ell_P(\Phi) = \ell_{P0}\exp\!\big((1-\Phi)/\phi_c\big)$, under which the "grid" *stretches* in low-$\Phi$ regions. The two forms point in opposite directions. The $\sqrt{1-\Phi^2}$ form describes the microscopic *operational* rendering scale between correlated states; how this relates to a macroscopic coordinate description of matter regions (where the earlier stretching intuition came from) is not yet derived here and is left as an explicit open item. Neither form is derived from the Omega axioms; both are model choices.
 
 3. Field Dynamics: The Lagrangian Formalism
 To make the theory compatible with standard physics, we promote $\Phi$ to a dynamical field governed by an action principle. This section explicitly bridges Omega concepts with field theory17.
