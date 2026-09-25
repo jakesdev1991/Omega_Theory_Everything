@@ -2,6 +2,8 @@ import OmegaAxioms
 import OmegaUnifiedFoundation
 import OmegaDimensionalHierarchy
 import OmegaProtocol
+import CBwK_Budget_Pacer
+import APPA_Context_Branching
 import Vol01_ClassicalMechanics
 import Vol02_Electromagnetism
 import Vol03_Thermodynamics
@@ -56,3 +58,4 @@ import Vol51_ClosedTimelikeCurves
 import Vol52_OmegaPointTheory
 import Vol53_UniversalCompiler
 import Vol54_TheoryOfNothing
+import InformationPhysics

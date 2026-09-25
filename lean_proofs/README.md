@@ -83,6 +83,30 @@ Each volume formalizes a major domain of physics:
 lake build
 ```
 
+## Proof-honesty policy
+
+This corpus is maintained under an explicit honesty policy, enforced in CI:
+
+1. **No unsound escapes.** `sorry`, `admit`, `native_decide`, `sorryAx`,
+   `@[extern]`, and `implemented_by` are banned from sources (grep gate in
+   `.github/workflows/lean-ci.yml`).
+2. **No declaration-level axioms.** `audit_axioms.py --max 0` counts
+   `axiom` commands; physical postulates are instead encoded as concrete
+   definitions in `OmegaAxioms.lean` or as explicit theorem hypotheses.
+3. **No dressed-up tautologies.** The Q-region model in `OmegaAxioms.lean`
+   is intentionally degenerate (e.g. `vonNeumannEntropy _ = 0`), so
+   statements like `vonNeumannEntropy R ≥ 0` are structural consistency
+   checks of the formalization, *not* physics. Such declarations must carry
+   the `bridge_*` naming convention and an honest docstring saying so;
+   `audit_vacuity.py` fails CI if any other theorem states one of those
+   tautologies.
+4. **No `Unit` stubs.** Existence proofs of the form `Nonempty X := ⟨()⟩`
+   and `def X : Type := Unit` inside the volumes are tracked by
+   `audit_vacuity.py` and ratcheted so they can only decrease.
+
+The ratchet values live in `.github/workflows/lean-ci.yml`; lowering them is
+always welcome, raising them is not.
+
 ## Security-gate proofs and tactic search
 
 `APPA_Context_Branching.lean` is a self-contained, axiom-free proof of the

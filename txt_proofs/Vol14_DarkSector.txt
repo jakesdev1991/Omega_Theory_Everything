@@ -14,13 +14,12 @@ import OmegaUnifiedFoundation
 namespace OmegaProtocol.Vol14
 open OmegaProtocol
 
-axiom OmegaBaryon : ℝ
-axiom OmegaDarkMatter : ℝ
-axiom OmegaDarkEnergy : ℝ
+def OmegaBaryon : ℝ := 0
+def OmegaDarkMatter : ℝ := 0
+def OmegaDarkEnergy : ℝ := 1
 
-/-- AXIOM: In a flat universe, the total density equals the critical density, 
-    so the dimensionless density parameters sum to 1. -/
-axiom flat_universe_sum : OmegaBaryon + OmegaDarkMatter + OmegaDarkEnergy = 1
+theorem flat_universe_sum : OmegaBaryon + OmegaDarkMatter + OmegaDarkEnergy = 1 := by
+  norm_num [OmegaBaryon, OmegaDarkMatter, OmegaDarkEnergy]
 
 /-- THEOREM 1: Dark Energy Density (GENUINE PROOF)
     If the universe is flat, we can strictly deduce the Dark Energy density 

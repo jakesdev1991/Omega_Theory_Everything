@@ -31,10 +31,18 @@ theorem cybernetics_from_omega (g : ℝ) (hg0 : 0 ≤ g) (hg1 : g ≤ 1) (n : �
   g ^ (n + 1) ≤ g ^ n := by
   exact feedback_convergence g hg0 hg1 n
 
-theorem feedback_stability (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := by
+/-- Consistency bridge (VOL32): the Omega-metric `d` is nonnegative.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `feedback_stability` evoked. -/
+theorem bridge_vol32_metric_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := by
   exact distance_nonneg R₁ R₂
 
-theorem control_loop_entropy (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
+/-- Consistency bridge (VOL32): the von Neumann entropy is nonnegative.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `control_loop_entropy` evoked. -/
+theorem bridge_vol32_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
   exact monotonicity_lemma R
 
 end OmegaProtocol.Vol32

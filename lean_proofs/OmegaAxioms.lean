@@ -267,7 +267,11 @@ theorem freeze_boundary_theorem (R₁ R₂ : QRegion) :
   intro h
   exact h
 
-theorem triangle_inequality_from_DPI (R₁ R₂ R₃ : QRegion) :
+/-- Consistency bridge (protocol core): the Omega-metric `d` satisfies the triangle inequality.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `triangle_inequality_from_DPI` evoked. -/
+theorem bridge_metric_triangle_from_DPI (R₁ R₂ R₃ : QRegion) :
   d R₁ R₃ ≤ d R₁ R₂ + d R₂ R₃ := by
   exact distance_triangle_inequality R₁ R₂ R₃
 

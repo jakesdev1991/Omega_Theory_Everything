@@ -66,9 +66,14 @@ jobs:
         working-directory: lean_proofs
         run: |
           set -e
-          if grep -rn --include='*.lean' --exclude-dir=.lake -E '\bsorry\b|: True :=|:= by trivial' . ; then
-            echo "::error::Found sorry or trivial stubs in lean sources"
+          if grep -rn --include='*.lean' --exclude-dir=.lake -E '\bsorry\b|\badmit\b|\bnative_decide\b|\bsorryAx\b|@\[extern|\bimplemented_by\b|: True :=|:= by trivial' . ; then
+            echo "::error::Found sorry/admit/native_decide/extern or trivial stubs in lean sources"
             exit 1
           fi
           echo "Clean: no sorry/trivial stubs."
           python3 audit_axioms.py --max 0
+          # Honesty ratchet: degenerate-model tautologies may only exist under
+          # the `bridge_*` naming convention, `Nonempty Unit` stubs and
+          # `Unit`-typed volume definitions may only decrease. See
+          # audit_vacuity.py for the definitions of the three metrics.
+          python3 audit_vacuity.py --max-misleading 0 --max-unit-stubs 0 --max-unit-types 15

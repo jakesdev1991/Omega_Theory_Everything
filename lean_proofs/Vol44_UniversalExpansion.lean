@@ -31,10 +31,18 @@ theorem desitter_entropy_positive : DeSitterEntropy > 0 := by
 theorem expansion_from_omega : DeSitterEntropy > 0 := by
   exact desitter_entropy_positive
 
-theorem expansion_distance_self (R : QRegion) : d R R = 0 := by
+/-- Consistency bridge (VOL44): the Omega-metric `d` is reflexive (`d R R = 0`).
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `expansion_distance_self` evoked. -/
+theorem bridge_vol44_metric_self_zero (R : QRegion) : d R R = 0 := by
   exact qregion_self_distance_zero R
 
-theorem expansion_phi_nonneg (R₁ R₂ : QRegion) : Φ R₁ R₂ ≥ 0 := by
+/-- Consistency bridge (VOL44): the coupling `Φ` is nonnegative.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `expansion_phi_nonneg` evoked. -/
+theorem bridge_vol44_coupling_nonneg (R₁ R₂ : QRegion) : Φ R₁ R₂ ≥ 0 := by
   exact Φ_nonneg R₁ R₂
 
 end OmegaProtocol.Vol44

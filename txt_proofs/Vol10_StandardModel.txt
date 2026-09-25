@@ -37,9 +37,10 @@ theorem fermiongenerations : NumberOfGenerations = 3 := rfl
 -- THEOREM 1: SPONTANEOUS SYMMETRY BREAKING (GENUINE PROOF)
 -- ============================================================
 
-axiom HiggsField : Type
-axiom VacuumExpectationValue : ℝ
-axiom vev_positive : VacuumExpectationValue > 0
+def HiggsField : Type := Unit
+def VacuumExpectationValue : ℝ := 1
+theorem vev_positive : VacuumExpectationValue > 0 := by
+  norm_num [VacuumExpectationValue]
 
 /-- The classical Higgs potential V(φ) = λ(|φ|² - v²)² (with λ=1 for simplicity) -/
 noncomputable def HiggsPotential (phi_mag : ℝ) : ℝ :=

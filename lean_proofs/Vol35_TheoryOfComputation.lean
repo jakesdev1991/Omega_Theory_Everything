@@ -32,16 +32,18 @@ theorem cantor_diagonal : ¬ Function.Surjective (f : ℕ → ℕ → Bool) := b
   -- This is a contradiction: x ≠ ¬x
   cases h : f k k <;> simp_all
 
-/-- COROLLARY: Theory of Computation from Omega Protocol
-    States = Q-Regions (0D)
-    Transitions = Φ (1D)
-    Configuration space = Ω-Metric (2D)
-    Computation time = Informational Viscosity (3D)
-    Halting = RCOD Asymmetry (4D) -/
-theorem computation_from_omega (R : QRegion) : d R R = 0 := by
+/-- Consistency bridge (VOL35): the Omega-metric `d` is reflexive (`d R R = 0`).
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `computation_from_omega` evoked. -/
+theorem bridge_vol35_metric_self_zero (R : QRegion) : d R R = 0 := by
   exact qregion_self_distance_zero R
 
-theorem computation_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
+/-- Consistency bridge (VOL35): the von Neumann entropy is nonnegative.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `computation_entropy_nonneg` evoked. -/
+theorem bridge_vol35_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
   exact monotonicity_lemma R
 
 theorem cantor_diagonal_nontrivial :
