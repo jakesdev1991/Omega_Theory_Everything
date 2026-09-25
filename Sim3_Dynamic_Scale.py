@@ -24,6 +24,13 @@ History: an earlier version of this simulation used the heuristic profile
 COD profile so that the simulation matches the Lean-proven module. The
 differences are stated explicitly in Section 3.
 
+Convention: ``Phi = 0`` is the vacuum and ``Phi -> 1`` the bound-state/horizon
+end, matching ``lean_proofs/DynamicCODScale.lean`` and Section 2.2 of the v4.0
+technical note. The consensus potential of Section 3.1 is oriented the same way
+(minimum at ``Phi = 0``); an earlier revision used ``V = m^2 (1 - Phi)^2 / 2``,
+whose minimum at ``Phi = 1`` followed the opposite reading of Section 1.2 and
+therefore made the horizon end the attractor.
+
 1. Introduction
 ---------------
 Simulations 1 and 2 established that geometry can emerge from correlations and
@@ -56,14 +63,18 @@ causality?
 2.3 Optional dynamics
 - Scalar-field equation of motion
       Phiddot + 3 H(Phi) Phidot + V'(Phi) = 0,   H(Phi) = H0 exp(Phi),
-  with consensus potential V(Phi) = m^2 (1 - Phi)^2 / 2, whose minimum at
-  Phi = 1 follows the v4.0 technical note (Section 3.1). The earlier version
-  used V = m^2 phi^2 / 2 (minimum at 0); that would drive Phi negative, which
-  is outside the COD range.
+  with consensus potential V(Phi) = m^2 Phi^2 / 2, whose minimum at Phi = 0
+  is the vacuum of the COD convention used throughout (Section 2.2 and
+  DynamicCODScale.lean: l_P(0) = l_P0). This is the orientation stated in
+  Section 3.1 of the v4.0 technical note. An earlier revision used
+  V = m^2 (1 - Phi)^2 / 2 (minimum at 1); under the present convention that
+  would put the attractor at the horizon end, where l_P vanishes, and would
+  leave V'(0) = -m^2 != 0 so that the vacuum is not a static solution.
 - Initial conditions lie inside the causality band; integration stops if Phi
   reaches 1, where l_P vanishes.
 - Diagnostics: causality ratio |Phidot| / bound, emergent scale factor
-  a(t) = exp(int H dt), and ringdown-shift proxy 100 * |Phidot| / (a l_P).
+  a(t) = exp(int H dt), ringdown-shift proxy 100 * |Phidot| / (a l_P), and
+  whether Phi stays inside the physical COD range [0, 1].
 
 3. Results
 ----------
@@ -86,13 +97,16 @@ regenerated; the values quoted are for the default parameters.
   l_P shrinks; the proxy diverges as Phi -> 1.
 
 3.3 Dynamic evolution (optional)
-  Phi rolls from 0 toward the consensus minimum at 1 under strong Hubble
-  damping (H0 = 1, m = 0.1): the initial kick is damped within t ~ 1 and Phi
-  then creeps slowly, reaching ~0.24 at t = 40 without approaching the
-  horizon. The causality ratio starts at 0.5 by construction and only
-  decreases, so |Phidot| < bound holds throughout. The ringdown proxy peaks
-  at 50 % at t = 0 (it is 100 * 0.5 * bound(0) / (a l_P) with a = l_P = 1
-  there) and decays with Phidot. ln a(40) ~ 49.
+  The initial kick (|Phidot| = 0.5 * bound(0) = 0.5) lifts Phi off the vacuum
+  to a peak of 0.153 within t ~ 1; the restoring force V' = m^2 Phi then
+  relaxes it back toward the consensus minimum at 0 with rate m^2 / (3 H)
+  ~ 0.0033, so Phi is still 0.138 at t = 40. Phi stays inside [0, 1] and the
+  horizon is not reached, which is the expected behaviour now that the
+  attractor is the vacuum rather than the horizon end. The causality ratio
+  starts at 0.5 by construction and only decreases, so |Phidot| < bound holds
+  throughout. The ringdown proxy peaks at 50 % at t = 0 (it is
+  100 * 0.5 * bound(0) / (a l_P) with a = l_P = 1 there) and decays with
+  Phidot. ln a(40) ~ 46.
 
 4. Discussion
 -------------
@@ -103,6 +117,14 @@ has a single tightest point at Phi* ~ 0.618 and opens up toward maximal
 overlap. This is a consequence of the model choice D = beta l_P^2 and should
 be read as such; neither the profile nor the coupling is derived from the
 Omega axioms (see the "Model assumptions" section of DynamicCODScale.lean).
+
+The potential is a second, independent model choice. V = m^2 Phi^2 / 2 has its
+minimum at the vacuum Phi = 0, so the field relaxes toward the unshared state
+and the horizon end Phi -> 1 is never an attractor; a quadratic potential is
+also Yukawa-screened, Phi ~ e^(-m rho) / rho, which is what an asymptotically
+flat vacuum needs. Both properties are consequences of the choice, not
+derivations of it. A quartic or cosine potential with the same minimum would
+change the late-time approach but not the vacuum value.
 
 5. Conclusion
 -------------
@@ -175,6 +197,13 @@ def self_check() -> None:
     for beta in (1.0, 0.5, 0.05):
         derived = np.sqrt(C_conformal(phi) / D_disformal(phi, beta))
         assert np.allclose(derived, causality_bound(phi, beta))
+    # Consensus potential V = m^2 Phi^2 / 2: minimum at the vacuum Phi = 0.
+    m = 0.1
+    v = 0.5 * m**2 * np.square(phi)
+    assert math.isclose(float(v[0]), 0.0)  # V(0) = 0
+    assert np.all(np.diff(v) >= 0.0)  # V increasing away from the vacuum
+    dv = np.gradient(v, phi)[1:-1]
+    assert np.allclose(dv, m**2 * phi[1:-1], rtol=1e-6, atol=1e-12)  # V' = m^2 Phi
 
 
 # ---------------------------------------------------------------------------
@@ -246,7 +275,9 @@ def run_dynamic(
     def phi_eom(_t: float, y: Sequence[float]) -> list[float]:
         phival, phidot = y
         H = H0 * math.exp(phival)
-        phiddot = -3.0 * H * phidot + m**2 * (1.0 - phival)  # V = m^2 (1-Phi)^2 / 2
+        # V = m^2 Phi^2 / 2, so V' = m^2 Phi: the minimum sits at the vacuum
+        # Phi = 0 of the COD convention (l_P(0) = l_P0), not at Phi = 1.
+        phiddot = -3.0 * H * phidot - m**2 * phival
         return [phidot, phiddot]
 
     def reach_horizon(_t: float, y: Sequence[float]) -> float:
@@ -271,17 +302,25 @@ def run_dynamic(
     bound_num = causality_bound(phi_num, beta=beta)
     ratio = np.abs(phidot_num) / bound_num
     shift = np.asarray(ringdown_shift_percent(phidot_num, a_num, phi_num))
-    ok = bool(np.all(ratio < 1.0))
+    in_range = bool(np.all((phi_num >= 0.0) & (phi_num <= 1.0)))
+    horizon = bool(sol.status == 1)
+    ok = bool(np.all(ratio < 1.0)) and in_range
 
     print(f"Dynamic run (beta={beta}, H0={H0}, m={m}, t_end={t_end})")
     print(
-        f"  Phi: {phi_num[0]:.3f} -> {phi_num[-1]:.3f}; horizon reached: {sol.status == 1}"
+        f"  Phi: {phi_num[0]:.3f} -> {phi_num[-1]:.3f}; "
+        f"range [{phi_num.min():.4f}, {phi_num.max():.4f}]; "
+        f"inside [0, 1]: {in_range}"
     )
     print(
         f"  causality ratio: initial {ratio[0]:.3f}, max {ratio.max():.3f}  -> satisfied: {ok}"
     )
     print(f"  ringdown proxy: peak {shift.max():.2f} %")
     print(f"  ln a(t_end) = {math.log(a_num[-1]):.2f}")
+    if horizon:
+        print("  stopped: horizon (Phi = 1) reached")
+    elif not in_range:
+        print("  warning: Phi left the physical COD range [0, 1]")
 
     if make_plots:
         import matplotlib

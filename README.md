@@ -33,6 +33,7 @@ This repository contains the full simulation suite for Omega Theory v4.0, implem
 - **Sim4**: System evolution with v14 depletion mechanics
 - **Sim5**: Emergent gravity as entropic force
 - **Sim6**: v14 depletion dynamics
+- **Sim7**: Checks for the macroscopic radial metric g_rr(Φ) (companion to `Omega_Theory_v4.0_Radial_Metric.md`)
 
 ## Theory Foundation
 
@@ -45,6 +46,7 @@ S_ent = A/4G  →  g_μν = δS_ent/δρ
 Key papers:
 - `Omega_Theory_v4.0_Technical.md` - Full technical specification
 - `Omega_Theory_Laymans_Guide.md` - Accessible overview
+- `Omega_Theory_v4.0_Radial_Metric.md` - Working notes toward the macroscopic metric g_rr(Φ) (exploratory; the open item of Technical §2.2)
 
 ## Formal Verification (Lean 4)
 
@@ -57,6 +59,10 @@ lean_proofs/
 ├── OmegaUnifiedFoundation.lean       # Unified foundation
 ├── OmegaDimensionalHierarchy.lean    # Dimensional hierarchy
 ├── OmegaProtocol.lean                # Cross-volume theorems
+├── InformationPhysics.lean           # Landauer-Einstein information mass
+├── DynamicPlanckScale.lean           # density-driven Planck scale
+├── DynamicCODScale.lean              # COD-driven Planck scale, l_P(Phi) = l_P0 sqrt(1 - Phi^2)
+├── RadialMetric.lean                 # golden-ratio bottleneck, finite-chain two-factor law, Phi-form Schwarzschild identities
 ├── Vol01_ClassicalMechanics.lean     # through
 └── Vol54_TheoryOfNothing.lean        # 54 physics volumes
 ```
@@ -94,6 +100,7 @@ Omega_Theory_Everything/
 ├── Sim4_Evolution.py
 ├── Sim5_Emergent_Gravity.py
 ├── sim6_v14_depletion.py
+├── Sim7_Radial_Metric.py
 ├── rcod/                     # RCOD optimizer governor (research prototype + benchmark)
 ├── cpp/                      # CBwK shadow-price pacer (Lucifer–Hermes routing governor, C++23)
 ├── omni-bridge/              # Omni-Bridge control boundary (Hermes ⇄ Lucifer), C++23 + host audit kit

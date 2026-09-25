@@ -18,10 +18,12 @@ The Only Observable: Between any two regions $i$ and $j$, the only fundamental p
 $$I_{ij} = S(\rho_i) + S(\rho_j) - S(\rho_{ij})$$
 1.2 Chain Overlap Density ($\Phi$)
 To transition from a discrete graph to a continuous field theory, we define the Chain Overlap Density field, $\Phi(x)$. This is the "master variable" of the theory8888.
-Definition: $\Phi(x) \in (0,1]$ represents the local density of shared correlations (redundancy) in the network.
-$\Phi \approx 1$ (Vacuum): Maximal Overlap. The network is in high consensus. Correlations are strong, so "distance" is minimal9.
-$\Phi < 1$ (Matter): Reduced Overlap. A "knot" of unique, decorrelated information. This asymmetry creates what we perceive as mass10101010.
-$\Phi \to 0$ (Horizon): Information reaches zero. The network is severed11.
+Definition: $\Phi(x) \in [0,1]$ represents the local density of shared correlations (redundancy) in the network.
+$\Phi = 0$ (Vacuum): No shared state. The network carries no redundancy, so there is nothing to render: the operational scale sits at its relaxed baseline $\ell_{P0}$ (§2.2) and spacetime is asymptotically flat9.
+$0 < \Phi < 1$ (Matter): Partial overlap. A "knot" of correlated information. The asymmetry between this knot and the surrounding vacuum is what we perceive as mass10101010.
+$\Phi \to 1$ (Horizon): Total overlap. The states have merged, the information that distinguished them reaches zero, and the network is severed11.
+
+*Note on the orientation.* Earlier drafts read $\Phi$ the other way round ($\Phi\approx1$ vacuum, $\Phi\to0$ horizon). The orientation above is the one used by the kernel-checked profile of §2.2 (`lean_proofs/DynamicCODScale.lean`) and by `Sim3_Dynamic_Scale.py`. A metric needs a single reading, because $g_{rr}\to1$ must hold at the vacuum end and $g_{rr}\to\infty$ at a horizon.
 
 2. Emergent Geometry: The Logarithmic Metric
 How does a number ($I_{ij}$) become a physical distance ($d_{ij}$)?
@@ -38,7 +40,7 @@ The scaling factor $\ell_P(\Phi)$ is not constant. It is the Informational Stiff
 $$\ell_P(\Phi) = \ell_{P0} \, \sqrt{1 - \Phi^2}, \qquad 0 \le \Phi \le 1$$
 This is the canonical form: it is the profile formally verified in `lean_proofs/DynamicCODScale.lean` and used by `Sim3_Dynamic_Scale.py`. At $\Phi = 0$ (unshared vacuum) the scale is the relaxed baseline $\ell_{P0}$; as $\Phi \to 1$ (maximal state overlap, e.g. a bound-mass core or horizon) the operational distance between the overlapping states collapses to zero, strictly monotonically in between. This local variation in scale is curvature16161616.
 
-*Note on an earlier form.* Previous drafts used $\ell_P(\Phi) = \ell_{P0}\exp\!\big((1-\Phi)/\phi_c\big)$, under which the "grid" *stretches* in low-$\Phi$ regions. The two forms point in opposite directions. The $\sqrt{1-\Phi^2}$ form describes the microscopic *operational* rendering scale between correlated states; how this relates to a macroscopic coordinate description of matter regions (where the earlier stretching intuition came from) is not yet derived here and is left as an explicit open item. Neither form is derived from the Omega axioms; both are model choices.
+*Note on an earlier form.* Previous drafts used $\ell_P(\Phi) = \ell_{P0}\exp\!\big((1-\Phi)/\phi_c\big)$, under which the "grid" *stretches* in low-$\Phi$ regions. The two forms point in opposite directions. The $\sqrt{1-\Phi^2}$ form describes the microscopic *operational* rendering scale between correlated states; how this relates to a macroscopic coordinate description of matter regions (where the earlier stretching intuition came from) is not yet derived here and is left as an explicit open item. Neither form is derived from the Omega axioms; both are model choices. Exploratory working notes on this open item, covering what the axioms fix, what they leave open, and what the macroscopic metric must look like to reproduce Schwarzschild, are in [`Omega_Theory_v4.0_Radial_Metric.md`](Omega_Theory_v4.0_Radial_Metric.md) (checked by `Sim7_Radial_Metric.py`); they do not change the claims of this section.
 
 3. Field Dynamics: The Lagrangian Formalism
 To make the theory compatible with standard physics, we promote $\Phi$ to a dynamical field governed by an action principle. This section explicitly bridges Omega concepts with field theory17.
@@ -46,7 +48,7 @@ To make the theory compatible with standard physics, we promote $\Phi$ to a dyna
 We posit that the universe evolves to minimize computational cost. The action $S_\Phi$ is18181818:
 $$S_\Phi = \int d^4x \sqrt{-g} \left[ \underbrace{\frac{1}{2} Z(\Phi) g^{\mu\nu} \nabla_\mu \Phi \nabla_\nu \Phi}_{\text{Kinetic: Cost of Gradients}} - \underbrace{V(\Phi)}_{\text{Potential: Cost of State}} \right]$$
 $Z(\Phi)$: The Stiffness Function. It determines how hard it is to create a gradient in $\Phi$.
-$V(\Phi)$: The Consensus Potential. It has a minimum at $\Phi=1$ (Vacuum), forcing the universe to tend toward maximal overlap19.
+$V(\Phi)$: The Consensus Potential. It has a minimum at $\Phi=0$ (Vacuum), forcing the universe to relax toward the unshared baseline19.
 3.2 Deriving Stress-Energy ($T_{\mu\nu}$)
 Varying the action with respect to the metric $g_{\mu\nu}$ yields the Stress-Energy Tensor exactly20202020:
 $$\boxed{T_{\mu\nu}^\Phi = Z(\Phi)\nabla_\mu\Phi \nabla_\nu\Phi - g_{\mu\nu}\mathcal{L}_\Phi}$$

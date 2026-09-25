@@ -72,5 +72,6 @@ lean_lib ToE where
     `Vol54_TheoryOfNothing,
     `InformationPhysics,
     `DynamicPlanckScale,
-    `DynamicCODScale
+    `DynamicCODScale,
+    `RadialMetric
   ]
