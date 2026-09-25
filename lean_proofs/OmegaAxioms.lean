@@ -27,24 +27,28 @@ assumptions as hypotheses rather than hiding them in axioms.
 /-- The concrete Hilbert space used by the minimal model. -/
 def StateSpace : Type := ℂ
 
-instance : NormedAddCommGroup StateSpace := inferInstanceAs (NormedAddCommGroup ℂ)
-instance : InnerProductSpace ℂ StateSpace := inferInstanceAs (InnerProductSpace ℂ ℂ)
+noncomputable instance : NormedAddCommGroup StateSpace := inferInstanceAs (NormedAddCommGroup ℂ)
+noncomputable instance : InnerProductSpace ℂ StateSpace := inferInstanceAs (InnerProductSpace ℂ ℂ)
 instance : CompleteSpace StateSpace := inferInstanceAs (CompleteSpace ℂ)
 
-/-- The top algebra is a convenient concrete von Neumann algebra for the model. -/
-noncomputable def OmegaAlgebra : VonNeumannAlgebra StateSpace := ⊤
+/-- The top operator *-algebra serves as the concrete algebra for the model.
+    (Mathlib does not (yet) supply a `Top` instance for the bundled
+    `VonNeumannAlgebra` structure, so the minimal model uses the top
+    `StarSubalgebra` of bounded operators on `StateSpace` instead.) -/
+noncomputable def OmegaAlgebra : StarSubalgebra ℂ (StateSpace →L[ℂ] StateSpace) := ⊤
 
 abbrev Operator := StateSpace →L[ℂ] StateSpace
 
 /-- The minimal model has a zero functional calculus. -/
-def op_pow (_ : Operator) (_ : ℂ) : Operator := 0
-@[default_instance] noncomputable instance : HPow Operator ℂ Operator where
+noncomputable def op_pow (_ : Operator) (_ : ℂ) : Operator := 0
+@[default_instance] noncomputable instance instHPowOperator : HPow Operator ℂ Operator where
   hPow := op_pow
 
-@[default_instance] noncomputable instance : Coe ↥OmegaAlgebra Operator where
+@[default_instance] noncomputable instance instCoeOmegaAlgebraOperator :
+    Coe ↥OmegaAlgebra Operator where
   coe A := A.1
 
-@[default_instance] noncomputable instance : Mul Operator where
+@[default_instance] noncomputable instance instMulOperator : Mul Operator where
   mul A B := A.comp B
 
 def CyclicSeparating (_ : StateSpace) : Prop := True
@@ -56,8 +60,8 @@ def QFIM (_ : StateSpace) (_ : Operator) (_ : Operator) : ℝ := 0
 def Hessian (_ : StateSpace → ℝ) (_ : StateSpace → ℝ) (_ : StateSpace → ℝ) : ℝ := 0
 def NewtonG : ℝ := 1
 
-def state_at {spacetime : Type*} (_ : spacetime) : StateSpace := 0
-def tangent_at {spacetime : Type*} (_ : spacetime) : Operator := 0
+noncomputable def state_at {spacetime : Type*} (_ : spacetime) : StateSpace := 0
+noncomputable def tangent_at {spacetime : Type*} (_ : spacetime) : Operator := 0
 def CovariantDivergence {spacetime : Type*}
     (_ : spacetime → spacetime → ℝ) (_ : spacetime) : ℝ := 0
 
@@ -72,7 +76,7 @@ def Observable : Type := Unit
 def commutator {T : Type*} (A _ : T) : T := A
 def lim_h_to_0 {T : Type*} (f : ℝ → T) : T := f 0
 
-def vacuum_at {manifold : Type*} (_ : manifold) : StateSpace := 0
+noncomputable def vacuum_at {manifold : Type*} (_ : manifold) : StateSpace := 0
 
 /-- A Q-Region is a single point in the minimal model. -/
 def QRegion : Type := Unit
@@ -152,7 +156,7 @@ theorem data_processing_inequality_multiplicative :
   ∀ (R₁ R₂ R₃ : QRegion),
     mutualInformation R₁ R₃ ≤ mutualInformation R₁ R₂ * mutualInformation R₂ R₃ / maxMutualInformation := by
   intros
-  norm_num [maxMutualInformation]
+  simp [mutualInformation, maxMutualInformation]
 
 theorem monotonicity_lemma :
   ∀ (R : QRegion), vonNeumannEntropy R ≥ 0 := by
@@ -163,7 +167,7 @@ theorem entropy_bounded :
   ∀ (R : QRegion), vonNeumannEntropy R ≤ Real.pi := by
   intro
   have : (0 : ℝ) ≤ Real.pi := le_of_lt Real.pi_pos
-  simpa using this
+  simpa [vonNeumannEntropy] using this
 
 theorem mutualInformation_nonneg :
   ∀ (R₁ R₂ : QRegion), mutualInformation R₁ R₂ ≥ 0 := by
@@ -173,7 +177,7 @@ theorem mutualInformation_nonneg :
 theorem mutualInformation_bounded :
   ∀ (R₁ R₂ : QRegion), mutualInformation R₁ R₂ ≤ maxMutualInformation := by
   intros
-  norm_num [maxMutualInformation]
+  simp [mutualInformation, maxMutualInformation]
 
 theorem log_ratio_nonpos :
   ∀ (R₁ R₂ : QRegion), mutualInformation R₁ R₂ > 0 →

@@ -1,6 +1,8 @@
 import Mathlib
 import OmegaUnifiedFoundation
 
+noncomputable section
+
 namespace OmegaProtocol.Vol06
 open OmegaProtocol
 
@@ -64,8 +66,8 @@ theorem standard_model_gauge_group : GaugeSymmetry = (SU3 × SU2 × U1) := rfl
 -- ============================================================
 
 def OperatorAdjoint (A : Operator) : Operator := A
-def SMatrix : Operator := 1
-def TMatrix : Operator := 0
+noncomputable def SMatrix : Operator := 1
+noncomputable def TMatrix : Operator := 0
 
 theorem optical_expansion :
   OperatorAdjoint SMatrix * SMatrix = (1 : Operator) + Complex.I • TMatrix - Complex.I • OperatorAdjoint TMatrix + OperatorAdjoint TMatrix * TMatrix := by

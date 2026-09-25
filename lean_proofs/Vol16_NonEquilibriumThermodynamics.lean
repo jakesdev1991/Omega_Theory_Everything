@@ -29,7 +29,7 @@ def TimeDeriv (_ : ThermoTime → ℝ) (_ : ThermoTime) : ℝ := 0
 
 theorem entropy_balance (t : ThermoTime) :
   TimeDeriv Entropy t = EntropyFlux t + EntropyProduction t := by
-  rfl
+  simp [TimeDeriv, EntropyFlux, EntropyProduction]
 
 theorem entropy_production_nonneg (t : ThermoTime) :
   EntropyProduction t ≥ 0 := by

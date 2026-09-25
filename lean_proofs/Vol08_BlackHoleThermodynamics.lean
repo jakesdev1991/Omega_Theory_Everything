@@ -20,7 +20,7 @@ namespace OmegaProtocol.Vol08
 open OmegaProtocol
 
 def BHGeometry : Type := Unit
-def ExteriorRegion (_ : BHGeometry) : StateSpace := 0
+noncomputable def ExteriorRegion (_ : BHGeometry) : StateSpace := 0
 def SurfaceGravity (_ : BHGeometry) : ℝ := 0
 def HorizonArea (_ : BHGeometry) : ℝ := 0
 def Mass (_ : BHGeometry) : ℝ := 0
@@ -85,7 +85,7 @@ theorem full_first_law_equivalence
 -- KMS STATE AND ENTROPY EMERGENCE
 -- ============================================================
 
-abbrev MT : ModularTheory := Vol03.MT
+noncomputable abbrev MT : ModularTheory := Vol03.MT
 
 /-- The concrete KMS predicate is true for every state and temperature. -/
 theorem kms_exterior_vacuum (bh : BHGeometry) :
@@ -93,7 +93,7 @@ theorem kms_exterior_vacuum (bh : BHGeometry) :
   trivial
 
 /-- Relative entropy and geometric entropy are both zero in the concrete model. -/
-def Vacuum : StateSpace := 0
+noncomputable def Vacuum : StateSpace := 0
 theorem bhthermofromrelativeentropy (bh : BHGeometry) :
   BHEntropy bh = MT.RelativeEntropy (ExteriorRegion bh) Vacuum := by
   norm_num [BHEntropy, HorizonArea, Vol03.MT, concreteModularTheory]

@@ -183,7 +183,7 @@ theorem orthogonal_exclusive (P Q : Operator)
   P (Q ψ) = 0 := by
   calc P (Q ψ) = (P * Q) ψ := rfl
     _ = (0 : Operator) ψ := by rw [hPQ]
-    _ = 0 := ContinuousLinearMap.zero_apply ψ
+    _ = 0 := by simp
 
 -- ============================================================
 -- PHYSICAL POSTULATES (correctly declared as axioms)
@@ -192,7 +192,7 @@ theorem orthogonal_exclusive (P Q : Operator)
 def hbar : ℝ := 1
 theorem hbar_pos : hbar > 0 := by
   norm_num [hbar]
-def time_derivative (_ : ℝ → StateSpace) (_ : ℝ) : StateSpace := 0
+noncomputable def time_derivative (_ : ℝ → StateSpace) (_ : ℝ) : StateSpace := 0
 
 /-- The equation is proved from the supplied dynamical law.  Making the law a
     hypothesis prevents a physical postulate from entering the kernel as an

@@ -24,7 +24,7 @@ namespace OmegaProtocol.Vol03
 open OmegaProtocol
 
 -- The legacy bridge uses the checked concrete model from the foundation.
-abbrev MT : ModularTheory := concreteModularTheory
+noncomputable abbrev MT : ModularTheory := concreteModularTheory
 
 -- ============================================================
 -- THEOREM 1: ZEROTH LAW OF THERMODYNAMICS (GENUINE PROOF)

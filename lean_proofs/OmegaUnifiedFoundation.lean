@@ -46,7 +46,10 @@ noncomputable def concreteModularTheory : ModularTheory :=
       trivial
     axiom_modular_operator := by
       intro A t
-      simp [op_pow]
+      -- Both sides reduce definitionally: the flow is constantly zero and the
+      -- zero functional calculus makes the RHS a product with a zero factor.
+      change (0 : Operator) = ((0 : Operator).comp (A : Operator)).comp 0
+      exact (ContinuousLinearMap.comp_zero _).symm
     axiom_kms_characterization := by
       intro ρ β
       simp [ω_ρ]

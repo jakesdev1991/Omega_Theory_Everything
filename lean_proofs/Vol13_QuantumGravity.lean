@@ -21,8 +21,8 @@ open Vol10
 -- ============================================================
 
 /-- Matter and Gravity Hamiltonians as operators on the global state -/
-def H_matter : Operator := 0
-def H_gravity : Operator := 0
+noncomputable def H_matter : Operator := 0
+noncomputable def H_gravity : Operator := 0
 
 /-- Total Hamiltonian -/
 noncomputable def H_total : Operator := H_matter + H_gravity

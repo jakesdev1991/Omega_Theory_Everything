@@ -143,26 +143,3 @@ theorem appa_branching_security_guarantee
   exact declassification_gate_bounded derivative h_cond
 
 end APPA
-
-/-- Compatibility namespace for clients that keep all Omega protocol modules
-    under `OmegaProtocol`. -/
-namespace OmegaProtocol.APPA
-
-abbrev IntegrityLabel := _root_.APPA.IntegrityLabel
-abbrev Capability := _root_.APPA.Capability
-abbrev Context := _root_.APPA.Context
-abbrev UntrustedRead := _root_.APPA.UntrustedRead
-abbrev ContextBranch := _root_.APPA.ContextBranch
-abbrev SanitizedDerivative := _root_.APPA.SanitizedDerivative
-abbrev DeclassifiedDerivative := _root_.APPA.DeclassifiedDerivative
-abbrev GateCondition := _root_.APPA.GateCondition
-
-abbrev spawn_isolated := _root_.APPA.spawn_isolated
-abbrev parent_label_untainted := _root_.APPA.parent_label_untainted
-abbrev child_write_isolated := _root_.APPA.child_write_isolated
-abbrev child_execute_isolated := _root_.APPA.child_execute_isolated
-abbrev declassification_gate := _root_.APPA.declassification_gate
-abbrev declassification_gate_bounded := _root_.APPA.declassification_gate_bounded
-abbrev appa_branching_security_guarantee := _root_.APPA.appa_branching_security_guarantee
-
-end OmegaProtocol.APPA

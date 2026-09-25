@@ -33,7 +33,7 @@ theorem holographic_boundary :
 -- ============================================================
 
 def boundary_map (x : AdSSpacetime) : CFTBoundary := x
-def BoundaryFields (_ : CFTBoundary) : ↥OmegaAlgebra := 0
+noncomputable def BoundaryFields (_ : CFTBoundary) : ↥OmegaAlgebra := 0
 
 noncomputable def BulkFields (x : AdSSpacetime) : ↥OmegaAlgebra := 
   BoundaryFields (boundary_map x)

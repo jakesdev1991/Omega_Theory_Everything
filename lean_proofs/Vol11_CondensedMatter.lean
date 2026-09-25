@@ -57,7 +57,7 @@ def BerryCurvature (_ : BrillouinZone) : ℝ := 0
 def ChernNumber : ℝ := 0
 
 theorem chern_number_quantized : ∃ (n : ℤ), ChernNumber = (n : ℝ) := by
-  exact ⟨0, rfl⟩
+  exact ⟨0, by simp [ChernNumber]⟩
 
 /-- THEOREM: The Hall conductance is quantized.
     σ_xy = (e²/h) * C -/

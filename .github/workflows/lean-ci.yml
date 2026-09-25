@@ -43,6 +43,25 @@ jobs:
           test: false
           lint: false
 
+      # Re-run the build when lean-action fails and surface the compiler
+      # diagnostics as check-run annotations (the raw action log is otherwise
+      # hard to find).
+      - name: Surface Lean build errors
+        if: failure()
+        working-directory: lean_proofs
+        run: |
+          set +e
+          lake build ToE > /tmp/lake-build.log 2>&1
+          rc=$?
+          # Consolidate the raw log tail into a few annotations first:
+          # GitHub caps per-job annotations, so the important context leads.
+          tail -n 30 /tmp/lake-build.log | awk 'BEGIN{RS="\n"; ORS=""} {buf = buf $0 "\\n"; n++; if (n % 10 == 0) {print "::error::LOGTAIL>> " substr(buf, 1, 8000) "\n"; buf=""}} END{if (buf != "") print "::error::LOGTAIL>> " substr(buf, 1, 8000)}'
+          if [ "$rc" -eq 0 ]; then
+            echo "::notice::lake build re-run exited 0 (original failure was transient)"
+          else
+            echo "::error::lake build re-run exited $rc"
+          fi
+
       - name: Gate - no sorry / trivial stubs in sources
         working-directory: lean_proofs
         run: |

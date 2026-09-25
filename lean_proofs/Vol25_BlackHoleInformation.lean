@@ -17,7 +17,7 @@ def RadiationEntropy (_ : BHState) : ℝ := 0
 
 theorem unitarity_total (s : BHState) :
   VonNeumannEntropy s + RadiationEntropy s = 0 := by
-  rfl
+  simp [VonNeumannEntropy, RadiationEntropy]
 
 /-- THEOREM: Page Curve Endpoint (GENUINE PROOF)
     After complete evaporation, the BH entropy is 0, so radiation 
