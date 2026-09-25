@@ -10,9 +10,9 @@ The project is already publicly accessible on GitHub, including scientific mater
 
 ## License interaction
 
-Apache-2.0 applies to the scientific paths listed in the root [`LICENSE`](../LICENSE). Section 3 contains a limited, express patent license from each contributor for patent claims that contributor can license and that are necessarily infringed by the contribution alone or by its combination with the covered work. It also contains a patent-litigation termination provision. Have counsel assess how that grant interacts with any present or future patent strategy before accepting contributions or making filings.
+MIT applies to the scientific paths listed in the root [`LICENSE`](../LICENSE). Unlike Apache-2.0, MIT contains no express patent grant and no patent-litigation termination clause. Product paths additionally receive an express patent license through the PolyForm Noncommercial License 1.0.0, limited to noncommercial use. Have counsel assess how these grants interact with any present or future patent strategy before accepting contributions or making filings.
 
-The all-rights-reserved product notice is not a patent filing and does not create a patent right. Copyright restrictions on expression do not by themselves create exclusive rights in an abstract system, method, or idea.
+These notices are not patent filings and do not create patent rights. Copyright restrictions on expression do not by themselves create exclusive rights in an abstract system, method, or idea.
 
 ## Recommended next steps
 

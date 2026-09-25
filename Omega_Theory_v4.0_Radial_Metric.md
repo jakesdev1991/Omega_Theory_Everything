@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2025-2026 Jacob See. SPDX-License-Identifier: Apache-2.0 -->
+<!-- Copyright (c) 2025-2026 Jacob See. SPDX-License-Identifier: MIT -->
 
 # Toward the Macroscopic Radial Metric $g_{rr}(\Phi)$
 

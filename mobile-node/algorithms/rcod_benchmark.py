@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Copyright (c) 2025-2026 Jacob See.
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 """RCOD Noise Recovery — allowlisted algorithm for the Lucifer mobile node.
 
 Toy stand-in for rcod/benchmark_noise_recovery.py: reports the honest verdict

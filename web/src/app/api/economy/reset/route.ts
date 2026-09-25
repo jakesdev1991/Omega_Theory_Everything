@@ -1,3 +1,5 @@
+// Copyright (c) 2025-2026 Jacob See.
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 import { NextResponse } from "next/server";
 
 import { assertEconomyTestMode, resetEngine } from "@/lib/domain/server-engine";

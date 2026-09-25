@@ -1,3 +1,5 @@
+// Copyright (c) 2025-2026 Jacob See.
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import tseslint from "typescript-eslint";

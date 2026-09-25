@@ -2,6 +2,7 @@
   "name": "omega-mobile-node",
   "version": "0.1.0",
   "private": true,
+  "license": "SEE LICENSE IN ../LICENSES/PolyForm-Noncommercial-1.0.0.txt",
   "type": "module",
   "description": "Sovereign NIP-90 execution node for Termux/Droid@Debian: answers app-store job requests from the static web frontend.",
   "scripts": {

@@ -1,3 +1,5 @@
+// Copyright (c) 2025-2026 Jacob See.
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 import test from "node:test";
 import assert from "node:assert/strict";
 import { TriTokenEngine } from "./engine";

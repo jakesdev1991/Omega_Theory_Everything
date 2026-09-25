@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2025-2026 Jacob See. SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0 -->
 # Omega MCP Hub
 
 Sovereign MCP server for the Omega tri-token economy. It is the main operating hub for the

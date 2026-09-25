@@ -1,3 +1,5 @@
+// Copyright (c) 2025-2026 Jacob See.
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 import { NextRequest, NextResponse } from "next/server";
 
 import { runAllScenarios, runScenario, SCENARIOS, scenarioSummaries } from "@/lib/domain/scenarios";

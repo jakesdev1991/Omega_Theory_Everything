@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// Copyright (c) 2025-2026 Jacob See.
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 /**
  * Lucifer mobile node — sovereign NIP-90 execution daemon for Termux.
  *
@@ -14,6 +16,9 @@
  *   LUCIFER_OPERATORS     comma separated npub/hex operator keys  (required)
  *   LUCIFER_ALGORITHMS    path to algorithms.json                 (default ./algorithms.json)
  *   LUCIFER_CONFIG        path to a JSON file with the same keys  (optional)
+ *   LUCIFER_LICENSE_ISSUERS comma separated npub/hex keys whose kind 31335
+ *                         licenses are honoured for algorithms marked
+ *                         license.access = "licensed"   (default: this node's key)
  *
  * TLS is always verified. There is no flag to disable certificate checks.
  */
@@ -27,6 +32,7 @@ import WebSocket from "ws";
 import { hexToNpub } from "./lib/bech32.mjs";
 import { getPublicKeyHex, npubOrHexToHex, signEvent } from "./lib/events.mjs";
 import { evaluateRequest, loadPolicy } from "./lib/policy.mjs";
+import { LICENSE_KIND, LicenseLedger } from "./lib/license.mjs";
 import { runAlgorithm } from "./lib/executor.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -68,13 +74,22 @@ function loadConfig() {
   if (!secret) throw new Error("LUCIFER_SECRET (hex or nsec) is required");
   if (operators.length === 0) throw new Error("LUCIFER_OPERATORS must list at least one operator pubkey");
 
-  return { relays, secret, operators, algorithmsPath };
+  const licenseIssuers = (process.env.LUCIFER_LICENSE_ISSUERS ?? (fileConfig.licenseIssuers ?? []).join(","))
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean)
+    .map(npubOrHexToHex);
+
+  return { relays, secret, operators, algorithmsPath, licenseIssuers };
 }
 
 const config = loadConfig();
 const algorithmsConfig = JSON.parse(readFileSync(config.algorithmsPath, "utf8"));
-const policy = loadPolicy({ algorithmsConfig, operators: config.operators });
 const serverPubkey = getPublicKeyHex(config.secret);
+const licenseIssuers = config.licenseIssuers.length > 0 ? config.licenseIssuers : [serverPubkey];
+const policy = loadPolicy({ algorithmsConfig, operators: config.operators, licenseIssuers });
+const ledger = new LicenseLedger({ trustedIssuers: licenseIssuers });
+const licensedAlgorithms = algorithmsConfig.algorithms.filter((algorithm) => algorithm.license?.access === "licensed");
 const jobKinds = algorithmsConfig.algorithms.map((algorithm) => algorithm.kind);
 
 const processed = new Set();
@@ -95,17 +110,32 @@ function log(line) {
 }
 
 async function handleEvent(connection, event) {
+  if (event && event.kind === LICENSE_KIND) {
+    if (ledger.ingest(event)) log(`license update ${event.id.slice(0, 12)} (${ledger.size} known)`);
+    return;
+  }
   if (!jobKinds.includes(event.kind)) return;
   if (!remember(event.id)) return;
 
-  const decision = evaluateRequest(policy, event);
+  const decision = evaluateRequest(policy, event, { ledger });
+  if (!decision.ok && decision.paymentRequired) {
+    log(`license check failed for ${event.id.slice(0, 12)} from ${(event.pubkey ?? "?").slice(0, 12)}: ${decision.reason}`);
+    publish(
+      connection,
+      event,
+      "payment-required",
+      JSON.stringify({ status: "payment-required", code: decision.code, reason: decision.reason, terms: decision.terms }),
+    );
+    return;
+  }
   if (!decision.ok) {
     log(`refused ${event.id.slice(0, 12)} from ${(event.pubkey ?? "?").slice(0, 12)}: ${decision.reason}`);
     publish(connection, event, "error", JSON.stringify({ status: "error", reason: decision.reason }));
     return;
   }
 
-  log(`executing ${decision.algorithm.id} for job ${event.id.slice(0, 12)} (kind ${event.kind})`);
+  const via = decision.access === "licensed" ? ` via license ${decision.license.id.slice(0, 12)} (${decision.license.tier})` : "";
+  log(`executing ${decision.algorithm.id} for job ${event.id.slice(0, 12)} (kind ${event.kind})${via}`);
   const result = await runAlgorithm({
     algorithm: decision.algorithm,
     sandboxArgv: algorithmsConfig.sandboxArgv ?? [],
@@ -160,6 +190,9 @@ function connectRelay(url) {
           { kinds: jobKinds, "#p": [serverPubkey] },
         ]),
       );
+      if (licensedAlgorithms.length > 0) {
+        ws.send(JSON.stringify(["REQ", "lucifer-store-licenses", { kinds: [LICENSE_KIND], authors: licenseIssuers }]));
+      }
     });
 
     ws.on("message", (raw) => {
@@ -193,6 +226,9 @@ function connectRelay(url) {
 
 log(`Lucifer node ${hexToNpub(serverPubkey)}`);
 log(`allowlisted kinds: ${jobKinds.join(", ")} · operators: ${config.operators.length}`);
+log(
+  `licensed algorithms: ${licensedAlgorithms.map((algorithm) => algorithm.id).join(", ") || "none"} · license issuers: ${licenseIssuers.length}`,
+);
 log(`sandbox argv prefix: ${JSON.stringify(algorithmsConfig.sandboxArgv ?? [])}`);
 for (const relay of config.relays) connectRelay(relay);
 

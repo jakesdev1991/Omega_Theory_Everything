@@ -1,3 +1,5 @@
+// Copyright (c) 2025-2026 Jacob See.
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 /**
  * Nostr integration surface for the Omega economy.
  *
@@ -28,6 +30,8 @@ export const ECONOMY_NOSTR_KINDS = {
   storeHandler: 31990,
   /** App store directory: NIP-99 generic classified listings (fallback index). */
   storeListing: 30017,
+  /** Provisional: app-store license grant/revocation (parameterized replaceable, d = appId:licensee). */
+  storeLicense: 31335,
   /** NIP-90 Data Vending Machine job request range (store → mobile node). */
   dvmRequestMin: 5000,
   dvmRequestMax: 5999,
@@ -89,7 +93,7 @@ export function getNostrIntegrationStatus(): NostrIntegrationStatus {
       storeRootNpub
         ? `App store root key configured: ${storeRootNpub}. The /store page lists handlers announced by this key.`
         : "No store root npub configured (set NOSTR_STORE_ROOT_NPUB) — /store lets you paste one per session.",
-      "Provisional kinds 31331-31334 are placeholders pending a NIP allocation; they are namespaced to avoid collisions.",
+      "Provisional kinds 31331-31335 are placeholders pending a NIP allocation; they are namespaced to avoid collisions.",
       "The mobile execution node lives in mobile-node/ (Termux daemon): it answers NIP-90 job requests from /store and only runs allowlisted algorithms for operator keys.",
     ],
   };

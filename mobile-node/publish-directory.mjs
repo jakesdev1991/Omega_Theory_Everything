@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// Copyright (c) 2025-2026 Jacob See.
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 /**
  * Publishes the app-store directory (kind 31990 handler announcements) for the
  * algorithms in algorithms.json, signed by the store ROOT key.
@@ -22,6 +24,7 @@ import WebSocket from "ws";
 
 import { hexToNpub } from "./lib/bech32.mjs";
 import { getPublicKeyHex, signEvent } from "./lib/events.mjs";
+import { algorithmLicensePolicy } from "./lib/license.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 
@@ -41,26 +44,38 @@ const algorithmsConfig = JSON.parse(readFileSync(algorithmsPath, "utf8"));
 const rootPubkey = getPublicKeyHex(rootSecret);
 process.stdout.write(`publishing directory as ${hexToNpub(rootPubkey)}\n`);
 
-const events = algorithmsConfig.algorithms.map((algorithm) =>
-  signEvent(
+const events = algorithmsConfig.algorithms.map((algorithm) => {
+  const license = algorithmLicensePolicy(algorithm);
+  const tags = [
+    ["d", algorithm.id],
+    ["k", String(algorithm.kind)],
+    ["title", algorithm.name],
+    ["access", license.access],
+    ["license", license.spdx],
+  ];
+  if (license.terms) tags.push(["terms", license.terms]);
+  return signEvent(
     {
       kind: 31990,
       created_at: Math.floor(Date.now() / 1000),
-      tags: [
-        ["d", algorithm.id],
-        ["k", String(algorithm.kind)],
-        ["title", algorithm.name],
-      ],
+      tags,
       content: JSON.stringify({
         name: algorithm.name,
         about: `Allowlisted algorithm ${algorithm.id} executed by the Lucifer mobile node (kind ${algorithm.kind} → ${algorithm.kind + 1000}).`,
         workClass: algorithm.workClass ?? "engineering_protocol",
         paramsTemplate: algorithm.paramsTemplate ?? {},
+        license: {
+          access: license.access,
+          terms: license.terms,
+          tiers: license.tiers,
+          spdx: license.spdx,
+          price: license.price,
+        },
       }),
     },
     rootSecret,
-  ),
-);
+  );
+});
 
 let pending = relays.length;
 for (const url of relays) {

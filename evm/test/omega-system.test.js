@@ -1,5 +1,5 @@
 // Copyright (c) 2025-2026 Jacob See.
-// SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
+// SPDX-License-Identifier: LicenseRef-Omega-ReadOnly
 
 const { expect } = require("chai");
 const { ethers } = require("hardhat");

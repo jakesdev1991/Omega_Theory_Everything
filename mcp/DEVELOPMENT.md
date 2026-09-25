@@ -1,3 +1,4 @@
+<!-- Copyright (c) 2025-2026 Jacob See. SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0 -->
 # Omega MCP Hub — agent integration wiring
 
 This directory wires the Omega tri-token economy into an MCP server that any MCP client can

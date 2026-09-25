@@ -22,7 +22,7 @@ copyright registration steps, and the historical ticker-collision findings (Wall
 Wrapped Canton Coin's WCC, Tiwi Cat's TWC). TWC is selected for the pilot/future identity,
 but that decision is not trademark clearance or a conclusion that the mark is available.
 
-The Apache-2.0 license for scientific files does not grant permission to use project names, marks, or logos as a brand, nor does the proprietary product notice transfer any mark. Apache-2.0 permits only the limited customary descriptive use stated in its trademark section. Use of names to accurately describe origin, and all other uses, remain subject to applicable law and any rights of others.
+The MIT license for scientific files does not grant permission to use project names, marks, or logos as a brand, nor does the PolyForm Noncommercial product license or the read-only crypto notice transfer any mark. Use of names to accurately describe origin, and all other uses, remain subject to applicable law and any rights of others.
 
 ## Suggested maintenance
 

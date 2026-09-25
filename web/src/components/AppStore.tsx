@@ -1,6 +1,9 @@
+// Copyright (c) 2025-2026 Jacob See.
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import { SimplePool, generateSecretKey, getPublicKey, nip19 } from "nostr-tools";
 import type { Event as NostrEvent } from "nostr-tools";
 
@@ -8,6 +11,7 @@ import { ECONOMY_NOSTR_KINDS } from "@/lib/nostr";
 import {
   buildJobRequestTemplate,
   bytesToHex,
+  demoIssueLicense,
   demoJobResult,
   demoListings,
   dedupeListings,
@@ -19,8 +23,19 @@ import {
   type AppListing,
   type JobResult,
 } from "@/lib/nostr-store";
+import {
+  STORE_TERMS_ID,
+  describeDecision,
+  evaluateLicense,
+  licenseFilter,
+  mergeLicenses,
+  parseLicenseEvent,
+  type LicenseDecision,
+  type StoreLicense,
+} from "@/lib/store-license";
 
 const OPERATOR_KEY_STORAGE = "omega.store.operatorKey.v1";
+const TERMS_ACCEPTANCE_STORAGE = "omega.store.acceptedTerms.v1";
 
 interface JobState {
   requestId: string;
@@ -72,11 +87,16 @@ export function AppStore() {
   const [paramDrafts, setParamDrafts] = useState<Record<string, string>>({});
   const [operatorNpub, setOperatorNpub] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [licenses, setLicenses] = useState<StoreLicense[]>([]);
+  const [acceptedTerms, setAcceptedTerms] = useState<string | null>(null);
+  const [operatorHex, setOperatorHex] = useState<string | null>(null);
+  const [nowSeconds, setNowSeconds] = useState(() => Math.floor(Date.now() / 1000));
 
   const poolRef = useRef<SimplePool | null>(null);
   const operatorRef = useRef<Uint8Array | null>(null);
   const rootHexRef = useRef<string | null>(null);
   const closeSubRef = useRef<{ close: () => void } | null>(null);
+  const closeLicenseSubRef = useRef<{ close: () => void } | null>(null);
 
   const relays = useMemo(
     () =>
@@ -106,11 +126,60 @@ export function AppStore() {
     }
     operatorRef.current = secret;
     setOperatorNpub(nip19.npubEncode(getPublicKey(secret)));
+    setOperatorHex(getPublicKey(secret));
+    try {
+      setAcceptedTerms(localStorage.getItem(TERMS_ACCEPTANCE_STORAGE));
+    } catch {
+      setAcceptedTerms(null);
+    }
   }, []);
+
+  /* Re-evaluate expiry once a minute. */
+  useEffect(() => {
+    const timer = window.setInterval(() => setNowSeconds(Math.floor(Date.now() / 1000)), 60_000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const termsAccepted = acceptedTerms === STORE_TERMS_ID;
+
+  function acceptTerms(checked: boolean) {
+    const value = checked ? STORE_TERMS_ID : null;
+    setAcceptedTerms(value);
+    try {
+      if (value) localStorage.setItem(TERMS_ACCEPTANCE_STORAGE, value);
+      else localStorage.removeItem(TERMS_ACCEPTANCE_STORAGE);
+    } catch {
+      /* private mode: session-only acceptance */
+    }
+  }
+
+  function ingestLicense(event: NostrEvent) {
+    const license = parseLicenseEvent(event);
+    if (!license) return;
+    setLicenses((current) => mergeLicenses(current, license));
+  }
+
+  const decisionFor = useCallback(
+    (listing: AppListing): LicenseDecision | null => {
+      if (listing.license.access !== "licensed" || !operatorHex) return null;
+      return evaluateLicense({
+        appId: listing.appId,
+        requester: operatorHex,
+        trustedIssuers: [listing.publisher],
+        candidates: licenses.map((license) => license.raw),
+        now: nowSeconds,
+        allowedTiers: listing.license.tiers,
+        acceptedTerms: listing.license.terms ? [listing.license.terms] : [],
+      });
+    },
+    [licenses, nowSeconds, operatorHex],
+  );
 
   const disconnect = useCallback(() => {
     closeSubRef.current?.close();
     closeSubRef.current = null;
+    closeLicenseSubRef.current?.close();
+    closeLicenseSubRef.current = null;
     poolRef.current?.close(relays);
     poolRef.current = null;
     setConnected(false);
@@ -121,6 +190,7 @@ export function AppStore() {
   async function connect() {
     setConnectError(null);
     setListings([]);
+    setLicenses([]);
 
     if (mode === "demo") {
       const demoSecret = hexToBytes("0000000000000000000000000000000000000000000000000000000000000001");
@@ -165,6 +235,11 @@ export function AppStore() {
       },
     );
     closeSubRef.current = directorySubscription;
+    if (operatorRef.current) {
+      closeLicenseSubRef.current = pool.subscribeMany(relays, licenseFilter([rootHex], getPublicKey(operatorRef.current)), {
+        onevent: ingestLicense,
+      });
+    }
     setConnected(true);
     setNotice(`Listening on ${relays.length} relay(s) for directory kinds 31990/30017 from ${rootInput.trim().slice(0, 16)}…`);
   }
@@ -182,8 +257,10 @@ export function AppStore() {
       return;
     }
 
+    const decision = decisionFor(listing);
+    const attachedLicense = decision?.ok && decision.license ? decision.license.raw : null;
     const request = signJobRequest(
-      buildJobRequestTemplate({ listing, serverPubkey: rootHexRef.current, params }),
+      buildJobRequestTemplate({ listing, serverPubkey: rootHexRef.current, params, license: attachedLicense }),
       operatorRef.current,
     );
 
@@ -199,7 +276,12 @@ export function AppStore() {
 
     if (mode === "demo") {
       window.setTimeout(() => {
-        const resultEvent = demoJobResult(request.event, operatorPubkey);
+        // Demo: this browser is NOT an operator, so licensed apps need a license.
+        const resultEvent = demoJobResult(request.event, operatorPubkey, {
+          terms: listing.license,
+          issuers: [listing.publisher],
+          operators: [],
+        });
         const result = parseJobResult(resultEvent, request.event.id);
         setJobs((current) => ({
           ...current,
@@ -287,6 +369,26 @@ export function AppStore() {
     }
   }
 
+  function demoLicense(listing: AppListing, status: "active" | "revoked") {
+    if (!operatorHex) return;
+    if (status === "active" && !termsAccepted) {
+      setNotice(`Accept the Store Terms (${STORE_TERMS_ID}) before obtaining a license.`);
+      return;
+    }
+    const tier = listing.license.tiers.includes("trial") ? "trial" : (listing.license.tiers[0] ?? "standard");
+    ingestLicense(demoIssueLicense(operatorHex, listing.appId, { tier, status }));
+    setNotice(
+      status === "active"
+        ? `Demo: the store key issued a 14-day ${tier} license for ${listing.name} to your key (kind 31335).`
+        : `Demo: the store key revoked your ${listing.name} license (newer kind 31335 with status=revoked).`,
+    );
+  }
+
+  function licenseCommand(listing: AppListing): string {
+    const tier = listing.license.tiers[0] ?? "standard";
+    return `node issue-license.mjs issue --app ${listing.appId} --to ${operatorNpub ?? "<your npub>"} --tier ${tier} --days 30`;
+  }
+
   return (
     <div className="store">
       <header className="store-hero">
@@ -339,8 +441,15 @@ export function AppStore() {
             <span>
               operator <code title={operatorNpub ?? ""}>{operatorNpub ? `${operatorNpub.slice(0, 12)}…` : "…"}</code>
             </span>
-            <span>kinds 31990/30017 → 5000-5999 → 6000-6999</span>
+            <span>kinds 31990/30017 → 5000-5999 → 6000-6999 · licenses 31335</span>
           </div>
+          <label className="store-terms-accept">
+            <input type="checkbox" checked={termsAccepted} onChange={(event) => acceptTerms(event.target.checked)} />
+            <span>
+              I have read and accept the <Link href="/store/terms">Store Terms of Use &amp; End-User License</Link>{" "}
+              (<code>{STORE_TERMS_ID}</code>). Licenses you receive record this terms version.
+            </span>
+          </label>
           {connectError ? <p className="store-error">{connectError}</p> : null}
           {notice ? <p className="store-notice">{notice}</p> : null}
         </div>
@@ -361,15 +470,70 @@ export function AppStore() {
           const draft = paramDrafts[listing.appId] ?? JSON.stringify(listing.paramsTemplate, null, 2);
           const listingJobs = Object.values(jobs).filter((job) => job.appId === listing.appId);
           const latest = listingJobs[listingJobs.length - 1];
+          const decision = decisionFor(listing);
+          const licensed = listing.license.access === "licensed";
+          const badgeClass = !licensed ? "store-license-badge op" : decision?.ok ? "store-license-badge ok" : "store-license-badge need";
           return (
             <article key={`${listing.publisher}:${listing.appId}`} className="store-card">
               <div className="store-card-head">
                 <span className="store-kind-tag">kind {listing.sourceKind}</span>
                 <span className="store-kind-tag dvm">job {listing.jobKind} → {listing.jobKind + 1000}</span>
+                <span className={badgeClass}>{describeDecision(listing.license, decision, false)}</span>
               </div>
               <h2>{listing.name}</h2>
               <p className="store-about">{listing.about}</p>
               <code className="store-appid">d={listing.appId} · workClass={listing.workClass}</code>
+              <div className="store-license">
+                <span>
+                  license <code>{listing.license.spdx}</code>
+                </span>
+                {licensed ? (
+                  <>
+                    <span>
+                      terms{" "}
+                      <Link href="/store/terms">
+                        <code>{listing.license.terms ?? STORE_TERMS_ID}</code>
+                      </Link>
+                    </span>
+                    {listing.license.tiers.length > 0 ? <span>tiers {listing.license.tiers.join(" / ")}</span> : null}
+                    {listing.license.price ? <span>{listing.license.price}</span> : null}
+                  </>
+                ) : (
+                  <span>runs only for the node&apos;s operator keys</span>
+                )}
+              </div>
+              {licensed && !decision?.ok ? (
+                <div className="store-license-get">
+                  {mode === "demo" ? (
+                    <button
+                      type="button"
+                      className="store-btn ghost"
+                      disabled={!connected || !termsAccepted}
+                      title={termsAccepted ? "" : "Accept the Store Terms first"}
+                      onClick={() => demoLicense(listing, "active")}
+                    >
+                      🔑 Get demo license
+                    </button>
+                  ) : (
+                    <>
+                      <p>
+                        {termsAccepted
+                          ? "Send your npub to the publisher. They issue the license from the store key with:"
+                          : "Accept the Store Terms above, then send your npub to the publisher. They issue the license with:"}
+                      </p>
+                      <code className="store-license-cmd">{licenseCommand(listing)}</code>
+                      <p>It appears here automatically once it reaches your relays.</p>
+                    </>
+                  )}
+                </div>
+              ) : null}
+              {licensed && decision?.ok && mode === "demo" ? (
+                <div className="store-license-get">
+                  <button type="button" className="store-btn ghost" onClick={() => demoLicense(listing, "revoked")}>
+                    Revoke (demo)
+                  </button>
+                </div>
+              ) : null}
 
               <label className="store-params">
                 job parameters (JSON)
@@ -394,8 +558,18 @@ export function AppStore() {
               {listingJobs.slice(-1).map((job) => (
                 <div key={job.requestId} className="store-job">
                   <div className="store-job-head">
-                    <span className={job.phase === "done" ? "store-pill ok" : job.phase === "error" ? "store-pill bad" : "store-pill idle"}>
-                      {job.phase}
+                    <span
+                      className={
+                        job.result?.status === "payment-required"
+                          ? "store-pill bad"
+                          : job.phase === "done"
+                            ? "store-pill ok"
+                            : job.phase === "error"
+                              ? "store-pill bad"
+                              : "store-pill idle"
+                      }
+                    >
+                      {job.result?.status === "payment-required" ? "license required" : job.phase}
                     </span>
                     <code>req {job.requestId.slice(0, 12)}…</code>
                   </div>
@@ -415,8 +589,18 @@ export function AppStore() {
           <li>Job requests are signed by a local operator key kept in this browser profile only; the page never transmits it.</li>
           <li>The mobile node only executes allowlisted algorithm ids, only for operator pubkeys, with argv arrays and timeouts — relay content is untrusted input, never shell code.</li>
           <li>Results settle into the economy ledger as audited TWC work receipts; the ledger never trusts a relay event as settlement authority on its own.</li>
+          <li>Licensed apps: the node re-verifies the attached kind 31335 license (issuer, licensee, app, tier, terms, expiry) and tracks newer revocations live from relays. A missing or revoked license is answered with NIP-90 <code>payment-required</code>, never executed.</li>
         </ul>
       </section>
+
+      <footer className="store-legal">
+        <p>
+          The storefront and the mobile node are <code>PolyForm-Noncommercial-1.0.0</code> (free noncommercial use; commercial use requires a paid license from Jacob See). Listed apps remain proprietary (<code>LicenseRef-Omega-Product-Proprietary</code>)
+          unless a listing says otherwise. Use of the store is governed by the{" "}
+          <Link href="/store/terms">Store Terms of Use &amp; End-User License</Link>; publishers list apps under the{" "}
+          <Link href="/store/terms#publisher">Publisher Agreement</Link>. Licenses and job requests are public Nostr events.
+        </p>
+      </footer>
 
       <style>{`
         .store { max-width: 1180px; margin: 0 auto; padding: 120px 24px 96px; }
@@ -467,6 +651,23 @@ export function AppStore() {
         .store-security h2 { font-family: ui-serif, Georgia, serif; font-size: 24px; font-weight: 500; margin: 0 0 14px; }
         .store-security ul { margin: 0; padding-left: 20px; color: var(--color-muted-strong); font-size: 13.5px; line-height: 1.75; display: grid; gap: 8px; }
         .store-security code { background: rgba(255,255,255,0.06); padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+
+        .store-terms-accept { display: flex; gap: 10px; align-items: flex-start; color: var(--color-muted-strong); font-size: 12.5px; line-height: 1.5; cursor: pointer; }
+        .store-terms-accept input { margin-top: 3px; accent-color: var(--color-amity); }
+        .store-terms-accept a, .store-license a, .store-legal a { color: var(--color-amity); }
+        .store-terms-accept code, .store-legal code { background: rgba(255,255,255,0.06); padding: 1px 5px; border-radius: 4px; font-size: 11.5px; }
+        .store-license-badge { font: 700 10px ui-monospace, monospace; padding: 3px 8px; border-radius: 5px; }
+        .store-license-badge.ok { background: rgba(52,211,153,0.14); color: var(--color-unlock); }
+        .store-license-badge.need { background: rgba(251,191,36,0.14); color: var(--color-omega); }
+        .store-license-badge.op { background: rgba(255,255,255,0.06); color: var(--color-muted-strong); }
+        .store-license { display: flex; flex-wrap: wrap; gap: 6px 14px; color: var(--color-muted); font: 11px ui-monospace, monospace; }
+        .store-license code { background: rgba(255,255,255,0.06); padding: 1px 5px; border-radius: 4px; }
+        .store-license-get { display: flex; flex-direction: column; gap: 6px; border: 1px dashed var(--color-border-strong); border-radius: 10px; padding: 10px 12px; }
+        .store-license-get p { margin: 0; color: var(--color-muted-strong); font-size: 12px; line-height: 1.5; }
+        .store-license-get .store-btn { align-self: flex-start; }
+        .store-license-cmd { display: block; background: rgba(0,0,0,0.4); border: 1px solid var(--color-border); border-radius: 6px; padding: 8px 10px; font: 11px ui-monospace, monospace; color: var(--color-unlock-soft); overflow-x: auto; white-space: nowrap; }
+        .store-legal { margin-top: 28px; color: var(--color-muted); font-size: 12.5px; line-height: 1.7; }
+        .store-legal p { margin: 0; max-width: 900px; }
       `}</style>
     </div>
   );

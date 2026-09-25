@@ -1,3 +1,5 @@
+// Copyright (c) 2025-2026 Jacob See.
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 "use client";
 
 import { useEffect, useState } from "react";
@@ -209,7 +211,7 @@ export function WalletDownloadPanel() {
           </li>
           <li>
             <b>License.</b> The wallet GUI is product material under{" "}
-            <code>{manifest?.license ?? "LicenseRef-Omega-Product-Proprietary"}</code>. The bundle
+            <code>{manifest?.license ?? "PolyForm-Noncommercial-1.0.0"}</code>. The bundle
             includes <code>LICENSE.txt</code>; redistribution or commercial use requires a signed
             agreement with the rights holder.
           </li>

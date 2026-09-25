@@ -1,11 +1,11 @@
 #!/bin/bash
 # Copyright (c) 2025-2026 Jacob See.
-# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: LicenseRef-Omega-ReadOnly
 
 echo ">> Updating README with The Asymmetry Discovery..."
 
 cat << 'EOF' > README.md
-<!-- Copyright (c) 2025-2026 Jacob See. Licensed under Apache-2.0. See LICENSE. -->
+<!-- Copyright (c) 2025-2026 Jacob See. Licensed under MIT. See LICENSE. -->
 
 # The Omega Theory: Emergent Reality from Quantum Information (v3.5)
 
@@ -61,7 +61,7 @@ This discovery aligns three previously separate phenomena into one Informational
 ---
 ## Licensing
 
-Scientific materials in this repository are licensed under Apache-2.0. The app, Rust prototype, whitepapers, and Tri-Token blueprint are all rights reserved; commercial use requires a separate signed percentage-royalty license. See [LICENSE](LICENSE) and [docs/LICENSING.md](docs/LICENSING.md), including the prior MIT-license limitation.
+Scientific materials in this repository are licensed under MIT. Product materials (website, App Store, wallet, tools) are under the PolyForm Noncommercial License 1.0.0: free for noncommercial use; commercial use requires a separate paid, signed license. The crypto and C.A.R.E. materials (Rust prototype, EVM, Solana, AMITY, whitepapers, Tri-Token blueprint) are read-only: no license is granted and no reproduction is permitted. See [LICENSE](LICENSE) and [docs/LICENSING.md](docs/LICENSING.md), including the prior MIT-license limitation.
 
 *Copyright (C) 2025-2026 Jacob See.*
 EOF

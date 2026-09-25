@@ -1,3 +1,5 @@
+// Copyright (c) 2025-2026 Jacob See.
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 /**
  * App-store protocol over the Nostr backplane.
  *
@@ -10,6 +12,10 @@
  *   31990  NIP-89 handler announcement  (preferred; tags: d, k)
  *   30017  NIP-99 classified listing    (fallback index; tags: d, title)
  *
+ * Licensing (see store-license.ts, docs/store/LICENSE-PROTOCOL.md):
+ *   31335  license grant / revocation from the store's issuer key
+ *   listings carry ["access", operators|licensed], ["terms", id], ["license", SPDX]
+ *
  * Execution kinds (NIP-90):
  *   request  5000-5999   (default 5001; per-app override via the "k" tag)
  *   result   request + 1000, tagged ["e", requestId] and ["p", requester]
@@ -21,12 +27,20 @@
 import {
   finalizeEvent,
   getEventHash,
+  getPublicKey,
   verifyEvent,
   type Event as NostrEvent,
   type EventTemplate,
 } from "nostr-tools";
 
 import { ECONOMY_NOSTR_KINDS } from "./nostr";
+import {
+  STORE_TERMS_ID,
+  buildLicenseTemplate,
+  evaluateLicense,
+  parseListingLicense,
+  type ListingLicenseTerms,
+} from "./store-license";
 
 export interface AppListing {
   appId: string;
@@ -39,6 +53,7 @@ export interface AppListing {
   eventId: string;
   paramsTemplate: Record<string, unknown>;
   workClass: string;
+  license: ListingLicenseTerms;
   raw: NostrEvent;
 }
 
@@ -142,6 +157,7 @@ export function parseListingEvent(event: NostrEvent): AppListing | null {
     eventId: event.id,
     paramsTemplate,
     workClass,
+    license: parseListingLicense(event, content),
     raw: event,
   };
 }
@@ -165,11 +181,14 @@ export function buildJobRequestTemplate({
   serverPubkey,
   params,
   inputs = [],
+  license,
 }: {
   listing: Pick<AppListing, "appId" | "jobKind">;
   serverPubkey: string;
   params: Record<string, unknown>;
   inputs?: string[];
+  /** Signed kind 31335 license to attach; the node re-verifies it. */
+  license?: NostrEvent | null;
 }): EventTemplate {
   return {
     kind: listing.jobKind,
@@ -179,7 +198,7 @@ export function buildJobRequestTemplate({
       ["a", listing.appId],
       ...inputs.map((input) => ["i", input]),
     ],
-    content: JSON.stringify({ app: listing.appId, params }),
+    content: JSON.stringify(license ? { app: listing.appId, params, license } : { app: listing.appId, params }),
   };
 }
 
@@ -209,7 +228,7 @@ export interface JobResult {
   resultKind: number;
   serverPubkey: string;
   content: string;
-  status: "success" | "error" | "pending";
+  status: "success" | "error" | "pending" | "payment-required";
   eventId: string;
   createdAt: number;
 }
@@ -223,7 +242,7 @@ export function parseJobResult(event: NostrEvent, requestId: string): JobResult 
 
   const statusTag = firstTag(event, "status");
   const status: JobResult["status"] =
-    statusTag === "error" || statusTag === "payment-required" ? "error" : "success";
+    statusTag === "payment-required" ? "payment-required" : statusTag === "error" ? "error" : "success";
 
   return {
     ok: status === "success",
@@ -235,6 +254,29 @@ export function parseJobResult(event: NostrEvent, requestId: string): JobResult 
     eventId: event.id,
     createdAt: event.created_at,
   };
+}
+
+/** Demo mode only: the fixture store key issues a license to `licensee`. */
+export function demoIssueLicense(
+  licenseePubkey: string,
+  appId: string,
+  { tier = "trial", days = 14, status = "active" as "active" | "revoked", now = Math.floor(Date.now() / 1000) } = {},
+): NostrEvent {
+  const secret = hexToBytes(DEMO_ROOT_SECRET_HEX);
+  return finalizeEvent(
+    buildLicenseTemplate({
+      issuerPubkey: getPublicKey(secret),
+      licenseePubkey,
+      appId,
+      tier,
+      status,
+      terms: STORE_TERMS_ID,
+      expiresAt: status === "active" ? now + days * 86400 : null,
+      payment: "demo",
+      createdAt: now,
+    }),
+    secret,
+  );
 }
 
 /* ------------------------------------------------------------------ */
@@ -254,6 +296,8 @@ export function demoListings(publisherPubkey: string, createdAt = 1767225600): N
         ["d", "radial-metric-sim"],
         ["k", String(DEFAULT_JOB_KIND)],
         ["title", "Radial Metric Simulator"],
+        ["access", "operators"],
+        ["license", "LicenseRef-Omega-Product-Proprietary"],
       ],
       content: JSON.stringify({
         name: "Radial Metric Simulator",
@@ -292,16 +336,81 @@ export function demoListings(publisherPubkey: string, createdAt = 1767225600): N
         paramsTemplate: { noisePct: 20 },
       }),
     },
+    {
+      kind: ECONOMY_NOSTR_KINDS.storeHandler,
+      created_at: createdAt,
+      tags: [
+        ["d", "echo"],
+        ["k", "5099"],
+        ["title", "Echo (licensed self-test)"],
+        ["access", "licensed"],
+        ["terms", STORE_TERMS_ID],
+        ["license", "LicenseRef-Omega-Product-Proprietary"],
+      ],
+      content: JSON.stringify({
+        name: "Echo (licensed self-test)",
+        about: "Returns its parameters. Open to anyone holding a license from the store key: exercises the full license → job → result path.",
+        workClass: "engineering_protocol",
+        paramsTemplate: { ping: "pong" },
+        license: {
+          access: "licensed",
+          terms: STORE_TERMS_ID,
+          tiers: ["trial", "standard", "pro"],
+          spdx: "LicenseRef-Omega-Product-Proprietary",
+          price: "Free self-test; license issued on request",
+        },
+      }),
+    },
   ];
 
   const secret = hexToBytes(DEMO_ROOT_SECRET_HEX);
   return templates.map((template) => finalizeEvent(template, secret));
 }
 
-/** Deterministic in-page DVM responder used by demo mode. */
-export function demoJobResult(request: NostrEvent, requesterPubkey: string): NostrEvent {
+/**
+ * Deterministic in-page DVM responder used by demo mode. When `licensing` is
+ * given for a licensed listing it enforces the same license rules as the
+ * mobile node (operators bypass; everyone else needs a valid license).
+ */
+export function demoJobResult(
+  request: NostrEvent,
+  requesterPubkey: string,
+  licensing?: { terms: ListingLicenseTerms; issuers: string[]; operators: string[]; now?: number },
+): NostrEvent {
   const payload = parseContentJson(request.content);
   const params = asRecord(asRecord(payload).params);
+
+  if (licensing && licensing.terms.access === "licensed" && !licensing.operators.includes(request.pubkey)) {
+    const attached = asRecord(payload.license);
+    const decision = evaluateLicense({
+      appId: typeof payload.app === "string" ? payload.app : "",
+      requester: request.pubkey,
+      trustedIssuers: licensing.issuers,
+      candidates: Object.keys(attached).length > 0 ? [attached as unknown as NostrEvent] : [],
+      now: licensing.now ?? Math.floor(Date.now() / 1000),
+      allowedTiers: licensing.terms.tiers,
+      acceptedTerms: licensing.terms.terms ? [licensing.terms.terms] : [],
+    });
+    if (!decision.ok) {
+      return finalizeEvent(
+        {
+          kind: request.kind + 1000,
+          created_at: Math.floor(Date.now() / 1000),
+          tags: [
+            ["e", request.id],
+            ["p", requesterPubkey],
+            ["status", "payment-required"],
+          ],
+          content: JSON.stringify(
+            { status: "payment-required", code: decision.code, reason: decision.reason, terms: licensing.terms.terms },
+            null,
+            2,
+          ),
+        },
+        hexToBytes(DEMO_ROOT_SECRET_HEX),
+      );
+    }
+  }
   const output = {
     status: "success",
     node: "pixel-8a-demo (simulated)",

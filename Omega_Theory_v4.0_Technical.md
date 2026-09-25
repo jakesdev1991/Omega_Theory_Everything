@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2025-2026 Jacob See. Licensed under Apache-2.0. -->
+<!-- Copyright (c) 2025-2026 Jacob See. Licensed under MIT. -->
 
 The Omega Protocol: Unified Theory of Everything (v4.0)
 From Discrete Information to Continuous Geometry

@@ -4,11 +4,19 @@ This repository has separate licensing regimes. Check the root [`LICENSE`](LICEN
 
 ## Scientific materials
 
-Contributions to Apache-2.0-covered scientific paths must be your original work or material you are authorized to contribute under Apache-2.0. By intentionally submitting a contribution for inclusion in those paths, you agree that it is submitted under Apache-2.0, subject to Section 5 of that license. Keep third-party sources, licenses, and attribution information with the proposed change. Do not submit confidential information, personal data, credentials, or material whose provenance is unclear.
+Contributions to MIT-covered scientific paths must be your original work or material you are authorized to contribute under MIT. By intentionally submitting a contribution for inclusion in those paths, you agree that it is submitted under the MIT License. Keep third-party sources, licenses, and attribution information with the proposed change. Do not submit confidential information, personal data, credentials, or material whose provenance is unclear.
 
-## Proprietary product materials
+## Product materials (PolyForm Noncommercial 1.0.0)
 
-Do **not** submit pull requests, patches, designs, or other contributions for `app/`, `rust/`, `whitepapers/`, or `tri_token_sovereign_economy_blueprint.md` unless you first have a separate written agreement with the rights holder covering ownership, licensing, and compensation for your contribution. A pull request, issue, or direct message is not a substitute for that agreement. No contributor agreement is currently in force in this repository.
+Product paths (`web/`, `mobile-node/`, `app/`, `desktop/`, `omni-bridge/`, `cpp/`, `mcp/`, `launch/`, `novel/`, `docs/store/`; see [`LICENSE`](LICENSE) for the authoritative list) are free to use and modify noncommercially, but contributions to them need coordination. Do **not** submit pull requests, patches, designs, or other contributions for product paths unless you first have a separate written agreement with the rights holder covering ownership, licensing, and compensation for your contribution. A pull request, issue, or direct message is not a substitute for that agreement. No contributor agreement is currently in force in this repository.
+
+## Crypto and C.A.R.E. materials (read-only)
+
+The crypto paths (`rust/`, `evm/`, `solana/`, `amity/`, `whitepapers/`, the Tri-Token blueprint, and the C.A.R.E. docs) are **read-only: no license is granted and no reproduction is permitted**. Do not submit changes to them, and do not copy or re-post them anywhere without prior written permission.
+
+## Publishing apps in the Nostr App Store
+
+Listing an app in the App Store is not a code contribution. It requires a signed [Publisher Agreement](web/public/legal/publisher-agreement.md) (template `omega-store-publisher-1.0`) that sets the revenue share and other commercial terms. Do not open a pull request that adds your app to `mobile-node/algorithms.json` without one.
 
 ## Questions and sensitive material
 

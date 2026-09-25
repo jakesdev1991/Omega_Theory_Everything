@@ -1,3 +1,5 @@
+// Copyright (c) 2025-2026 Jacob See.
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 import "server-only";
 
 import { createHash } from "node:crypto";
@@ -240,7 +242,7 @@ async function buildBundleEntries(): Promise<Array<{ path: string; data: Buffer 
   } catch {
     entries.push({
       path: "LICENSE.txt",
-      data: Buffer.from("LicenseRef-Omega-Product-Proprietary — see docs/LICENSING.md in the repository.\n", "utf8"),
+      data: Buffer.from("PolyForm-Noncommercial-1.0.0 — free for noncommercial use; commercial use requires a license from Jacob See. See docs/LICENSING.md in the repository.\n", "utf8"),
     });
   }
 
@@ -280,7 +282,7 @@ async function buildBundleEntries(): Promise<Array<{ path: string; data: Buffer 
         `Verify integrity:`,
         `  sha256sum -c CHECKSUMS.txt`,
         ``,
-        `License: ${"LicenseRef-Omega-Product-Proprietary"} (see LICENSE.txt and docs/LICENSING.md).`,
+        `License: ${"PolyForm-Noncommercial-1.0.0"} (see LICENSE.txt and docs/LICENSING.md).`,
         `Prototype rails only: $OMEGA on Ethereum Sepolia and TWC on Solana Devnet.`,
         `No value-bearing issuance. Not audited. Not for mainnet use.`,
         ``,
@@ -381,7 +383,7 @@ export async function getWalletManifest(): Promise<WalletManifest> {
     name: configJson.name as string,
     version: configJson.version as string,
     channel: configJson.channel as string,
-    license: "LicenseRef-Omega-Product-Proprietary",
+    license: "PolyForm-Noncommercial-1.0.0",
     notice: configJson.notice as string,
     mountPath: WALLET_MOUNT_PATH,
     synced: !!buildInfo,

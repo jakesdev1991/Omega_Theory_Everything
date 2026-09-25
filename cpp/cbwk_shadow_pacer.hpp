@@ -1,5 +1,5 @@
 // Copyright (c) 2025-2026 Jacob See.
-// SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 //
 // cbwk_shadow_pacer.hpp — Contextual-Bandit-with-Knapsacks (CBwK)
 // primal-dual shadow-price pacer. C++23, header-only, zero heap
