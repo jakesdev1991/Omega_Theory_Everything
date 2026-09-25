@@ -1,6 +1,6 @@
 # Copyright (c) 2025-2026 Jacob See.
 # SPDX-License-Identifier: LicenseRef-Omega-ReadOnly
-numpy>=1.24.0
+numpy>=2.5.3
 scipy>=1.10.0
 matplotlib>=3.7.0
 pandas>=2.0.0
