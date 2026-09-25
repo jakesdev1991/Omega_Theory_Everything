@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Copyright (c) 2025-2026 Jacob See.
-# SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 """
 omni_host_audit.py — Omni-Bridge FIRST-ACTION audit kit (directive §3,
 §8, §9, §10, §66, §84).

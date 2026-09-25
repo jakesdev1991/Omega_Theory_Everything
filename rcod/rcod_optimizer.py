@@ -1,5 +1,5 @@
 # Copyright (c) 2025-2026 Jacob See.
-# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: MIT
 """RCOD multi-scale optimizer governor (research prototype).
 
 Wraps any ``torch.optim`` optimizer and governs its updates with Reverse
@@ -47,7 +47,7 @@ per workload by ``benchmark_noise_recovery.py``. No performance claim is
 made by this module alone.
 
 License note: research tooling on the science side of this repository
-(Apache-2.0). Re-scope before any product/commercial use.
+(MIT). Re-scope before any product/commercial use.
 """
 
 from __future__ import annotations

@@ -1,5 +1,5 @@
 // Copyright (c) 2025-2026 Jacob See.
-// SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 // Shared domain types for the 4 economic planes: CARE, TWC, OMEGA, AMITY
 // Reference: docs/tri-token-integration-v1.md and docs/care-architecture-v2.md
 

@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2025-2026 Jacob See. SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary. -->
+<!-- Copyright (c) 2025-2026 Jacob See. SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0 -->
 # Omega web unlock app
 
 This Next.js app is the public reading and release surface for **Genesis Block: The Satoshi

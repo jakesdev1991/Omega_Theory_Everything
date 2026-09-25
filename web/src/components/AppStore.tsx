@@ -1,5 +1,5 @@
 // Copyright (c) 2025-2026 Jacob See.
-// SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -595,7 +595,7 @@ export function AppStore() {
 
       <footer className="store-legal">
         <p>
-          The storefront, the mobile node, and listed apps are proprietary (<code>LicenseRef-Omega-Product-Proprietary</code>)
+          The storefront and the mobile node are <code>PolyForm-Noncommercial-1.0.0</code> (free noncommercial use; commercial use requires a paid license from Jacob See). Listed apps remain proprietary (<code>LicenseRef-Omega-Product-Proprietary</code>)
           unless a listing says otherwise. Use of the store is governed by the{" "}
           <Link href="/store/terms">Store Terms of Use &amp; End-User License</Link>; publishers list apps under the{" "}
           <Link href="/store/terms#publisher">Publisher Agreement</Link>. Licenses and job requests are public Nostr events.

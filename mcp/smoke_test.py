@@ -1,3 +1,5 @@
+# Copyright (c) 2025-2026 Jacob See.
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 """Smoke test: import the server, list tools, and exercise a couple of tool paths."""
 
 from __future__ import annotations

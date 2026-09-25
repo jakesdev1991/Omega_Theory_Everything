@@ -1,5 +1,5 @@
 // Copyright (c) 2025-2026 Jacob See.
-// SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
+// SPDX-License-Identifier: LicenseRef-Omega-ReadOnly
 //! Local Proof-of-Useful-Work claim lifecycle.
 use ledger::{Ledger, LedgerError};
 use protocol_types::{AccountId, Amount, Asset, ClaimId, ClaimStatus, Event, WorkCategory, WorkClaim};

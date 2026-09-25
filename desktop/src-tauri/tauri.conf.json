@@ -36,6 +36,6 @@
     "category": "Finance",
     "shortDescription": "Omega release wallet prototype",
     "longDescription": "Client-side wallet GUI for the Omega prototype rails: $OMEGA on Ethereum Sepolia and TWC on Solana Devnet. Keys never leave the device. Valueless test assets only.",
-    "licenseFile": "../../LICENSES/Omega-Product-Proprietary.txt"
+    "licenseFile": "../../LICENSES/PolyForm-Noncommercial-1.0.0.txt"
   }
 }

@@ -1,5 +1,5 @@
 # Copyright (c) 2025-2026 Jacob See.
-# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: MIT
 
 Omega Evolution Sim v2.3.0 - LTEE-Inspired E. coli
 

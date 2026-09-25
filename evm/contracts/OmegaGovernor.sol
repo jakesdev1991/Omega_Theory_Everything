@@ -1,5 +1,5 @@
 // Copyright (c) 2025-2026 Jacob See.
-// SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
+// SPDX-License-Identifier: LicenseRef-Omega-ReadOnly
 pragma solidity ^0.8.24;
 
 import {Governor} from "@openzeppelin/contracts/governance/Governor.sol";

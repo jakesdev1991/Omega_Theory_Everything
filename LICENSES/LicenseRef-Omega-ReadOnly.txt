@@ -1,0 +1,21 @@
+Omega Read-Only Notice (LicenseRef-Omega-ReadOnly)
+
+Copyright (c) 2025-2026 Jacob See. All rights reserved.
+
+No license is granted. The material carrying this notice — the crypto and
+C.A.R.E. materials and any other material so marked — may be viewed in place
+in this public repository as hosted by GitHub, under GitHub's terms of
+service. You may not copy, reproduce, republish, modify, publish,
+distribute, sublicense, sell, or create derivative works of it, in whole or
+in part, in any medium or form, without the prior written permission of
+Jacob See.
+
+This applies even though the repository is public and the files are
+technically downloadable. Do not infer permission from visibility.
+
+This restriction is prospective. It does not, and cannot, withdraw rights
+that were already granted in earlier public versions of this repository;
+see docs/LICENSING.md for the prior-license history.
+
+THE MATERIAL IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED.

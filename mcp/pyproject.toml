@@ -1,9 +1,11 @@
+# Copyright (c) 2025-2026 Jacob See.
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 [project]
 name = "omega-mcp-hub"
 version = "0.1.0"
 description = "Sovereign MCP hub for the Omega tri-token economy: SOV, USE, CARE, AMITY, OMEGA planes."
 readme = "README_MCP_HUB.md"
-license = { text = "MIT" }
+license = { text = "PolyForm-Noncommercial-1.0.0" }
 requires-python = ">=3.12"
 dependencies = [
     "mcp>=1.7.0",

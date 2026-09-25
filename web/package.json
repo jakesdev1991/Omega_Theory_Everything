@@ -2,7 +2,7 @@
   "name": "web",
   "version": "0.1.0",
   "private": true,
-  "license": "SEE LICENSE IN ../LICENSES/Omega-Product-Proprietary.txt",
+  "license": "SEE LICENSE IN ../LICENSES/PolyForm-Noncommercial-1.0.0.txt",
   "scripts": {
     "predev": "node scripts/sync-wallet.mjs",
     "dev": "next dev",

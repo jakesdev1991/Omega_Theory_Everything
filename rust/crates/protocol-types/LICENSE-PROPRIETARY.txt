@@ -1,32 +1,16 @@
-OMEGA THEORY EVERYTHING — PRODUCT MATERIALS
-ALL RIGHTS RESERVED
+OMEGA THEORY EVERYTHING — CRYPTO / C.A.R.E. MATERIALS
+READ-ONLY — NO LICENSE GRANTED
 
 Copyright (c) 2025-2026 Jacob See
-SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
+SPDX-License-Identifier: LicenseRef-Omega-ReadOnly
 
-This notice identifies the rights-reserved status of files marked
-LicenseRef-Omega-Product-Proprietary in this repository. It is not an
-open-source license, and it does not itself grant a commercial license.
+This crate is part of the crypto and C.A.R.E. materials. No license is
+granted. It may be viewed in place in this public repository as hosted by
+GitHub, under GitHub's terms of service. You may not copy, reproduce,
+republish, modify, publish, distribute, sublicense, sell, or create
+derivative works of it, in whole or in part, without the prior written
+permission of Jacob See.
 
-Except for rights that cannot be restricted by law, no permission is granted
-by this notice to copy, modify, adapt, distribute, publicly display, publicly
-perform, sublicense, or commercially exploit the covered product materials.
-Repository visibility, access to source, or the ability to fork a repository
-is not an additional license from the rights holder. Existing licenses for
-older copies, and applicable statutory exceptions, are not changed by this
-notice.
-
-The rights holder is willing to consider separate commercial licenses that
-include a percentage-based royalty payable to Jacob See. No royalty rate,
-royalty base, reporting schedule, or other commercial term is established
-here. Any permission must be granted in advance in a separate written
-agreement signed by the rights holder, and that agreement must specify the
-licensed materials and uses and the royalty percentage and calculation base,
-as well as payment, reporting, term, territory, sublicensing, and other
-applicable terms. Until such an agreement is signed, no commercial-use
-permission is granted by this notice.
-
-This notice applies only to rights the rights holder owns or is authorized
-to license. It does not create exclusive rights in ideas, facts, methods,
-systems, procedures, or concepts that are not protected by copyright or
-another applicable right. See docs/LICENSING.md and docs/PATENT-POSTURE.md.
+This is prospective; it does not withdraw rights already granted in earlier
+public versions of this repository. See LICENSES/LicenseRef-Omega-ReadOnly.txt
+and docs/LICENSING.md at the repository root.

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Copyright (c) 2025-2026 Jacob See.
-# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: MIT
 """Audit vacuous or misleading declarations in the Lean proof corpus.
 
 Complements `audit_axioms.py` (which counts declaration-level `axiom`s) by

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Copyright (c) 2025-2026 Jacob See.
-// SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 /**
  * Publishes the app-store directory (kind 31990 handler announcements) for the
  * algorithms in algorithms.json, signed by the store ROOT key.

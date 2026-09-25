@@ -1,5 +1,5 @@
 // Copyright (c) 2025-2026 Jacob See.
-// SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
+// SPDX-License-Identifier: LicenseRef-Omega-ReadOnly
 /* eslint-disable no-console */
 
 const fs = require("node:fs");

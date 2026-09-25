@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Copyright (c) 2025-2026 Jacob See.
-# SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 """Radial Metric Simulator — allowlisted algorithm for the Lucifer mobile node.
 
 Reads a JSON parameter object on stdin, computes the golden-ratio bottleneck

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Copyright (c) 2025-2026 Jacob See.
-// SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 /**
  * Issue, renew, or revoke an app-store license (kind 31335) signed by the
  * store root / publisher key. The secret key never leaves this terminal.

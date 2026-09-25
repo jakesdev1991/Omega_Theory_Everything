@@ -1,5 +1,5 @@
 // Copyright (c) 2025-2026 Jacob See.
-// SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 /**
  * Loads and renders the store's legal documents (web/public/legal/*.md).
  *

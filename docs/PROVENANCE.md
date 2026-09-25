@@ -16,7 +16,7 @@
 
 The intended current licensing split is recorded in [`../LICENSE`](../LICENSE) and [`LICENSING.md`](LICENSING.md):
 
-- Scientific materials: root simulations and theory files, `lean_proofs/`, `latex_docs/`, `txt_proofs/`, and listed tooling — Apache-2.0.
+- Scientific materials: root simulations and theory files, `lean_proofs/`, `latex_docs/`, `txt_proofs/`, and `rcod/` — MIT.
 - Product materials: `app/`, `rust/`, `whitepapers/`, and `tri_token_sovereign_economy_blueprint.md` — all rights reserved / `LicenseRef-Omega-Product-Proprietary`.
 - Other project-administration and legal notices — no separate grant to product assets.
 
@@ -30,7 +30,7 @@ The following checks remain outstanding unless separately documented with eviden
 - Review all contributors, employment/contractor obligations, joint authorship, assignments, and authority to relicense. Confirm the rights holder's legal identity and ownership for each asset.
 - Identify copied/adapted text, figures, diagrams, datasets, code, generated content, fonts, icons, and other third-party material. Record source, author, license, required attribution, and whether redistribution is permitted.
 - Produce a dependency inventory/SBOM and review license notices for Python, Lean/Mathlib, Rust, and any future browser/runtime dependencies.
-- Confirm that all science files marked Apache-2.0 are eligible for that grant, including its patent terms; obtain written consent for any contribution not owned by the rights holder.
+- Confirm that all science files marked MIT are eligible for that grant; obtain written consent for any contribution not owned by the rights holder.
 - Confirm product materials intended for royalty-bearing licensing are not subject to employer, contractor, co-author, or prior-license restrictions.
 
 ## Evidence to retain

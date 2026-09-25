@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Copyright (c) 2025-2026 Jacob See.
-// SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 /**
  * Syncs the standalone Omega wallet GUI (`app/` at the repository root) into the
  * Next.js `public/` tree so the forward-facing website can serve it, link to it,

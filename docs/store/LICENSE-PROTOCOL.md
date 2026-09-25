@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2025-2026 Jacob See. SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary. -->
+<!-- Copyright (c) 2025-2026 Jacob See. SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0 -->
 # Omega App Store: license protocol (v1)
 
 This document specifies how app licenses are expressed, issued, checked and revoked over Nostr. There are two implementations, and they must stay in sync:

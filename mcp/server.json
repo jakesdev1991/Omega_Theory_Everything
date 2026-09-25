@@ -5,7 +5,7 @@
   "description": "Sovereign MCP hub for the Omega tri-token economy — SOV accounting, USE contribution receipts, CARE stewardship, AMITY exchange entitlements, and OMEGA macro-governance.",
   "publisher": "Jacob M. See",
   "repository": "https://github.com/jakesdev1991/Omega_Theory_Everything",
-  "license": "MIT",
+  "license": "PolyForm-Noncommercial-1.0.0",
   "tools": [
     {
       "name": "sov_mint",

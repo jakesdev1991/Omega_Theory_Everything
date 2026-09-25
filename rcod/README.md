@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2025-2026 Jacob See. SPDX-License-Identifier: Apache-2.0 -->
+<!-- Copyright (c) 2025-2026 Jacob See. SPDX-License-Identifier: MIT -->
 
 # RCOD multi-scale optimizer governor — research prototype
 
@@ -107,7 +107,7 @@ governor is deployed, not before.
 
 ## License
 
-Apache-2.0 (science side of this repository). This is research tooling for
+MIT (science side of this repository). This is research tooling for
 falsifying/improving the Omega metrics; it is not product code. If it is
 ever moved into a product path (e.g., the C.A.R.E. protocol stack), re-scope
 the license deliberately first.

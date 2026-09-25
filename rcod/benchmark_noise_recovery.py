@@ -1,5 +1,5 @@
 # Copyright (c) 2025-2026 Jacob See.
-# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: MIT
 """Benchmark: does RCOD governance improve loss recovery after a label-noise shock?
 
 This is the empirical test the Omega $OMEGA whitepaper asks for ("test

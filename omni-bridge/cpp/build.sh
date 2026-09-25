@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copyright (c) 2025-2026 Jacob See.
-# SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 #
 # Build and run the Omni-Bridge control-boundary acceptance suite:
 #   1. strict -Wall -Wextra -Werror build, run

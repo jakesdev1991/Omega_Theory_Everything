@@ -1,6 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/bash
 # Copyright (c) 2025-2026 Jacob See.
-# SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
+# SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 # Termux installer for the Lucifer mobile node (Pixel 8a sovereign executor).
 #
 # What it does:

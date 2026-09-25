@@ -2,32 +2,39 @@
 
 This repository does **not** have one repository-wide license. This file is an index only; it is not a blanket grant of rights. The path-specific grants below apply only to material the rights holder is authorized to license. See [`docs/LICENSING.md`](docs/LICENSING.md) for scope, limitations, prior-version history, and commercial licensing information.
 
-## Open scientific materials — Apache-2.0
+## Science and physics materials — MIT
 
-The following materials are licensed under the Apache License, Version 2.0. Read the full terms in [`LICENSES/Apache-2.0.txt`](LICENSES/Apache-2.0.txt):
+The following scientific materials are licensed under the MIT License. Read the full terms in [`LICENSES/MIT.txt`](LICENSES/MIT.txt):
 
 - `Sim1_Emergent_Geometry.py` through `Sim5_Emergent_Gravity.py`, `Sim7_Radial_Metric.py` and `sim6_v14_depletion.py`
 - `Omega_Theory_Laymans_Guide.md`, `Omega_Theory_v4.0_Technical.md` and `Omega_Theory_v4.0_Radial_Metric.md`
-- all files in `lean_proofs/`, `latex_docs/`, and `txt_proofs/`
-- `README.md`, `requirements.txt`, `update_discovery.sh`, `.gitignore`, and `.github/`
+- all files in `lean_proofs/`, `latex_docs/`, `txt_proofs/`, and `rcod/`
 
-Apache-2.0 permits commercial use of these covered materials subject to its terms, including its attribution and patent provisions. It does not grant rights to project trademarks or to the proprietary product assets below.
+MIT permits commercial use of these covered materials subject to its attribution and disclaimer terms. It grants no rights to project trademarks, to the product materials below, or to the crypto materials below.
 
-## Product materials — all rights reserved
+## Product materials — PolyForm Noncommercial License 1.0.0
 
-The following are proprietary and are **not** open-source licensed by this version of the repository:
+The following product materials are licensed under the **PolyForm Noncommercial License 1.0.0** ([`LICENSES/PolyForm-Noncommercial-1.0.0.txt`](LICENSES/PolyForm-Noncommercial-1.0.0.txt), <https://polyformproject.org/licenses/noncommercial/1.0.0>):
 
-- all files in `app/`, `rust/`, `cpp/`, `evm/`, and `solana/`
-- all files in `web/` (website, wallet hub, and the Nostr App Store storefront), `mobile-node/` (App Store execution node and license tooling), `desktop/`, `amity/`, `omni-bridge/`, and `launch/`
-- `tri_token_sovereign_economy_blueprint.md` and all files in `novel/`
-- all files in `whitepapers/`
-- the App Store legal texts in `web/public/legal/` (Store Terms of Use & End-User License, and the Publisher Agreement template) and the App Store protocol documentation in `docs/store/`
+- all files in `web/` (website, wallet hub, and the Nostr App Store storefront), **except** the store legal texts in `web/public/legal/`, which remain all rights reserved
+- all files in `mobile-node/` (App Store execution node and license tooling), `app/`, `desktop/`, `omni-bridge/`, `cpp/`, `mcp/`, `launch/`, and `novel/`
+- the App Store protocol documentation in `docs/store/`
 
-These files are marked `LicenseRef-Omega-Product-Proprietary`, either by a per-file SPDX header or by this path-level designation. Files that cannot hold comments, such as JSON, are covered by the path-level designation. Apps distributed through the Nostr App Store are proprietary unless their listing states otherwise. End users may run them only under a license issued under the Store Terms (`omega-store-eula-1.0`), and third-party publishers list them only under a signed Publisher Agreement. See `docs/LICENSING.md` § "Nostr App Store licensing". The notice at [`LICENSES/Omega-Product-Proprietary.txt`](LICENSES/Omega-Product-Proprietary.txt) reserves rights; it does not itself grant commercial-use permission. Commercial use may be considered only under a separate, signed written license with percentage-based compensation. The royalty rate and calculation base are not set in this repository.
+In short: **anyone may use, modify, and share these materials for noncommercial purposes for free. Commercial use requires a separate paid, signed written license from Jacob See** with percentage-based compensation; this repository sets no rate. These files are marked `PolyForm-Noncommercial-1.0.0` by per-file SPDX header or by this path-level designation. Files that cannot hold comments, such as JSON, are covered by the path-level designation. Apps distributed through the Nostr App Store are proprietary unless their listing states otherwise; end users run them only under a license issued under the Store Terms (`omega-store-eula-1.0`), and third-party publishers list them only under a signed Publisher Agreement. See `docs/LICENSING.md` § "Nostr App Store licensing".
+
+## Crypto and C.A.R.E. materials — read-only, no license
+
+The following materials are **read-only in this repository. No license is granted and no reproduction is permitted.** Read the notice in [`LICENSES/LicenseRef-Omega-ReadOnly.txt`](LICENSES/LicenseRef-Omega-ReadOnly.txt):
+
+- all files in `rust/`, `evm/`, `solana/`, `amity/`, and `whitepapers/`
+- `tri_token_sovereign_economy_blueprint.md`
+- `docs/care-architecture-v2.md`, `docs/care-policy-v2.json`, and `docs/tri-token-integration-v1.md`
+
+These files are marked `LicenseRef-Omega-ReadOnly` by per-file SPDX header or by this path-level designation. Do not infer permission from the fact that they are publicly viewable or downloadable.
 
 ## Other files and third-party materials
 
-`LICENSE`, `LICENSES/` (except for the license texts it contains), `NOTICE`, `CONTRIBUTING.md`, and `docs/` are project-administration and legal-notice materials; they do not grant rights to product assets. Unless a file is expressly included above or carries its own license notice, no license is granted by this index beyond rights provided by applicable law. Third-party software, content, names, and other rights are excluded from the grants above and retain their own terms.
+`LICENSE`, `LICENSES/` (except for the license texts it contains), `NOTICE`, `CONTRIBUTING.md`, `README.md`, `requirements.txt`, `update_discovery.sh`, `.gitignore`, `.github/`, `docs/` (except as listed above), and the store legal texts in `web/public/legal/` are project-administration and legal-notice materials; they are read-only (`LicenseRef-Omega-ReadOnly`) and grant no rights to product assets. Unless a file is expressly included above or carries its own license notice, no license is granted by this index beyond rights provided by applicable law. Third-party software, content, names, and other rights are excluded from the grants above and retain their own terms.
 
 ## Historical MIT notice
 

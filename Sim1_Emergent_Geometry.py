@@ -1,5 +1,5 @@
 # Copyright (c) 2025-2026 Jacob See.
-# SPDX-License-Identifier: Apache-2.0
+# SPDX-License-Identifier: MIT
 
 Simulation 1: Emergent Distances and 1D Embedding
 

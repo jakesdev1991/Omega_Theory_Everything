@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2025-2026 Jacob See. Licensed under Apache-2.0; see ../LICENSE. -->
+<!-- Copyright (c) 2025-2026 Jacob See. Licensed under MIT; see ../LICENSE and ../LICENSES/MIT.txt. -->
 
 # Plain Text Proofs - Omega Theory
 

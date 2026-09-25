@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Copyright (c) 2025-2026 Jacob See.
-// SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 /**
  * Lucifer mobile node — sovereign NIP-90 execution daemon for Termux.
  *
