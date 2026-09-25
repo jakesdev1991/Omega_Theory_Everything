@@ -12,6 +12,7 @@ authoritative map of what each draft does and does not currently cover.
 | Document | Version | Covers | Implementation status |
 |---|---|---|---|
 | [`omega_protocol_whitepaper.md`](omega_protocol_whitepaper.md) | 0.2 | Macro-governance, staking, supply, and governance for `$OMEGA` | Sepolia-only, valueless `tOMEGA` pilot suite exists in [`../evm/`](../evm/README.md); not deployed, not audited |
+| [`twc_whitepaper.md`](twc_whitepaper.md) | 0.1 | Token of the World Citizen: proof-of-useful-work receipts, settlement, verification, appeals, and the Devnet boundary | Solana Devnet-only, valueless `tTWC` pilot; not deployed, not audited |
 | [`tokamak_domain_token_whitepaper.md`](tokamak_domain_token_whitepaper.md) | 0.3 | Legacy plasma-domain computation, telemetry boundaries, and scientific PoUW research under the historical name `TOKAMAK` | Design only; **`TOKAMAK` is retired as the Solana token identity** |
 | [`care_amity_protocol_whitepaper.md`](care_amity_protocol_whitepaper.md) | 0.2 | Proof of Care, CARE Verifiers, human Archangels, stewardship progression, privacy, arbitration, and the CARE-to-AMITY exchange boundary | Local social prototype and bounded conversion/AMITY testnet scaffold exist; no value-bearing deployment authorized |
 | [`lucifer_hermes_omni_bridge_whitepaper.md`](lucifer_hermes_omni_bridge_whitepaper.md) | 0.2 | Agentic routing, verification, sandboxing, audit, and governance boundaries | Header-only C++23 control-boundary implementation with an acceptance suite in [`../omni-bridge/`](../omni-bridge/README.md); host-side sandboxing and production governance separation are not implemented |
@@ -19,8 +20,7 @@ authoritative map of what each draft does and does not currently cover.
 ## Canonical identity and the missing TWC paper
 
 The selected canonical Solana identity is **Token of the World Citizen (`TWC`)**, with the
-visibly test-only Devnet symbol `tTWC`. There is deliberately **no TWC whitepaper in this
-directory yet**. Until one is written and reviewed, the TWC specification lives in:
+visibly test-only Devnet symbol `tTWC`. The TWC paper is now [`twc_whitepaper.md`](twc_whitepaper.md). The interim implementation and integration references remain:
 
 - [`../docs/tri-token-integration-v1.md`](../docs/tri-token-integration-v1.md) §3 — the work-class
   receipt protocol and verifier adapters;
