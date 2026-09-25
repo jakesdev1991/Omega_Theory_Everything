@@ -4,11 +4,11 @@ import { Navigation } from "@/components/Navigation";
 
 export const metadata: Metadata = {
   title: {
-    default: "Omega MCP Hub — $OMEGA + TWC Unlock Rails",
-    template: "%s | Omega MCP Hub",
+    default: "The C.A.R.E. Economy — Care Is the Base Layer",
+    template: "%s | The C.A.R.E. Economy",
   },
   description:
-    "Omega MCP Hub currently wires two release-day currencies into the wallet-to-web unlock flow: $OMEGA on the EVM rail and TWC on Solana. Sign a verified proof and unlock Genesis Block: The Satoshi Protocol.",
+    "The C.A.R.E. Economy: a sovereign, three-currency economy built on care — Compassion, Accountability, Reciprocity, Exchange, in that order. Read the manifesto and the extensive whitepaper, run the wallet, and test the whole economy. Currently wires $OMEGA (EVM) and TWC (Solana) release proofs to the token-gated novel Genesis Block: The Satoshi Protocol.",
   icons: {
     icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
   },
@@ -33,9 +33,10 @@ export default function RootLayout({
 function Footer() {
   return (
     <footer className="border-t border-border/40 py-8 text-sm text-muted">
-      <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6">
+      <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-6">
         <p>
-          Omega MCP Hub — Open-source AI operating hub for a three-currency economy.
+          The C.A.R.E. Economy — Compassion, Accountability, Reciprocity,
+          Exchange. Operated by the open-source Omega MCP Hub.
         </p>
         <p className="text-xs">
           Genesis Block: The Satoshi Protocol —{" "}

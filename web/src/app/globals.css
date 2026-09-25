@@ -179,3 +179,230 @@ a {
   line-height: 1.6;
 }
 
+
+/* ---- C.A.R.E. Economy document reader (/manifesto, /whitepapers) ---- */
+
+.doc-body {
+  font-family: ui-serif, Georgia, Cambria, "Times New Roman", serif;
+  font-size: 17px;
+  line-height: 1.75;
+  color: var(--color-muted-strong);
+}
+
+.doc-body p {
+  margin: 0 0 18px;
+}
+
+.doc-body strong {
+  color: var(--color-foreground);
+  font-weight: 600;
+}
+
+.doc-body em {
+  color: var(--color-foreground);
+}
+
+.doc-h2 {
+  font-family: ui-serif, Georgia, Cambria, serif;
+  font-size: clamp(24px, 3vw, 34px);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: var(--color-foreground);
+  margin: 56px 0 18px;
+  line-height: 1.2;
+  scroll-margin-top: 96px;
+}
+
+.doc-h3 {
+  font-family: ui-serif, Georgia, Cambria, serif;
+  font-size: clamp(19px, 2.2vw, 24px);
+  font-weight: 500;
+  color: var(--color-foreground);
+  margin: 40px 0 14px;
+  line-height: 1.3;
+  scroll-margin-top: 96px;
+}
+
+.doc-h4 {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-foreground);
+  margin: 28px 0 10px;
+  scroll-margin-top: 96px;
+}
+
+.doc-inline-code {
+  font-family: ui-monospace, "SF Mono", "JetBrains Mono", monospace;
+  font-size: 0.82em;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  padding: 2px 6px;
+  color: var(--color-accent-soft);
+  white-space: nowrap;
+}
+
+.doc-link {
+  color: var(--color-accent-soft);
+  border-bottom: 1px solid rgba(212, 165, 116, 0.35);
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.doc-link:hover {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.doc-link-ext {
+  font-size: 0.75em;
+  margin-left: 3px;
+  opacity: 0.7;
+}
+
+.doc-ul,
+.doc-ol {
+  margin: 0 0 20px;
+  padding-left: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.doc-ul li::marker {
+  color: var(--color-accent);
+}
+
+.doc-ol li::marker {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.doc-pre {
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid var(--color-border-strong);
+  border-radius: 12px;
+  padding: 18px 20px;
+  overflow-x: auto;
+  margin: 0 0 22px;
+  line-height: 1.55;
+}
+
+.doc-pre code {
+  font-family: ui-monospace, "SF Mono", "JetBrains Mono", monospace;
+  font-size: 13px;
+  color: var(--color-unlock-soft);
+  white-space: pre;
+}
+
+.doc-blockquote {
+  border-left: 3px solid var(--color-accent);
+  background: rgba(192, 132, 87, 0.06);
+  border-radius: 0 12px 12px 0;
+  padding: 14px 20px;
+  margin: 0 0 22px;
+}
+
+.doc-blockquote p {
+  margin: 0 0 8px;
+}
+
+.doc-blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.doc-table-wrap {
+  overflow-x: auto;
+  margin: 0 0 22px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 12px;
+}
+
+.doc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.doc-table th {
+  text-align: left;
+  font-family: ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--color-border-strong);
+}
+
+.doc-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: top;
+}
+
+.doc-table tr:last-child td {
+  border-bottom: none;
+}
+
+.doc-hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 40px 0;
+}
+
+.doc-toc {
+  position: sticky;
+  top: 96px;
+  max-height: calc(100vh - 128px);
+  overflow-y: auto;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+
+.doc-toc-title {
+  font-family: ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+.doc-toc ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.doc-toc a {
+  display: block;
+  padding: 5px 10px;
+  border-left: 2px solid var(--color-border);
+  color: var(--color-muted);
+  font-size: 13px;
+  line-height: 1.45;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.doc-toc a:hover {
+  color: var(--color-foreground);
+  border-left-color: var(--color-accent);
+}
+
+.doc-toc-sub a {
+  padding-left: 24px;
+  font-size: 12px;
+}
+
+@media (max-width: 1023px) {
+  .doc-toc {
+    display: none;
+  }
+}

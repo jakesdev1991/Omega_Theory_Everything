@@ -2,15 +2,16 @@
   "name": "web",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "predev": "node scripts/sync-wallet.mjs",
+    "scripts": {
+    "predev": "node scripts/sync-wallet.mjs && node scripts/sync-docs.mjs",
     "dev": "next dev",
-    "prebuild": "node scripts/sync-wallet.mjs",
+    "prebuild": "node scripts/sync-wallet.mjs && node scripts/sync-docs.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "sync:wallet": "node scripts/sync-wallet.mjs",
+    "sync:docs": "node scripts/sync-docs.mjs",
     "test": "tsx --test src/lib/domain/*.test.ts src/lib/*.test.ts",
     "test:economy": "tsx --test src/lib/domain/scenarios.test.ts"
   },
