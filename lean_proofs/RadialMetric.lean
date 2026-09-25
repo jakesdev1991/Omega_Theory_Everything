@@ -159,7 +159,7 @@ with a varying `Φ` the chain sum and the single-scale formula differ, which
 theorem chainLength_const_scale (a : ℝ) (w : ℕ → ℝ) (n : ℕ) :
     chainLength (fun _ => a) w n = a * ∑ i ∈ Finset.range n, w i := by
   unfold chainLength
-  simp
+  simp only [Finset.mul_sum]
 
 /-! ## 3. The `Φ`-form Schwarzschild identities -/
 
