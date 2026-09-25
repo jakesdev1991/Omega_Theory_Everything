@@ -63,8 +63,8 @@ noncomputable def travelTime (distance speed : ℝ) : ℝ :=
 theorem travel_time_monotone (d₁ d₂ v : ℝ) (hv : 0 < v) (h : d₁ ≤ d₂) :
     travelTime d₁ v ≤ travelTime d₂ v := by
   simp only [travelTime]
-  rw [div_le_div_iff hv hv]
-  exact mul_le_mul_of_nonneg_right h (le_of_lt hv)
+  rw [div_eq_mul_inv, div_eq_mul_inv]
+  exact mul_le_mul_of_nonneg_right h (by positivity)
 
 /-- Structural bridge: interstellar distances in the Q-region model are
     nonnegative. -/

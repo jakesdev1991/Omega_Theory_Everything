@@ -47,16 +47,18 @@ theorem failed_filter_silences (c : Chain) :
 /-- The empty development chain trivially survives. -/
 theorem empty_chain_survives : passesAll [] = true := rfl
 
+/-- All stages of a chain are passed (recursive mirror of `passesAll`). -/
+def allTrue : Chain → Prop
+  | [] => True
+  | f :: fs => f = true ∧ allTrue fs
+
 /-- A chain survives if every stage passes. -/
-theorem all_pass_survives (c : Chain) :
-    List.Forall (fun f => f = true) c → passesAll c = true := by
+theorem all_pass_survives (c : Chain) : allTrue c → passesAll c = true := by
   induction c with
   | nil => intro _; rfl
   | cons hd tl ih =>
     intro h
-    cases h with
-    | cons hhd htl =>
-      simp [passesAll, hhd, ih htl]
+    simp [passesAll, h.1, ih h.2]
 
 /-- The Drake expectation: product of seven natural-number factors. -/
 def drake (R fp ne fl fi fc L : ℕ) : ℕ :=
