@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2025-2026 Jacob See. SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary. -->
+<!-- Copyright (c) 2025-2026 Jacob See. SPDX-License-Identifier: LicenseRef-Omega-ReadOnly -->
 
 # Omega Ecosystem Whitepapers
 
@@ -55,7 +55,7 @@ Whitepaper versions are bumped when a change alters a claim, a parameter, an inv
 
 ## License
 
-All whitepapers in this directory, including this index, are all rights reserved and marked `LicenseRef-Omega-Product-Proprietary`. No general commercial-use license is granted here. Commercial use may be considered only under a separate signed written agreement with a percentage-based royalty; the rate and calculation base must be negotiated and specified in that agreement. See [`../docs/LICENSING.md`](../docs/LICENSING.md), including its explanation of rights already granted under the previous MIT-licensed version and of copyright's limits on protecting ideas.
+All whitepapers in this directory, including this index, are **read-only** (`LicenseRef-Omega-ReadOnly`): viewable in this repository, with no license to copy, reproduce, modify, distribute, or build on them without prior written permission. See [`../docs/LICENSING.md`](../docs/LICENSING.md) and [`../LICENSES/LicenseRef-Omega-ReadOnly.txt`](../LICENSES/LicenseRef-Omega-ReadOnly.txt), including the prior MIT-license limitation.
 
 ## Naming decision
 

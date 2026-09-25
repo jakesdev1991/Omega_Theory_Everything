@@ -2,7 +2,8 @@
   "name": "web",
   "version": "0.1.0",
   "private": true,
-    "scripts": {
+  "license": "SEE LICENSE IN ../LICENSES/PolyForm-Noncommercial-1.0.0.txt",
+  "scripts": {
     "predev": "node scripts/sync-wallet.mjs && node scripts/sync-docs.mjs",
     "dev": "next dev",
     "prebuild": "node scripts/sync-wallet.mjs && node scripts/sync-docs.mjs",

@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2025-2026 Jacob See. SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary. -->
+<!-- Copyright (c) 2025-2026 Jacob See. SPDX-License-Identifier: LicenseRef-Omega-ReadOnly -->
 
 # The C.A.R.E. Economy — A Manifesto
 
@@ -98,7 +98,7 @@ The path runs in stages: falsification and review, local simulation, valueless t
 
 This manifesto will be read by three kinds of people.
 
-**To the builders:** the specification is open. The science is Apache-2.0. The failure modes are documented next to the features. Come find the holes we couldn't see.
+**To the builders:** the specification is public. The science is MIT. The failure modes are documented next to the features. Come find the holes we couldn't see.
 
 **To the skeptical:** good. Stay skeptical. The honest table in the whitepaper marks exactly what is real, what is simulated, and what is a drawing. Hold us to it. A care economy that can't survive scrutiny doesn't deserve anyone's care.
 
@@ -110,4 +110,4 @@ You don't have to be finished to begin. You never had to be.
 
 ---
 
-*The C.A.R.E. Economy is the name of this entire economy. This manifesto is all rights reserved (`LicenseRef-Omega-Product-Proprietary`) and published for review. It is not an offer of securities or a promise of token value. All current implementations are local, valueless, testnet-only prototypes. The mechanics live in the [extensive whitepaper](care_economy_whitepaper.md); the original systems spec lives in the [tri-token blueprint](../tri_token_sovereign_economy_blueprint.md).*
+*The C.A.R.E. Economy is the name of this entire economy. This statement is read-only (`LicenseRef-Omega-ReadOnly`) and published for review. It is not an offer of securities or a promise of token value. All current implementations are local, valueless, testnet-only prototypes. The mechanics live in the [extensive whitepaper](care_economy_whitepaper.md); the original systems spec lives in the [tri-token blueprint](../tri_token_sovereign_economy_blueprint.md). The canonical manifesto is [`docs/sovereign_economy_manifesto.md`](../docs/sovereign_economy_manifesto.md).*

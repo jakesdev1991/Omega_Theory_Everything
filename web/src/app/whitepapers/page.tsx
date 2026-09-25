@@ -1,3 +1,5 @@
+// Copyright (c) 2025-2026 Jacob See.
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -230,10 +232,10 @@ export default function WhitepapersPage() {
           >
             The whitepapers are also in the repository under{" "}
             <code className="doc-inline-code">whitepapers/</code> — alongside
-            the science materials (Apache-2.0 simulations, Lean proofs, and the
+            the science materials (MIT simulations, Lean proofs, and the
             54-volume Omega research program). Product specifications in{" "}
-            <code className="doc-inline-code">whitepapers/</code> are all
-            rights reserved; see{" "}
+            <code className="doc-inline-code">whitepapers/</code> are
+            read-only; see{" "}
             <a
               className="doc-link"
               href="https://github.com/jakesdev1991/Omega_Theory_Everything/blob/main/docs/LICENSING.md"

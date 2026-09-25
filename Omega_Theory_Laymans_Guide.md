@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2025-2026 Jacob See. Licensed under Apache-2.0. -->
+<!-- Copyright (c) 2025-2026 Jacob See. Licensed under MIT. -->
 
 # Emergent Reality from Quantum Correlation: Life IS Quantum
 ## A Layman's Guide to the Omega Theory
@@ -161,4 +161,4 @@ Every one of those sentences is a hypothesis with a stated scope. The point of w
 
 ---
 
-*Copyright (C) 2025-2026 Jacob See. Licensed under Apache-2.0; see [`LICENSE`](LICENSE).*
+*Copyright (C) 2025-2026 Jacob See. Licensed under MIT; see [`LICENSE`](LICENSE).*

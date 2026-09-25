@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2025-2026 Jacob See. Split licensing: this repository mixes Apache-2.0 science materials with all-rights-reserved product materials — see LICENSE and docs/LICENSING.md. -->
+<!-- Copyright (c) 2025-2026 Jacob See. Split licensing: science is MIT, products are PolyForm Noncommercial 1.0.0 (free noncommercial, paid commercial license), and crypto/C.A.R.E. materials are read-only — see LICENSE and docs/LICENSING.md. -->
 
 # Omega Theory Everything
 
@@ -149,11 +149,12 @@ pytest -v
 
 ## License and intellectual property
 
-This repository uses a **split license**: the science is open; the product materials are proprietary.
+This repository uses a **split license**: the science is open, the products are free for noncommercial use, and the crypto materials are read-only.
 
 | Materials | Terms |
 |---|---|
-| Simulations, Omega theory notes, Lean proofs, LaTeX and text companions, and listed tooling | Apache-2.0 — see [`LICENSES/Apache-2.0.txt`](LICENSES/Apache-2.0.txt) |
-| `app/`, `rust/`, `evm/`, `solana/`, [`whitepapers/`](whitepapers/), and the [Tri-Token blueprint](tri_token_sovereign_economy_blueprint.md) | All rights reserved. Commercial licenses may be negotiated under a separate signed agreement with a percentage-based royalty; no rate or commercial permission is set by this repository. |
+| Simulations, Omega theory notes, Lean proofs, LaTeX and text companions, `rcod/` | **MIT** — see [`LICENSES/MIT.txt`](LICENSES/MIT.txt) |
+| `web/` (website, wallet hub, App Store storefront), `mobile-node/`, `app/`, `desktop/`, `omni-bridge/`, `cpp/`, `mcp/`, `launch/`, `novel/`, `docs/store/` | **PolyForm Noncommercial 1.0.0** — free for noncommercial use; commercial use requires a separate paid, signed written license with percentage-based compensation. See [`LICENSES/PolyForm-Noncommercial-1.0.0.txt`](LICENSES/PolyForm-Noncommercial-1.0.0.txt) |
+| `rust/`, `evm/`, `solana/`, `amity/`, [`whitepapers/`](whitepapers/), the [Tri-Token blueprint](tri_token_sovereign_economy_blueprint.md), and the C.A.R.E. docs | **Read-only, no license** — view-only in this repository; no copying, reproduction, or derivative works without written permission. See [`LICENSES/LicenseRef-Omega-ReadOnly.txt`](LICENSES/LicenseRef-Omega-ReadOnly.txt) |
 
 See [`LICENSE`](LICENSE) for exact path scope and [`docs/LICENSING.md`](docs/LICENSING.md) for important limits, including the prior MIT license and public-disclosure history. Copyright does not generally make underlying ideas, methods, or systems exclusive. Patent status is not claimed; see [`docs/PATENT-POSTURE.md`](docs/PATENT-POSTURE.md). Project-name notices are in [`docs/TRADEMARKS.md`](docs/TRADEMARKS.md).

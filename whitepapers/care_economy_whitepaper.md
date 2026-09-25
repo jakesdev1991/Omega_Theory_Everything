@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2025-2026 Jacob See. SPDX-License-Identifier: LicenseRef-Omega-Product-Proprietary. -->
+<!-- Copyright (c) 2025-2026 Jacob See. SPDX-License-Identifier: LicenseRef-Omega-ReadOnly -->
 
 # The C.A.R.E. Economy — Extensive Whitepaper
 
@@ -533,7 +533,7 @@ Carried openly, not hidden:
 
 ### 30. Invitation
 
-The C.A.R.E. Economy is an open research program. The science is Apache-2.0; the product specifications in `whitepapers/` are proprietary but public; the pilots are real code you can run today, valueless and local. What is needed most: verifier-training design, trauma-informed UX review, privacy engineering, formal methods, simulation work, and people willing to tell us where the design would hurt someone. The failure modes we have not imagined are the ones that matter most.
+The C.A.R.E. Economy is an open research program. The science is MIT; the product specifications in `whitepapers/` are read-only (`LicenseRef-Omega-ReadOnly`); the website and other product code are PolyForm Noncommercial 1.0.0; the pilots are real code you can run today, valueless and local. What is needed most: verifier-training design, trauma-informed UX review, privacy engineering, formal methods, simulation work, and people willing to tell us where the design would hurt someone. The failure modes we have not imagined are the ones that matter most.
 
 ### 31. Companion documents
 
@@ -569,4 +569,4 @@ The C.A.R.E. Economy is an open research program. The science is Apache-2.0; the
 
 ---
 
-*This document is all rights reserved (`LicenseRef-Omega-Product-Proprietary`). It is published for review and evaluation. It is not an offer of securities, a promise of liquidity, a clinical protocol, or a validated scientific result. See `docs/LICENSING.md` for licensing context and limits.*
+*This document is read-only (`LicenseRef-Omega-ReadOnly`): published for review in this repository, with no license to copy or build on it without written permission. It is not an offer of securities, a promise of liquidity, a clinical protocol, or a validated scientific result. See `docs/LICENSING.md` for licensing context and limits.*

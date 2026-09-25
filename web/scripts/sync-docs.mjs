@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// Copyright (c) 2025-2026 Jacob See.
+// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 /**
  * Syncs the C.A.R.E. Economy documents — the manifesto and the whitepapers —
  * from the repository root into the Next.js `content/docs/` tree so the website
