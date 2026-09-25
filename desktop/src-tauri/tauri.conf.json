@@ -1,0 +1,41 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Omega Wallet",
+  "version": "0.1.0",
+  "identifier": "org.omega.wallet.prototype",
+  "build": {
+    "frontendDist": "../../web/public/omega-wallet",
+    "beforeBuildCommand": "npm --prefix ../../web run sync:wallet",
+    "devUrl": null
+  },
+  "app": {
+    "withGlobalTauri": false,
+    "windows": [
+      {
+        "title": "Omega Wallet",
+        "width": 1280,
+        "height": 860,
+        "minWidth": 940,
+        "minHeight": 640,
+        "resizable": true,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https: wss:",
+      "capabilities": []
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "../../web/public/omega-wallet/icon-192.png",
+      "../../web/public/omega-wallet/icon-512.png"
+    ],
+    "category": "Finance",
+    "shortDescription": "Omega release wallet prototype",
+    "longDescription": "Client-side wallet GUI for the Omega prototype rails: $OMEGA on Ethereum Sepolia and TWC on Solana Devnet. Keys never leave the device. Valueless test assets only.",
+    "licenseFile": "../../LICENSES/Omega-Product-Proprietary.txt"
+  }
+}

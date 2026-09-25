@@ -7,6 +7,7 @@ test("Slice A: Resource Quota to CARE Status transition", () => {
   const engine = new TriTokenEngine();
   const participantId = "alice";
   engine.registerParticipant(participantId, "participant", "P0");
+  engine.recordConsent(participantId, "resource_contribution", true);
 
   // Initial state: contributedUnits = 50, minimumQuota = 50 -> active
   const initial = engine.participants.get(participantId);
@@ -57,6 +58,7 @@ test("Slice C: Hardship Solidarity (Unbounded, No Debt, Sponsor Bonus)", () => {
 
   engine.registerParticipant(recipient);
   engine.registerParticipant(sponsor);
+  engine.recordConsent(sponsor, "resource_contribution", true);
 
   // Sponsor contributes excess resources
   engine.updateResourceContribution(sponsor, 100);
@@ -166,4 +168,73 @@ test("Slice F: OMEGA Governance Proposal and Timelock Execution", () => {
   const executed = engine.executeGovernancePolicy(proposal.proposalId, future);
   assert.equal(executed, true);
   assert.equal(engine.governanceProposals.get(proposal.proposalId)?.status, "executed");
+});
+
+test("Consent gate: resource contribution fails closed without explicit consent", () => {
+  const engine = new TriTokenEngine();
+  engine.registerParticipant("no-consent");
+
+  assert.throws(
+    () => engine.updateResourceContribution("no-consent", 10),
+    /explicit consent/
+  );
+
+  engine.recordConsent("no-consent", "resource_contribution", true);
+  assert.equal(engine.updateResourceContribution("no-consent", 10).status, "active");
+
+  engine.recordConsent("no-consent", "resource_contribution", false);
+  assert.throws(() => engine.updateResourceContribution("no-consent", 10), /explicit consent/);
+});
+
+test("Governance fails closed without voting power when bootstrap is disabled", () => {
+  const engine = new TriTokenEngine({ bootstrapVotingPower: false });
+  engine.registerParticipant("powerless");
+
+  assert.throws(
+    () => engine.proposeGovernancePolicy("powerless", "AMITY", "t", "d", {}),
+    /Insufficient \$OMEGA voting power/
+  );
+
+  engine.creditBalance("omega", "powerless", 1000, "observed on-chain holding import");
+  const proposal = engine.proposeGovernancePolicy("powerless", "AMITY", "t", "d", {});
+  assert.equal(proposal.status, "queued");
+});
+
+test("Appeals: reversal claws back settled TWC and marks the receipt reversed", () => {
+  const engine = new TriTokenEngine();
+  const dev = "dev-appeal";
+  engine.registerParticipant(dev);
+
+  const proposal = engine.proposeWork(dev, "engineering_protocol", "Ship adapter", ["tests"], 100);
+  const receipt = engine.executeAndVerifyWork(
+    proposal.workId,
+    "0xartifact-appeal-1",
+    { cpuSeconds: 5 },
+    VerifierAdapters.engineering
+  );
+  assert.equal(receipt.status, "settled");
+  assert.equal(engine.twcBalances.get(dev), receipt.issuedTwcUnits);
+
+  const appeal = engine.openWorkAppeal(proposal.workId, "reviewer-a", "Benchmark was fabricated");
+  assert.throws(() => engine.resolveWorkAppeal(appeal.appealId, "reviewer-a", "dismissed"), /own appeal/);
+
+  const resolved = engine.resolveWorkAppeal(appeal.appealId, "reviewer-b", "reversed", "Evidence not reproducible");
+  assert.equal(resolved.status, "reversed");
+  assert.equal(resolved.clawbackTwcUnits, receipt.issuedTwcUnits);
+  assert.equal(engine.twcBalances.get(dev), 0);
+  assert.equal(engine.workReceipts.get(proposal.workId)?.status, "reversed");
+
+  assert.throws(() => engine.resolveWorkAppeal(appeal.appealId, "reviewer-b", "upheld"), /already resolved/);
+  assert.throws(() => engine.openWorkAppeal(proposal.workId, "reviewer-a", "again"), /already reversed/);
+});
+
+test("Faucet grants are disabled outside test mode", () => {
+  const production = new TriTokenEngine();
+  production.registerParticipant("alice");
+  assert.throws(() => production.faucetGrant("twc", "alice", 500), /not in test mode/);
+
+  const testEngine = new TriTokenEngine({ testMode: true });
+  testEngine.registerParticipant("alice");
+  assert.equal(testEngine.faucetGrant("twc", "alice", 500), 500);
+  assert.ok(testEngine.auditEvents.some((event) => event.action === "credit_balance"));
 });

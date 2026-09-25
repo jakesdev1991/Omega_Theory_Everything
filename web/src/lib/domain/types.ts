@@ -58,6 +58,8 @@ export interface VerificationResult {
   verifiedAt: string;
 }
 
+export type WorkReceiptStatus = "settled" | "reversed";
+
 export interface WorkReceipt {
   workId: string;
   workClass: WorkClass;
@@ -74,6 +76,40 @@ export interface WorkReceipt {
   policyVersion: string;
   issuedTwcUnits: number;
   settledAt: string;
+  status: WorkReceiptStatus;
+}
+
+export type WorkAppealDecision = "upheld" | "dismissed" | "reversed";
+
+export interface WorkAppeal {
+  appealId: string;
+  workId: string;
+  appellantCommitment: string;
+  reason: string;
+  status: "open" | WorkAppealDecision;
+  reviewerCommitment?: string;
+  decisionNote?: string;
+  clawbackTwcUnits?: number;
+  unrecoverableTwcUnits?: number;
+  openedAt: string;
+  resolvedAt?: string;
+}
+
+export type BalanceCurrency = "care" | "twc" | "omega" | "amity";
+
+export interface EngineOptions {
+  /**
+   * Test mode enables explicitly labelled test-only conveniences (faucet grants,
+   * bootstrap voting power). Production callers must construct the engine with
+   * testMode false so those paths fail closed.
+   */
+  testMode?: boolean;
+  /**
+   * When true (the historical prototype behaviour) a proposer with no $OMEGA
+   * voting power is silently bootstrapped with 1000 units. Scenario suites and
+   * any production path must set this to false so governance fails closed.
+   */
+  bootstrapVotingPower?: boolean;
 }
 
 export interface HardshipRequest {

@@ -1,17 +1,21 @@
-import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import tseslint from "typescript-eslint";
+import reactHooks from "eslint-plugin-react-hooks";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-export default /** @type {import('eslint').Linter.Config[]} */ [
+export default tseslint.config(
+  {
+    ignores: [".next/**", "node_modules/**", "public/**", "next-env.d.ts"],
+  },
   {
     files: ["**/*.{ts,tsx}"],
-    extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+    extends: [...tseslint.configs.recommended],
     languageOptions: {
       ecmaVersion: "latest",
       sourceType: "module",
-      parser: await import("@typescript-eslint/parser").then((m) => m.default),
       parserOptions: {
         project: `${__dirname}/tsconfig.json`,
         ecmaFeatures: { jsx: true },
@@ -23,14 +27,14 @@ export default /** @type {import('eslint').Linter.Config[]} */ [
       },
     },
     plugins: {
-      "@typescript-eslint": await import("@typescript-eslint/eslint-plugin").then(
-        (m) => m.default
-      ),
+      "react-hooks": reactHooks,
     },
     rules: {
+      "react-hooks/exhaustive-deps": "warn",
       "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
       "no-console": "warn",
+      "@typescript-eslint/no-explicit-any": "warn",
     },
   },
-];
+);

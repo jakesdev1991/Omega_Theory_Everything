@@ -1,0 +1,6 @@
+{
+  "version": null,
+  "channel": "prototype",
+  "artifacts": [],
+  "note": "Populated when .github/workflows/wallet-desktop.yml publishes a wallet-v* tag. The website's /wallet/download page reads this file through /api/wallet/manifest."
+}

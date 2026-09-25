@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { Section } from "@/components/Section";
 import { TokenShowcase } from "@/components/TokenShowcase";
 import { CallToAction } from "@/components/CallToAction";
@@ -39,6 +41,14 @@ export default function HomePage() {
         <div style={{ marginTop: "40px" }}>
           <CallToAction label="Start Reading" href="/novel" />
         </div>
+      </Section>
+
+      <Section
+        eyebrow="Wallet & testing"
+        title="A wallet GUI you can hold, and a console that tests the whole economy"
+        subtitle="The release wallet ships as a graphical app served right here: launch it in the browser, install it, or download the offline bundle with checksums. The Economy Test Console runs the full four-plane scenario suite — every slice, both unlock rails, and the cross-plane invariants — without touching a chain."
+      >
+        <WalletAndTesting />
       </Section>
 
       <Section
@@ -214,6 +224,94 @@ function Stat({ label, value }: { label: string; value: string | number }) {
       >
         {label}
       </div>
+    </div>
+  );
+}
+
+function WalletAndTesting() {
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+        gap: "18px",
+      }}
+    >
+      {[
+        {
+          href: "/wallet",
+          tag: "Wallet GUI",
+          color: "var(--color-omega)",
+          title: "Launch or download the wallet",
+          body: "Real BIP-39 keys, an encrypted local keystore, MetaMask and Phantom bridges, and signed release-day proofs. Installable as an app, or offline from a checksummed bundle.",
+          cta: "Open the wallet →",
+        },
+        {
+          href: "/wallet/download",
+          tag: "Downloads",
+          color: "var(--color-twc)",
+          title: "Every artifact, verifiable",
+          body: "Per-file SHA-256 for the served GUI, a deterministic offline ZIP with launchers for macOS, Linux, and Windows, and native desktop builds from the release workflow.",
+          cta: "See downloads →",
+        },
+        {
+          href: "/testnet",
+          tag: "Test console",
+          color: "var(--color-unlock)",
+          title: "Test the economy end to end",
+          body: "Readiness across all rails, the slice A–G scenario suite, a valueless faucet, an audited action runner, audit exports, and the Nostr surface the social client plugs into.",
+          cta: "Open the console →",
+        },
+      ].map((card) => (
+        <Link
+          key={card.href}
+          href={card.href}
+          className="hover-raise"
+          style={{
+            display: "block",
+            padding: "26px 24px",
+            border: "1px solid var(--color-border-strong)",
+            borderRadius: "14px",
+            background: "rgba(255,255,255,0.015)",
+            textDecoration: "none",
+          }}
+        >
+          <div
+            style={{
+              fontFamily: "ui-monospace, monospace",
+              fontSize: "11px",
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              color: card.color,
+              marginBottom: "10px",
+            }}
+          >
+            {card.tag}
+          </div>
+          <h3
+            style={{
+              fontFamily: "ui-serif, Georgia, serif",
+              fontSize: "22px",
+              fontWeight: 500,
+              margin: "0 0 10px",
+              color: "var(--color-foreground)",
+            }}
+          >
+            {card.title}
+          </h3>
+          <p
+            style={{
+              color: "var(--color-muted-strong)",
+              fontSize: "14px",
+              lineHeight: 1.65,
+              margin: "0 0 16px",
+            }}
+          >
+            {card.body}
+          </p>
+          <span style={{ color: card.color, fontSize: "13px", fontWeight: 600 }}>{card.cta}</span>
+        </Link>
+      ))}
     </div>
   );
 }

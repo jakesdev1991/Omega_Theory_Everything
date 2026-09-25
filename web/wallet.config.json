@@ -1,0 +1,23 @@
+{
+  "name": "Omega Wallet",
+  "version": "0.1.0",
+  "channel": "prototype",
+  "sourceDir": "../app",
+  "publicDir": "public/omega-wallet",
+  "mountPath": "/omega-wallet",
+  "entry": "index.html",
+  "include": [
+    "index.html",
+    "app.js",
+    "wallet.js",
+    "styles.css",
+    "vendor/ethers.umd.min.js"
+  ],
+  "licenseFile": "../LICENSES/Omega-Product-Proprietary.txt",
+  "notice": "Omega Wallet prototype. Keys never leave the device. Prototype rails only: $OMEGA on Ethereum Sepolia and TWC on Solana Devnet. No value-bearing issuance.",
+  "desktop": {
+    "releaseManifest": "../desktop/releases.json",
+    "scaffoldDir": "../desktop",
+    "workflow": ".github/workflows/wallet-desktop.yml"
+  }
+}
