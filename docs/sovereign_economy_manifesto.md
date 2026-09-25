@@ -155,6 +155,20 @@ A participant should never have to trust an invisible calculation. Each conversi
 
 No unrelated balance should be confiscated. No personal enforcement percentage should flow automatically to a founder, reviewer, agent, steward, or holder. Unissued holdbacks should remain unissued rather than being quietly treated as burned participant property.
 
+## The human problem we are trying to solve
+
+This economy is not being designed for abstract wallets. It is being designed for people whose internal models were formed under conditions they did not choose.
+
+A child who grows up amid bombardment may correctly learn that danger can arrive without warning. A child who grows up in a quiet home may still form a painful misunderstanding from an ordinary moment. Imagine two brothers playing football with their father. The ten-year-old needs more help, so the father naturally gives him more attention. The fourteen-year-old is proud and says nothing. He quietly concludes that his father loves his brother more. The father never hears the thought. The older child becomes more rebellious; the father sees unexplained defiance and responds with less empathy. The child reads that response as confirmation. No one intended the wound. The misunderstanding becomes a feedback loop.
+
+This is what we mean by a **virus of thought**: an uncorrected interpretation that reproduces itself through behavior, changes how other people respond, and eventually feels like reality. In a warzone, the original prediction — “danger is near” — may be accurate. When the environment becomes safe, the body may continue to fire the chemistry of the old environment. The misunderstanding is not that danger once existed. It is that the extreme condition is still present.
+
+We use “chemical imbalance” here in a careful, non-exclusive sense: a real, acquired calibration of stress and regulation systems can persist after the information that created it is no longer current. This is not a claim that every mental-health condition is learned, that genetics and physiology do not matter, or that medication is illegitimate. It is a claim that experience, interpretation, relationships, and repeated safety can change biology — and that people should not be treated as born broken when their systems adapted to survive.
+
+C.A.R.E. therefore aims at more than distributing resources. It aims to help people rebuild foundations, surface misunderstandings safely, restore two-way empathy, and give the nervous system new evidence about the present. It does not diagnose people, replace clinicians, infer private pain without consent, or turn mental health into a token score. It supports human-led care, practical stability, and the conditions in which a person can update an outdated survival model.
+
+This is why the economy must be humane. If an agent can route money but cannot ask permission, explain itself, protect anonymity, or recognize the person behind the receipt, it is only a faster version of the old system.
+
 ## Why join
 
 People may participate because they want to help build a more open economic system, not because they are promised a guaranteed return. Potential benefits of participation may include:
@@ -172,6 +186,17 @@ People may participate because they want to help build a more open economic syst
 - receiving release-day recognition or benefits if a future, legally reviewed program explicitly authorizes them.
 
 None of these benefits is guaranteed. Testnet participation does not guarantee a token allocation, a future price, a grant, a retailer acceptance, or eligibility for any program. Participation must never require a person to surrender anonymity or sensitive data unnecessarily.
+
+## An economy people can enter, not merely observe
+
+The intention is that the people who build and support this ecosystem are not asked to purchase their way into belonging. Subject to the final distribution design, legal review, anti-sybil safeguards, and the capacity of each network, the project intends to distribute the non-CARE ecosystem tokens to eligible participants rather than make participation depend solely on capital:
+
+- **$OMEGA** is given as a participation and governance invitation around research, development, and responsible stewardship.
+- **TWC** is given as an invitation to support useful work and the infrastructure of the wider crypto world.
+- **$AMITY** is given as an invitation into the economy-facing network and its approved exchange activity.
+- **C.A.R.E. is different.** It is not a speculative token to be handed out as a prize. It is a proof-of-care and protected social record, earned or recognized through published, humane criteria, with hardship and support treated as human realities rather than market opportunities.
+
+Receiving a token does not make a person more valuable than someone without one. It does not guarantee a price, income, grant, retailer acceptance, or governance power. The purpose of distribution is to make ownership and participation broad enough that the sovereign economy is genuinely ours, rather than another system owned by the earliest or wealthiest buyers.
 
 ## The book and release-day participation
 
