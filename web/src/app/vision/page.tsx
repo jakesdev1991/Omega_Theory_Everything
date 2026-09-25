@@ -71,13 +71,11 @@ function Hero() {
             maxWidth: "980px",
           }}
         >
-          Care is the base layer.
+          Call About
           <br />
           <span style={{ color: "var(--color-accent)" }}>
-            The whole economy is
+            Resuscitating Everyone.
           </span>
-          <br />
-          built on it.
         </h1>
 
         <p
@@ -89,15 +87,14 @@ function Hero() {
             margin: "0 0 40px",
           }}
         >
-          This economy is named the{" "}
+          The entire economy is named the{" "}
           <strong style={{ color: "var(--color-foreground)", fontWeight: 600 }}>
             C.A.R.E. Economy
           </strong>{" "}
-          because of what it is built from. Compassion, Accountability,
-          Reciprocity, Exchange — in that order, as hard architecture, not
-          slogans. An economy where you can arrive imperfect, participate
-          pseudonymously, earn while you learn, and never watch care get
-          priced by an order book.
+          because that is the call it answers. Not a slogan. An invitation to
+          bring people back — from isolation, crisis, grief, and the systems
+          that meet them at their worst and charge them for it — and it is
+          for everyone.
         </p>
 
         <div
@@ -127,10 +124,10 @@ function Hero() {
           }}
         >
           {[
-            { value: "C", label: "Compassion — the base layer" },
-            { value: "A", label: "Accountability — humans govern" },
-            { value: "R", label: "Reciprocity — earn while you learn" },
-            { value: "E", label: "Exchange — last, on purpose" },
+            { value: "C", label: "Call — the invitation" },
+            { value: "A", label: "About — the purpose" },
+            { value: "R", label: "Resuscitating — the work" },
+            { value: "E", label: "Everyone — the scope" },
           ].map((item) => (
             <div
               key={item.value}
@@ -172,9 +169,9 @@ function Hero() {
 function NameSection() {
   return (
     <Section
-      eyebrow="The name is the architecture"
-      title="Four layers. One order. The order is the design."
-      subtitle="C.A.R.E. is not a slogan — it is a dependency graph. Each layer must exist, and they must stay in this order, for an economy to be a C.A.R.E. Economy. Reorder them and it becomes something else entirely."
+      eyebrow="The name is the mission"
+      title="Four words. One call. The call is the design."
+      subtitle="C.A.R.E. stands for Call About Resuscitating Everyone. Each word is load-bearing. Drop any of them and it becomes something else entirely. This is not a clinical system or an emergency service — when someone needs emergency medical care, call 911. What we build is the call that reaches people before that, and the economy that still has a place for them after."
     >
       <div
         style={{
@@ -186,27 +183,27 @@ function NameSection() {
         {[
           {
             letter: "C",
-            name: "Compassion",
+            name: "Call",
             color: "var(--color-care)",
-            body: "The base layer. No-judgment entry, Proof of Care, safeguarding, reflection and peer-support spaces. People are met before they are measured.",
+            body: "An invitation, not a command. We reach out before people have to prove they deserve help. The first product is a social surface — rooms, circles, requests, a fast exit — because a call is how resuscitation starts.",
           },
           {
             letter: "A",
-            name: "Accountability",
+            name: "About",
             color: "var(--color-amity)",
-            body: "CARE Verifiers, human Archangels, randomized audits, published error rates, reasoning on the record, and an appeal for every decision that matters.",
+            body: "The purpose is specific. This economy is not about speculation, engagement, or ranking human worth. It is about the work of bringing people back.",
           },
           {
             letter: "R",
-            name: "Reciprocity",
+            name: "Resuscitating",
             color: "var(--color-use)",
-            body: "Proof of Useful Work. Contribution, repair, care, and stewardship are all paths to standing — you earn while you learn, from wherever you start.",
+            body: "The verb. Restore. Revive. Make a path back from every mistake. Proof of Care, peer support, earn-while-you-learn, human Archangels over machines. Not triage. Not a leaderboard.",
           },
           {
             letter: "E",
-            name: "Exchange",
+            name: "Everyone",
             color: "var(--color-omega)",
-            body: "AMITY: the compliance-gated, reserve-backed boundary between care value and markets. Deliberately last. Care itself never crosses.",
+            body: "The scope. No one left outside the call. No permanent moral exile. No judgment at the door. The person at 3 a.m. is a first-class participant.",
           },
         ].map((layer, i) => (
           <div
@@ -546,7 +543,7 @@ function ArcSection() {
           {
             step: "03",
             title: "The C.A.R.E. Economy",
-            body: "The blueprint gets its name and its soul: care as the base layer, five planes, three rails, Proof of Care and Proof of Useful Work, human Archangels over machine agents, and the manifesto that states the intent in plain language.",
+            body: "The blueprint gets its name and its soul: Call About Resuscitating Everyone. Care as the base layer, five planes, three rails, Proof of Care and Proof of Useful Work, human Archangels over machine agents, and the manifesto that states the intent in plain language.",
             color: "var(--color-care)",
           },
           {

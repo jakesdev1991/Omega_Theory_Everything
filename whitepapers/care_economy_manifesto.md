@@ -24,17 +24,21 @@ And the machines are coming into this. Agents and models are being dropped into 
 
 It starts from care. Not care as charity, not care as a feature, not care as the thing you get around to after the important work — care as the **base layer**. The foundation the accounting, the work, the exchange, and the governance are all built on. Everything above it inherits its constraints, the way a building's floors inherit the strength of its foundation.
 
-Its name is its architecture:
+Its name is the mission. The expansion is canonical:
 
-**C — Compassion.** You can arrive imperfect. Recovering, grieving, learning, rebuilding — you can participate, contribute, and earn without being reduced to your worst day. No judgment at the door. Ever.
+**C.A.R.E. — Call About Resuscitating Everyone.**
 
-**A — Accountability.** Nothing is real just because a machine said so. Human verifiers check care claims. Senior human stewards — we call them Archangels — carry high-impact decisions and can be audited for how they carry them. Randomized audits, published error rates, reasoning on the record, and an appeal for every decision that matters.
+**C — Call.** An invitation, not a command. We reach out before people have to prove they deserve help. The first product is a social surface — rooms, circles, requests, a fast exit — because a call is how resuscitation starts.
 
-**R — Reciprocity.** You earn while you learn. Useful work, repair, care, and stewardship are all paths to standing — recorded, honored, and paid — so growth doesn't have to wait for stability, and stability doesn't have to cost growth.
+**A — About.** The purpose is specific. This economy is not about speculation, engagement, or ranking human worth. It is about the work of bringing people back: from isolation, crisis, grief, exploitation, and the judgment systems that meet them at their worst and charge them for it.
 
-**E — Exchange.** Last, on purpose. Only after evidence, verification, and human accountability does anything cross the narrow, audited boundary toward markets — and care itself never does. Care is protected from speculation the way drinking water is protected from dumping.
+**R — Resuscitating.** The verb. Restore. Revive. Make a path back from every mistake. Proof of Care, peer support, earn-while-you-learn, human Archangels over machines. Not triage. Not a leaderboard. The work of holding someone until they can stand.
 
-Four layers. One order. The order *is* the design.
+**E — Everyone.** The scope. No one left outside the call. No permanent moral exile. No judgment at the door. Anonymity is a right. The person reading this at 3 a.m. is a first-class participant.
+
+Four words. One call. The call *is* the design.
+
+This is not a clinical system, an emergency service, or a hospital protocol. "Resuscitating" is the mission of the economy — restoring people, communities, and dignity — not a claim to provide medical treatment. When someone needs emergency care, the right move is still 911, or the local equivalent. What we build is the call that reaches them before that, and the economy that still has a place for them after.
 
 ## III. The promises
 
@@ -100,7 +104,7 @@ This manifesto will be read by three kinds of people.
 
 **To the person this was built for** — the one reading this at 3 a.m., rebuilding after a worst year, wondering if there's a place where they can start over without announcing their whole history first:
 
-There is. We are building it in the open, carefully, in that order: **Compassion. Accountability. Reciprocity. Exchange.**
+There is. We are building it in the open, carefully, under one name: **Call About Resuscitating Everyone.**
 
 You don't have to be finished to begin. You never had to be.
 

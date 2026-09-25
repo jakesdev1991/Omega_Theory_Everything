@@ -62,10 +62,10 @@ export default function ManifestoPage() {
               maxWidth: "880px",
             }}
           >
-            Care is the base layer.
+            Call About
             <br />
             <span style={{ color: "var(--color-accent)" }}>
-              Everything else is built on it.
+              Resuscitating Everyone.
             </span>
           </h1>
           <p

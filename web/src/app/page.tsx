@@ -140,11 +140,11 @@ function Hero() {
           The entire economy is named the{" "}
           <strong style={{ color: "var(--color-foreground)", fontWeight: 600 }}>
             C.A.R.E. Economy
-          </strong>{" "}
-          — care is its base layer, so care names the whole. It lets people
-          earn while they learn, enter without judgment, and choose privacy
-          first. The public gateway currently wires two live rails — $OMEGA and
-          TWC — to{" "}
+          </strong>
+          : Call About Resuscitating Everyone. Care is its base layer, so
+          care names the whole. It lets people earn while they learn, enter
+          without judgment, and choose privacy first. The public gateway
+          currently wires two live rails — $OMEGA and TWC — to{" "}
           <em style={{ color: "var(--color-accent-soft)" }}>
             Genesis Block: The Satoshi Protocol
           </em>{" "}
@@ -228,8 +228,8 @@ function VisionSection() {
   return (
     <Section
       eyebrow="The Vision"
-      title="Compassion, Accountability, Reciprocity, Exchange — in that order."
-      subtitle="The name C.A.R.E. is the architecture. Compassion is the base layer: no-judgment entry and protected Proof of Care. Accountability puts trained humans and auditable reasoning over every high-impact call. Reciprocity lets you earn while you learn. Exchange comes last, on purpose — and care itself never crosses it."
+      title="Call About Resuscitating Everyone."
+      subtitle="The name C.A.R.E. is the mission. A call — an invitation, not a command. About resuscitation: restoring people, not ranking them. Everyone: no one left outside. Care is the base layer of the economy that answers that call."
     >
       <div
         style={{
@@ -241,26 +241,26 @@ function VisionSection() {
         {[
           {
             letter: "C",
-            name: "Compassion",
-            body: "Arrive imperfect. No judgment at the door, care that is seen without being priced, safeguarding without surveillance.",
+            name: "Call",
+            body: "An invitation, not a command. We reach out before people have to prove they deserve help.",
             color: "var(--color-care)",
           },
           {
             letter: "A",
-            name: "Accountability",
-            body: "CARE Verifiers, human Archangels, randomized audits, appeals. Machines assist; accountable humans decide.",
+            name: "About",
+            body: "The purpose is specific: bring people back. Not speculation, not engagement, not a ranking of human worth.",
             color: "var(--color-amity)",
           },
           {
             letter: "R",
-            name: "Reciprocity",
-            body: "Proof of Useful Work: contribution, repair, and stewardship all count. Growth doesn't wait for stability.",
+            name: "Resuscitating",
+            body: "The verb. Restore. Revive. Make a path back from every mistake. Proof of Care, peer support, earn while you learn.",
             color: "var(--color-use)",
           },
           {
             letter: "E",
-            name: "Exchange",
-            body: "AMITY: the compliance-gated boundary to markets. Reserve-backed, audited, reversible — and last, on purpose.",
+            name: "Everyone",
+            body: "The scope. No one left outside the call. No permanent exile. The person at 3 a.m. is a first-class participant.",
             color: "var(--color-omega)",
           },
         ].map((layer) => (

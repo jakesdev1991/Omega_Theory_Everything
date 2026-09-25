@@ -13,7 +13,7 @@ export default function EconomyPage() {
       <Section
         eyebrow="The C.A.R.E. Economy"
         title="The C.A.R.E. Economy has three currencies"
-        subtitle="The public economy is three-currency: $OMEGA on the EVM rail, TWC on Solana, and AMITY on Bitcoin / Lightning / Taproot. Only two rails are wired into the live wallet-to-web unlock flow today, but the economic structure is already three-currency — and the whole economy is named for its base layer: care."
+        subtitle="The public economy is three-currency: $OMEGA on the EVM rail, TWC on Solana, and AMITY on Bitcoin / Lightning / Taproot. Only two rails are wired into the live wallet-to-web unlock flow today, but the economic structure is already three-currency — and the whole economy is named the C.A.R.E. Economy: Call About Resuscitating Everyone."
       >
         <TokenShowcase variant="economy" />
       </Section>
@@ -116,11 +116,11 @@ function Hero() {
             margin: "0 0 0",
           }}
         >
-          The entire economy is the C.A.R.E. Economy — Compassion,
-          Accountability, Reciprocity, Exchange, in that order. It settles
-          across three currencies: $OMEGA on the EVM rail, TWC on Solana, and
-          AMITY on Bitcoin / Lightning / Taproot. Today, only the $OMEGA and
-          TWC rails are wired from wallet signature to web unlock verification.
+          The entire economy is the C.A.R.E. Economy — Call About
+          Resuscitating Everyone. It settles across three currencies: $OMEGA
+          on the EVM rail, TWC on Solana, and AMITY on Bitcoin / Lightning /
+          Taproot. Today, only the $OMEGA and TWC rails are wired from wallet
+          signature to web unlock verification.
         </p>
       </div>
     </section>
@@ -244,7 +244,7 @@ function WhitepaperCards() {
         {
           title: "The C.A.R.E. Economy — Extensive Whitepaper",
           type: "Whitepaper",
-          desc: "The complete specification of the entire economy: the four layers, five planes, three rails, proofs, privacy, audits, governance, threat model, and the honest status table.",
+          desc: "The complete specification of the entire economy: Call About Resuscitating Everyone, five planes, three rails, proofs, privacy, audits, governance, threat model, and the honest status table.",
           href: "/whitepapers/care_economy_whitepaper",
           color: "var(--color-accent)",
         },

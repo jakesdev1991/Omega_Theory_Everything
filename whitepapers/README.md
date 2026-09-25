@@ -9,7 +9,7 @@ These are research drafts and system specifications. They do not constitute an o
 ## Start here
 
 - [`care_economy_manifesto.md`](care_economy_manifesto.md) — **The Manifesto**: the vision of the C.A.R.E. Economy in first person — the problem, the promises, what we refuse, and the invitation.
-- [`care_economy_whitepaper.md`](care_economy_whitepaper.md) — **The Extensive Whitepaper**: the complete specification of the C.A.R.E. Economy — the name and the four layers (Compassion, Accountability, Reciprocity, Exchange), the five planes, the three rails, Proof of Care, Proof of Useful Work, verifiers and Archangels, privacy architecture, audit and arbitration, the CARE ⇄ AMITY boundary, governance, threat model, honest implementation status, roadmap, glossary, and open questions.
+- [`care_economy_whitepaper.md`](care_economy_whitepaper.md) — **The Extensive Whitepaper**: the complete specification of the C.A.R.E. Economy — the name and its expansion (**Call About Resuscitating Everyone**), the five planes, the three rails, Proof of Care, Proof of Useful Work, verifiers and Archangels, privacy architecture, audit and arbitration, the CARE ⇄ AMITY boundary, governance, threat model, honest implementation status, roadmap, glossary, and open questions.
 
 ## Whitepapers
 

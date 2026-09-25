@@ -17,7 +17,7 @@ The economy runs on **five planes** (SOV accounting, USE contribution, CARE stew
 
 Every mechanism in this document is stated as a design proposal with its failure modes attached. Where a mechanism exists in code today, we say so. Where it is simulated, we say so. Where it does not exist yet, we say so loudest of all.
 
-**The working expansion of the name** (§2): **Compassion, Accountability, Reciprocity, Exchange** — the four layers that must all exist, and must stay in that order, for the economy to remain itself.
+**The expansion of the name** (§2): **Call About Resuscitating Everyone** — the canonical mission of the entire economy, already published in `docs/care-architecture-v2.md`. Each word is load-bearing. This is not a clinical system, an emergency service, or a hospital protocol.
 
 ---
 
@@ -45,22 +45,33 @@ Nothing about the underlying separation of powers changes. What changes is which
 
 ### 2. What C.A.R.E. stands for
 
-The name is a working acronym for the four layers every deployment must implement, in order:
+The expansion is canonical, already published in [`docs/care-architecture-v2.md`](../docs/care-architecture-v2.md):
+
+> **Call About Resuscitating Everyone.**
 
 ```text
-C  — Compassion      the base layer: no-judgment participation, Proof of Care,
-                     safeguarding, storytelling and peer-support spaces
-A  — Accountability  CARE Verifiers, human Archangels, randomized audits,
-                     appeals, reasoning records, error rates published
-R  — Reciprocity     Proof of Useful Work: people earn while they learn,
-                     contribution is honored without being commodified
-E  — Exchange        AMITY: a compliance-gated, reserve-backed boundary
-                     between care value and markets — deliberately last
+C  — Call            the invitation: reach out first; social application
+                     before markets; a call is an offer, not a command
+A  — About           the purpose is specific: this economy exists to
+                     restore people, not to rank, extract, or speculate
+R  — Resuscitating   the verb: restore, revive, make a path back;
+                     Proof of Care, peer support, earn while you learn
+E  — Everyone        the scope: no one left outside; no permanent exile;
+                     anonymity as a right; first-class at zero visibility
 ```
 
-The order is the design. **Compassion before accountability** means people are met before they are measured. **Accountability before reciprocity** means nothing is earned on an unverified claim. **Reciprocity before exchange** means work and care create standing before anything becomes a tradable asset. An implementation that reorders these layers — that lets exchange lead, or skips accountability, or replaces compassion with triage — is not a C.A.R.E. Economy regardless of what it calls itself.
+Each word is load-bearing.
 
-The acronym is a mnemonic for a dependency graph, not a slogan. Each letter is load-bearing.
+- A deployment that waits for people to prove they deserve help is not a **Call**.
+- A deployment whose purpose is speculation or ranking is not **About** resuscitation.
+- A deployment that triages the "deserving" instead of restoring is not **Resuscitating**.
+- A deployment that leaves anyone outside the invitation is not for **Everyone**.
+
+An implementation that drops any of those words — that lets exchange lead, that skips the invitation, that replaces revival with triage, that walls anyone out — is not a C.A.R.E. Economy regardless of what it calls itself.
+
+**"Resuscitating" is the mission metaphor of the economy, not a clinical claim.** C.A.R.E. is not an emergency service, a hospital protocol, a benefits-determination system, or a measure of a person's moral worth. When someone needs emergency medical care, the correct action remains calling emergency services. What this economy builds is the call that can reach a person before that moment, the support that can hold them after it, and the economic standing that does not vanish because they needed either.
+
+Compassion, human accountability, reciprocity of useful work, and a narrow exchange boundary remain **design principles** of the planes (§5, §12–§18). They are not the expansion of the name.
 
 ### 3. The diagnosis: the judgment economy
 
@@ -340,7 +351,7 @@ Rules of the boundary:
 - The treasury may absorb bounded volatility **only if** reserves are real, segregated, independently attested, and sufficient. A stated loss split (e.g. "80/20") is not protection unless the reserve actually covers the obligation.
 - Whitelisted vendors require due diligence, a published policy, expiration, monitoring, and an appeal path. A fee exemption must never become a covert surveillance or exclusion list.
 
-Exchange is the last letter of C.A.R.E. on purpose: everything upstream exists so that this boundary stays narrow, audited, and reversible.
+The AMITY boundary is last in the design on purpose: everything upstream exists so that this boundary stays narrow, audited, and reversible. Exchange is a tool of the C.A.R.E. Economy, never its name.
 
 ---
 
@@ -540,7 +551,7 @@ The C.A.R.E. Economy is an open research program. The science is Apache-2.0; the
 
 | Term | Meaning |
 |---|---|
-| **C.A.R.E. Economy** | The name of this entire economy; Compassion, Accountability, Reciprocity, Exchange, in that order. |
+| **C.A.R.E. Economy** | The name of this entire economy. Expansion: **Call About Resuscitating Everyone.** |
 | **CARE plane** | The protected, non-market proof-and-verification layer (the economy's namesake). |
 | **Proof of Care** | Evidence that an agreed care or support action occurred; never a worth score. |
 | **CARE Verifier** | A trained, conflict-disclosing legitimacy checker for care claims. |

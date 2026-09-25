@@ -75,7 +75,7 @@ export const DOC_REGISTRY: DocMeta[] = [
     shortTitle: "Extensive Whitepaper",
     accent: "var(--color-accent)",
     summary:
-      "The complete specification of the entire economy: the name and the four layers, five planes, three rails, Proof of Care, Proof of Useful Work, Archangels, privacy, audits, the AMITY boundary, governance, threat model, roadmap, and glossary.",
+      "The complete specification of the entire economy: Call About Resuscitating Everyone, five planes, three rails, Proof of Care, Proof of Useful Work, Archangels, privacy, audits, the AMITY boundary, governance, threat model, roadmap, and glossary.",
     order: 1,
   },
   {
