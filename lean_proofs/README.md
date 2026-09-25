@@ -23,6 +23,13 @@ This directory contains the complete formal verification of the Omega Theory fra
   positive information in a positive volume therefore contracts it. The
   profile `ℓ_P(ρ) = ℓ_P0 / √(1 + ρ/ρ₀)` is a stated model assumption, not a
   derivation.
+- `DynamicRCODScale.lean` - Dynamic Planck scale driven by Reverse
+  Chain-Overlap Density: correlation `Φ` ⟹ RCOD `μ = √(1 − Φ²)` ⟹ scale
+  `ℓ_P(μ)`. Proves `μ ∈ [0, 1]`, positivity of the scale, that any positive
+  dissonance contracts it below `ℓ_P0` (strictly monotonically), and hence
+  that any imperfect correlation (`Φ² < 1`) contracts it while perfect
+  correlation leaves the baseline. The profile `ℓ_P0 / √(1 + k·μ)` is a
+  stated model assumption, not a derivation.
 
 ### Physics Volumes (1-54)
 Each volume formalizes a major domain of physics:

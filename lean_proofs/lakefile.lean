@@ -71,5 +71,6 @@ lean_lib ToE where
     `Vol53_UniversalCompiler,
     `Vol54_TheoryOfNothing,
     `InformationPhysics,
-    `DynamicPlanckScale
+    `DynamicPlanckScale,
+    `DynamicRCODScale
   ]
