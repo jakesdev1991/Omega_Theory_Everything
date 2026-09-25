@@ -38,8 +38,8 @@ def transitionCost : Substrate → Substrate → ℕ
   | .carbon, .carbon => 0
   | .silicon, .silicon => 0
   | .hybrid, .hybrid => 0
-  | .carbon, .silicon => 3
-  | .silicon, .carbon => 3
+  | .carbon, .silicon => 2
+  | .silicon, .carbon => 2
   | .carbon, .hybrid => 1
   | .hybrid, .carbon => 1
   | .silicon, .hybrid => 1

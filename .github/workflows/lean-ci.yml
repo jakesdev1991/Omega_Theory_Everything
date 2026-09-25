@@ -54,9 +54,9 @@ jobs:
           lake build ToE > /tmp/lake-build.log 2>&1
           rc=$?
           # Emit every compiler diagnostic (not just the tail) as
-          # annotations; GitHub caps per-job annotations, so chunk them.
-          grep -nE "error|warning|failures" /tmp/lake-build.log \
-            | awk 'BEGIN{ORS=""} {buf = buf $0 "\\n"; n++; if (n % 12 == 0) {print "::error::LOG>> " substr(buf, 1, 8000) "\n"; buf=""}} END{if (buf != "") print "::error::LOG>> " substr(buf, 1, 8000)}'
+          # annotations; include continuation lines of multi-line errors.
+          awk '/error|warning|failures/{p=8} p>0{print; p--}' /tmp/lake-build.log \
+            | awk 'BEGIN{ORS=""} {buf = buf $0 "\\n"; n++; if (n % 25 == 0) {print "::error::LOG>> " substr(buf, 1, 8000) "\n"; buf=""}} END{if (buf != "") print "::error::LOG>> " substr(buf, 1, 8000)}'
           if [ "$rc" -eq 0 ]; then
             echo "::notice::lake build re-run exited 0 (original failure was transient)"
           else

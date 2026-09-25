@@ -33,8 +33,8 @@ theorem simulation_hypothesis_axiom : Nonempty SimulationSubstrate :=
 
 /-- Simulation depth of a layer. -/
 def level : Layer → ℕ
-  | base => 0
-  | sim l => level l + 1
+  | .base => 0
+  | .sim l => level l + 1
 
 /-- Each simulation stratum sits exactly one level above its substrate. -/
 theorem simulation_strata_ascend (l : Layer) :

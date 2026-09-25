@@ -35,17 +35,17 @@ theorem multiverse_theory_axiom : Nonempty MultiverseEnsemble :=
 
 /-- Generation depth of a branch. -/
 def depth : Branch → ℕ
-  | root => 0
-  | left b => depth b + 1
-  | right b => depth b + 1
+  | .root => 0
+  | .left b => depth b + 1
+  | .right b => depth b + 1
 
 /-- Branch weight: doubles along every edge, i.e. `weight b = 2^depth b`
     (the number of equiprobable histories reaching the generation of `b`).
     Defined recursively so that the doubling law is definitional. -/
 def weight : Branch → ℕ
-  | root => 1
-  | left b => 2 * weight b
-  | right b => 2 * weight b
+  | .root => 1
+  | .left b => 2 * weight b
+  | .right b => 2 * weight b
 
 /-- Sibling branches are distinct worlds. -/
 theorem sibling_branches_distinct (b : Branch) :
