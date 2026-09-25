@@ -39,9 +39,13 @@ def depth : Branch → ℕ
   | left b => depth b + 1
   | right b => depth b + 1
 
-/-- Branch weight: `2^depth`, the number of equiprobable histories reaching
-    the generation of `b`. -/
-def weight (b : Branch) : ℕ := 2 ^ depth b
+/-- Branch weight: doubles along every edge, i.e. `weight b = 2^depth b`
+    (the number of equiprobable histories reaching the generation of `b`).
+    Defined recursively so that the doubling law is definitional. -/
+def weight : Branch → ℕ
+  | root => 1
+  | left b => 2 * weight b
+  | right b => 2 * weight b
 
 /-- Sibling branches are distinct worlds. -/
 theorem sibling_branches_distinct (b : Branch) :
@@ -52,24 +56,21 @@ theorem sibling_branches_distinct (b : Branch) :
 /-- Branching strictly increases generation depth. -/
 theorem branching_increases_depth (b : Branch) :
     depth (Branch.left b) > depth b ∧ depth (Branch.right b) > depth b := by
-  constructor <;> exact Nat.lt_succ_self _
+  constructor <;> dsimp [depth] <;> omega
 
-/-- Branch weight doubles at every generation. -/
+/-- Branch weight doubles at every generation (definitional in the
+    recursive model). -/
 theorem weight_doubles_each_generation (b : Branch) :
     weight (Branch.left b) = 2 * weight b ∧
-    weight (Branch.right b) = 2 * weight b := by
-  constructor
-  · rw [weight, weight, depth]
-    rw [pow_succ]
-    ring
-  · rw [weight, weight, depth]
-    rw [pow_succ]
-    ring
+    weight (Branch.right b) = 2 * weight b :=
+  ⟨rfl, rfl⟩
 
 /-- The multiverse has no maximal generation: every branch is succeeded. -/
 theorem no_final_generation (b : Branch) :
-    ∃ c : Branch, depth c > depth b :=
-  ⟨Branch.left b, Nat.lt_succ_self _⟩
+    ∃ c : Branch, depth c > depth b := by
+  refine ⟨Branch.left b, ?_⟩
+  dsimp [depth]
+  omega
 
 /-- Structural bridge: Q-region entropy is nonnegative in the model used for
     branch entropies. -/

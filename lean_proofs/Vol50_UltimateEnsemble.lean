@@ -42,17 +42,14 @@ theorem ultimate_ensemble_axiom : Nonempty MathematicalStructure :=
 /-- Cantor's diagonal argument: for any proposed enumeration of predicates
     `ℕ → Bool`, the diagonal-complement predicate is missed. Hence the
     ensemble of definable structures is provably inexhaustible by any single
-    enumeration. -/
+    enumeration. (Same argument as `Vol35.cantor_diagonal_nontrivial`,
+    restated in the ensemble vocabulary.) -/
 theorem ensemble_not_enumerable :
-    ∀ (e : ℕ → ℕ → Bool), ∃ (S : ℕ → Bool), ∀ n, e n ≠ S := by
-  intro e
-  let S : ℕ → Bool := fun n => !e n n
-  refine ⟨S, fun n heq => ?_⟩
-  have hn : e n n = S n := congrFun heq n
-  change e n n = !e n n at hn
-  cases h : e n n
-  · exact Bool.noConfusion hn
-  · exact Bool.noConfusion hn
+    ∀ e : ℕ → (ℕ → Bool), ¬ Function.Surjective e := by
+  intro e hs
+  obtain ⟨k, hk⟩ := hs (fun n => !(e n n))
+  have hkk : e k k = !(e k k) := congrFun hk k
+  exact (Bool.eq_not_self (e k k)).mp hkk
 
 /-- Structural bridge: the ensemble layer is compatible with the Ω-metric
     layer of the protocol. -/
