@@ -1,0 +1,16 @@
+{
+  "name": "omega-wallet-desktop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Tauri v2 wrapper packaging the synced Omega wallet GUI as native installers.",
+  "scripts": {
+    "sync:wallet": "npm --prefix ../web run sync:wallet",
+    "tauri": "tauri",
+    "build:linux": "npm run sync:wallet && tauri build --target-dir target --bundles appimage,deb",
+    "build:macos": "npm run sync:wallet && tauri build --target-dir target --bundles dmg",
+    "build:windows": "npm run sync:wallet && tauri build --target-dir target --bundles msi"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.1.0"
+  }
+}

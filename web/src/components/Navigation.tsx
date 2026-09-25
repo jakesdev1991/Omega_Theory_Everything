@@ -1,11 +1,13 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/economy", label: "Economy" },
+  { href: "/wallet", label: "Wallet" },
+  { href: "/testnet", label: "Testnet" },
   { href: "/care", label: "C.A.R.E." },
   { href: "/novel", label: "The Novel" },
   { href: "/invest", label: "Invest" },
@@ -21,9 +23,10 @@ export function Navigation() {
     setScrolled(window.scrollY > 12);
   }, []);
 
-  if (typeof window !== "undefined") {
+  useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
-  }
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
 
   return (
     <header

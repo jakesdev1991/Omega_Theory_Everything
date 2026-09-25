@@ -1,30 +1,43 @@
 import type {
   AuditEvent,
+  BalanceCurrency,
   CareConversionRequest,
   CarePrivacyLevel,
   CareRole,
   CareStatus,
+  ConsentRecord,
+  EngineOptions,
   GovernancePolicyProposal,
   HardshipRequest,
   ParticipantCredential,
   Plane,
   ResourceBudget,
+  WorkAppeal,
+  WorkAppealDecision,
   WorkClass,
   WorkProposal,
   WorkReceipt,
 } from "./types";
 
 export const POLICY_VERSION = "tri-token-v1-prototype";
+export const MIN_GOVERNANCE_PROPOSAL_POWER = 100;
+export const BOOTSTRAP_VOTING_POWER = 1000;
+export const SPONSOR_BONUS_BPS = 1000; // 10% of the uncovered quota, as useful-work credit
+export const CONVERSION_DOCK_BPS = 500; // 5% participant dock on CARE -> AMITY
+export const CONVERSION_EXTREME_HOLDBACK_BPS = 1500; // extra 15% unissued holdback
 
 export class TriTokenEngine {
   public participants: Map<string, ParticipantCredential> = new Map();
   public budgets: Map<string, ResourceBudget> = new Map();
+  public consents: Map<string, ConsentRecord> = new Map();
   public workProposals: Map<string, WorkProposal> = new Map();
   public workReceipts: Map<string, WorkReceipt> = new Map();
+  public workAppeals: Map<string, WorkAppeal> = new Map();
   public hardshipRequests: Map<string, HardshipRequest> = new Map();
   public conversionRequests: Map<string, CareConversionRequest> = new Map();
   public governanceProposals: Map<string, GovernancePolicyProposal> = new Map();
   public auditEvents: AuditEvent[] = [];
+  public readonly options: Required<EngineOptions>;
 
   // Balances
   public careBalances: Map<string, number> = new Map();
@@ -36,9 +49,95 @@ export class TriTokenEngine {
   public weeklyCarePool: number = 100_000;
   public reachEvents: Map<string, { audienceCount: number; attentionCount: number }> = new Map();
 
-  constructor() {
+  constructor(options: EngineOptions = {}) {
+    this.options = {
+      testMode: options.testMode ?? false,
+      bootstrapVotingPower: options.bootstrapVotingPower ?? true,
+    };
     // Initial seeded participant
     this.registerParticipant("demo-user", "participant", "P0");
+  }
+
+  public balanceFor(currency: BalanceCurrency, participantId: string): number {
+    const balances = this.balances(currency);
+    return balances.get(participantId) || 0;
+  }
+
+  public balances(currency: BalanceCurrency): Map<string, number> {
+    switch (currency) {
+      case "care":
+        return this.careBalances;
+      case "twc":
+        return this.twcBalances;
+      case "omega":
+        return this.omegaBalances;
+      case "amity":
+        return this.amityBalances;
+      default:
+        throw new Error(`Unknown currency: ${String(currency)}`);
+    }
+  }
+
+  /**
+   * Records an observed credit (for example an on-chain settlement imported by an
+   * operator, or a faucet grant in test mode). Every credit is an explicit,
+   * audited mutation — the engine never invents balances silently.
+   */
+  public creditBalance(
+    currency: BalanceCurrency,
+    participantId: string,
+    units: number,
+    reason: string
+  ): number {
+    if (!Number.isFinite(units) || units <= 0) throw new Error("Credit units must be a positive number");
+    if (!this.participants.has(participantId)) throw new Error("Participant not found");
+    if (!reason || !reason.trim()) throw new Error("A credit reason is required for the audit trail");
+
+    const balances = this.balances(currency);
+    const next = (balances.get(participantId) || 0) + units;
+    balances.set(participantId, next);
+
+    const plane: Plane = currency === "care" ? "CARE" : currency === "twc" ? "TWC" : currency === "omega" ? "OMEGA" : "AMITY";
+    this.logEvent(plane, "credit_balance", participantId, [currency, reason, String(units)], [String(next)]);
+    return next;
+  }
+
+  /**
+   * Test-mode-only faucet grant. Throws in non-test engines so a production
+   * caller can never mint balances through this path.
+   */
+  public faucetGrant(currency: BalanceCurrency, participantId: string, units: number): number {
+    if (!this.options.testMode) {
+      throw new Error("Faucet grants are disabled: this engine is not in test mode.");
+    }
+    return this.creditBalance(currency, participantId, units, "faucet:test-grant");
+  }
+
+  /** Plain-object snapshot used by the API routes, the test console, and exports. */
+  public snapshot() {
+    return {
+      policyVersion: POLICY_VERSION,
+      testMode: this.options.testMode,
+      bootstrapVotingPower: this.options.bootstrapVotingPower,
+      participants: Array.from(this.participants.values()),
+      budgets: Array.from(this.budgets.values()),
+      consents: Array.from(this.consents.values()),
+      balances: {
+        care: Object.fromEntries(this.careBalances),
+        twc: Object.fromEntries(this.twcBalances),
+        omega: Object.fromEntries(this.omegaBalances),
+        amity: Object.fromEntries(this.amityBalances),
+      },
+      proposals: Array.from(this.workProposals.values()),
+      receipts: Array.from(this.workReceipts.values()),
+      appeals: Array.from(this.workAppeals.values()),
+      hardships: Array.from(this.hardshipRequests.values()),
+      conversions: Array.from(this.conversionRequests.values()),
+      governance: Array.from(this.governanceProposals.values()),
+      auditEvents: this.auditEvents,
+      weeklyCarePool: this.weeklyCarePool,
+      reachEvents: Object.fromEntries(this.reachEvents),
+    };
   }
 
   public logEvent(
@@ -96,6 +195,35 @@ export class TriTokenEngine {
     return cred;
   }
 
+  // --- Consent records (CARE) ---
+  public recordConsent(
+    participantId: string,
+    scope: ConsentRecord["scope"],
+    granted: boolean
+  ): ConsentRecord {
+    if (!this.participants.has(participantId)) throw new Error("Participant not found");
+    const record: ConsentRecord = {
+      consentId: `consent-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      participantId,
+      scope,
+      granted,
+      timestamp: new Date().toISOString(),
+    };
+    this.consents.set(`${participantId}:${scope}`, record);
+    this.logEvent(
+      "CARE",
+      granted ? "grant_consent" : "withdraw_consent",
+      participantId,
+      [scope],
+      [record.consentId]
+    );
+    return record;
+  }
+
+  public hasConsent(participantId: string, scope: ConsentRecord["scope"]): boolean {
+    return this.consents.get(`${participantId}:${scope}`)?.granted === true;
+  }
+
   // --- Slice A: Resource Quota to CARE status ---
   public updateResourceContribution(
     participantId: string,
@@ -106,6 +234,11 @@ export class TriTokenEngine {
     if (!budget) throw new Error("Participant budget not found");
     const participant = this.participants.get(participantId);
     if (!participant) throw new Error("Participant not found");
+    if (!this.hasConsent(participantId, "resource_contribution")) {
+      throw new Error(
+        "Resource contribution requires explicit consent. Record a resource_contribution consent first."
+      );
+    }
 
     budget.paused = isPaused;
     budget.contributedUnits += contributedDelta;
@@ -217,8 +350,8 @@ export class TriTokenEngine {
       throw new Error("Sponsor has insufficient verified contribution");
     }
 
-    // Sponsor bonus: 10% useful bonus credit
-    const bonus = Math.floor(req.uncoveredQuotaUnits * 0.1);
+    // Sponsor bonus: SPONSOR_BONUS_BPS (10%) useful-work credit for verified solidarity
+    const bonus = Math.floor((req.uncoveredQuotaUnits * SPONSOR_BONUS_BPS) / 10000);
     req.status = "sponsored";
     req.sponsoredBy = sponsorId;
     req.sponsorBonusUnits = bonus;
@@ -250,9 +383,9 @@ export class TriTokenEngine {
     const curCare = this.careBalances.get(participantId) || 0;
     if (curCare < careAmount) throw new Error("Insufficient CARE balance");
 
-    // Dock: 500 bps (5%), holdback: 0 or 1500 bps (15%)
-    const dockBps = 500;
-    const holdbackBps = hasExtremeHoldback ? 1500 : 0;
+    // Dock: CONVERSION_DOCK_BPS (5%), holdback: 0 or CONVERSION_EXTREME_HOLDBACK_BPS (15%)
+    const dockBps = CONVERSION_DOCK_BPS;
+    const holdbackBps = hasExtremeHoldback ? CONVERSION_EXTREME_HOLDBACK_BPS : 0;
     const totalReductionBps = dockBps + holdbackBps;
 
     const netAmity = Math.floor((careAmount * (10000 - totalReductionBps)) / 10000);
@@ -346,6 +479,7 @@ export class TriTokenEngine {
       policyVersion: POLICY_VERSION,
       issuedTwcUnits: twcAward,
       settledAt: new Date().toISOString(),
+      status: "settled",
     };
 
     this.workReceipts.set(workId, receipt);
@@ -374,11 +508,24 @@ export class TriTokenEngine {
     parametersDiff: Record<string, unknown>,
     timelockSeconds: number = 86400
   ): GovernancePolicyProposal {
-    // Proposer must hold OMEGA voting power
+    // Proposer must hold OMEGA voting power; the historical bootstrap is a
+    // test-only convenience and fails closed unless explicitly enabled.
     const omegaBal = this.omegaBalances.get(proposerCommitment) || 0;
-    if (omegaBal < 100) {
-      // Grant initial 1000 OMEGA voting token if zero for prototype testing
-      this.omegaBalances.set(proposerCommitment, 1000);
+    if (omegaBal < MIN_GOVERNANCE_PROPOSAL_POWER) {
+      if (!this.options.bootstrapVotingPower) {
+        throw new Error(
+          `Insufficient $OMEGA voting power to propose: ${omegaBal} < ${MIN_GOVERNANCE_PROPOSAL_POWER}.`
+        );
+      }
+      if (!this.participants.has(proposerCommitment)) {
+        this.registerParticipant(proposerCommitment);
+      }
+      this.creditBalance(
+        "omega",
+        proposerCommitment,
+        BOOTSTRAP_VOTING_POWER,
+        "test-mode bootstrap voting power"
+      );
     }
 
     const proposal: GovernancePolicyProposal = {
@@ -423,5 +570,75 @@ export class TriTokenEngine {
     proposal.status = "executed";
     this.logEvent("OMEGA", "execute_governance_policy", proposal.proposerCommitment, [proposalId], ["executed"]);
     return true;
+  }
+
+  // --- Slice G: Work receipt appeals and reversals ---
+  public openWorkAppeal(workId: string, appellantCommitment: string, reason: string): WorkAppeal {
+    const receipt = this.workReceipts.get(workId);
+    if (!receipt) throw new Error("Work receipt not found");
+    if (receipt.status === "reversed") throw new Error("Receipt already reversed; nothing left to appeal");
+    if (!reason || !reason.trim()) throw new Error("An appeal requires a stated reason");
+
+    const existing = Array.from(this.workAppeals.values()).find(
+      (appeal) => appeal.workId === workId && appeal.status === "open"
+    );
+    if (existing) throw new Error(`An open appeal already exists for ${workId}`);
+
+    const appeal: WorkAppeal = {
+      appealId: `appeal-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      workId,
+      appellantCommitment,
+      reason,
+      status: "open",
+      openedAt: new Date().toISOString(),
+    };
+    this.workAppeals.set(appeal.appealId, appeal);
+    this.logEvent("TWC", "open_work_appeal", appellantCommitment, [workId, reason], [appeal.appealId]);
+    return appeal;
+  }
+
+  public resolveWorkAppeal(
+    appealId: string,
+    reviewerCommitment: string,
+    decision: WorkAppealDecision,
+    note = ""
+  ): WorkAppeal {
+    const appeal = this.workAppeals.get(appealId);
+    if (!appeal) throw new Error("Appeal not found");
+    if (appeal.status !== "open") throw new Error("Appeal already resolved");
+    if (reviewerCommitment === appeal.appellantCommitment) {
+      throw new Error("The appellant may not review their own appeal");
+    }
+
+    const receipt = this.workReceipts.get(appeal.workId);
+    if (!receipt) throw new Error("Work receipt not found for appeal");
+
+    appeal.status = decision;
+    appeal.reviewerCommitment = reviewerCommitment;
+    appeal.decisionNote = note;
+    appeal.resolvedAt = new Date().toISOString();
+
+    if (decision === "reversed") {
+      const balances = this.twcBalances;
+      const current = balances.get(receipt.contributorCommitment) || 0;
+      const recovered = Math.min(current, receipt.issuedTwcUnits);
+      const unrecoverable = receipt.issuedTwcUnits - recovered;
+      balances.set(receipt.contributorCommitment, current - recovered);
+      receipt.status = "reversed";
+      appeal.clawbackTwcUnits = recovered;
+      appeal.unrecoverableTwcUnits = unrecoverable;
+
+      this.logEvent(
+        "TWC",
+        "reverse_work_receipt",
+        reviewerCommitment,
+        [appealId, appeal.workId, String(recovered)],
+        [String(unrecoverable)]
+      );
+    } else {
+      this.logEvent("TWC", "resolve_work_appeal", reviewerCommitment, [appealId, decision], [appeal.workId]);
+    }
+
+    return appeal;
   }
 }
