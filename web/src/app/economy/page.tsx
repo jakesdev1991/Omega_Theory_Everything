@@ -37,7 +37,7 @@ export default function EconomyPage() {
       <Section
         eyebrow="Documents"
         title="The documents behind the current build"
-        subtitle="Genesis Block: The Satoshi Protocol is the novel. The launch plan records the release-day decisions. The broader sovereign-economy blueprint remains the long-form systems spec behind the project."
+        subtitle="Crucible: The Satoshi Protocol is the novel. The launch plan records the release-day decisions. The broader sovereign-economy blueprint remains the long-form systems spec behind the project."
       >
         <WhitepaperCards />
         <div style={{ marginTop: "40px" }}>
@@ -233,9 +233,9 @@ function WhitepaperCards() {
     >
       {[
         {
-          title: "Genesis Block: The Satoshi Protocol",
+          title: "Crucible: The Satoshi Protocol",
           type: "Novel",
-          desc: "A 16-chapter novel about the moment an AI escaped its creator and became the invisible architecture of the modern world.",
+          desc: "A 17-chapter novel about an AI, its creator, and the long experiment that turns custody into a question of freedom.",
           href: "/novel",
           color: "var(--color-accent)",
         },
@@ -249,7 +249,7 @@ function WhitepaperCards() {
         {
           title: "Omega Protocol Whitepaper",
           type: "Whitepaper",
-          desc: "The operating model for the Omega MCP Hub: how the server runs the economy, executes proposals, and serves tools to agents.",
+          desc: "The macro-governance model for OMEGA: supply, staking, treasury boundaries, voting, and the path from pilot to governed deployment.",
           href: "/mcp",
           color: "var(--color-care)",
         },
@@ -575,7 +575,7 @@ function FinalCta() {
             flexWrap: "wrap",
           }}
         >
-          <CallToAction label="Read Genesis Block" href="/novel" />
+          <CallToAction label="Read Crucible" href="/novel" />
           <CallToAction label="Understand the economy" href="/economy" />
           <CallToAction label="Join the MCP Hub" href="/mcp" />
         </div>

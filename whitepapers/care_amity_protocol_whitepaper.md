@@ -2,8 +2,23 @@
 
 # C.A.R.E. / AMITY Protocol Whitepaper
 
-**Version:** 0.1 research draft  
-**Status:** Social-infrastructure design; not a clinical system, benefits determination system, or promise of exchange value.
+**Version:** 0.2 research draft  
+**Status:** Social-infrastructure design; not a clinical system, benefits determination system, or promise of exchange value.  
+**Supersedes:** 0.1 (claims unchanged; this revision aligns the paper with the v0.2 architecture and
+records the parameters and invariants that were settled after 0.1 was written).
+
+> **Authoritative companion.** [`../docs/care-architecture-v2.md`](../docs/care-architecture-v2.md)
+> is the current contract for the plane, and [`../docs/care-policy-v2.json`](../docs/care-policy-v2.json)
+> is its machine-readable parameter set. Where this paper and those two disagree on a number, the
+> machine-readable file governs. This paper carries the reasoning; it is not the parameter store.
+
+> **Expansion.** C.A.R.E. stands for **Call About Resuscitating Everyone**.
+
+> **Implementation status.** A local social prototype exists in
+> [`../web/`](../web/README.md), a bounded CARE-to-AMITY conversion policy is encoded in
+> [`../amity/`](../amity/README.md), and a Devnet-only, valueless `tTWC` issuer/verifier exists in
+> [`../solana/`](../solana/README.md). None of it is deployed, audited, or approved for
+> value-bearing use.
 
 ## Abstract
 
@@ -13,6 +28,26 @@ C.A.R.E. is the protected social and care-coordination layer of the ecosystem. A
 - **AMITY:** a constrained, market-facing token or wrapped representation that may be exchanged only under applicable compliance, reserve, custody, and consumer-protection rules.
 
 This separation protects care relationships from direct market speculation while allowing approved providers and participants to settle eligible services.
+
+CARE is described as protected, not as safe or stable. Support is protected only to the extent that real reserves, services, or sponsor commitments can cover it, and CARE is not called a stablecoin until its reference value, redemption, insolvency treatment, and audit process are defined.
+
+## Non-negotiable invariants
+
+The plane is bounded by ten invariants. They are constraints on implementation, not aspirations:
+
+1. **No permanent moral exile.** Community access may be restricted indefinitely for safety, but every person retains a reviewable path to restoration.
+2. **No vague economic offenses.** A sanction requires a published `rule_id`, reproducible evidence, an affected amount, and an appeal route.
+3. **No punishment for hardship.** Hardship has no maximum duration, frequency, or lifetime allowance.
+4. **No hidden device use.** Wallet resource contribution is visible, user-controlled, and capped.
+5. **No automatic clinical or psychological judgment.** Agents may assist with completeness and anomaly checks; they cannot diagnose, decide moral worth, or independently punish.
+6. **No personal enforcement profit.** No founder, Archangel, reviewer, or agent receives a percentage of a user's sanction.
+7. **No unbacked value creation.** A pending entitlement may not become a market-facing asset unless the applicable policy and reserve checks pass.
+8. **No unrelated balance confiscation.** A proven exploit can reverse the exact fraud-derived delta; legitimate unrelated CARE is not automatically seized.
+9. **No sensitive data by default.** Raw conversations, trauma narratives, health information, and precise location histories remain private and off-chain unless separately consented.
+10. **No required government support.** Government grants may supplement the system but are not a core invariant.
+
+An invariant that cannot be enforced by the deployed system must be documented as unmet rather than
+assumed.
 
 ## Proof of Care
 
@@ -34,6 +69,83 @@ protocol_version
 ```
 
 Sensitive narratives, health information, and identifying details remain off-ledger under consent-controlled storage.
+
+## Social application first
+
+The first C.A.R.E. product is a social application, not a token exchange: pseudonymous or verified
+profiles, user-controlled circles, care requests and offers, posts and group activity,
+consent-controlled sharing, blocking and boundary controls, safety reports and appeals, weekly
+participation views, and voluntary in-person attestations.
+
+Ordinary participation is **not** gated by AMITY, OMEGA, TWC, legal-name disclosure, or a high
+privacy tier. Any design that makes basic participation conditional on holding or disclosing
+something has failed this section.
+
+## Participation, reach, and weekly distribution
+
+The protocol may reward observable social reach, because reach and attention are measurable proxies
+for reducing isolation. It must not claim that raw reach proves a person's private motives or
+therapeutic outcomes, and it must publish the definition rather than operate a hidden authenticity
+score:
+
+```text
+raw reach units = unique audience observations + attention events
+```
+
+Coefficients and event definitions are versioned and public. Automated-account and duplicate-event
+limits protect the ledger; they are not judgments about a person's character.
+
+Issuance is a **fixed weekly pool**, not an uncapped per-person mint:
+
+```text
+participant allocation = weekly pool × participant reach units / total eligible reach units
+```
+
+The pool and policy version are published before the epoch. Early participation may produce larger
+individual allocations because fewer participants share the pool; the design does not need a burn to
+imitate early Bitcoin distribution, because unissued holdbacks simply never enter circulation.
+
+## Wallet resource contribution
+
+A wallet may contribute a small, user-defined resource quota while the device is powered on. The
+initial design target is a **2% device-resource budget** — a policy target, not a verified claim of
+exact electrical consumption. Receipts may account for CPU time, network bandwidth, storage, relay
+uptime, memory or service capacity, and optional operating-system energy estimates.
+
+```text
+protocol minimum <= user quota <= device-safe maximum
+```
+
+The wallet must show the quota, current usage, remaining requirement, and pause controls, and must
+pause for low battery, overheating, battery-saver mode, or the user's own limits. A quota may be
+satisfied through the user's own device, a delegated community node, an approved hosted provider, or
+a sponsored contribution. A wallet is not automatically a full blockchain node; light-client use is
+supported.
+
+A missed quota changes activity status — `active -> grace -> under-quota` — and never destroys a
+person's history. When funded settlement capacity is unavailable, conversion requests may be queued;
+the protocol must not create unbacked AMITY to conceal an uncovered obligation.
+
+## Hardship and solidarity
+
+Hardship is unbounded in every direction:
+
+```text
+hardship duration cap = none
+hardship count cap = none
+hardship assistance cap = none
+forced hardship expiry = forbidden
+```
+
+A person may request indefinite hardship status without publicly disclosing the reason, and hardship
+creates no debt. Other holders may voluntarily cover the deficit with verified resource
+contributions. A sponsor receives a published, bounded bonus based on actual contribution — never on
+the recipient's private hardship details — and receives no control, ownership, contact rights, or
+governance power over the person receiving support.
+
+If no sponsor is available: the hardship status remains valid, the person is not expelled or
+punished, CARE is not destroyed, the uncovered need remains an open support request, and settlement
+may be delayed rather than minted against no reserve.
 
 ## Legitimacy verifiers
 
@@ -62,6 +174,93 @@ CARE evidence -> multi-party verification -> finalized entitlement
 ```
 
 The bridge must support rejection, expiration, reversal, and appeal. It must never expose protected care data to an exchange.
+
+Before any conversion, a weekly settlement record must show:
+
+```text
+CARE/reach entitlement
+gross AMITY calculation
+participant dock
+reserve allocation
+unissued holdback
+net AMITY
+policy version
+resource/quota status
+```
+
+The initial conversion schedule is a dock and holdback, not a burn:
+
+```text
+initial:   5% participant dock
+maximum:  20% participant dock
+extreme:  20% dock + 15% unissued holdback
+```
+
+The base design does not burn supply. The extreme 15% is **not issued** rather than destroyed after
+circulation, and it can never be applied as a hidden tax outside the published policy. The total
+reduction is capped, and conversion is available whenever funded settlement capacity exists — the
+policy queues the request rather than minting an uncovered entitlement.
+
+## Roles and promotion
+
+The role ladder exists to distribute responsibility, not to rank human worth:
+
+```text
+Level 0: Participant
+Level 1: X1
+Level 2: X2
+Level 3: Archangel
+```
+
+- **Participant** — may use the app, join communities, request support, contribute resources, and appeal decisions.
+- **X1** — requires safety and consent training, supervised participation, and no unresolved serious integrity case; may assist with low-risk activities.
+- **X2** — requires independent review, supervised attestations, conflict disclosure, and additional safeguarding training; may serve on limited verification panels.
+- **Archangel** — requires nomination or selection, independent conflict review, senior safeguarding training, a fixed term, and a reviewable appointment.
+
+No role may be purchased with AMITY, TWC, or OMEGA. Draft capacity for the top of the ladder is:
+
+```text
+maximum local Archangels = floor(active participants / 500)
+```
+
+Small communities use a shared regional pool rather than appointing a single local authority.
+Archangels receive a bounded, published governance allocation rather than unlimited control; within
+it, active Archangels receive equal shares. Economic and treasury decisions require broader
+participation than the Archangel council, and conflicted Archangels recuse themselves. An Archangel
+cannot unilaterally mint, slash, erase records, or override an appeal.
+
+## Integrity sanctions
+
+Community safety and protocol integrity are separate systems. Safety actions may restrict access to a
+person, circle, venue, or community; they do not automatically confiscate balances. Only enumerated
+technical or economic events — forged signatures, duplicate finalized claims or nonces, double
+redemption, unauthorized state transitions, deliberate oracle manipulation, deliberate contract
+exploitation, falsified verifier attestations, coordinated issuance or identity attacks — count as
+protocol-integrity offenses. A normal mistake, a good-faith overclaim, a hardship request, or a bug
+report is not one.
+
+The three-offense rule applies only to final, adjudicated violations, and one exploit is not counted
+multiple times for affecting multiple records.
+
+**First confirmed violation:** freeze the affected pending path; recover the exact fraud-derived or
+unauthorized delta; remove relevant trusted permissions; preserve unrelated legitimate CARE; provide
+an appeal.
+
+**Second confirmed violation**, for the exact illicit delta:
+
+```text
+75% permanently removed or left unissued
+15% security, restitution, or protocol reserve
+10% independent audit and bug-bounty fund
+```
+
+There is no founder or individual enforcement share.
+
+**Third confirmed violation:** apply the second-offense financial rule to the new illicit delta,
+impose indefinite temporary exclusion from the affected community, remove trusted roles, require
+periodic independent review, and preserve a restoration path — never permanent moral exile.
+
+Responsible vulnerability disclosure receives safe-harbor treatment and may receive a fixed bounty.
 
 ## Fees and reserves
 
@@ -121,6 +320,21 @@ L2  contribution-visible: approved work and aggregate outcomes
 L3  community-visible: profile, projects, and contact preferences
 L4  verified disclosure: identity shared only with a specific authorized party
 ```
+
+These visibility levels are separate from the accountability proof levels, which run in the other
+direction — from pseudonymous participation to verified person, verified service or community
+history, and senior accountable steward:
+
+```text
+P0: pseudonymous participation
+P1: verified person credential
+P2: verified service or community history
+P3: senior accountable steward
+```
+
+Higher proof levels may unlock greater payout limits, verifier eligibility, or governance
+responsibilities. They do not make a person more valuable, and P0 is always sufficient for basic
+participation.
 
 Each level requires a separate, plain-language opt-in. Opting out must be easier than opting in. Consent must be revocable where legally and operationally possible, and a withdrawal must not erase an immutable public event; instead, public records should be minimized, detached, or replaced with a privacy-preserving revocation marker.
 
@@ -200,6 +414,21 @@ Safety exceptions are permitted when there is an immediate risk of violence, exp
 
 CARE governance may oversee verification standards, ethics, privacy, accessibility, safeguarding, Archangel accreditation, and thought-virus mediation standards. AMITY market governance may oversee approved exchange parameters, liquidity, custody, and settlement. Neither group should be able to unilaterally change the other’s protected rules.
 
+The protocol has four planes, and CARE governance is not the governance of the others:
+
+| Plane | Owns |
+|---|---|
+| CARE | Care records, consent, privacy, safeguarding, verifier standards, the weekly pool policy |
+| TWC | Useful-work receipt classes and their verifier adapters |
+| OMEGA | Protocol parameters, treasury, and long-horizon security commitments under timelock |
+| AMITY | Exchange eligibility, custody, reserves, and settlement parameters |
+
+CARE consumes TWC receipts — a resource receipt can satisfy a wallet quota, infrastructure work can
+contribute service capacity, engineering work can improve the oracle or the social application — but
+CARE does not become a TWC-only economy, and a TWC contributor does not need to participate in CARE
+to earn TWC. The cross-plane primitives and the settlement funding flow are specified in
+[`../docs/tri-token-integration-v1.md`](../docs/tri-token-integration-v1.md).
+
 ## Public-health prevention and government partnership
 
 C.A.R.E. can be proposed to governments, foundations, universities, and community organizations as a voluntary prevention and connection infrastructure. The purpose is broader than substance-use or rehabilitation programs. It may support people who are processing trauma, isolation, grief, family conflict, domestic violence, coercive control, or other destabilizing experiences by giving them a safer way to speak, listen, find resources, and seek human help earlier.
@@ -255,3 +484,32 @@ The service must display location-appropriate crisis and domestic-violence resou
 4. Survivor-led and community-led pilot with an ombuds process.
 5. Independent evaluation of support connection, safety, false approvals, false reports, appeals, and subgroup effects.
 6. Only then consider regulated exchange eligibility.
+
+## Mainnet gate
+
+No value-bearing mainnet deployment should occur until every one of the following holds. This is a
+gate, not a checklist to be waived by schedule pressure:
+
+1. The social application exists and is usable without token pressure.
+2. The C.A.R.E. rules are machine-readable and tested.
+3. The hardship and solidarity flow has been piloted.
+4. Physical attestations have been tested voluntarily and privately.
+5. The role ladder and Archangel ratio have been stress-tested.
+6. Protocol-integrity cases have reproducible evidence and appeal paths.
+7. Weekly payout and reserve simulations pass severe drawdown scenarios.
+8. Wallet resource use is opt-in, visible, and bounded.
+9. Independent security, privacy, safeguarding, and legal reviews are complete.
+10. The system does not rely on unverified clinical, economic, or performance claims.
+
+Until then, C.A.R.E., AMITY, OMEGA, and TWC remain research or valueless testnet components. The
+repository contains local and Devnet-only tooling for the mechanical parts of this work; that tooling
+does not satisfy the gate, and its existence must not be presented as compliance.
+
+## Revision history
+
+- **0.2 (2026-09-25)** — Aligned with `docs/care-architecture-v2.md` and `care-policy-v2.json`:
+  added the ten invariants, social-application-first scope, reach and fixed weekly pool, the 2%
+  wallet-resource budget, unbounded hardship and solidarity, the role ladder and Archangel ratio,
+  progressive integrity sanctions, the conversion dock/holdback schedule, the four-plane governance
+  split, proof levels P0–P3, and the mainnet gate. No safety commitment was weakened.
+- **0.1 (2026-09-23)** — Initial research draft.

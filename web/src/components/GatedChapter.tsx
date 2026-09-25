@@ -154,7 +154,7 @@ export function GatedChapter({ slug, number }: { slug: string; number: number })
         This chapter is locked
       </div>
       <p style={{ margin: "0 0 12px", fontSize: "14px", color: "var(--color-muted-strong)" }}>
-        Chapter {number} of <em>Genesis Block: The Satoshi Protocol</em> is released to
+        Chapter {number} of <em>Crucible: The Satoshi Protocol</em> is released to
         verified $OMEGA and TWC participants. Open the wallet, sign a release-day
         unlock statement for one of the two wired currencies, and return here — the
         chapter prose is served only after your signature verifies and the server
