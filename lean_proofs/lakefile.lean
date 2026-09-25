@@ -70,5 +70,7 @@ lean_lib ToE where
     `Vol52_OmegaPointTheory,
     `Vol53_UniversalCompiler,
     `Vol54_TheoryOfNothing,
-    `InformationPhysics
+    `InformationPhysics,
+    `DynamicPlanckScale,
+    `DynamicCODScale
   ]

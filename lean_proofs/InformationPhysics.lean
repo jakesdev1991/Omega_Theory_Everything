@@ -12,6 +12,9 @@ Genuinely proven theorems:
    energy.
 2. **Conservation of Total State Energy** — when bound mass converts into
    propagating information `ΔI`, the total energy remains strictly conserved.
+3. **Positivity of Information Mass** — a positive number of bits at positive
+   temperature carries strictly positive equivalent mass. This is the single
+   fact that `DynamicPlanckScale` consumes from this module.
 
 Model assumptions:
 - `E_landauer = I · k_B · T · ln 2` (thermal cost of processing/erasing `I`
@@ -73,5 +76,14 @@ theorem energy_conservation_during_state_conversion (env : Environment) (m_initi
   dsimp [informationMass]
   rw [div_mul_cancel₀ (landauerEnergy env ΔI) hc2]
   exact sub_add_cancel (m_initial * env.c ^ 2) (landauerEnergy env ΔI)
+
+/-- **Theorem 3: Positivity of Information Mass**
+    A positive number of bits `I` at positive temperature has strictly positive
+    equivalent mass `m_I = I · k_B · T · ln 2 / c²`. -/
+theorem informationMass_pos (env : Environment) {I : ℝ} (hI : 0 < I) :
+    0 < informationMass env I := by
+  unfold informationMass landauerEnergy
+  have hlog : 0 < Real.log 2 := Real.log_pos (by norm_num)
+  exact div_pos (mul_pos (mul_pos (mul_pos hI env.hkB) env.hT) hlog) (pow_pos env.hc 2)
 
 end InformationPhysics

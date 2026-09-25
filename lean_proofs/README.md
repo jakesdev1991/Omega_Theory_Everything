@@ -13,8 +13,22 @@ This directory contains the complete formal verification of the Omega Theory fra
 - `OmegaDimensionalHierarchy.lean` - Dimensional hierarchy structure
 - `OmegaProtocol.lean` - Protocol definitions and cross-volume theorems
 - `InformationPhysics.lean` - Landauer–Einstein bridge: information-mass-energy
-  equivalence and conservation of total state energy during mass↔information
-  conversion
+  equivalence, conservation of total state energy during mass↔information
+  conversion, and positivity of information mass
+- `DynamicPlanckScale.lean` - Dynamic Planck scale, built on
+  `InformationPhysics` as a prerequisite module:
+  information mass `m(I)` ⟹ local density `ρ = m(I)/V` ⟹ scale `ℓ_P(ρ)`.
+  Proves that any positive density contracts the operational Planck length
+  below its baseline `ℓ_P0` (strictly decreasing in `ρ`), and that any
+  positive information in a positive volume therefore contracts it. The
+  profile `ℓ_P(ρ) = ℓ_P0 / √(1 + ρ/ρ₀)` is a stated model assumption, not a
+  derivation.
+- `DynamicCODScale.lean` - Dynamic Planck scale driven directly by
+  Chain-Overlap Density `Φ ∈ [0, 1]`: `ℓ_P(Φ) = ℓ_P0 · √(1 − Φ²)`. Proves the
+  vacuum baseline `ℓ_P(0) = ℓ_P0`, the collapse `ℓ_P(1) = 0` at maximal
+  overlap, `0 ≤ ℓ_P(Φ) ≤ ℓ_P0`, that any positive overlap contracts the scale
+  strictly below baseline, and strict monotonicity of the contraction on
+  `[0, 1]`. The profile is a stated model assumption, not a derivation.
 
 ### Physics Volumes (1-54)
 Each volume formalizes a major domain of physics:

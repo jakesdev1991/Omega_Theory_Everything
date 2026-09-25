@@ -1,163 +1,338 @@
 # Copyright (c) 2025-2026 Jacob See.
 # SPDX-License-Identifier: Apache-2.0
-
+"""
 Simulation 3: Dynamic Planck Length and Disformal Causality Band
+================================================================
 
 Abstract
-We investigate the interplay between a dynamically varying Planck length, conformal rescaling, and disformal causality bounds. Static relations are derived for a range of scalar field values, including a β‑sweep that illustrates widening of the causality band. An optional dynamical evolution is implemented via a scalar‑field equation of motion with disformal‑inspired Hubble scaling, allowing causality checks and a preliminary estimate of ringdown frequency shifts. This simulation extends the emergent‑geometry framework by probing ultraviolet cutoffs, causal structure, and dynamical stability.
+--------
+We investigate the interplay between a dynamically varying Planck length,
+conformal rescaling, and disformal causality bounds. The Planck-length profile
+is the Chain-Overlap-Density (COD) form formally verified in
+``lean_proofs/DynamicCODScale.lean``:
 
----
+    l_P(Phi) = l_P0 * sqrt(1 - Phi^2),      0 <= Phi <= 1.
+
+Static relations are derived across the physical COD range, including a
+beta-sweep of the disformal causality band. An optional dynamical evolution is
+implemented via a scalar-field equation of motion with disformal-inspired
+Hubble scaling, allowing causality checks and a preliminary estimate of
+ringdown frequency shifts.
+
+History: an earlier version of this simulation used the heuristic profile
+``l_P(phi) = exp((1 - phi)/2)`` over ``phi in [0, 5]``. It was replaced by the
+COD profile so that the simulation matches the Lean-proven module. The
+differences are stated explicitly in Section 3.
 
 1. Introduction
-The previous simulations established that geometry can emerge from correlations (Sim 1) and that cosmological expansion can be modeled as an informational chain‑break process (Sim 2). Simulation 3 advances the framework into the ultraviolet and causal domain: how does a dynamic Planck length interact with conformal and disformal factors, and what bounds ensure Lorentzian causality?  
-
-By sweeping over scalar field values and disformal parameters, we map the causality band and explore how it constrains dynamics. The optional dynamical run demonstrates how these bounds operate in time‑dependent scenarios, with implications for black‑hole ringdown and horizon physics.
-
----
+---------------
+Simulations 1 and 2 established that geometry can emerge from correlations and
+that expansion can be modelled as a chain-break process. Simulation 3 probes
+the ultraviolet and causal domain: how does a dynamic Planck length interact
+with conformal and disformal factors, and what bounds ensure Lorentzian
+causality?
 
 2. Methods
+----------
+2.1 Static relations (l_P0 = 1 throughout)
 
-2.1 Static Relations
-- Dynamic Planck length:  
-  \[
-  \ell_P(\phi) = \exp\!\left(\tfrac{1-\phi}{2}\right).
-  \]
-- Conformal factor:  
-  \[
-  C(\phi) = e^{-2\phi}.
-  \]
-- Disformal causality bound:  
-  \[
-  |\dot\phi| < \frac{e^{-(\phi+1)/2}}{\sqrt{\beta}}.
-  \]
+- Dynamic Planck length (Lean: ``DynamicCODScale.dynamicPlanckCOD``):
+      l_P(Phi) = sqrt(1 - Phi^2).
+  Vacuum baseline l_P(0) = 1 (``dynamicPlanckCOD_zero``); maximal overlap
+  l_P(1) = 0 (``dynamicPlanckCOD_one``); strictly decreasing on [0, 1]
+  (``dynamicPlanckCOD_strictAntiOn``).
+- Conformal factor:  C(Phi) = exp(-2 Phi).
+- Disformal coupling: D(Phi) = beta * l_P(Phi)^2 = beta * (1 - Phi^2).
+- Disformal causality bound. For the disformal metric
+  g_hat = C g + D dPhi dPhi, the Lorentzian signature is preserved iff
+  D * Phidot^2 < C, i.e.
+      |Phidot| < sqrt(C / D) = exp(-Phi) / (sqrt(beta) * sqrt(1 - Phi^2)).
+  (With the old exponential profile the same derivation gives the previous
+  bound exp(-(phi+1)/2)/sqrt(beta); the derivation is unchanged, only l_P is.)
 
-2.2 β‑Sweep
-We evaluate the causality bound for β = 1.0, 0.5, and 0.05, illustrating how the safe band widens as β decreases.
+2.2 beta-sweep
+  The bound is evaluated for beta = 1.0, 0.5 and 0.05.
 
-2.3 Optional Dynamics
-- Scalar field equation of motion:  
-  \[
-  \ddot\phi + 3H(\phi)\dot\phi + m^2 \phi = 0,
-  \]
-  with \(H(\phi) = H_0 e^{\phi}\).  
-- Initial conditions chosen to lie safely within the causality band.  
-- Numerical integration performed with Runge–Kutta (if SciPy available).  
-- Diagnostics: causality ratio \(|\dot\phi|/\text{bound}\), emergent scale factor, and ringdown frequency shift proxy.
-
----
+2.3 Optional dynamics
+- Scalar-field equation of motion
+      Phiddot + 3 H(Phi) Phidot + V'(Phi) = 0,   H(Phi) = H0 exp(Phi),
+  with consensus potential V(Phi) = m^2 (1 - Phi)^2 / 2, whose minimum at
+  Phi = 1 follows the v4.0 technical note (Section 3.1). The earlier version
+  used V = m^2 phi^2 / 2 (minimum at 0); that would drive Phi negative, which
+  is outside the COD range.
+- Initial conditions lie inside the causality band; integration stops if Phi
+  reaches 1, where l_P vanishes.
+- Diagnostics: causality ratio |Phidot| / bound, emergent scale factor
+  a(t) = exp(int H dt), and ringdown-shift proxy 100 * |Phidot| / (a l_P).
 
 3. Results
+----------
+All numbers below are printed by ``python Sim3_Dynamic_Scale.py`` and can be
+regenerated; the values quoted are for the default parameters.
 
-3.1 Static Outputs
-- \(\ell_P(\phi)\) decreases monotonically with \(\phi\), from ~1.65 at \(\phi=0\) to ~0.135 at \(\phi=5\).  
-- Conformal factor \(C(\phi)\) falls sharply, with \(C(5) \approx 4.5\times 10^{-5}\).  
-- Causality bound tightens with increasing \(\phi\), but widens significantly for small β (e.g. β=0.05 widens the safe band by ~3× at \(\phi=0\)).
+3.1 Static outputs
+- l_P(Phi) decreases monotonically from 1 at Phi = 0 to 0 at Phi = 1.
+- The causality bound is NOT monotone (unlike the old exponential profile,
+  where it tightened monotonically). d ln(bound)/dPhi = -1 + Phi/(1 - Phi^2)
+  vanishes at Phi* = (sqrt(5) - 1)/2 ~ 0.618, so the band tightens on
+  [0, Phi*] to a minimum of ~0.686/sqrt(beta) and then widens, diverging as
+  Phi -> 1 because the disformal coupling D switches off with l_P.
+- Decreasing beta widens the whole band by 1/sqrt(beta) (beta = 0.05 widens
+  it by ~4.5x at every Phi).
 
-3.2 Ringdown Shift (Static Estimate)
-Assuming a toy gradient \(|\nabla\phi|\sim 0.1\) at \(\phi=0\), the ringdown frequency shift is ~16%.
+3.2 Ringdown shift (static estimate)
+  With a toy gradient |grad Phi| ~ 0.1 at Phi = 0 the proxy gives ~10 %
+  (l_P(0) = 1). The same gradient at higher Phi gives a larger shift because
+  l_P shrinks; the proxy diverges as Phi -> 1.
 
-3.3 Dynamic Evolution (Optional)
-- Scalar field rolls down with damping from the exponential Hubble term.  
-- Causality condition \(|\dot\phi| < \text{bound}\) is satisfied throughout the run.  
-- Emergent scale factor grows exponentially.  
-- Ringdown shift proxy peaks at a few percent, consistent with static estimates.
-
----
+3.3 Dynamic evolution (optional)
+  Phi rolls from 0 toward the consensus minimum at 1 under strong Hubble
+  damping (H0 = 1, m = 0.1): the initial kick is damped within t ~ 1 and Phi
+  then creeps slowly, reaching ~0.24 at t = 40 without approaching the
+  horizon. The causality ratio starts at 0.5 by construction and only
+  decreases, so |Phidot| < bound holds throughout. The ringdown proxy peaks
+  at 50 % at t = 0 (it is 100 * 0.5 * bound(0) / (a l_P) with a = l_P = 1
+  there) and decays with Phidot. ln a(40) ~ 49.
 
 4. Discussion
-Simulation 3 demonstrates that causal structure can be encoded in disformal bounds tied to a dynamic Planck length. The β‑sweep shows how parameter choices control the width of the safe band, suggesting a tunable mechanism for causal stability.  
-
-The optional dynamics confirm that the system remains within causal limits under evolution, and the ringdown shift teaser connects the framework to observable signatures in black‑hole physics. Together, these results extend the emergent‑geometry program into the ultraviolet regime, where cutoff scales and causal consistency become central.
-
----
+-------------
+The disformal causality bound is inherited directly from l_P(Phi). Replacing
+the exponential heuristic by the Lean-proven COD profile changes the
+qualitative picture in one place: the band no longer closes monotonically but
+has a single tightest point at Phi* ~ 0.618 and opens up toward maximal
+overlap. This is a consequence of the model choice D = beta l_P^2 and should
+be read as such; neither the profile nor the coupling is derived from the
+Omega axioms (see the "Model assumptions" section of DynamicCODScale.lean).
 
 5. Conclusion
-This simulation completes the trilogy:
-- Sim 1: Emergent distances from correlations.  
-- Sim 2: Cosmological expansion from chain‑break processes.  
-- Sim 3: Ultraviolet cutoff and causal stability from dynamic Planck length.  
+-------------
+- Sim 1: emergent distances from correlations.
+- Sim 2: cosmological expansion from chain-break processes.
+- Sim 3: ultraviolet cutoff and causal band from the COD-driven Planck length.
 
-Together, they form a coherent demonstration that geometry, cosmology, and causality can all be derived from informational primitives. This provides a foundation for scaling the framework toward a full unification program.
+Usage
+-----
+    python Sim3_Dynamic_Scale.py [--beta 1.0 0.5 0.05] [--no-dynamic]
+                                 [--no-plots] [--outdir .]
+"""
 
----
+from __future__ import annotations
 
-Appendix A: Cleaned Code (Python)
-
-`python
-
-sim3.py
-
-Simulation 3: Dynamic Planck Length and Disformal Causality Band
+import argparse
+import math
+import sys
+from typing import Sequence
 
 import numpy as np
-import matplotlib.pyplot as plt
-from scipy.integrate import solve_ivp, cumtrapz
 
-def lP(phi):
-    return np.exp((1.0 - phi) / 2.0)
+GOLDEN_CONJUGATE = (math.sqrt(5.0) - 1.0) / 2.0  # tightest point of the band
 
-def C_conformal(phi):
+
+# ---------------------------------------------------------------------------
+# Static relations
+# ---------------------------------------------------------------------------
+def lP(phi: np.ndarray | float, lP0: float = 1.0) -> np.ndarray | float:
+    """COD-driven Planck length l_P(Phi) = l_P0 sqrt(1 - Phi^2).
+
+    Mirrors ``DynamicCODScale.dynamicPlanckCOD``. Like Mathlib's ``Real.sqrt``
+    the function is total: it returns 0 outside the physical range |Phi| >= 1.
+    """
+    return lP0 * np.sqrt(np.clip(1.0 - np.square(phi), 0.0, None))
+
+
+def C_conformal(phi: np.ndarray | float) -> np.ndarray | float:
+    """Conformal factor C(Phi) = exp(-2 Phi)."""
     return np.exp(-2.0 * phi)
 
-def causality_bound(phi, beta=1.0):
-    return np.exp(-(phi + 1.0) / 2.0) / np.sqrt(beta)
 
-Parameters
-phi = np.linspace(0, 5, 11)
-beta_sweep = [1.0, 0.5, 0.05]
+def D_disformal(phi: np.ndarray | float, beta: float = 1.0) -> np.ndarray | float:
+    """Disformal coupling D(Phi) = beta l_P(Phi)^2."""
+    return beta * np.square(lP(phi))
 
-lP_vals = lP(phi)
-Cvals = Cconformal(phi)
-bounds = {b: causalitybound(phi, beta=b) for b in betasweep}
 
-Static plots
-plt.figure()
-plt.semilogy(phi, lP_vals, 'g-o', label='lP(phi)')
-plt.xlabel('phi'); plt.ylabel('lP'); plt.title('Dynamic Planck Length')
-plt.legend(); plt.grid(True); plt.savefig('fig4_1a.pdf')
+def causality_bound(phi: np.ndarray | float, beta: float = 1.0) -> np.ndarray | float:
+    """Signature-preservation bound |Phidot| < sqrt(C / D).
 
-plt.figure()
-for b in beta_sweep:
-    plt.plot(phi, bounds[b], 'o-', label=f'beta={b}')
-plt.xlabel('phi'); plt.ylabel('Bound')
-plt.title('Disformal Causality Band')
-plt.legend(); plt.grid(True); plt.savefig('fig4_1b.pdf')
+    Closed form: exp(-Phi) / (sqrt(beta) sqrt(1 - Phi^2)). Diverges as Phi -> 1.
+    """
+    return np.exp(-phi) / (math.sqrt(beta) * lP(phi))
 
-Optional dynamics
-RUN_DYNAMIC = True
-if RUN_DYNAMIC:
-    H0, m = 1.0, 0.1
-    def phi_eom(t, y):
+
+def ringdown_shift_percent(
+    phidot: np.ndarray | float, a: np.ndarray | float, phi: np.ndarray | float
+) -> np.ndarray | float:
+    """Ringdown-shift proxy 100 |Phidot| / (a l_P(Phi))."""
+    return 100.0 * np.abs(phidot) / (a * lP(phi))
+
+
+def self_check() -> None:
+    """Numerical sanity checks mirroring the Lean theorems and the derivation."""
+    phi = np.linspace(0.0, 0.999, 1000)
+    assert math.isclose(float(lP(0.0)), 1.0)  # dynamicPlanckCOD_zero
+    assert float(lP(1.0)) == 0.0  # dynamicPlanckCOD_one
+    assert np.all(np.diff(lP(phi)) < 0)  # dynamicPlanckCOD_strictAntiOn
+    assert np.all(lP(phi[1:]) < 1.0)  # cod_scale_contraction
+    for beta in (1.0, 0.5, 0.05):
+        derived = np.sqrt(C_conformal(phi) / D_disformal(phi, beta))
+        assert np.allclose(derived, causality_bound(phi, beta))
+
+
+# ---------------------------------------------------------------------------
+# Runs
+# ---------------------------------------------------------------------------
+def run_static(betas: Sequence[float], make_plots: bool, outdir: str) -> None:
+    phi = np.linspace(0.0, 0.95, 20)
+    lP_vals = lP(phi)
+    bounds = {b: causality_bound(phi, beta=b) for b in betas}
+
+    print("Static relations (l_P0 = 1)")
+    print(
+        f"  l_P(0) = {float(lP(0.0)):.3f}, l_P(0.5) = {float(lP(0.5)):.3f}, l_P(1) = {float(lP(1.0)):.3f}"
+    )
+    print(f"  band tightest at Phi* = {GOLDEN_CONJUGATE:.3f}")
+    for b in betas:
+        bmin = float(causality_bound(GOLDEN_CONJUGATE, b))
+        b0 = float(causality_bound(0.0, b))
+        print(
+            f"  beta={b:<5}: bound(0) = {b0:.3f}, min bound = {bmin:.3f}, bound(0.95) = {float(causality_bound(0.95, b)):.3f}"
+        )
+    grad = 0.1
+    print(
+        f"  static ringdown proxy for |grad Phi| = {grad}: {float(ringdown_shift_percent(grad, 1.0, 0.0)):.1f} % at Phi=0, {float(ringdown_shift_percent(grad, 1.0, 0.9)):.1f} % at Phi=0.9"
+    )
+
+    if not make_plots:
+        return
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    plt.figure()
+    plt.plot(phi, lP_vals, "g-o", label=r"$\ell_P(\Phi)=\sqrt{1-\Phi^2}$")
+    plt.xlabel(r"$\Phi$")
+    plt.ylabel(r"$\ell_P$")
+    plt.title("Dynamic Planck Length (COD profile)")
+    plt.legend()
+    plt.grid(True)
+    plt.savefig(f"{outdir}/fig4_1a.pdf")
+
+    plt.figure()
+    for b in betas:
+        plt.semilogy(phi, bounds[b], "o-", label=f"beta={b}")
+    plt.axvline(GOLDEN_CONJUGATE, color="k", ls=":", label=r"$\Phi^*=(\sqrt{5}-1)/2$")
+    plt.xlabel(r"$\Phi$")
+    plt.ylabel("Bound on |dPhi/dt|")
+    plt.title("Disformal Causality Band")
+    plt.legend()
+    plt.grid(True)
+    plt.savefig(f"{outdir}/fig4_1b.pdf")
+
+
+def run_dynamic(
+    beta: float,
+    make_plots: bool,
+    outdir: str,
+    H0: float = 1.0,
+    m: float = 0.1,
+    t_end: float = 40.0,
+) -> bool:
+    try:
+        from scipy.integrate import cumulative_trapezoid, solve_ivp
+    except ImportError:  # pragma: no cover - SciPy is a listed requirement
+        print("SciPy not available; skipping dynamic run.")
+        return True
+
+    def phi_eom(_t: float, y: Sequence[float]) -> list[float]:
         phival, phidot = y
-        Hphi = H0 * np.exp(phival)
-        phiddot = -3Hphiphidot - m2 * phival
+        H = H0 * math.exp(phival)
+        phiddot = -3.0 * H * phidot + m**2 * (1.0 - phival)  # V = m^2 (1-Phi)^2 / 2
         return [phidot, phiddot]
 
+    def reach_horizon(_t: float, y: Sequence[float]) -> float:
+        return y[0] - 1.0
+
+    reach_horizon.terminal = True  # type: ignore[attr-defined]
+
     phi0 = 0.0
-    phidot0 = 0.5 * causalitybound(phi0, beta=1.0)
-    y0 = [phi0, phi_dot0]
-    t_span = (0, 10)
-    teval = np.linspace(*tspan, 400)
+    phidot0 = 0.5 * float(causality_bound(phi0, beta=beta))
+    sol = solve_ivp(
+        phi_eom,
+        (0.0, t_end),
+        [phi0, phidot0],
+        t_eval=np.linspace(0.0, t_end, 800),
+        events=reach_horizon,
+        rtol=1e-8,
+        atol=1e-10,
+    )
+    phi_num, phidot_num = sol.y
+    H_num = H0 * np.exp(phi_num)
+    a_num = np.exp(cumulative_trapezoid(H_num, sol.t, initial=0.0))
+    bound_num = causality_bound(phi_num, beta=beta)
+    ratio = np.abs(phidot_num) / bound_num
+    shift = np.asarray(ringdown_shift_percent(phidot_num, a_num, phi_num))
+    ok = bool(np.all(ratio < 1.0))
 
-    sol = solveivp(phieom, tspan, y0, teval=t_eval)
-    phinum, phidot_num = sol.y
-    Hnum = H0 * np.exp(phinum)
-    lna = cumtrapz(Hnum, sol.t, initial=0.0)
-    anum = np.exp(lna)
-    boundnum = causalitybound(phi_num, beta=1.0)
+    print(f"Dynamic run (beta={beta}, H0={H0}, m={m}, t_end={t_end})")
+    print(
+        f"  Phi: {phi_num[0]:.3f} -> {phi_num[-1]:.3f}; horizon reached: {sol.status == 1}"
+    )
+    print(
+        f"  causality ratio: initial {ratio[0]:.3f}, max {ratio.max():.3f}  -> satisfied: {ok}"
+    )
+    print(f"  ringdown proxy: peak {shift.max():.2f} %")
+    print(f"  ln a(t_end) = {math.log(a_num[-1]):.2f}")
 
-    # Diagnostics
-    ratio = np.abs(phidotnum) / bound_num
-    print("Causality satisfied?", np.all(ratio < 1.0))
+    if make_plots:
+        import matplotlib
 
-    # Plot dynamic run
-    import matplotlib.pyplot as plt
-    fig, axs = plt.subplots(2,2,figsize=(12,8))
-    axs[0,0].plot(sol.t, phinum); axs[0,0].settitle('phi(t)')
-    axs[0,1].plot(sol.t, phidotnum); axs[0,1].plot(sol.t, bound_num, 'g--')
-    axs[1,0].semilogy(sol.t, anum); axs[1,0].settitle('a(t)')
-    axs[1,1].plot(sol.t, 100np.abs(phidotnum)/anumlP(phinum))
-    axs[1,1].set_title('Ringdown Shift (%)')
-    plt.tightlayout(); plt.savefig('fig41_eom.pdf')
-    plt.show()
-`
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+
+        fig, axs = plt.subplots(2, 2, figsize=(12, 8))
+        axs[0, 0].plot(sol.t, phi_num)
+        axs[0, 0].set_title(r"$\Phi(t)$")
+        axs[0, 1].plot(sol.t, np.abs(phidot_num), label=r"$|\dot\Phi|$")
+        axs[0, 1].plot(sol.t, bound_num, "g--", label="bound")
+        axs[0, 1].set_yscale("log")
+        axs[0, 1].legend()
+        axs[0, 1].set_title("Causality band")
+        axs[1, 0].semilogy(sol.t, a_num)
+        axs[1, 0].set_title("a(t)")
+        axs[1, 1].plot(sol.t, shift)
+        axs[1, 1].set_title("Ringdown Shift (%)")
+        fig.tight_layout()
+        fig.savefig(f"{outdir}/fig41_eom.pdf")
+    return ok
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        description="Simulation 3: COD-driven dynamic Planck length and disformal causality band."
+    )
+    parser.add_argument(
+        "--beta",
+        type=float,
+        nargs="+",
+        default=[1.0, 0.5, 0.05],
+        help="disformal parameters for the sweep (first is used for dynamics)",
+    )
+    parser.add_argument(
+        "--no-dynamic", action="store_true", help="skip the scalar-field evolution"
+    )
+    parser.add_argument(
+        "--no-plots", action="store_true", help="do not write PDF figures"
+    )
+    parser.add_argument("--outdir", default=".", help="directory for figures")
+    args = parser.parse_args(argv)
+
+    self_check()
+    run_static(args.beta, not args.no_plots, args.outdir)
+    if not args.no_dynamic:
+        ok = run_dynamic(args.beta[0], not args.no_plots, args.outdir)
+        return 0 if ok else 1
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -2,8 +2,8 @@
 # Copyright (c) 2025-2026 Jacob See.
 #
 # Notes on scope:
-# - Sim1-Sim4 are prose manuscripts stored with a .py extension; they
-#   are not executable Python (Sim5 and sim6 are). They are excluded
+# - Sim1, Sim2 and Sim4 are prose manuscripts stored with a .py extension;
+#   they are not executable Python (Sim3, Sim5 and sim6 are). They are excluded
 #   from Python tooling rather than renamed here because links and
 #   external references depend on the current names; renaming them is
 #   a separate decision for the repository owner.
@@ -15,7 +15,6 @@
 extend-exclude = [
     "Sim1_Emergent_Geometry.py",
     "Sim2_Cosmology.py",
-    "Sim3_Dynamic_Scale.py",
     "Sim4_Evolution.py",
 ]
 
