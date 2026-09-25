@@ -18,12 +18,19 @@ def main() -> int:
         print(json.dumps({"status": "error", "reason": "params are not valid JSON"}))
         return 1
 
-    repo = os.environ.get("OMEGA_REPO", os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+    repo = os.environ.get(
+        "OMEGA_REPO",
+        os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")),
+    )
     lean_dir = os.path.join(repo, "lean_proofs")
     module = str(params.get("module", "*"))
 
     if not os.path.isdir(lean_dir):
-        print(json.dumps({"status": "error", "reason": f"lean_proofs not found at {lean_dir}"}))
+        print(
+            json.dumps(
+                {"status": "error", "reason": f"lean_proofs not found at {lean_dir}"}
+            )
+        )
         return 1
 
     names = [f"{module}.lean"] if module != "*" else sorted(os.listdir(lean_dir))
@@ -36,10 +43,21 @@ def main() -> int:
             text = handle.read()
         report[name] = {
             "sorry": text.count("sorry"),
-            "axiom": sum(1 for line in text.splitlines() if line.strip().startswith("axiom ")),
+            "axiom": sum(
+                1 for line in text.splitlines() if line.strip().startswith("axiom ")
+            ),
         }
 
-    print(json.dumps({"status": "success", "algorithm": "lean-audit", "module": module, "report": report}))
+    print(
+        json.dumps(
+            {
+                "status": "success",
+                "algorithm": "lean-audit",
+                "module": module,
+                "report": report,
+            }
+        )
+    )
     return 0
 
 

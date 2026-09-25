@@ -7,10 +7,9 @@ and prints a JSON result on stdout. No network, no shell, bounded work.
 """
 
 import json
-import math
 import sys
 
-PHI = (1 + 5 ** 0.5) / 2
+PHI = (1 + 5**0.5) / 2
 
 
 def main() -> int:
@@ -27,7 +26,7 @@ def main() -> int:
     # Finite-chain two-factor law toy evaluation: product of radial factors.
     accumulator = 1.0
     for step in range(1, chain_length + 1):
-        accumulator *= 1.0 - (phi ** 2) / (step * PHI)
+        accumulator *= 1.0 - (phi**2) / (step * PHI)
         if accumulator <= 0:
             break
 
