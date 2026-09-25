@@ -111,7 +111,9 @@ def main() -> int:
 
     misleading, stubs, unit_types = audit(args.root)
     rc = 0
-    rc |= report("misleading trivially-stated theorems", misleading, args.max_misleading)
+    rc |= report(
+        "misleading trivially-stated theorems", misleading, args.max_misleading
+    )
     rc |= report("Nonempty-unit stubs", stubs, args.max_unit_stubs)
     rc |= report("Unit-typed volume definitions", unit_types, args.max_unit_types)
     if rc == 0:
