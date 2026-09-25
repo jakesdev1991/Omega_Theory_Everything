@@ -78,20 +78,22 @@ theorem dynamicPlanckLength_of_nonpos (env : ScaleEnvironment) {rho : ℝ}
     length `lP(rho)` is strictly smaller than the baseline `lP0`. -/
 theorem planck_scale_contraction (env : ScaleEnvironment) (rho : ℝ) (hrho : rho > 0) :
     dynamicPlanckLength env rho < env.lP0 := by
-  dsimp [dynamicPlanckLength]
-  split_ifs with h
-  · have h1 : 1 + rho / env.rho0 > 1 := by
-      have hdiv : rho / env.rho0 > 0 := div_pos hrho env.hrho0
-      linarith
-    -- Compare the square roots first, then rewrite only `√1` into `1`.
-    -- (`rw [← Real.sqrt_one]` on the goal would also rewrite the `1` inside
-    -- `1 + rho / env.rho0`, which no longer matches `h1`.)
-    have hsqrt : Real.sqrt (1 + rho / env.rho0) > 1 := by
-      have hlt := Real.sqrt_lt_sqrt zero_le_one h1
-      rwa [Real.sqrt_one] at hlt
-    -- `a / b < a` whenever `0 < a` and `1 < b`; no nonlinear arithmetic needed.
-    exact div_lt_self env.hlP0 hsqrt
-  · exact absurd hrho h
+  have h1 : 1 + rho / env.rho0 > 1 := by
+    have hdiv : rho / env.rho0 > 0 := div_pos hrho env.hrho0
+    linarith
+  -- Compare the square roots first, then rewrite only `√1` into `1`.
+  -- (`rw [← Real.sqrt_one]` on the goal would also rewrite the `1` inside
+  -- `1 + rho / env.rho0`, which no longer matches `h1`.)
+  have hsqrt : Real.sqrt (1 + rho / env.rho0) > 1 := by
+    have hlt := Real.sqrt_lt_sqrt zero_le_one h1
+    rwa [Real.sqrt_one] at hlt
+  -- `hrho` already decides the `if`, so there is no `else` branch to refute.
+  -- (`split_ifs` does not case-split on a condition that is already a
+  -- hypothesis, which is why a second `contradiction` bullet has no goal.)
+  unfold dynamicPlanckLength
+  rw [if_pos hrho]
+  -- `a / b < a` whenever `0 < a` and `1 < b`; no nonlinear arithmetic needed.
+  exact div_lt_self env.hlP0 hsqrt
 
 /-- **Contraction is monotone in density.** On positive densities the operational
     Planck length is strictly decreasing: a denser region has a strictly shorter
