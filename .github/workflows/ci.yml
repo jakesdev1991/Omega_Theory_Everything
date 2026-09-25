@@ -44,6 +44,7 @@ jobs:
           python Sim3_Dynamic_Scale.py --help || true
           python Sim4_Evolution.py --help || true
           python Sim5_Emergent_Gravity.py --help || true
+          python Sim7_Radial_Metric.py --help || true
 
   rust-checks:
     name: Rust Build & Test
