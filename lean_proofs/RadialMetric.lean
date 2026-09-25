@@ -58,45 +58,37 @@ namespace RadialMetric
 Sim3's disformal causality band. -/
 noncomputable def phiStar : ℝ := (Real.sqrt 5 - 1) / 2
 
-/-- Eliminating the denominator: `2 * Φ* = √5 - 1`. Proved by an explicit
-chain so that no tactic has to guess how to clear a division. -/
+/-- Clearing the denominator: `2 * Φ* = √5 - 1`. -/
 theorem two_mul_phiStar : 2 * phiStar = Real.sqrt 5 - 1 := by
   unfold phiStar
-  calc 2 * ((Real.sqrt 5 - 1) / 2)
-      = 2 * ((Real.sqrt 5 - 1) * ((2 : ℝ)⁻¹)) := by rw [div_eq_mul_inv]
-    _ = (Real.sqrt 5 - 1) * (2 * ((2 : ℝ)⁻¹)) := by ring
-    _ = (Real.sqrt 5 - 1) * 1 := by
-        rw [mul_inv_cancel (by norm_num : (2 : ℝ) ≠ 0)]
-    _ = Real.sqrt 5 - 1 := by ring
+  field_simp
 
 /-- The golden conjugate is strictly positive. Uses `Real.sqrt_lt_sqrt` and
 `Real.sqrt_one`, the same two lemmas `DynamicCODScale` relies on. -/
 theorem phiStar_pos : 0 < phiStar := by
-  have e : 2 * phiStar = Real.sqrt 5 - 1 := two_mul_phiStar
   have h1 : (1 : ℝ) < Real.sqrt 5 := by
     have h' : Real.sqrt (1 : ℝ) < Real.sqrt 5 :=
       Real.sqrt_lt_sqrt (by norm_num) (by norm_num)
     rwa [Real.sqrt_one] at h'
+  have e : 2 * phiStar = Real.sqrt 5 - 1 := two_mul_phiStar
   linarith
 
 /-- The defining equation of the golden conjugate: `Φ*² + Φ* = 1`. -/
 theorem phiStar_golden : phiStar * phiStar + phiStar - 1 = 0 := by
-  have hs : Real.sqrt 5 * Real.sqrt 5 = 5 := Real.sq_sqrt (by norm_num)
+  have hs : (Real.sqrt 5) ^ 2 = 5 := Real.sq_sqrt (by norm_num)
   have e : 2 * phiStar = Real.sqrt 5 - 1 := two_mul_phiStar
+  have hexp : (Real.sqrt 5 - 1) * (Real.sqrt 5 - 1)
+            = (Real.sqrt 5) ^ 2 - 2 * Real.sqrt 5 + 1 := by ring
   have e2 : (2 * phiStar) * (2 * phiStar) = 6 - 2 * Real.sqrt 5 := by
-    rw [e]
-    have hexp : (Real.sqrt 5 - 1) * (Real.sqrt 5 - 1)
-              = Real.sqrt 5 * Real.sqrt 5 - 2 * Real.sqrt 5 + 1 := by ring
-    rw [hexp, hs]
+    rw [e, hexp, hs]
     ring
-  -- 4 * (Φ*² + Φ* - 1) written with the denominator cleared on the right.
+  -- 4 * (Φ*² + Φ* - 1) with the denominator cleared on the right.
   have key : 4 * (phiStar * phiStar + phiStar - 1)
            = (2 * phiStar) * (2 * phiStar) + 2 * (2 * phiStar) - 4 := by ring
   have hval : (2 * phiStar) * (2 * phiStar) + 2 * (2 * phiStar) - 4 = 0 := by
     rw [e2, e]
     ring
-  have h4 : 4 * (phiStar * phiStar + phiStar - 1) = 0 := by
-    rw [key, hval]
+  have h4 : 4 * (phiStar * phiStar + phiStar - 1) = 0 := by rw [key, hval]
   exact Or.resolve_left (mul_eq_zero.mp h4) (by norm_num)
 
 /-- **The golden-ratio bottleneck.** For every real `Φ`,
@@ -148,7 +140,7 @@ rendering scale `s i` and local weight `w i` (the correlation deficit `-ln K_i`)
 The scale and the decay rate enter *per link* as a product: this is the discrete
 content of `g_rr = (ℓ_P(Φ) · κ)²`. -/
 noncomputable def chainLength (s w : ℕ → ℝ) (n : ℕ) : ℝ :=
-  ∑ i in Finset.range n, s i * w i
+  ∑ i ∈ Finset.range n, s i * w i
 
 /-- The chain length is monotone in the local scale: a uniformly larger
 rendering scale gives a uniformly longer chain. -/
@@ -165,7 +157,7 @@ This is the only case in which the finite §2.1 formula `d = -ℓ_P ln K` is exa
 with a varying `Φ` the chain sum and the single-scale formula differ, which
 `Sim7_Radial_Metric.py` measures at 6–52 % for the canonical profile. -/
 theorem chainLength_const_scale (s w : ℕ → ℝ) (n : ℕ) :
-    chainLength (fun _ => s) w n = s * ∑ i in Finset.range n, w i := by
+    chainLength (fun _ => s) w n = s * ∑ i ∈ Finset.range n, w i := by
   unfold chainLength
   simp
 
@@ -201,9 +193,8 @@ lapse–conformal identity reads `N · ψ² = (ℓ_P(Φ)/ℓ_P0)²`. -/
 theorem cod_profile_matches_lapse (env : DynamicCODScale.CODEnvironment) (Φ : ℝ)
     (hΦ : 0 ≤ 1 - Φ ^ 2) :
     DynamicCODScale.dynamicPlanckCOD env Φ ^ 2 = env.lP0 ^ 2 * (1 - Φ ^ 2) := by
-  have h : Real.sqrt (1 - Φ ^ 2) * Real.sqrt (1 - Φ ^ 2) = 1 - Φ ^ 2 :=
-    Real.mul_self_sqrt hΦ
+  have h : (Real.sqrt (1 - Φ ^ 2)) ^ 2 = 1 - Φ ^ 2 := Real.sq_sqrt hΦ
   unfold DynamicCODScale.dynamicPlanckCOD
-  rw [mul_pow, pow_two, h]
+  rw [mul_pow, h]
 
 end RadialMetric
