@@ -40,10 +40,18 @@ theorem effective_coupling_positive : G_effective > 0 := by
 theorem extradim_from_omega : G_effective > 0 := by
   exact effective_coupling_positive
 
-theorem extradim_distance_self (R : QRegion) : d R R = 0 := by
+/-- Consistency bridge (VOL48): the Omega-metric `d` is reflexive (`d R R = 0`).
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `extradim_distance_self` evoked. -/
+theorem bridge_vol48_metric_self_zero (R : QRegion) : d R R = 0 := by
   exact qregion_self_distance_zero R
 
-theorem extradim_phi_nonneg (R₁ R₂ : QRegion) : Φ R₁ R₂ ≥ 0 := by
+/-- Consistency bridge (VOL48): the coupling `Φ` is nonnegative.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `extradim_phi_nonneg` evoked. -/
+theorem bridge_vol48_coupling_nonneg (R₁ R₂ : QRegion) : Φ R₁ R₂ ≥ 0 := by
   exact Φ_nonneg R₁ R₂
 
 end OmegaProtocol.Vol48

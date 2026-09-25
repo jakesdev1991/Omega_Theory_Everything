@@ -40,20 +40,22 @@ theorem lotka_volterra_equilibrium
     field_simp
     ring
 
-/-- COROLLARY: Ecosystem Dynamics from Omega Protocol
-    Species = Q-Regions (0D)
-    Predator-prey = Φ interaction (1D)
-    Spatial distribution = Ω-Metric (2D)
-    Timescale = Informational Viscosity (3D)
-    Stability = RCOD Asymmetry (4D) -/
-theorem ecosystem_from_omega (R : QRegion) : d R R = 0 := by
+/-- Consistency bridge (VOL29): the Omega-metric `d` is reflexive (`d R R = 0`).
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `ecosystem_from_omega` evoked. -/
+theorem bridge_vol29_metric_self_zero (R : QRegion) : d R R = 0 := by
   exact qregion_self_distance_zero R
 
 theorem predator_prey_symmetry (alpha beta delta gamma x y : ℝ) :
   PreyRate alpha beta x y + PredatorRate delta gamma x y = alpha * x - gamma * y + (delta - beta) * x * y := by
   dsimp [PreyRate, PredatorRate]; ring
 
-theorem ecosystem_entropy_bound (R : QRegion) : vonNeumannEntropy R ≤ Real.pi := by
+/-- Consistency bridge (VOL29): the von Neumann entropy satisfies the bound `S ≤ π`.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `ecosystem_entropy_bound` evoked. -/
+theorem bridge_vol29_entropy_bounded (R : QRegion) : vonNeumannEntropy R ≤ Real.pi := by
   exact entropy_bounded R
 
 end OmegaProtocol.Vol29

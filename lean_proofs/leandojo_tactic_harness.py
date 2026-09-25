@@ -26,7 +26,6 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Iterable, Sequence
 
-
 DEFAULT_MODULES = (
     "CBwK_Budget_Pacer.lean",
     "APPA_Context_Branching.lean",
@@ -194,21 +193,23 @@ def verify_modules(project_dir: Path, modules: Sequence[str]) -> list[ModuleChec
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--json", action="store_true", help="emit machine-readable output")
+    parser.add_argument(
+        "--json", action="store_true", help="emit machine-readable output"
+    )
     parser.add_argument(
         "--require-lean",
         action="store_true",
         help="return failure when the Lean executable is unavailable",
     )
-    parser.add_argument("--no-kernel-check", action="store_true", help="only run tactic search")
+    parser.add_argument(
+        "--no-kernel-check", action="store_true", help="only run tactic search"
+    )
     args = parser.parse_args()
 
     project_dir = Path(__file__).resolve().parent
     search = BestFirstTacticSearch().search(KNOWN_GOALS)
     checks = (
-        []
-        if args.no_kernel_check
-        else verify_modules(project_dir, DEFAULT_MODULES)
+        [] if args.no_kernel_check else verify_modules(project_dir, DEFAULT_MODULES)
     )
     payload = {
         "search": [asdict(result) for result in search],
@@ -225,7 +226,9 @@ def main() -> int:
                 f"({result.evaluation_steps} steps, {result.tactic})"
             )
         for check in checks:
-            print(f"kernel check {check.module}: {check.status} ({check.elapsed_ms:.2f} ms)")
+            print(
+                f"kernel check {check.module}: {check.status} ({check.elapsed_ms:.2f} ms)"
+            )
             if check.status == "FAILED" and check.diagnostics:
                 print(check.diagnostics)
 

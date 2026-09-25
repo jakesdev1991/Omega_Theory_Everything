@@ -18,7 +18,9 @@ AXIOM = re.compile(r"^\s*axiom\s+([A-Za-z0-9_.'₁₂₃]+)")
 def declarations(root: Path) -> list[tuple[Path, int, str]]:
     found: list[tuple[Path, int, str]] = []
     for path in sorted(root.glob("*.lean")):
-        for line_number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        for line_number, line in enumerate(
+            path.read_text(encoding="utf-8").splitlines(), 1
+        ):
             match = AXIOM.match(line)
             if match:
                 found.append((path, line_number, match.group(1)))

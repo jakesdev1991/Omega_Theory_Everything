@@ -52,11 +52,19 @@ theorem gametheory_from_omega (s2 : Strategy) :
   Payoff1 Strategy.Defect s2 ≥ Payoff1 Strategy.Cooperate s2 := by
   exact defect_dominates_p1 s2
 
-theorem game_theory_mutual_info_nonneg (R₁ R₂ : QRegion) :
+/-- Consistency bridge (VOL31): the mutual information is nonnegative.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `game_theory_mutual_info_nonneg` evoked. -/
+theorem bridge_vol31_mutual_info_nonneg (R₁ R₂ : QRegion) :
   mutualInformation R₁ R₂ ≥ 0 := by
   exact mutualInformation_nonneg R₁ R₂
 
-theorem nash_from_phi (R : QRegion) : d R R = 0 := by
+/-- Consistency bridge (VOL31): the Omega-metric `d` is reflexive (`d R R = 0`).
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `nash_from_phi` evoked. -/
+theorem bridge_vol31_metric_self_zero (R : QRegion) : d R R = 0 := by
   exact qregion_self_distance_zero R
 
 end OmegaProtocol.Vol31

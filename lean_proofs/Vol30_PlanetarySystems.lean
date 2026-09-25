@@ -27,18 +27,21 @@ theorem kepler_ratio_constant (a₁ a₂ : ℝ) (ha1 : a₁^3 ≠ 0) (ha2 : a₂
   (OrbitalPeriod a₁)^2 / a₁^3 = (OrbitalPeriod a₂)^2 / a₂^3 := by
   simp [OrbitalPeriod]
 
-/-- COROLLARY: Kepler's Laws from Omega Protocol
-    Planets = Q-Regions (0D)
-    Gravity = Φ (1D)
-    Orbital distance = Ω-Metric (2D)
-    Period = Informational Viscosity (3D) -/
-theorem kepler_from_omega (R : QRegion) : d R R = 0 := by
+/-- Consistency bridge (VOL30): the Omega-metric `d` is reflexive (`d R R = 0`).
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `kepler_from_omega` evoked. -/
+theorem bridge_vol30_metric_self_zero (R : QRegion) : d R R = 0 := by
   exact qregion_self_distance_zero R
 
 theorem orbital_period_sq_nonneg (a : ℝ) : (OrbitalPeriod a)^2 ≥ 0 := by
   exact sq_nonneg _
 
-theorem kepler_distance_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := by
+/-- Consistency bridge (VOL30): the Omega-metric `d` is nonnegative.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `kepler_distance_nonneg` evoked. -/
+theorem bridge_vol30_metric_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := by
   exact distance_nonneg R₁ R₂
 
 end OmegaProtocol.Vol30

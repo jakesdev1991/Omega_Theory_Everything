@@ -53,9 +53,10 @@ jobs:
           set +e
           lake build ToE > /tmp/lake-build.log 2>&1
           rc=$?
-          # Consolidate the raw log tail into a few annotations first:
-          # GitHub caps per-job annotations, so the important context leads.
-          tail -n 30 /tmp/lake-build.log | awk 'BEGIN{RS="\n"; ORS=""} {buf = buf $0 "\\n"; n++; if (n % 10 == 0) {print "::error::LOGTAIL>> " substr(buf, 1, 8000) "\n"; buf=""}} END{if (buf != "") print "::error::LOGTAIL>> " substr(buf, 1, 8000)}'
+          # Emit every compiler diagnostic (not just the tail) as
+          # annotations; include continuation lines of multi-line errors.
+          awk '/error|warning|failures/{p=8} p>0{print; p--}' /tmp/lake-build.log \
+            | awk 'BEGIN{ORS=""} {buf = buf $0 "\\n"; n++; if (n % 25 == 0) {print "::error::LOG>> " substr(buf, 1, 8000) "\n"; buf=""}} END{if (buf != "") print "::error::LOG>> " substr(buf, 1, 8000)}'
           if [ "$rc" -eq 0 ]; then
             echo "::notice::lake build re-run exited 0 (original failure was transient)"
           else
@@ -66,9 +67,14 @@ jobs:
         working-directory: lean_proofs
         run: |
           set -e
-          if grep -rn --include='*.lean' --exclude-dir=.lake -E '\bsorry\b|: True :=|:= by trivial' . ; then
-            echo "::error::Found sorry or trivial stubs in lean sources"
+          if grep -rn --include='*.lean' --exclude-dir=.lake -E '\bsorry\b|\badmit\b|\bnative_decide\b|\bsorryAx\b|@\[extern|\bimplemented_by\b|: True :=|:= by trivial' . ; then
+            echo "::error::Found sorry/admit/native_decide/extern or trivial stubs in lean sources"
             exit 1
           fi
           echo "Clean: no sorry/trivial stubs."
           python3 audit_axioms.py --max 0
+          # Honesty ratchet: degenerate-model tautologies may only exist under
+          # the `bridge_*` naming convention, `Nonempty Unit` stubs and
+          # `Unit`-typed volume definitions may only decrease. See
+          # audit_vacuity.py for the definitions of the three metrics.
+          python3 audit_vacuity.py --max-misleading 0 --max-unit-stubs 0 --max-unit-types 15

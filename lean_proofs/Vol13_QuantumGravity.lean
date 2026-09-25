@@ -56,12 +56,20 @@ theorem graviton_sm_coupling : ∀ (g : Graviton) (s : Vol10.SM_Gauge_Group), SM
   intro g s R
   exact qregion_self_distance_zero R
 
-theorem sm_interaction_explicit (g : Graviton) (s : Vol10.SM_Gauge_Group) (R : QRegion) :
+/-- Consistency bridge (VOL13): the Omega-metric `d` is reflexive (`d R R = 0`).
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `sm_interaction_explicit` evoked. -/
+theorem bridge_vol13_metric_self_zero (g : Graviton) (s : Vol10.SM_Gauge_Group) (R : QRegion) :
   d R R = 0 := by
   have h := graviton_sm_coupling g s
   exact h R
 
-theorem graviton_coupling_entropy (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
+/-- Consistency bridge (VOL13): the von Neumann entropy is nonnegative.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `graviton_coupling_entropy` evoked. -/
+theorem bridge_vol13_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
   exact monotonicity_lemma R
 
 end OmegaProtocol.Vol13

@@ -57,7 +57,14 @@ import Vol54_TheoryOfNothing
 -- OmegaProtocol.lean
 -- Master Lean 4 file that imports and unifies all 54 volumes
 -- Forces all volumes into a single interdependent mathematical structure
--- FIXED: No True := trivial placeholders - all theorems have genuine proofs
+--
+-- Naming convention (enforced by lean_proofs/audit_vacuity.py):
+--   * Declarations named `bridge_*` are STRUCTURAL consistency checks of the
+--     concrete Q-region model from `OmegaAxioms.lean`. They are honest
+--     theorems about the formalization itself; they do not claim to derive
+--     the physical law their section heading refers to.
+--   * All other declarations are either genuine mathematical proofs or
+--     explicit re-statements of volume-level results.
 
 namespace OmegaProtocol
 open Vol01
@@ -67,7 +74,11 @@ open Vol04
 open Vol05
 
 -- Vol 01: Classical Mechanics
-theorem macroscopic_limit_flow (R : QRegion) : d R R = 0 := by
+/-- Consistency bridge (VOL01): the Omega-metric `d` is reflexive (`d R R = 0`).
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `macroscopic_limit_flow` evoked. -/
+theorem bridge_vol01_metric_self_zero (R : QRegion) : d R R = 0 := by
   exact qregion_self_distance_zero R
 
 /-- Vol01: energy conservation from Hamilton's equations (genuine calculus proof). -/
@@ -97,7 +108,11 @@ theorem least_action_principle (N : ℕ) (x η : ℕ → ℝ) (k : ℝ)
   Vol01.least_action_principle N x η k hx h0 hN
 
 -- Vol 02: Electromagnetism
-theorem informational_bianchi (R₁ R₂ R₃ : QRegion) : d R₁ R₃ ≤ d R₁ R₂ + d R₂ R₃ := by
+/-- Consistency bridge (protocol core): the Omega-metric `d` satisfies the triangle inequality.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `informational_bianchi` evoked. -/
+theorem bridge_metric_triangle (R₁ R₂ R₃ : QRegion) : d R₁ R₃ ≤ d R₁ R₂ + d R₂ R₃ := by
   exact distance_triangle_inequality R₁ R₂ R₃
 
 theorem gauss_law_magnetism (em : Vol02.ElectromagneticField) :
@@ -112,7 +127,11 @@ theorem ampere_maxwell_law (em : Vol02.ElectromagneticField) :
   Vol02.ExteriorDerivative (Vol02.HodgeStar em.F) = Vol02.HodgeStar Vol02.J := by
   exact Vol02.inhomogeneous_maxwell em
 
-theorem em_wave_equation (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := by
+/-- Consistency bridge (VOL02): the Omega-metric `d` is nonnegative.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `em_wave_equation` evoked. -/
+theorem bridge_vol02_metric_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := by
   exact distance_nonneg R₁ R₂
 
 -- Vol 03: Thermodynamics
@@ -143,7 +162,11 @@ theorem clausius_inequality (ρ σ : StateSpace) (hT : Vol03.Temperature ρ > 0)
   exact Vol03.clausius_inequality ρ σ hT
 
 -- Vol 04: Quantum Mechanics
-theorem axiom_non_commutative_algebra (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R₂ R₁ := by
+/-- Consistency bridge (VOL04): the coupling `Φ` is symmetric.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `axiom_non_commutative_algebra` evoked. -/
+theorem bridge_vol04_coupling_symm (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R₂ R₁ := by
   exact Φ_symm R₁ R₂
 
 theorem heisenberg_uncertainty (A B : Operator) (ψ : StateSpace) :
@@ -157,7 +180,11 @@ theorem schrodinger_equation (ψ : ℝ → StateSpace) (H : Operator)
   Complex.I • Vol04.time_derivative ψ t = (1 / (Vol04.hbar : ℂ)) • H (ψ t) := by
   exact Vol04.schrodinger_equation ψ H hH t h_dynamics
 
-theorem ehrenfests_theorem (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := by
+/-- Consistency bridge (VOL04): the Omega-metric `d` is nonnegative.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `ehrenfests_theorem` evoked. -/
+theorem bridge_vol04_metric_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := by
   exact distance_nonneg R₁ R₂
 
 -- Vol 05: General Relativity
@@ -179,16 +206,28 @@ theorem cosmological_constant :
   exact Vol05.cosmological_constant
 
 -- Vol 06: QFT
-theorem axiom_local_nets (R₁ R₂ : QRegion) : Φ R₁ R₂ ≥ 0 := by
+/-- Consistency bridge (VOL06): the coupling `Φ` is nonnegative.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `axiom_local_nets` evoked. -/
+theorem bridge_vol06_coupling_nonneg (R₁ R₂ : QRegion) : Φ R₁ R₂ ≥ 0 := by
   exact Φ_nonneg R₁ R₂
 
-theorem dirac_equation (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := by
+/-- Consistency bridge (VOL06): the Omega-metric `d` is nonnegative.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `dirac_equation` evoked. -/
+theorem bridge_vol06_metric_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := by
   exact distance_nonneg R₁ R₂
 
 theorem standard_model_gauge_group : Vol10.SM_Gauge_Group = (Vol06.SU3 × Vol06.SU2 × Vol06.U1) := by
   exact Vol10.gauge_symmetry
 
-theorem optical_theorem (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
+/-- Consistency bridge (VOL06): the von Neumann entropy is nonnegative.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `optical_theorem` evoked. -/
+theorem bridge_vol06_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
   exact monotonicity_lemma R
 
 -- Vol 07: Cosmology
@@ -210,26 +249,50 @@ theorem critical_density (t : Vol07.CosmologicalTime) : Vol07.CriticalDensity t 
   rfl
 
 -- Vol 08: Black Hole Thermodynamics
-theorem axiom_kms_exterior_vacuum (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
+/-- Consistency bridge (VOL08): the von Neumann entropy is nonnegative.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `axiom_kms_exterior_vacuum` evoked. -/
+theorem bridge_vol08_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
   exact monotonicity_lemma R
 
-theorem bekenstein_hawking_entropy (R : QRegion) : d R R = 0 := by
+/-- Consistency bridge (VOL08): the Omega-metric `d` is reflexive (`d R R = 0`).
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `bekenstein_hawking_entropy` evoked. -/
+theorem bridge_vol08_metric_self_zero (R : QRegion) : d R R = 0 := by
   exact qregion_self_distance_zero R
 
-theorem hawking_temperature (R₁ R₂ : QRegion) : mutualInformation R₁ R₂ ≥ 0 := by
+/-- Consistency bridge (VOL08): the mutual information is nonnegative.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `hawking_temperature` evoked. -/
+theorem bridge_vol08_mutual_info_nonneg (R₁ R₂ : QRegion) : mutualInformation R₁ R₂ ≥ 0 := by
   exact mutualInformation_nonneg R₁ R₂
 
-theorem four_laws_bh_mechanics (R₁ R₂ R₃ : QRegion) : d R₁ R₃ ≤ d R₁ R₂ + d R₂ R₃ := by
+/-- Consistency bridge (VOL08): the Omega-metric `d` satisfies the triangle inequality.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `four_laws_bh_mechanics` evoked. -/
+theorem bridge_vol08_metric_triangle (R₁ R₂ R₃ : QRegion) : d R₁ R₃ ≤ d R₁ R₂ + d R₂ R₃ := by
   exact distance_triangle_inequality R₁ R₂ R₃
 
 -- Vol 09: Holographic Principle
-theorem axiom_holographic_boundary (R : QRegion) : vonNeumannEntropy R ≤ Real.pi := by
+/-- Consistency bridge (VOL09): the von Neumann entropy satisfies the bound `S ≤ π`.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `axiom_holographic_boundary` evoked. -/
+theorem bridge_vol09_entropy_bounded (R : QRegion) : vonNeumannEntropy R ≤ Real.pi := by
   exact entropy_bounded R
 
 theorem bulk_reconstruction (R₁ R₂ : QRegion) : forwardFlux R₁ R₂ = Φ R₁ R₂ := by
   rfl
 
-theorem ryu_takayanagi (R : QRegion) : d R R = 0 := by
+/-- Consistency bridge (VOL09): the Omega-metric `d` is reflexive (`d R R = 0`).
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `ryu_takayanagi` evoked. -/
+theorem bridge_vol09_metric_self_zero (R : QRegion) : d R R = 0 := by
   exact qregion_self_distance_zero R
 
 -- Vol 10: Standard Model
@@ -247,7 +310,11 @@ theorem condensed_matter_emergence (a b Tc : ℝ) : Vol11.LandauFreeEnergy a b T
   exact Vol11.landau_critical_point_min a b Tc
 
 -- Vol 12: Quantum Information
-theorem quantum_information_axiom (R₁ R₂ : QRegion) : mutualInformation R₁ R₂ ≥ 0 := by
+/-- Consistency bridge (VOL12): the mutual information is nonnegative.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `quantum_information_axiom` evoked. -/
+theorem bridge_vol12_mutual_info_nonneg (R₁ R₂ : QRegion) : mutualInformation R₁ R₂ ≥ 0 := by
   exact mutualInformation_nonneg R₁ R₂
 
 -- Vol 13: Quantum Gravity
@@ -270,15 +337,27 @@ theorem non_equilibrium_axiom (t : Vol16.ThermoTime) (h_isolated : Vol16.Entropy
   exact Vol16.isolated_entropy_nondecreasing t h_isolated
 
 -- Vol 17: Fluid Dynamics
-theorem fluid_dynamics_axiom (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := by
+/-- Consistency bridge (VOL17): the Omega-metric `d` is nonnegative.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `fluid_dynamics_axiom` evoked. -/
+theorem bridge_vol17_metric_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := by
   exact distance_nonneg R₁ R₂
 
 -- Vol 18: Statistical Mechanics
-theorem statistical_mechanics_axiom (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
+/-- Consistency bridge (VOL18): the von Neumann entropy is nonnegative.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `statistical_mechanics_axiom` evoked. -/
+theorem bridge_vol18_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
   exact monotonicity_lemma R
 
 -- Vol 19: Complex Systems
-theorem complex_systems_axiom (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R₂ R₁ := by
+/-- Consistency bridge (VOL19): the coupling `Φ` is symmetric.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `complex_systems_axiom` evoked. -/
+theorem bridge_vol19_coupling_symm (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R₂ R₁ := by
   exact Φ_symm R₁ R₂
 
 -- Vol 20: Chaos Theory
@@ -313,7 +392,11 @@ theorem axiom_bell_violation : Vol24.TsirelsonBound > Vol24.ClassicalCHSHBound :
 theorem contextuality : Vol24.TsirelsonBound > Vol24.ClassicalCHSHBound := by
   exact Vol24.bell_violation
 
-theorem non_locality_causality (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := by
+/-- Consistency bridge (VOL24): the Omega-metric `d` is nonnegative.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `non_locality_causality` evoked. -/
+theorem bridge_vol24_metric_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := by
   exact distance_nonneg R₁ R₂
 
 -- Vol 25: Black Hole Information
@@ -325,7 +408,11 @@ theorem page_curve (s_final : Vol25.BHState) (h_evaporated : Vol25.VonNeumannEnt
   Vol25.RadiationEntropy s_final = 0 := by
   exact Vol25.page_curve_endpoint s_final h_evaporated
 
-theorem firewall_resolution (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
+/-- Consistency bridge (VOL25): the von Neumann entropy is nonnegative.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `firewall_resolution` evoked. -/
+theorem bridge_vol25_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
   exact monotonicity_lemma R
 
 -- Vol 26: Network Theory
@@ -370,7 +457,11 @@ theorem evolution_of_cooperation :
   (Vol31.Payoff2 Vol31.Strategy.Defect Vol31.Strategy.Defect ≥ Vol31.Payoff2 Vol31.Strategy.Defect Vol31.Strategy.Cooperate) := by
   exact Vol31.nash_equilibrium_defect
 
-theorem tragedy_of_the_commons (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := by
+/-- Consistency bridge (VOL31): the Omega-metric `d` is nonnegative.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `tragedy_of_the_commons` evoked. -/
+theorem bridge_vol31_metric_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := by
   exact distance_nonneg R₁ R₂
 
 -- Vol 32: Cybernetics
@@ -382,11 +473,19 @@ theorem cybernetics_axiom (g : ℝ) (hg0 : 0 ≤ g) (hg1 : g ≤ 1) (n : ℕ) :
 theorem axiom_general_intelligence : Nonempty Vol33.ArtificialGeneralIntelligence := by
   exact Vol33.general_intelligence
 
-theorem recursive_self_improvement (R : QRegion) : d R R = 0 := by
-  exact Vol33.recursiveselfimprovement R
+/-- Consistency bridge (VOL33): the Omega-metric `d` is reflexive (`d R R = 0`).
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `recursive_self_improvement` evoked. -/
+theorem bridge_vol33_metric_self_zero (R : QRegion) : d R R = 0 := by
+  exact qregion_self_distance_zero R
 
-theorem orthogonality_thesis (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R₂ R₁ := by
-  exact Vol33.orthogonalitythesis R₁ R₂
+/-- Consistency bridge (VOL33): the coupling `Φ` is symmetric.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `orthogonality_thesis` evoked. -/
+theorem bridge_vol33_coupling_symm (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R₂ R₁ := by
+  exact Φ_symm R₁ R₂
 
 -- Vol 34: Quantum Computing
 theorem quantum_computing_axiom :
@@ -446,11 +545,19 @@ theorem simulation_hypothesis_axiom : Nonempty Vol46.SimulationSubstrate := by
 theorem axiom_type_iv_civilization : Nonempty Vol47.TranscendentCivilization := by
   exact Vol47.type_iv_civilization
 
-theorem parameter_tuning (R : QRegion) : d R R = 0 := by
-  exact Vol47.parametertuning R
+/-- Consistency bridge (VOL47): the Omega-metric `d` is reflexive (`d R R = 0`).
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `parameter_tuning` evoked. -/
+theorem bridge_vol47_metric_self_zero (R : QRegion) : d R R = 0 := by
+  exact qregion_self_distance_zero R
 
-theorem artificial_universes (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R₂ R₁ := by
-  exact Vol47.artificialuniverses R₁ R₂
+/-- Consistency bridge (VOL47): the coupling `Φ` is symmetric.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `artificial_universes` evoked. -/
+theorem bridge_vol47_coupling_symm (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R₂ R₁ := by
+  exact Φ_symm R₁ R₂
 
 -- Vol 48: Extra Dimensions
 theorem extra_dimensions_axiom : Vol48.G_effective > 0 := by
@@ -471,25 +578,41 @@ theorem closed_timelike_curves_axiom (h : Vol51.History) (hc : Vol51.IsConsisten
   exact Vol51.novikov_consistency h hc
 
 -- Vol 52: Omega Point Theory
-theorem omega_point_theory_axiom (R : QRegion) : d R R = 0 := by
+/-- Consistency bridge (VOL52): the Omega-metric `d` is reflexive (`d R R = 0`).
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `omega_point_theory_axiom` evoked. -/
+theorem bridge_vol52_metric_self_zero (R : QRegion) : d R R = 0 := by
   exact qregion_self_distance_zero R
 
 -- Vol 53: Universal Compiler
 theorem axiom_universal_compiler : Nonempty Vol53.CosmicCompiler := by
   exact Vol53.universal_compiler
 
-theorem holographic_code (R : QRegion) : d R R = 0 := by
-  exact Vol53.holographiccode R
+/-- Consistency bridge (VOL53): the Omega-metric `d` is reflexive (`d R R = 0`).
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `holographic_code` evoked. -/
+theorem bridge_vol53_metric_self_zero (R : QRegion) : d R R = 0 := by
+  exact qregion_self_distance_zero R
 
-theorem substrate_modification (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R₂ R₁ := by
-  exact Vol53.substratemodification R₁ R₂
+/-- Consistency bridge (VOL53): the coupling `Φ` is symmetric.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `substrate_modification` evoked. -/
+theorem bridge_vol53_coupling_symm (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R₂ R₁ := by
+  exact Φ_symm R₁ R₂
 
 -- Vol 54: Theory of Nothing
 theorem theory_of_nothing_axiom : Vol54.AbsoluteNothingness := by
   exact Vol54.theory_of_nothing_axiom
 
 -- Cross Volume
-theorem cross_vol01_vol04_ehrenfest (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R₂ R₁ := by
+/-- Consistency bridge (cross-volume consistency): the coupling `Φ` is symmetric.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `cross_vol01_vol04_ehrenfest` evoked. -/
+theorem bridge_cross_v01_v04_coupling_symm (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R₂ R₁ := by
   exact Φ_symm R₁ R₂
 
 theorem cross_vol02_vol05_em_stress_energy : Vol05.Geometry.stress_energy = Vol05.EMStressEnergy := by
@@ -498,7 +621,11 @@ theorem cross_vol02_vol05_em_stress_energy : Vol05.Geometry.stress_energy = Vol0
 theorem cross_vol03_vol08_bh_thermo (ρ : StateSpace) : Vol03.BHEntropy ρ = Vol03.BlackHoleArea ρ / 4 := by
   exact Vol03.bh_entropy_formula ρ
 
-theorem cross_vol04_vol06_qm_from_qft (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
+/-- Consistency bridge (cross-volume consistency): the von Neumann entropy is nonnegative.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `cross_vol04_vol06_qm_from_qft` evoked. -/
+theorem bridge_cross_v04_v06_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
   exact monotonicity_lemma R
 
 theorem cross_vol05_vol07_flrw (t : Vol07.CosmologicalTime) :
@@ -506,15 +633,23 @@ theorem cross_vol05_vol07_flrw (t : Vol07.CosmologicalTime) :
   8 * Real.pi * NewtonG / 3 * Vol07.EnergyDensity t - Vol07.SpatialCurvatureK / Vol07.ScaleFactor t ^ 2 + Vol07.CosmologicalConstant / 3 := by
   exact Vol07.friedmannequations t
 
-theorem cross_vol08_vol09_bh_holography (R₁ R₂ : QRegion) : mutualInformation R₁ R₂ ≥ 0 := by
+/-- Consistency bridge (cross-volume consistency): the mutual information is nonnegative.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `cross_vol08_vol09_bh_holography` evoked. -/
+theorem bridge_cross_v08_v09_mutual_info_nonneg (R₁ R₂ : QRegion) : mutualInformation R₁ R₂ ≥ 0 := by
   exact mutualInformation_nonneg R₁ R₂
 
 theorem cross_vol09_vol22_holography_er_epr (A B : Vol22.Subsystem) (h : Φ A B = 1) : A = B := by
   exact Vol22.perfect_overlap_same_entity A B h
 
-theorem cross_vol10_vol13_sm_qg (g : Vol13.Graviton) (s : Vol10.SM_Gauge_Group) (R : QRegion) :
+/-- Consistency bridge (cross-volume consistency): the Omega-metric `d` is reflexive (`d R R = 0`).
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `cross_vol10_vol13_sm_qg` evoked. -/
+theorem bridge_cross_v10_v13_metric_self_zero (g : Vol13.Graviton) (s : Vol10.SM_Gauge_Group) (R : QRegion) :
   d R R = 0 := by
-  exact Vol13.sm_interaction_explicit g s R
+  exact Vol13.bridge_vol13_metric_self_zero g s R
 
 theorem cross_vol22_vol25_er_epr_bh_info (s_final : Vol25.BHState) (h_evaporated : Vol25.VonNeumannEntropy s_final = 0) :
   Vol25.RadiationEntropy s_final = 0 := by
@@ -527,19 +662,65 @@ theorem cross_vol49_all_observer_dependent (A : Vol49.ReferenceFrame) (ψ : Stat
   Vol49.FrameTransform A A ψ = ψ := by
   exact Vol49.frame_self_identity A ψ
 
-theorem cross_vol53_all_compiler (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
+/-- Consistency bridge (protocol core): the von Neumann entropy is nonnegative.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `cross_vol53_all_compiler` evoked. -/
+theorem bridge_cross_v53_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
   exact monotonicity_lemma R
 
-theorem cross_vol54_all_boundary (R : QRegion) : d R R = 0 := by
+/-- Consistency bridge (protocol core): the Omega-metric `d` is reflexive (`d R R = 0`).
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `cross_vol54_all_boundary` evoked. -/
+theorem bridge_cross_v54_metric_self_zero (R : QRegion) : d R R = 0 := by
   exact qregion_self_distance_zero R
 
--- Master Theorem
-theorem master_unification (R : QRegion) : d R R = 0 ∧ vonNeumannEntropy R ≥ 0 := by
-  constructor
-  · exact qregion_self_distance_zero R
-  · exact monotonicity_lemma R
+-- Structural bundles ----------------------------------------------------
+--
+-- These two declarations used to carry the grand names `master_unification`
+-- and `theory_of_everything` while proving only a single degenerate-model
+-- tautology each. They are renamed and, below, *strengthened* so their
+-- statements honestly reflect what is actually established: a conjunction of
+-- proven structural properties of the concrete Q-region model. They certify
+-- the internal coherence of the formalization; they are NOT derivations of
+-- physics from first principles.
 
-theorem theory_of_everything (R₁ R₂ R₃ : QRegion) : d R₁ R₃ ≤ d R₁ R₂ + d R₂ R₃ := by
-  exact distance_triangle_inequality R₁ R₂ R₃
+/-- Omega Protocol structural bundle: for any Q-region, the Ω-metric is
+    reflexive and the von Neumann entropy is nonnegative. Both conjuncts are
+    theorems about the concrete model in `OmegaAxioms.lean`. -/
+theorem omega_protocol_structural_bundle (R : QRegion) :
+    d R R = 0 ∧ vonNeumannEntropy R ≥ 0 :=
+  ⟨qregion_self_distance_zero R, monotonicity_lemma R⟩
+
+/-- Omega Theory structural consistency: the full set of proven structural
+    invariants of the Q-region model, bundled into one statement.
+
+    Conjuncts (each a theorem, not an axiom):
+    1. `d` is reflexive            (`d R R = 0`)
+    2. `d` is nonnegative          (`d x y ≥ 0`)
+    3. `d` obeys the triangle law  (`d x z ≤ d x y + d y z`)
+    4. `Φ` is symmetric            (`Φ x y = Φ y x`)
+    5. `Φ` is nonnegative          (`Φ x y ≥ 0`)
+    6. entropy is nonnegative      (`S R ≥ 0`)
+    7. entropy is π-bounded        (`S R ≤ π`)
+    8. mutual information nonneg.  (`I x y ≥ 0`) -/
+theorem omega_theory_structural_consistency (R₁ R₂ R₃ : QRegion) :
+    d R₁ R₁ = 0 ∧
+    d R₁ R₂ ≥ 0 ∧
+    d R₁ R₃ ≤ d R₁ R₂ + d R₂ R₃ ∧
+    Φ R₁ R₂ = Φ R₂ R₁ ∧
+    Φ R₁ R₂ ≥ 0 ∧
+    vonNeumannEntropy R₁ ≥ 0 ∧
+    vonNeumannEntropy R₁ ≤ Real.pi ∧
+    mutualInformation R₁ R₂ ≥ 0 :=
+  ⟨qregion_self_distance_zero R₁,
+   distance_nonneg R₁ R₂,
+   distance_triangle_inequality R₁ R₂ R₃,
+   Φ_symm R₁ R₂,
+   Φ_nonneg R₁ R₂,
+   monotonicity_lemma R₁,
+   entropy_bounded R₁,
+   mutualInformation_nonneg R₁ R₂⟩
 
 end OmegaProtocol

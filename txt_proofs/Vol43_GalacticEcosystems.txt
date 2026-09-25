@@ -4,37 +4,77 @@ import OmegaUnifiedFoundation
 
 /-
   Vol43_GalacticEcosystems.lean
-  REAL formalization: Galactic Ecosystems.
+  Formalization of Galactic Ecosystems.
 
-  Using Omega Protocol:
-  - 0D: Star systems = Q-Regions
-  - 1D: Interstellar trade = Φ
-  - 2D: Ω-Metric = galactic distance
-  - 3D: Informational Viscosity = colonization timescale
-  - 4D: RCOD Asymmetry = ecosystem stability
+  Model scope (stated honestly):
+  * A galactic network carries a symmetric, irreflexive adjacency relation on
+    star indices. The symmetry of reachability and the impossibility of
+    self-links are proven from those axioms.
+  * Interstellar travel time is `distance / speed`; its monotonicity in
+    distance is proven over ℝ.
+  * Omega-Protocol mapping: stars = Q-regions (0D), communication = Φ (1D),
+    distance = Ω-metric (2D).
 -/
 
 namespace OmegaProtocol.Vol43
 open OmegaProtocol
 
-def GalacticNetwork : Type := Unit
+/-- A network of stars with an adjacency relation. -/
+structure GalacticNetwork where
+  stars : ℕ
+  adjacent : ℕ → ℕ → Bool
+  symm : ∀ i j, adjacent i j = adjacent j i
+  irrefl : ∀ i, adjacent i i = false
 
-/-- AXIOM: Galactic Ecosystems Axiom -/
-theorem galactic_ecosystems_axiom : Nonempty GalacticNetwork := ⟨()⟩
+/-- Named bridge (legacy name kept for `OmegaProtocol.lean`): the empty
+    network inhabits the type. -/
+theorem galactic_ecosystems_axiom : Nonempty GalacticNetwork :=
+  ⟨⟨0, fun _ _ => false, fun _ _ => rfl, fun _ => rfl⟩⟩
 
-/-- COROLLARY: Galactic Ecosystems from Omega Protocol
-    Star systems = Q-Regions (0D)
-    Trade = Φ (1D)
-    Distance = Ω-Metric (2D)
-    Timescale = Informational Viscosity (3D)
-    Stability = RCOD Asymmetry (4D) -/
-theorem galactic_from_omega : Nonempty GalacticNetwork := by
-  exact galactic_ecosystems_axiom
+/-- Communication links are genuinely bidirectional. -/
+def linkExists (g : GalacticNetwork) (i j : ℕ) : Prop :=
+  g.adjacent i j = true
 
-theorem galactic_distance_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := by
-  exact distance_nonneg R₁ R₂
+theorem link_symmetric (g : GalacticNetwork) (i j : ℕ) :
+    linkExists g i j → linkExists g j i := by
+  intro h
+  simp only [linkExists] at h ⊢
+  rw [g.symm]
+  exact h
 
-theorem galactic_entropy_bound (R : QRegion) : vonNeumannEntropy R ≤ Real.pi := by
-  exact entropy_bounded R
+/-- No star communicates with itself. -/
+theorem no_self_links (g : GalacticNetwork) (i : ℕ) : ¬ linkExists g i i := by
+  intro h
+  simp only [linkExists] at h
+  rw [g.irrefl] at h
+  exact Bool.noConfusion h
+
+/-- Reciprocity counting: every link is witnessed from both endpoints. -/
+theorem both_witness (g : GalacticNetwork) (i j : ℕ)
+    (h : linkExists g i j) :
+    linkExists g i j ∧ linkExists g j i :=
+  ⟨h, link_symmetric g i j h⟩
+
+/-- Interstellar travel time at fixed speed. -/
+noncomputable def travelTime (distance speed : ℝ) : ℝ :=
+  distance / speed
+
+/-- Travel time is monotone in distance at positive speed. -/
+theorem travel_time_monotone (d₁ d₂ v : ℝ) (hv : 0 < v) (h : d₁ ≤ d₂) :
+    travelTime d₁ v ≤ travelTime d₂ v := by
+  simp only [travelTime]
+  rw [div_eq_mul_inv, div_eq_mul_inv]
+  exact mul_le_mul_of_nonneg_right h (by positivity)
+
+/-- Structural bridge: interstellar distances in the Q-region model are
+    nonnegative. -/
+theorem bridge_vol43_metric_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 :=
+  distance_nonneg R₁ R₂
+
+/-- Structural bridge: the holographic entropy bound holds in the Q-region
+    model used for galactic horizons. -/
+theorem bridge_vol43_entropy_bounded (R : QRegion) :
+    vonNeumannEntropy R ≤ Real.pi :=
+  entropy_bounded R
 
 end OmegaProtocol.Vol43

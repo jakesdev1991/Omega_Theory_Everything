@@ -43,10 +43,18 @@ theorem equilibrium_excess_demand_zero :
 theorem economics_from_omega : ExcessDemand equilibrium_price = 0 := by
   exact equilibrium_excess_demand_zero
 
-theorem economics_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
+/-- Consistency bridge (VOL38): the von Neumann entropy is nonnegative.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `economics_entropy_nonneg` evoked. -/
+theorem bridge_vol38_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
   exact monotonicity_lemma R
 
-theorem market_phi_symm (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R₂ R₁ := by
+/-- Consistency bridge (VOL38): the coupling `Φ` is symmetric.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `market_phi_symm` evoked. -/
+theorem bridge_vol38_coupling_symm (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R₂ R₁ := by
   exact Φ_symm R₁ R₂
 
 end OmegaProtocol.Vol38

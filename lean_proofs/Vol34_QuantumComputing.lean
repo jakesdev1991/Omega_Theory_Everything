@@ -4,53 +4,80 @@ import OmegaUnifiedFoundation
 
 /-
   Vol34_QuantumComputing.lean
-  REAL formalization: Quantum Computing.
+  Formalization of Quantum Computing.
 
-  Using Omega Protocol:
-  - 0D: Qubits = Q-Regions
-  - 1D: Gate operations = Φ (mutual information between qubits)
-  - 2D: Ω-Metric = circuit depth
-  - 3D: Informational Viscosity = gate time
-  - 4D: RCOD Asymmetry = quantum error correction
+  Model scope (stated honestly):
+  * Gates are modeled by the two-element Clifford fragment {I, H} with
+    composition and adjoint given by explicit tables: H is self-adjoint and
+    involutive, I is the identity. This is a genuine (toy) group table —
+    unlike a `Unit`-valued model, each equation here is a case-checked fact
+    about an explicit algebra.
+  * Substantive theorems: unitarity of H (H†H = I), associativity of gate
+    composition, and existence of inverses for every gate.
+  * Omega-Protocol mapping: qubits = Q-regions (0D), gates = Φ operations
+    (1D), circuit depth = Ω-metric (2D).
 -/
 
 namespace OmegaProtocol.Vol34
 open OmegaProtocol
 
-def QuantumGate : Type := Unit
-def GateAdjoint (_ : QuantumGate) : QuantumGate := ()
-def GateCompose (_ _ : QuantumGate) : QuantumGate := ()
-def GateIdentity : QuantumGate := ()
+/-- The toy single-qubit gate set {I, H}. -/
+inductive QGate
+  | I
+  | H
 
-def HadamardGate : QuantumGate := ()
+/-- Legacy carrier name kept for `OmegaProtocol.lean`. -/
+def QuantumGate : Type := QGate
 
-theorem hadamard_self_adjoint : GateAdjoint HadamardGate = HadamardGate := by
+/-- Gate adjoint: both I and H are self-adjoint. -/
+def GateAdjoint : QuantumGate → QuantumGate
+  | .I => .I
+  | .H => .H
+
+/-- Gate composition: I is the unit and H is involutive. -/
+def GateCompose : QuantumGate → QuantumGate → QuantumGate
+  | .I, g => g
+  | g, .I => g
+  | .H, .H => .I
+
+def GateIdentity : QuantumGate := QGate.I
+
+def HadamardGate : QuantumGate := QGate.H
+
+theorem hadamard_self_adjoint : GateAdjoint HadamardGate = HadamardGate :=
   rfl
 
-theorem hadamard_involution : GateCompose HadamardGate HadamardGate = GateIdentity := by
+theorem hadamard_involution :
+    GateCompose HadamardGate HadamardGate = GateIdentity :=
   rfl
 
-/-- THEOREM: Hadamard is Unitary: H†H = I (GENUINE PROOF) -/
+/-- H is unitary in the model: H†H = I. -/
 theorem hadamard_unitary :
-  GateCompose (GateAdjoint HadamardGate) HadamardGate = GateIdentity := by
+    GateCompose (GateAdjoint HadamardGate) HadamardGate = GateIdentity := by
   rw [hadamard_self_adjoint]
   exact hadamard_involution
 
-/-- COROLLARY: Quantum Computing from Omega Protocol
-    Qubits = Q-Regions (0D)
-    Gates = Φ operations (1D)
-    Circuit = Ω-Metric (2D)
-    Gate time = Informational Viscosity (3D)
-    Error correction = RCOD Asymmetry (4D) -/
+/-- Composition in the gate fragment is associative. -/
+theorem gate_compose_assoc (a b c : QuantumGate) :
+    GateCompose (GateCompose a b) c = GateCompose a (GateCompose b c) := by
+  cases a <;> cases b <;> cases c <;> rfl
+
+/-- Every gate has a right inverse under composition. -/
+theorem gate_inverses_exist (g : QuantumGate) :
+    ∃ h : QuantumGate, GateCompose g h = GateIdentity := by
+  cases g
+  · exact ⟨QGate.I, rfl⟩
+  · exact ⟨QGate.H, rfl⟩
+
+/-- COROLLARY bridge for `OmegaProtocol.lean` (legacy name kept): restates
+    Hadamard unitarity at protocol level. -/
 theorem quantum_computing_from_omega :
-  GateCompose (GateAdjoint HadamardGate) HadamardGate = GateIdentity := by
-  exact hadamard_unitary
+    GateCompose (GateAdjoint HadamardGate) HadamardGate = GateIdentity :=
+  hadamard_unitary
 
-theorem quantum_gate_self_distance (R : QRegion) : d R R = 0 := by
-  exact qregion_self_distance_zero R
-
-theorem quantum_mutual_info_nonneg (R₁ R₂ : QRegion) :
-  mutualInformation R₁ R₂ ≥ 0 := by
-  exact mutualInformation_nonneg R₁ R₂
+/-- Structural bridge: the Ω-metric is reflexive on the Q-region model used
+    for circuit-depth distances. -/
+theorem bridge_vol34_metric_self_zero (R : QRegion) : d R R = 0 :=
+  qregion_self_distance_zero R
 
 end OmegaProtocol.Vol34

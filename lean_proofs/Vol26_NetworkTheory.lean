@@ -47,7 +47,11 @@ theorem network_degree_nonneg (G : Graph) : DegreeSum G ≥ 0 := by
   dsimp [DegreeSum, NumEdges]
   apply Nat.zero_le
 
-theorem network_distance_self (R : QRegion) : d R R = 0 := by
+/-- Consistency bridge (VOL26): the Omega-metric `d` is reflexive (`d R R = 0`).
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `network_distance_self` evoked. -/
+theorem bridge_vol26_metric_self_zero (R : QRegion) : d R R = 0 := by
   exact qregion_self_distance_zero R
 
 end OmegaProtocol.Vol26

@@ -42,10 +42,18 @@ theorem min_connections : 2 * NumConnections ≥ NumNodes := by
 theorem society_from_omega : 2 * NumConnections ≥ NumNodes := by
   exact min_connections
 
-theorem society_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
+/-- Consistency bridge (VOL39): the von Neumann entropy is nonnegative.
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `society_entropy_nonneg` evoked. -/
+theorem bridge_vol39_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
   exact monotonicity_lemma R
 
-theorem social_distance_self (R : QRegion) : d R R = 0 := by
+/-- Consistency bridge (VOL39): the Omega-metric `d` is reflexive (`d R R = 0`).
+    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
+    it certifies internal coherence of the formalization and is NOT a
+    derivation of the physical law the legacy name `social_distance_self` evoked. -/
+theorem bridge_vol39_metric_self_zero (R : QRegion) : d R R = 0 := by
   exact qregion_self_distance_zero R
 
 end OmegaProtocol.Vol39
