@@ -156,7 +156,7 @@ vary along the chain, the chain length is the scale times the total weight.
 This is the only case in which the finite §2.1 formula `d = -ℓ_P ln K` is exact;
 with a varying `Φ` the chain sum and the single-scale formula differ, which
 `Sim7_Radial_Metric.py` measures at 6–52 % for the canonical profile. -/
-theorem chainLength_const_scale (a w : ℕ → ℝ) (n : ℕ) :
+theorem chainLength_const_scale (a : ℝ) (w : ℕ → ℝ) (n : ℕ) :
     chainLength (fun _ => a) w n = a * ∑ i ∈ Finset.range n, w i := by
   unfold chainLength
   simp
