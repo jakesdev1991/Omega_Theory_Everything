@@ -367,8 +367,10 @@ theorem metric_nonneg_of_le_max (planckScale : ℝ → ℝ)
       div_pos hI_pos h_max_pos
     have h_ratio_le : net.mutualInfo A B / net.maxMI ≤ 1 :=
       div_le_one_of_le₀ (net.mi_le_max A B) (le_of_lt h_max_pos)
-    have h_log_nonpos : Real.log (net.mutualInfo A B / net.maxMI) ≤ 0 :=
-      Real.log_le_zero_of_le_one h_ratio_pos h_ratio_le
+    have h_log_nonpos : Real.log (net.mutualInfo A B / net.maxMI) ≤ 0 := by
+      have h_le := Real.log_le_log h_ratio_pos h_ratio_le
+      rw [Real.log_one] at h_le
+      exact h_le
     have h_neg_log_nonneg : 0 ≤ -Real.log (net.mutualInfo A B / net.maxMI) :=
       neg_nonneg.mpr h_log_nonpos
     have h_scale := h_scale_nonneg (net.overlap A B)
@@ -390,28 +392,28 @@ namespace BinaryRegion
 /-- An explicit non-degenerate information witness on two regions where
     mutual information and joint entropy are strictly positive,
     and distinct regions have positive separation. -/
-def binaryNetwork : InformationNetwork BinaryRegion where
-  mutualInfo := fun A B => if A = B then 1 else (1 / 2 : ℝ)
-  jointEnt   := fun _ _ => 2
+noncomputable def binaryNetwork : InformationNetwork BinaryRegion where
+  mutualInfo := fun A B => if A = B then (1 : ℝ) else (1 / 2 : ℝ)
+  jointEnt   := fun _ _ => (2 : ℝ)
   maxMI      := 1
   mi_symm    := by
     intro A B
-    cases A <;> cases B <;> simp
+    rcases A with _ | _ <;> rcases B with _ | _ <;> simp
   mi_nonneg  := by
     intro A B
-    cases A <;> cases B <;> norm_num
+    rcases A with _ | _ <;> rcases B with _ | _ <;> norm_num
   mi_le_max  := by
     intro A B
-    cases A <;> cases B <;> norm_num
+    rcases A with _ | _ <;> rcases B with _ | _ <;> norm_num
   je_symm    := by intros; rfl
   je_pos     := by intros; norm_num
   mi_le_je   := by
     intro A B
-    cases A <;> cases B <;> norm_num
+    rcases A with _ | _ <;> rcases B with _ | _ <;> norm_num
 
 theorem binary_overlap_self (A : BinaryRegion) :
     binaryNetwork.overlap A A = 1 / 2 := by
-  cases A <;> { dsimp [InformationNetwork.overlap, binaryNetwork]; norm_num }
+  rcases A with _ | _ <;> { dsimp [InformationNetwork.overlap, binaryNetwork]; norm_num }
 
 theorem binary_overlap_cross :
     binaryNetwork.overlap BinaryRegion.alpha BinaryRegion.beta = 1 / 4 := by
@@ -420,7 +422,7 @@ theorem binary_overlap_cross :
 
 theorem binary_mi_pos (A B : BinaryRegion) :
     0 < binaryNetwork.mutualInfo A B := by
-  cases A <;> cases B <;> norm_num [binaryNetwork]
+  rcases A with _ | _ <;> rcases B with _ | _ <;> { dsimp [binaryNetwork]; norm_num }
 
 theorem binary_distinct_regions :
     BinaryRegion.alpha ≠ BinaryRegion.beta := by
