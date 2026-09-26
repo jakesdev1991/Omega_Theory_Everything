@@ -156,7 +156,7 @@ theorem kretschmann_pos (G r : ℝ) (hG : 0 < G) (hr : 0 < r) :
   exact div_pos hnum hden
 
 /-- Benchmark unit solar mass black hole (M = 1, G = 1). -/
-def unitSchwarzschild : SphericallySymmetricSpacetime where
+noncomputable def unitSchwarzschild : SphericallySymmetricSpacetime where
   f := fun r => 1 - 2 / r
   mass := 1
   mass_pos := by norm_num

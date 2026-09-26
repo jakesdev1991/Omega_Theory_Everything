@@ -97,7 +97,7 @@ theorem Geff_antitone {C₁ C₂ : Compactification}
   have h2 : C₂.Geff = C₂.Gbulk / C₂.volume := rfl
   rw [h1, h2, hG, div_eq_mul_inv, div_eq_mul_inv]
   apply mul_lt_mul_of_pos_left _ C₂.Gbulk_pos
-  exact (inv_lt_inv₀ C₁.volume_pos C₂.volume_pos).mpr hV
+  exact (inv_lt_inv₀ C₂.volume_pos C₁.volume_pos).mpr hV
 
 /-- Large-volume limit: at fixed bulk coupling, the effective coupling
     can be made smaller than any positive `ε` by taking the compact

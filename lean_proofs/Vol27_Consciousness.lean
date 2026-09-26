@@ -117,7 +117,7 @@ theorem phi_zero_of_independent (h : S.H_AB = S.H_A + S.H_B) :
 /-- Canonical conscious cortical architecture witness:
     H_A = 1, H_B = 1, H_AB = 1.2 (sharing 0.8 nats of mutual correlation),
     with forward rate 2.0 and reverse predictive rate 1.5. -/
-def corticalComplex : IntegratedSystem where
+noncomputable def corticalComplex : IntegratedSystem where
   H_A  := 1
   H_B  := 1
   H_AB := 6 / 5

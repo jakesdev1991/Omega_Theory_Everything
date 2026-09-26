@@ -144,10 +144,10 @@ theorem skelProd_unique {z m n : SkelObj} (f : SkelHom z m)
       exact h1x
     · have h2x := congrFun h2 x
       exact h2x
-  calc h x = finProdFinEquiv (finProdFinEquiv.symm (h x)) :=
-        (Equiv.apply_symm_apply _ _).symm
-    _ = finProdFinEquiv (f x, g x) := by rw [hpair]
-    _ = skelPair f g x := rfl
+  have hself : h x = finProdFinEquiv (finProdFinEquiv.symm (h x)) :=
+    (Equiv.apply_symm_apply _ _).symm
+  rw [hself, hpair]
+  rfl
 
 /-- Products exist with the usual universal property. -/
 theorem skel_has_products (z m n : SkelObj) (f : SkelHom z m)
@@ -170,13 +170,13 @@ noncomputable def skelEq (m n : SkelObj) (f g : SkelHom m n) : SkelObj :=
 /-- The equalizer inclusion. -/
 noncomputable def skelEqIncl {m n : SkelObj} (f g : SkelHom m n) :
     SkelHom (skelEq m n f g) m :=
-  fun i => (Fintype.equivFin { x : Fin m // f x = g x }.symm i).1
+  fun i => ((Fintype.equivFin { x : Fin m // f x = g x }).symm i).1
 
 /-- The inclusion equalizes the pair. -/
 theorem skelEq_fork {m n : SkelObj} (f g : SkelHom m n) :
     skelComp (skelEqIncl f g) f = skelComp (skelEqIncl f g) g := by
   funext i
-  exact (Fintype.equivFin { x : Fin m // f x = g x }.symm i).2
+  exact ((Fintype.equivFin { x : Fin m // f x = g x }).symm i).2
 
 /-- The universal factorization through the equalizer. -/
 noncomputable def skelEqFactor {z m n : SkelObj} {f g : SkelHom m n}

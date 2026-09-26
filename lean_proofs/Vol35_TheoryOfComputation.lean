@@ -21,6 +21,8 @@ import OmegaUnifiedFoundation
 namespace OmegaProtocol.Vol35
 open OmegaProtocol
 
+open scoped Classical
+
 /-- THEOREM: Cantor's Diagonal Argument (GENUINE PROOF)
     There is no surjection from ℕ to (ℕ → Bool). -/
 theorem cantor_diagonal : ¬ Function.Surjective (f : ℕ → ℕ → Bool) := by
@@ -112,11 +114,25 @@ theorem halts_stable (M : Machine) (c k : ℕ) (h : run M c k = none) :
     rw [hstep]
     exact run_none_stable M c (k + j) ih
 
-/-- Bounded halting is decidable: it is a bounded search over a
-    decidable predicate. -/
-theorem bounded_halting_decidable (M : Machine) (c K : ℕ) :
-    Decidable (∃ k ∈ Finset.range (K + 1), run M c k = none) :=
-  inferInstance
+/-- Bounded-time halting predicate: `true` iff `M` reaches a halted
+    configuration within `K` steps. A plain boolean scan, so an
+    explicit `Decidable` instance with no automation risk. -/
+def haltsWithin (M : Machine) (c K : ℕ) : Bool :=
+  (List.range (K + 1)).any (fun k => decide (run M c k = none))
+
+theorem haltsWithin_correct (M : Machine) (c K : ℕ) :
+    haltsWithin M c K = true ↔
+      ∃ k ∈ Finset.range (K + 1), run M c k = none := by
+  dsimp [haltsWithin]
+  rw [List.any_eq_true]
+  constructor
+  · rintro ⟨k, hkmem, hkdec⟩
+    rw [List.mem_range] at hkmem
+    exact ⟨k, Finset.mem_range.mpr hkmem, of_decide_eq_true hkdec⟩
+  · rintro ⟨k, hkmem, hkrun⟩
+    rw [Finset.mem_range] at hkmem
+    refine ⟨k, List.mem_range.mpr hkmem, ?_⟩
+    rw [decide_eq_true hkrun]
 
 /-- The machine that halts immediately on every input. -/
 def haltMachine : Machine := ⟨fun _ => none⟩
@@ -135,6 +151,7 @@ theorem loopMachine_diverges (c : ℕ) : ¬ Halts loopMachine c := by
     | zero => rfl
     | succ k ih =>
       rw [run_succ_some _ _ _ _ ih]
+      rfl
   rw [hstay k] at hk
   nomatch hk
 

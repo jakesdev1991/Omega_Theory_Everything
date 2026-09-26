@@ -81,7 +81,7 @@ theorem dark_energy_lt_one_of_matter_pos
 
 /-- Concrete realistic ΛCDM cosmological benchmark:
     Ω_b ≈ 0.05, Ω_dm ≈ 0.26, Ω_de ≈ 0.69. -/
-def standardLCDM : CosmicDensityBudget where
+noncomputable def standardLCDM : CosmicDensityBudget where
   omegaB := 5 / 100
   omegaDM := 26 / 100
   omegaDE := 69 / 100

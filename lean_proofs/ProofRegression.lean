@@ -504,13 +504,13 @@ example (S : Vol23.QubitState) : S.trace = 1 :=
 example (S : Vol23.QubitState) : S.purity ≤ 1 :=
   S.purity_le_one
 
-example (S : Vol23.QubitState) (λ : ℝ) (hλ0 : 0 ≤ λ) (hλ1 : λ ≤ 1) :
-    (S.dephase λ hλ0 hλ1).trace = S.trace :=
-  S.dephase_trace_preserving λ hλ0 hλ1
+example (S : Vol23.QubitState) (lam : ℝ) (hlam0 : 0 ≤ lam) (hlam1 : lam ≤ 1) :
+    (S.dephase lam hlam0 hlam1).trace = S.trace :=
+  S.dephase_trace_preserving lam hlam0 hlam1
 
-example (S : Vol23.QubitState) (λ : ℝ) (hλ0 : 0 ≤ λ) (hλ1 : λ ≤ 1) :
-    |(S.dephase λ hλ0 hλ1).c| ≤ |S.c| :=
-  S.dephase_coherence_decay λ hλ0 hλ1
+example (S : Vol23.QubitState) (lam : ℝ) (hlam0 : 0 ≤ lam) (hlam1 : lam ≤ 1) :
+    |(S.dephase lam hlam0 hlam1).c| ≤ |S.c| :=
+  S.dephase_coherence_decay lam hlam0 hlam1
 
 example : Vol23.QubitState.plusState.purity = 1 :=
   Vol23.QubitState.plusState_pure
