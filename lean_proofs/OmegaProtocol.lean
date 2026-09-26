@@ -728,6 +728,3 @@ theorem omega_theory_structural_consistency (R₁ R₂ R₃ : QRegion) :
    mutualInformation_nonneg R₁ R₂⟩
 
 end OmegaProtocol
-nformation_nonneg R₁ R₂⟩
-
-end OmegaProtocol
