@@ -90,7 +90,7 @@ noncomputable abbrev MT : ModularTheory := Vol03.MT
 /-- The concrete KMS predicate is true for every state and temperature. -/
 theorem kms_exterior_vacuum (bh : BHGeometry) :
   MT.KMSState (ExteriorRegion bh) (2 * Real.pi / SurfaceGravity bh) := by
-  trivial
+  exact True.intro
 
 /-- Relative entropy and geometric entropy are both zero in the concrete model. -/
 noncomputable def Vacuum : StateSpace := 0
