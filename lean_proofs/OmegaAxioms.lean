@@ -418,10 +418,11 @@ noncomputable def binaryNetwork : InformationNetwork BinaryRegion where
 
 theorem binary_overlap_self (A : BinaryRegion) :
     binaryNetwork.overlap A A = 1 / 2 := by
-  cases A <;> {
-    dsimp [InformationNetwork.overlap, binaryNetwork, binaryMI]
+  cases A
+  · dsimp [InformationNetwork.overlap, binaryNetwork, binaryMI]
     norm_num
-  }
+  · dsimp [InformationNetwork.overlap, binaryNetwork, binaryMI]
+    norm_num
 
 theorem binary_overlap_cross :
     binaryNetwork.overlap BinaryRegion.alpha BinaryRegion.beta = 1 / 4 := by
