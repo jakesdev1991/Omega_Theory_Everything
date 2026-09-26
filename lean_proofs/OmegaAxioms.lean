@@ -392,37 +392,41 @@ namespace BinaryRegion
 /-- An explicit non-degenerate information witness on two regions where
     mutual information and joint entropy are strictly positive,
     and distinct regions have positive separation. -/
+def binaryMI : BinaryRegion → BinaryRegion → ℝ
+  | BinaryRegion.alpha, BinaryRegion.alpha => 1
+  | BinaryRegion.beta,  BinaryRegion.beta  => 1
+  | _,                  _                  => 1 / 2
+
 noncomputable def binaryNetwork : InformationNetwork BinaryRegion where
-  mutualInfo := fun A B => if A = B then (1 : ℝ) else (1 / 2 : ℝ)
-  jointEnt   := fun _ _ => (2 : ℝ)
+  mutualInfo := binaryMI
+  jointEnt   := fun _ _ => 2
   maxMI      := 1
   mi_symm    := by
     intro A B
-    rcases A with _ | _ <;> rcases B with _ | _ <;> simp
+    cases A <;> cases B <;> rfl
   mi_nonneg  := by
     intro A B
-    rcases A with _ | _ <;> rcases B with _ | _ <;> norm_num
+    cases A <;> cases B <;> norm_num [binaryMI]
   mi_le_max  := by
     intro A B
-    rcases A with _ | _ <;> rcases B with _ | _ <;> norm_num
+    cases A <;> cases B <;> norm_num [binaryMI]
   je_symm    := by intros; rfl
   je_pos     := by intros; norm_num
   mi_le_je   := by
     intro A B
-    rcases A with _ | _ <;> rcases B with _ | _ <;> norm_num
+    cases A <;> cases B <;> norm_num [binaryMI]
 
 theorem binary_overlap_self (A : BinaryRegion) :
     binaryNetwork.overlap A A = 1 / 2 := by
-  rcases A with _ | _ <;> { dsimp [InformationNetwork.overlap, binaryNetwork]; norm_num }
+  cases A <;> rfl
 
 theorem binary_overlap_cross :
     binaryNetwork.overlap BinaryRegion.alpha BinaryRegion.beta = 1 / 4 := by
-  dsimp [InformationNetwork.overlap, binaryNetwork]
-  norm_num
+  rfl
 
 theorem binary_mi_pos (A B : BinaryRegion) :
     0 < binaryNetwork.mutualInfo A B := by
-  rcases A with _ | _ <;> rcases B with _ | _ <;> { dsimp [binaryNetwork]; norm_num }
+  cases A <;> cases B <;> norm_num [binaryNetwork, binaryMI]
 
 theorem binary_distinct_regions :
     BinaryRegion.alpha ≠ BinaryRegion.beta := by
