@@ -27,6 +27,23 @@ import Vol37_Morphogenesis
 import Vol44_UniversalExpansion
 import Vol48_ExtraDimensions
 import Vol54_TheoryOfNothing
+import Vol02_Electromagnetism
+import Vol03_Thermodynamics
+import Vol05_GeneralRelativity
+import Vol06_QuantumFieldTheory
+import Vol07_Cosmology
+import Vol08_BlackHoleThermodynamics
+import Vol09_HolographicPrinciple
+import Vol13_QuantumGravity
+import Vol14_DarkSector
+import Vol15_EarlyUniverse
+import Vol19_ComplexSystems
+import Vol20_ChaosTheory
+import Vol22_EREqualsEPR
+import Vol23_MeasurementProblem
+import Vol24_NonLocality
+import Vol27_Consciousness
+import Vol33_AGI
 
 /-! Boundary and non-degeneracy regression checks. Included in `lake build ToE`. -/
 
