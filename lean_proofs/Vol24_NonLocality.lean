@@ -120,17 +120,17 @@ theorem local_realism_bound (a a' b b' : ℝ)
       _ ≤ 2 * 1 := mul_le_mul_of_nonneg_left ha' (by norm_num)
       _ = 2 := by norm_num
 
-/-- Concrete quantum Bell singlet state attaining the Tsirelson bound 2√2:
-    E(A, B) = √2/2, E(A, B') = √2/2, E(A', B) = √2/2, E(A', B') = -√2/2. -/
 /-- The singlet correlation magnitude `√2 / 2` is a valid CHSH correlator. -/
 theorem sqrt2_div2_abs_le_one : |Real.sqrt 2 / 2| ≤ 1 := by
-  rw [abs_div, abs_of_nonneg Real.sqrt_nonneg,
+  rw [abs_div, abs_of_nonneg (Real.sqrt_nonneg 2),
     abs_of_pos (by norm_num : (0:ℝ) < 2)]
   have h2 : Real.sqrt 2 ≤ 2 := by
     rw [show (2:ℝ) = Real.sqrt 4 by norm_num]
     exact Real.sqrt_le_sqrt (by norm_num)
   linarith
 
+/-- Concrete quantum Bell singlet state attaining the Tsirelson bound 2√2:
+    E(A, B) = √2/2, E(A, B') = √2/2, E(A', B) = √2/2, E(A', B') = -√2/2. -/
 noncomputable def singletBellSystem : CHSHSystem where
   E_AB := Real.sqrt 2 / 2
   E_AB' := Real.sqrt 2 / 2

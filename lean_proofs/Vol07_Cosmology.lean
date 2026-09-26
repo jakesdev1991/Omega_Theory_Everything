@@ -177,7 +177,6 @@ theorem flat_friedmann_critical_density_eq (G : ℝ) (hG : 0 < G) :
       _ = 3 * (U.hubbleRate ^ 2) / (8 * Real.pi * G) := by ring
   · intro h
     rw [h]
-    dsimp [criticalDensity]
     symm
     calc (8 * Real.pi * G / 3) * (3 * (U.hubbleRate ^ 2) / (8 * Real.pi * G))
       _ = ((8 * Real.pi * G) / 3 * 3) * (U.hubbleRate ^ 2) / (8 * Real.pi * G) := by ring
