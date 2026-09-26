@@ -63,7 +63,7 @@ def _bare(rx: re.Pattern) -> re.Pattern:
     without the `theorem ... :` prefix (e.g. after a `∀ ... ,`)."""
     prefix = r":\s*"
     assert rx.pattern.startswith(prefix), rx.pattern
-    return re.compile(rx.pattern[len(prefix):])
+    return re.compile(rx.pattern[len(prefix) :])
 
 
 BARE_TRIVIAL = [_bare(rx) for rx in TRIVIAL_CONCLUSION]
@@ -136,9 +136,7 @@ def audit(root: Path) -> tuple[list[str], list[str], list[str], list[str]]:
                 if any(rx.search(body) for rx in BARE_TRIVIAL):
                     misleading.append(f"{path.name}: {name} (via {ref.group(1)})")
             elif ref:
-                misleading.append(
-                    f"{path.name}: {name} (unresolved {ref.group(1)})"
-                )
+                misleading.append(f"{path.name}: {name} (unresolved {ref.group(1)})")
         for n, line in enumerate(text.splitlines(), 1):
             if UNIT_STUB.search(line):
                 stubs.append(f"{path.name}:{n}: {line.strip()[:90]}")

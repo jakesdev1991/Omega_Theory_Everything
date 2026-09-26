@@ -222,8 +222,7 @@ theorem codProfile_triangle :
   intro R₁ R₂ R₃
   have hΦ : ∀ (A B : QRegion), Φ A B = 0 := fun A B => by
     norm_num [Φ, chainOverlapDensity, jointEntropy]
-  rw [hΦ, hΦ, hΦ, DynamicCODScale.dynamicPlanckCOD_zero,
-    DynamicCODScale.dynamicPlanckCOD_zero, DynamicCODScale.dynamicPlanckCOD_zero]
+  rw [hΦ, hΦ, hΦ, DynamicCODScale.dynamicPlanckCOD_zero]
   norm_num [canonicalCODEnv]
 
 theorem log_inequality_from_DPI :
