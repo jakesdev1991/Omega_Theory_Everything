@@ -44,6 +44,18 @@ conflict reconciliation with newer main changes and a build of that revision.
   overlap, `0 ≤ ℓ_P(Φ) ≤ ℓ_P0`, that any positive overlap contracts the scale
   strictly below baseline, and strict monotonicity of the contraction on
   `[0, 1]`. The profile is a stated model assumption, not a derivation.
+- `RadialMetric.lean` - Macroscopic radial metric in `Φ`: the golden-ratio
+  bottleneck of Sim3's disformal causality band, the finite-chain two-factor
+  law (proper length is scale × weight per link), and the `Φ`-form
+  Schwarzschild identities (areal radius endpoints, lapse–conformal
+  identity). Companion to `Omega_Theory_v4.0_Radial_Metric.md`.
+- `RadialDilation.lean` - Obstruction and reconciliation for the radial
+  metric, built on `DynamicCODScale`: `ℓ_P` alone gives
+  `g_RR = (1−Φ²)² ≤ 1` with negative quasi-local mass and no linear term
+  (`M_ADM = 0` content), while the required `κ/κ₀ = (1+Φ)²/√(1−Φ²)`
+  reproduces the isotropic conformal factor exactly, outruns the inverse
+  rendering scale, and yields areal dilation with exact lapse reciprocity.
+  The `Φ`-form Schwarzschild dictionary is identified, not derived.
 
 ### Physics Volumes (1-54)
 The table lists intended domains and legacy topic labels, **not established

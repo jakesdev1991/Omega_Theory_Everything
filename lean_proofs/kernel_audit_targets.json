@@ -74,5 +74,9 @@
   "InformationPhysics.erasure_energy_bookkeeping",
   "InformationPhysics.batch_affordable_iff",
   "InformationPhysics.remainingMass_append",
-  "InformationPhysics.affordable_batch_has_affordable_prefix"
+  "InformationPhysics.affordable_batch_has_affordable_prefix",
+  "OmegaProtocol.Vol30.kepler_period_squared",
+  "OmegaProtocol.Vol30.kepler_ratio_constant_of_squared_laws",
+  "RadialDilation.misnerSharpLPOnly_neg",
+  "RadialDilation.dilation_reconciliation"
 ]

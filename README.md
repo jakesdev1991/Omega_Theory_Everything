@@ -65,6 +65,7 @@ lean_proofs/
 ├── DynamicPlanckScale.lean           # density-driven Planck scale
 ├── DynamicCODScale.lean              # COD-driven Planck scale, l_P(Phi) = l_P0 sqrt(1 - Phi^2)
 ├── RadialMetric.lean                 # golden-ratio bottleneck, finite-chain two-factor law, Phi-form Schwarzschild identities
+├── RadialDilation.lean              # lP-only obstruction (g_RR<=1, negative quasi-local mass) + required-kappa dilation reconciliation
 ├── Vol01_ClassicalMechanics.lean     # through
 └── Vol54_TheoryOfNothing.lean        # 54 physics volumes
 ```

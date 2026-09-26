@@ -37,8 +37,8 @@ jobs:
         working-directory: lean_proofs
         run: |
           set -e
-          if grep -rn --include='*.lean' --exclude-dir=.lake -E '\bsorry\b|\badmit\b|\bnative_decide\b|\bsorryAx\b|@\[extern|\bimplemented_by\b|: True :=|:= by trivial' . ; then
-            echo "::error::Found sorry/admit/native_decide/extern or trivial stubs in lean sources"
+          if grep -rn --include='*.lean' --exclude-dir=.lake -E '\bsorry\b|\badmit\b|\bnative_decide\b|\bsorryAx\b|@\[extern|\bimplemented_by\b|\bopaque\b|\bunsafe\b|^\s*partial\s+def\b|: True :=|:= by trivial' . ; then
+            echo "::error::Found sorry/admit/native_decide/extern/opaque/unsafe/partial or trivial stubs in lean sources"
             exit 1
           fi
           echo "Clean: no sorry/trivial stubs."
@@ -47,7 +47,7 @@ jobs:
           # the `bridge_*` naming convention, `Nonempty Unit` stubs and
           # `Unit`-typed volume definitions may only decrease. See
           # audit_vacuity.py for the definitions of the three metrics.
-          python3 audit_vacuity.py --max-misleading 0 --max-unit-stubs 0 --max-unit-types 13 --alias-baseline legacy_statement_aliases.json
+          python3 audit_vacuity.py --max-misleading 0 --max-unit-stubs 0 --max-unit-types 13 --alias-baseline legacy_statement_aliases.json --max-trivial-proofs 0
 
       # Official Lean action: installs elan + pinned toolchain, fetches
       # prebuilt mathlib oleans, and runs `lake build ToE` in lean_proofs/.

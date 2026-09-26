@@ -189,6 +189,7 @@ Caveat: the bound constrains $\dot\Phi$ only. For static profiles the disformal 
 3. Obtain the transverse/areal structure from Q-region data, e.g. area-law entanglement across shells, so that $g_{tt}g_{RR}=-1$ is *tested* rather than imposed.
 4. Decide $\Phi$'s role (§7) and re-derive §3.2 accordingly. Its static limit should reduce to the Lichnerowicz form of §5.
 5. ~~Lean: formalize the golden-ratio minimum (§8), the finite-chain two-factor law (§3) and the $\Phi$-form Schwarzschild identities (§5).~~ **Done:** `lean_proofs/RadialMetric.lean` proves all three and is kernel-checked by the Lean CI job.
+6. **Done:** `lean_proofs/RadialDilation.lean` proves the §4 obstruction identities (`ℓ_P` alone gives `g_RR = (1-Φ²)² ≤ 1` with negative quasi-local mass and no linear term), the §5 required-`κ` consequences (exact two-factor product, integrated outrunning margin, areal dilation with lapse reciprocity), and the combined reconciliation conjunction. All are kernel-checked by the Lean CI job.
 
 ## References
 

@@ -3,6 +3,7 @@
 These are source wiring checks, not Lean elaboration or mathematical verification.
 """
 
+import json
 import re
 import unittest
 from pathlib import Path
@@ -73,6 +74,11 @@ class BuildCoverageTests(unittest.TestCase):
             if dependency not in graph and dependency.split(".")[0] not in external
         }
         self.assertEqual(unresolved, set())
+
+    def test_retired_statement_alias_baseline_stays_empty(self):
+        self.assertEqual(
+            json.loads((ROOT / "legacy_statement_aliases.json").read_text()), []
+        )
 
 
 if __name__ == "__main__":

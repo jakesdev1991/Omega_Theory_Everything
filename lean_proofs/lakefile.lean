@@ -76,5 +76,6 @@ lean_lib ToE where
     `DynamicCODScale,
     `ProofRegression,
     `LogCorrelationMetric,
-    `RadialMetric
+    `RadialMetric,
+    `RadialDilation
   ]

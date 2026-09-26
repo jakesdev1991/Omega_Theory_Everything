@@ -140,6 +140,18 @@ def report(title: str, items: list[str], maximum: int | None) -> int:
     return 0
 
 
+def trivial_proofs(root: Path) -> list[str]:
+    """Reject trivial-only proof scripts, including multiline ones, lexically."""
+    pattern = re.compile(r":=\s*by\s*trivial[ \t]*$", re.M)
+    findings = []
+    for path in lean_sources(root):
+        text = mask_comments_and_strings(path.read_text(encoding="utf-8"))
+        for match in pattern.finditer(text):
+            line = text.count("\n", 0, match.start()) + 1
+            findings.append(f"{path.relative_to(root)}:{line}")
+    return findings
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parent)
@@ -152,6 +164,7 @@ def main() -> int:
         default=None,
         help="Exact reviewed legacy *_Stmt exports; not a proof certificate",
     )
+    parser.add_argument("--max-trivial-proofs", type=int, default=None)
     args = parser.parse_args()
 
     misleading, stubs, unit_types = audit(args.root)
@@ -161,6 +174,9 @@ def main() -> int:
     )
     rc |= report("Nonempty-unit stubs", stubs, args.max_unit_stubs)
     rc |= report("Unit-typed volume definitions", unit_types, args.max_unit_types)
+    rc |= report(
+        "trivial-only proofs", trivial_proofs(args.root), args.max_trivial_proofs
+    )
     if args.alias_baseline is not None:
         new, stale = alias_baseline_errors(args.root, args.alias_baseline)
         print(

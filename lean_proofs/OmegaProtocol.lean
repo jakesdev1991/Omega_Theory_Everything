@@ -285,7 +285,9 @@ theorem bridge_vol08_metric_triangle (R₁ R₂ R₃ : QRegion) : d R₁ R₃ �
 theorem bridge_vol09_entropy_bounded (R : QRegion) : vonNeumannEntropy R ≤ Real.pi := by
   exact entropy_bounded R
 
-theorem bulk_reconstruction (R₁ R₂ : QRegion) : forwardFlux R₁ R₂ = Φ R₁ R₂ := by
+/-- Definitional restatement: in the concrete model `forwardFlux` is defined as
+    `Φ`. Named `bridge_` because it certifies coherence, not bulk physics. -/
+theorem bridge_bulk_reconstruction (R₁ R₂ : QRegion) : forwardFlux R₁ R₂ = Φ R₁ R₂ := by
   rfl
 
 /-- Consistency bridge (VOL09): the Omega-metric `d` is reflexive (`d R R = 0`).

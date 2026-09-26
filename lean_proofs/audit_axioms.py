@@ -4,6 +4,8 @@
 The audit is intentionally lexical: it is useful in CI before a full Lean
 installation is available.  It reports declaration-level ``axiom`` commands,
 not occurrences of the word in documentation or structure field names.
+The source policy also rejects `opaque` declarations (including ones with bodies);
+this is a conservative policy, not a claim that all opaque definitions are axioms.
 """
 
 from __future__ import annotations
@@ -16,7 +18,7 @@ from lean_source import lean_sources, mask_comments_and_strings
 
 AXIOM = re.compile(
     r"(?m)^[ \t]*(?:@\[[^\]]*\]\s*)*(?:(?:private|protected)\s+)?"
-    r"axiom\s+([^\s:({]+)"
+    r"(?:axiom|opaque)\s+([^\s:({]+)"
 )
 
 
@@ -37,7 +39,7 @@ def main() -> int:
     args = parser.parse_args()
 
     found = declarations(args.root)
-    print(f"axiom declarations: {len(found)}")
+    print(f"axiom/opaque declarations: {len(found)}")
     by_file: dict[Path, int] = {}
     for path, line, name in found:
         by_file[path] = by_file.get(path, 0) + 1

@@ -348,3 +348,24 @@ command lines so real diagnostics are not truncated by those lines.
 changes, then rerun the full build and selected axiom gate on the reconciled
 revision. Existing nonfatal linter warnings, 13 counted Unit types and 96 legacy
 statement aliases remain; a passing build does not eliminate those limitations.
+
+## Integration with main (567afb2)
+
+Reconciled the seven conflicting files while preserving main's RadialDilation
+module and P0 remediation. `RadialDilation.lean` proves conditional scalar radial
+profile identities, the LP-only negative mass obstruction and reconciliation of
+isotropic/areal formulas; these are not a derivation of gravity from Omega.
+It is included in both the Lake roots and ToE imports.
+
+The misleading volume/cross-volume alias exports retired by main remain retired:
+the exact legacy-alias baseline is now empty (zero, down from 96). Main's
+opaque/unsafe/partial and trivial-only source restrictions remain enabled,
+combined with recursive comment-aware scans and the parameterized Unit-type
+ceiling of 13. No gate was disabled to resolve the merge.
+
+Both Kepler formulations remain: the positive-parameter model keeps
+`kepler_ratio_constant`; main's general conditional algebra is retained as
+`kepler_ratio_constant_of_squared_laws`, alongside `kepler_period_squared`.
+The selected kernel inventory is now 80 declarations, including both of those
+imported results and two RadialDilation results. Combined-revision CI is pending;
+earlier green runs certify the pre-integration revision only.

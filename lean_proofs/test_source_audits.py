@@ -8,7 +8,12 @@ import unittest
 from pathlib import Path
 
 from audit_axioms import declarations
-from audit_vacuity import alias_baseline_errors, audit, statement_aliases
+from audit_vacuity import (
+    alias_baseline_errors,
+    audit,
+    statement_aliases,
+    trivial_proofs,
+)
 from lean_source import find_import_cycle, mask_comments_and_strings, module_imports
 
 
@@ -138,6 +143,28 @@ class SourceAuditTests(unittest.TestCase):
                 {"A": {"B", "C"}, "B": {"D"}, "C": {"D"}, "D": {"Mathlib"}}
             )
         )
+
+    def test_opaque_policy_masks_comments_and_checks_nested_sources(self):
+        self.source(
+            "/- opaque hidden : Nat -/\n@[tag] private opaque actual : Nat := 1",
+            "Nested/Policy.lean",
+        )
+        self.assertEqual([name for _, _, name in declarations(self.root)], ["actual"])
+
+    def test_trivial_only_proof_including_multiline_and_comment(self):
+        self.source(
+            "theorem a : True := by\n  trivial -- comment\n"
+            "theorem b : True := by trivial\n"
+        )
+        self.assertEqual(len(trivial_proofs(self.root)), 2)
+
+    def test_trivial_text_in_comments_and_strings_is_not_a_proof(self):
+        self.source(
+            "/- theorem a : True := by trivial -/\n"
+            'def message := ":= by trivial"\n'
+            "theorem b : True := by exact True.intro\n"
+        )
+        self.assertEqual(trivial_proofs(self.root), [])
 
 
 if __name__ == "__main__":
