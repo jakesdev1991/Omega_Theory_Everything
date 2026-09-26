@@ -37,7 +37,6 @@ theorem local_nets_microcausality (O₁ O₂ : SpacetimeRegion) (h : spacelike_s
   intro A B hA hB
   simp only [LocalNet, Set.mem_singleton_iff] at hA hB
   rw [hA, hB]
-  ring
 
 theorem spacelike_hereditary (O₁ O₂ O₃ O₄ : SpacetimeRegion)
   (h12 : subset_region O₁ O₂) (h34 : subset_region O₃ O₄)

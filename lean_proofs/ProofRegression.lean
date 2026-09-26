@@ -20,6 +20,30 @@ import Vol31_GameTheory
 import Vol32_Cybernetics
 import Vol38_Economics
 import Vol53_UniversalCompiler
+import Vol29_EcosystemDynamics
+import Vol35_TheoryOfComputation
+import Vol36_ToposTheory
+import Vol37_Morphogenesis
+import Vol44_UniversalExpansion
+import Vol48_ExtraDimensions
+import Vol54_TheoryOfNothing
+import Vol02_Electromagnetism
+import Vol03_Thermodynamics
+import Vol05_GeneralRelativity
+import Vol06_QuantumFieldTheory
+import Vol07_Cosmology
+import Vol08_BlackHoleThermodynamics
+import Vol09_HolographicPrinciple
+import Vol13_QuantumGravity
+import Vol14_DarkSector
+import Vol15_EarlyUniverse
+import Vol19_ComplexSystems
+import Vol20_ChaosTheory
+import Vol22_EREqualsEPR
+import Vol23_MeasurementProblem
+import Vol24_NonLocality
+import Vol27_Consciousness
+import Vol33_AGI
 
 /-! Boundary and non-degeneracy regression checks. Included in `lake build ToE`. -/
 
@@ -383,8 +407,8 @@ example : Vol15.CosmologicalFluid.deSitterVacuum.accelerationSource = -2 :=
   Vol15.CosmologicalFluid.deSitter_source_neg
 
 example : 0 < - (4 * Real.pi * 1 / 3) * Vol15.CosmologicalFluid.deSitterVacuum.accelerationSource :=
-  Vol15.CosmologicalFluid.cosmic_acceleration_positive _ (by norm_num)
-    (by rw [Vol15.CosmologicalFluid.deSitter_source_neg]; norm_num)
+  Vol15.CosmologicalFluid.cosmic_acceleration_positive Vol15.CosmologicalFluid.deSitterVacuum 1
+    (by norm_num) (by rw [Vol15.CosmologicalFluid.deSitter_source_neg]; norm_num)
 
 example : Vol12.QubitSystem.bellPairSystem.entanglement <
     Vol12.QubitSystem.bellPairSystem.capacity :=
@@ -397,7 +421,10 @@ example (planckScale : ℝ → ℝ) :
 
 end CosmicAndDynamicsRegression
 
-
+-- File-scope resolution for the bare `VolXX.*` references used by all
+-- regression examples below (the earlier `open OmegaProtocol` commands
+-- are scoped inside the namespaces above and do not reach this far).
+open OmegaProtocol
 
 example : Vol08.standardSchwarzschild.mass = 1 := rfl
 
@@ -497,13 +524,13 @@ example (S : Vol23.QubitState) : S.trace = 1 :=
 example (S : Vol23.QubitState) : S.purity ≤ 1 :=
   S.purity_le_one
 
-example (S : Vol23.QubitState) (λ : ℝ) (hλ0 : 0 ≤ λ) (hλ1 : λ ≤ 1) :
-    (S.dephase λ hλ0 hλ1).trace = S.trace :=
-  S.dephase_trace_preserving λ hλ0 hλ1
+example (S : Vol23.QubitState) (lam : ℝ) (hlam0 : 0 ≤ lam) (hlam1 : lam ≤ 1) :
+    (S.dephase lam hlam0 hlam1).trace = S.trace :=
+  S.dephase_trace_preserving lam hlam0 hlam1
 
-example (S : Vol23.QubitState) (λ : ℝ) (hλ0 : 0 ≤ λ) (hλ1 : λ ≤ 1) :
-    |(S.dephase λ hλ0 hλ1).c| ≤ |S.c| :=
-  S.dephase_coherence_decay λ hλ0 hλ1
+example (S : Vol23.QubitState) (lam : ℝ) (hlam0 : 0 ≤ lam) (hlam1 : lam ≤ 1) :
+    |(S.dephase lam hlam0 hlam1).c| ≤ |S.c| :=
+  S.dephase_coherence_decay lam hlam0 hlam1
 
 example : Vol23.QubitState.plusState.purity = 1 :=
   Vol23.QubitState.plusState_pure
@@ -537,3 +564,37 @@ example : Vol33.BoundedAgent.dualTaskAgent.totalUtility = 25 :=
 
 example : 0 < Vol33.BoundedAgent.dualTaskAgent.totalUtility :=
   Vol33.BoundedAgent.dualTask_totalUtility_pos
+
+/-! Computation, categories, pattern, expansion, dimensions, nothing. -/
+
+example (c : ℕ) : Vol35.run Vol35.haltMachine c 1 = none := rfl
+
+example (c : ℕ) : Vol35.run Vol35.loopMachine c 0 = some c := rfl
+
+example (c : ℕ) : Vol35.Halts Vol35.haltMachine c :=
+  Vol35.haltMachine_halts c
+
+example (c : ℕ) : ¬ Vol35.Halts Vol35.loopMachine c :=
+  Vol35.loopMachine_diverges c
+
+example (m n : Vol36.SkelObj) (f : Vol36.SkelHom m n) :
+    Vol36.skelComp (Vol36.skelId m) f = f :=
+  Vol36.skelId_left f
+
+example : Vol37.ReactionSystem.turingWitness.dispersion (7 / 20) = -9 / 40 :=
+  Vol37.ReactionSystem.turingWitness_optimal_value
+
+example : Vol44.DeSitterSpace.unitDeSitter.entropy = 3 * Real.pi :=
+  Vol44.DeSitterSpace.unitDeSitter_entropy
+
+example : Vol48.Compactification.unitCompact.Geff = 1 :=
+  Vol48.Compactification.unitCompact_Geff
+
+example (f g : Empty → Bool) : f = g :=
+  Vol54.ex_nihilo_maps_unique Bool f g
+
+example : Vol29.PreyRate 1 2 0 0 = 0 ∧ Vol29.PredatorRate 3 4 0 0 = 0 :=
+  Vol29.extinction_equilibrium 1 2 3 4
+
+example (c : ℕ) : Vol35.haltsWithin Vol35.haltMachine c 1 = true :=
+  (Vol35.haltsWithin_correct Vol35.haltMachine c 1).mpr ⟨1, by decide, rfl⟩

@@ -120,7 +120,6 @@ theorem bellPair_subsystem_entropy :
 theorem bellPair_capacity :
     bellPairSystem.capacity = 2 * Real.log 2 := by
   dsimp [capacity, bellPairSystem]
-  norm_num
 
 theorem bellPair_strictly_below_capacity :
     bellPairSystem.entanglement < bellPairSystem.capacity := by

@@ -46,8 +46,10 @@ theorem chsh_violation_magnitude : TsirelsonBound - ClassicalCHSHBound > 0 := by
   dsimp [TsirelsonBound, ClassicalCHSHBound] at h ⊢
   linarith
 
-end OmegaProtocol.Vol24-- ============================================================
+-- ============================================================
 -- CHSH CORRELATION OPERATORS & BELL VIOLATION
+-- (Inside `OmegaProtocol.Vol24`: the singlet theorems below refer
+-- to `TsirelsonBound`, `ClassicalCHSHBound` and `bell_violation`.)
 -- ============================================================
 
 /-- Bipartite correlation setup with measurements A, A' on subsystem 1
@@ -118,6 +120,15 @@ theorem local_realism_bound (a a' b b' : ℝ)
       _ ≤ 2 * 1 := mul_le_mul_of_nonneg_left ha' (by norm_num)
       _ = 2 := by norm_num
 
+/-- The singlet correlation magnitude `√2 / 2` is a valid CHSH correlator. -/
+theorem sqrt2_div2_abs_le_one : |Real.sqrt 2 / 2| ≤ 1 := by
+  rw [abs_div, abs_of_nonneg (Real.sqrt_nonneg 2),
+    abs_of_pos (by norm_num : (0:ℝ) < 2)]
+  have h2 : Real.sqrt 2 ≤ 2 := by
+    rw [show (2:ℝ) = Real.sqrt 4 by norm_num]
+    exact Real.sqrt_le_sqrt (by norm_num)
+  linarith
+
 /-- Concrete quantum Bell singlet state attaining the Tsirelson bound 2√2:
     E(A, B) = √2/2, E(A, B') = √2/2, E(A', B) = √2/2, E(A', B') = -√2/2. -/
 noncomputable def singletBellSystem : CHSHSystem where
@@ -125,30 +136,12 @@ noncomputable def singletBellSystem : CHSHSystem where
   E_AB' := Real.sqrt 2 / 2
   E_A'B := Real.sqrt 2 / 2
   E_A'B' := - Real.sqrt 2 / 2
-  h_AB := by
-    rw [abs_div, abs_of_pos (by norm_num : (2:ℝ) > 0)]
-    have : Real.sqrt 2 ≤ 2 := by
-      rw [show (2:ℝ) = Real.sqrt 4 by norm_num]
-      exact Real.sqrt_le_sqrt (by norm_num)
-    linarith
-  h_AB' := by
-    rw [abs_div, abs_of_pos (by norm_num : (2:ℝ) > 0)]
-    have : Real.sqrt 2 ≤ 2 := by
-      rw [show (2:ℝ) = Real.sqrt 4 by norm_num]
-      exact Real.sqrt_le_sqrt (by norm_num)
-    linarith
-  h_A'B := by
-    rw [abs_div, abs_of_pos (by norm_num : (2:ℝ) > 0)]
-    have : Real.sqrt 2 ≤ 2 := by
-      rw [show (2:ℝ) = Real.sqrt 4 by norm_num]
-      exact Real.sqrt_le_sqrt (by norm_num)
-    linarith
+  h_AB := sqrt2_div2_abs_le_one
+  h_AB' := sqrt2_div2_abs_le_one
+  h_A'B := sqrt2_div2_abs_le_one
   h_A'B' := by
-    rw [abs_neg, abs_div, abs_of_pos (by norm_num : (2:ℝ) > 0)]
-    have : Real.sqrt 2 ≤ 2 := by
-      rw [show (2:ℝ) = Real.sqrt 4 by norm_num]
-      exact Real.sqrt_le_sqrt (by norm_num)
-    linarith
+    rw [show (- Real.sqrt 2 / 2 : ℝ) = -(Real.sqrt 2 / 2) by ring, abs_neg]
+    exact sqrt2_div2_abs_le_one
 
 theorem singlet_chsh_attains_tsirelson :
     singletBellSystem.chshParameter = TsirelsonBound := by
@@ -161,3 +154,5 @@ theorem singlet_violates_classical_bound :
   exact bell_violation
 
 end CHSHSystem
+
+end OmegaProtocol.Vol24

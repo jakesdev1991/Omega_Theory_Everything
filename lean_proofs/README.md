@@ -369,3 +369,26 @@ microscopic derivation of Landauer's bound or an erasure/conversion mechanism.
 Real-valued information quantities need not be integer bitstrings. The old
 ideal information-mass and density/scale APIs remain unchanged and must not be
 interpreted as actual storage mass or general irreversible erasure cost.
+
+### Seventh pass: computation, categories, pattern, expansion
+
+- Vol35 now has a toy computability semantics (`Machine` over ℕ
+  configurations) with halting propagation, bounded-halt decidability,
+  halt/loop witnesses, and a halting diagonal theorem — not a
+  Turing-machine equivalence.
+- Vol36 now defines a skeletal FinSet category with products,
+  equalizers, exponentials, and subset characteristic maps — honestly
+  scoped below a full elementary topos.
+- Vol37 now carries a 2-species Jacobian/diffusivity model with the
+  Turing instability criterion, the exact inhibitor-faster threshold,
+  and a verified activator-inhibitor witness.
+- Vol44/Vol48 replace fixed constants with variable positive
+  parameters, scaling/inverse laws, antitonicity, and benchmarks.
+- Vol54 now proves the empty type's universal property; Vol29
+  classifies all Lotka–Volterra equilibria under nonzero rates; the
+  Vol04 Robertson header overclaim is corrected (comment-only).
+- Ten regression examples and ten kernel-audit targets added
+  (142 selected declarations). All changes are additive; no protocol
+  signatures changed. Kernel validation passes on PR #47 (Lean CI
+  run 36270581122, 2026-09-26): full build green, all 142 targets
+  resolve with zero unexpected axioms.

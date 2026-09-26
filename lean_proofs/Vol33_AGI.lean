@@ -75,7 +75,6 @@ theorem agi_integration_pos (R₁ R₂ : QRegion) (h : asymmetryTensor R₁ R₂
     |asymmetryTensor R₁ R₂| > 0 :=
   abs_pos.mpr h
 
-end OmegaProtocol.Vol33
 -- ============================================================
 -- FINITE RESOURCE-BOUNDED AGENT ALLOCATION & PARETO DOMINANCE
 -- ============================================================
@@ -152,3 +151,5 @@ theorem dualTask_totalUtility_pos :
   norm_num
 
 end BoundedAgent
+
+end OmegaProtocol.Vol33

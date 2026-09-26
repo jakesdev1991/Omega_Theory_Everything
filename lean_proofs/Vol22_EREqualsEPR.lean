@@ -78,7 +78,6 @@ theorem persistent_perfect_overlap_same_entity (A B : RegionHistory) :
   funext t
   exact perfect_overlap_identifies_regions (A t) (B t) (h t)
 
-end OmegaProtocol.Vol22
 
 -- ============================================================
 -- NON-DEGENERATE ER=EPR BRIDGE (Over General Information Networks)
@@ -124,3 +123,5 @@ theorem binary_identical_zero_throat (A : BinaryRegion) :
   · norm_num [BinaryRegion.binaryNetwork]
 
 end NetworkER_EPR
+
+end OmegaProtocol.Vol22

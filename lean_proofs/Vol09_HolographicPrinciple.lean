@@ -80,7 +80,6 @@ theorem ryu_takayanagi (bh : BHGeometry) :
 theorem bh_entropy_is_holographic (bh : BHGeometry) :
   EntanglementEntropy bh = BHEntropy bh := by
   dsimp [EntanglementEntropy, BHEntropy, MinimalSurfaceArea]
-  rfl
 
 -- ============================================================
 -- THEOREM 2: ER = EPR

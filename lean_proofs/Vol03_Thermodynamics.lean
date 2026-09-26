@@ -109,7 +109,6 @@ noncomputable def BHEntropy (ρ : StateSpace) : ℝ := BlackHoleArea ρ / 4
 theorem bh_entropy_formula :
   ∀ (ρ : StateSpace), BHEntropy ρ = BlackHoleArea ρ / 4 := fun _ => rfl
 
-end OmegaProtocol.Vol03
 -- ============================================================
 -- MACROSCOPIC THERMODYNAMIC PROCESSES & CARNOT EFFICIENCY
 -- ============================================================
@@ -206,3 +205,5 @@ theorem idealCarnotEngine_attains_carnot (TC TH : ℝ) (hC : 0 < TC) (hH : 0 < T
   exact mul_div_cancel_right₀ _ hQne
 
 end HeatEngine
+
+end OmegaProtocol.Vol03

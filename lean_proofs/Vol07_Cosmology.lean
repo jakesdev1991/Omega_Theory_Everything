@@ -118,7 +118,6 @@ theorem criticaldensity (t : CosmologicalTime)
     _ = ((HubbleParameter t)^2 * 3) / (8 * Real.pi * NewtonG) := by rw [← h1]
     _ = 3 * (HubbleParameter t)^2 / (8 * Real.pi * NewtonG) := by ring
 
-end OmegaProtocol.Vol07
 -- ============================================================
 -- EXPANDING COSMOLOGICAL SOLUTIONS (FLRW Dynamics)
 -- ============================================================
@@ -178,6 +177,7 @@ theorem flat_friedmann_critical_density_eq (G : ℝ) (hG : 0 < G) :
       _ = 3 * (U.hubbleRate ^ 2) / (8 * Real.pi * G) := by ring
   · intro h
     rw [h]
+    symm
     calc (8 * Real.pi * G / 3) * (3 * (U.hubbleRate ^ 2) / (8 * Real.pi * G))
       _ = ((8 * Real.pi * G) / 3 * 3) * (U.hubbleRate ^ 2) / (8 * Real.pi * G) := by ring
       _ = (8 * Real.pi * G) * (U.hubbleRate ^ 2) / (8 * Real.pi * G) := by ring
@@ -195,3 +195,5 @@ theorem redshift_positive_of_expansion (a_emit a_obs : ℝ)
   linarith
 
 end FLRWUniverse
+
+end OmegaProtocol.Vol07

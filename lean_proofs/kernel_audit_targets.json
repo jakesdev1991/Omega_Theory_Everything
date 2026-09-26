@@ -130,5 +130,15 @@
   "OmegaProtocol.Vol33.BoundedAgent.utility_nonneg",
   "OmegaProtocol.Vol33.BoundedAgent.totalUtility_nonneg",
   "OmegaProtocol.Vol33.BoundedAgent.dualTask_totalUtility_value",
-  "OmegaProtocol.Vol33.BoundedAgent.dualTask_totalUtility_pos"
+  "OmegaProtocol.Vol33.BoundedAgent.dualTask_totalUtility_pos",
+  "OmegaProtocol.Vol35.halts_diagonal",
+  "OmegaProtocol.Vol36.skel_has_products",
+  "OmegaProtocol.Vol36.skelExp_beta",
+  "OmegaProtocol.Vol36.skelChar_unique",
+  "OmegaProtocol.Vol37.ReactionSystem.turing_instability",
+  "OmegaProtocol.Vol37.ReactionSystem.drive_iff_ratio",
+  "OmegaProtocol.Vol44.DeSitterSpace.entropy_formula",
+  "OmegaProtocol.Vol48.Compactification.Geff_eventually_small",
+  "OmegaProtocol.Vol54.ex_nihilo_unique",
+  "OmegaProtocol.Vol29.equilibrium_classification"
 ]

@@ -44,10 +44,10 @@ noncomputable instance {n : ℕ} : Add (DifferentialForm n) := ⟨diff_add⟩
 noncomputable instance {n : ℕ} : Neg (DifferentialForm n) := ⟨diff_neg⟩
 
 -- The exterior derivative d : Ωⁿ → Ωⁿ⁺¹
-def ExteriorDerivative {n : ℕ} (_ : DifferentialForm n) : DifferentialForm (n + 1) := 0
+noncomputable def ExteriorDerivative {n : ℕ} (_ : DifferentialForm n) : DifferentialForm (n + 1) := 0
 
 -- The Hodge star ⋆ : Ωⁿ → Ω⁴⁻ⁿ (on 4-dimensional spacetime)
-def HodgeStar {n : ℕ} (_ : DifferentialForm n) : DifferentialForm (4 - n) := 0
+noncomputable def HodgeStar {n : ℕ} (_ : DifferentialForm n) : DifferentialForm (4 - n) := 0
 
 -- ============================================================
 -- KEY MATHEMATICAL MODEL CLAIM: d² = 0 (Poincaré Lemma)
@@ -60,7 +60,13 @@ theorem d_squared_zero {n : ℕ} (ω : DifferentialForm n) :
 -- d is linear in the concrete differential form model.
 theorem d_linear {n : ℕ} (ω₁ ω₂ : DifferentialForm n) :
   ExteriorDerivative (diff_add ω₁ ω₂) = diff_add (ExteriorDerivative ω₁) (ExteriorDerivative ω₂) := by
-  rfl
+  -- Both sides unfold to pointwise `0 = 0 + 0`; `show` discharges the
+  -- definitional unfolding, then congruence plus `add_zero` finishes.
+  show (⟨fun _ => (0:ℝ)⟩ : DifferentialForm (n + 1)) = ⟨fun i => (0:ℝ) + 0⟩
+  congr 1
+  funext i
+  show (0 : ℝ) = 0 + 0
+  exact (add_zero _).symm
 
 -- ============================================================
 -- THE ELECTROMAGNETIC FIELD
@@ -104,7 +110,7 @@ theorem gauge_transform_field_zero (χ : DifferentialForm 0) :
 -- INHOMOGENEOUS MAXWELL EQUATIONS (PHYSICAL POSTULATE)
 -- ============================================================
 
-def J : DifferentialForm 1 := 0
+noncomputable def J : DifferentialForm 1 := 0
 
 theorem inhomogeneous_maxwell (em : ElectromagneticField) :
   ExteriorDerivative (HodgeStar em.F) = HodgeStar J := by

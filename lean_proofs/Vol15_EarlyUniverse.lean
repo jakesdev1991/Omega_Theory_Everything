@@ -60,7 +60,7 @@ namespace CosmologicalFluid
 variable (F : CosmologicalFluid)
 
 /-- Equation of state parameter w = p / ρ. -/
-def w : ℝ := F.pressure / F.density
+noncomputable def w : ℝ := F.pressure / F.density
 
 /-- The acceleration source term ρ + 3p. -/
 def accelerationSource : ℝ := F.density + 3 * F.pressure
