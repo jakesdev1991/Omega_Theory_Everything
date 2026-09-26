@@ -332,9 +332,11 @@ theorem early_universe_axiom (t : Vol07.CosmologicalTime) (h_lambda : Vol07.Cosm
   exact Vol15.inflation_acceleration t h_lambda h_inflation
 
 -- Vol 16: Non-Equilibrium Thermodynamics
-theorem non_equilibrium_axiom (t : Vol16.ThermoTime) (h_isolated : Vol16.EntropyFlux t = 0) :
-  Vol16.TimeDeriv Vol16.Entropy t ≥ 0 := by
-  exact Vol16.isolated_entropy_nondecreasing t h_isolated
+/-- Pointwise consequence of a supplied differentiable entropy-balance model. -/
+theorem non_equilibrium_axiom (sys : Vol16.EntropyProcess) (t : Vol16.ThermoTime)
+    (h_isolated : Vol16.EntropyFlux sys t = 0) :
+    0 ≤ Vol16.TimeDeriv (Vol16.Entropy sys) t :=
+  Vol16.isolated_entropy_nondecreasing sys t h_isolated
 
 -- Vol 17: Fluid Dynamics
 /-- Consistency bridge (VOL17): the Omega-metric `d` is nonnegative.
@@ -365,9 +367,11 @@ theorem chaos_theory_axiom (t : ℝ) (ht : t > 0) : Vol20.LyapunovExponent * t >
   exact Vol20.sensitive_dependence t ht
 
 -- Vol 21: Arrow of Time
-theorem arrow_of_time_axiom (t₁ t₂ : Vol21.CosmicTime) (h : t₁ ≤ t₂) :
-  Vol21.CosmicEntropy t₂ ≥ Vol21.CosmicEntropy t₁ := by
-  exact Vol21.arrow_of_time t₁ t₂ h
+/-- Conditional entropy ordering, not a derivation of cosmological time. -/
+theorem arrow_of_time_axiom (history : Vol21.CosmicHistory)
+    (h_isolated : Vol16.IsIsolated history) (t₁ t₂ : Vol21.CosmicTime) (h : t₁ ≤ t₂) :
+    Vol21.CosmicEntropy history t₁ ≤ Vol21.CosmicEntropy history t₂ :=
+  Vol21.arrow_of_time history h_isolated t₁ t₂ h
 
 -- Vol 22: ER = EPR
 theorem axiom_er_epr (A B : Vol22.Subsystem) (h : Φ A B = 1) : d A B = 0 := by
@@ -443,15 +447,20 @@ theorem ecosystem_dynamics_axiom (alpha beta delta gamma : ℝ) (hd : delta ≠ 
   exact Vol29.lotka_volterra_equilibrium alpha beta delta gamma hd hb
 
 -- Vol 30: Planetary Systems
-theorem planetary_systems_axiom (a₁ a₂ : ℝ) (ha1 : a₁^3 ≠ 0) (ha2 : a₂^3 ≠ 0) :
-  (Vol30.OrbitalPeriod a₁)^2 / a₁^3 = (Vol30.OrbitalPeriod a₂)^2 / a₂^3 := by
-  exact Vol30.kepler_ratio_constant a₁ a₂ ha1 ha2
+/-- Conditional consequence of the chosen positive-parameter Kepler formula. -/
+theorem planetary_systems_axiom (sys : Vol30.KeplerSystem) (a₁ a₂ : ℝ)
+    (ha1 : 0 < a₁) (ha2 : 0 < a₂) :
+    Vol30.OrbitalPeriod sys a₁ ^ 2 / a₁ ^ 3 =
+      Vol30.OrbitalPeriod sys a₂ ^ 2 / a₂ ^ 3 :=
+  Vol30.kepler_ratio_constant sys a₁ a₂ ha1 ha2
 
 -- Vol 31: Game Theory
+/-- Legacy name: this states payoff dominance, not convergence of a learning process. -/
 theorem axiom_nash_convergence (s2 : Vol31.Strategy) :
   Vol31.Payoff1 Vol31.Strategy.Defect s2 ≥ Vol31.Payoff1 Vol31.Strategy.Cooperate s2 := by
   exact Vol31.defect_dominates_p1 s2
 
+/-- Legacy name: this is mutual defection stability, not an evolution theorem. -/
 theorem evolution_of_cooperation :
   (Vol31.Payoff1 Vol31.Strategy.Defect Vol31.Strategy.Defect ≥ Vol31.Payoff1 Vol31.Strategy.Cooperate Vol31.Strategy.Defect) ∧
   (Vol31.Payoff2 Vol31.Strategy.Defect Vol31.Strategy.Defect ≥ Vol31.Payoff2 Vol31.Strategy.Defect Vol31.Strategy.Cooperate) := by
@@ -506,12 +515,16 @@ theorem morphogenesis_axiom (h_pos : Vol37.ActivatorDiffusion > 0) :
   exact Vol37.turing_instability_ratio h_pos
 
 -- Vol 38: Economics
-theorem economics_axiom : Vol38.ExcessDemand Vol38.equilibrium_price = 0 := by
-  exact Vol38.equilibrium_excess_demand_zero
+/-- Clearing in the explicit linear-market model, not general equilibrium. -/
+theorem economics_axiom (market : Vol38.LinearMarket) :
+    Vol38.ExcessDemand market (Vol38.equilibrium_price market) = 0 :=
+  Vol38.equilibrium_excess_demand_zero market
 
 -- Vol 39: Societal Networks
-theorem societal_networks_axiom : 2 * Vol39.NumConnections ≥ Vol39.NumNodes := by
-  exact Vol39.min_connections
+/-- Conditional graph-counting bound; no-isolated-vertices is essential. -/
+theorem societal_networks_axiom (G : Vol39.SocialNetwork) (h : Vol39.NoIsolatedVertices G) :
+    Vol39.NumNodes G ≤ 2 * Vol39.NumConnections G :=
+  Vol39.min_connections G h
 
 -- Vol 40: Fermi Paradox
 theorem fermi_paradox_axiom : Nonempty Vol40.GreatFilter := by

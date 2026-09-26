@@ -2,16 +2,13 @@ import Mathlib
 import OmegaAxioms
 import OmegaUnifiedFoundation
 
-/-
-  Vol31_GameTheory.lean
-  REAL formalization: Game Theory.
+/-!
+# A concrete prisoner's dilemma
 
-  Using Omega Protocol:
-  - 0D: Players = Q-Regions
-  - 1D: Strategy interaction = Φ (mutual information)
-  - 2D: Ω-Metric = strategic distance
-  - 3D: Informational Viscosity = decision timescale
-  - 4D: RCOD Asymmetry = Nash equilibrium stability
+The payoffs below are stipulated, not derived from information geometry. The
+new pure-Nash predicate quantifies over every unilateral deviation; its unique
+equilibrium is mutual defection, even though cooperation is Pareto-superior.
+No repeated-game, mixed-strategy, or evolutionary-dynamics claim is made.
 -/
 
 namespace OmegaProtocol.Vol31
@@ -42,12 +39,7 @@ theorem nash_equilibrium_defect :
   (Payoff2 Strategy.Defect Strategy.Defect ≥ Payoff2 Strategy.Defect Strategy.Cooperate) := by
   constructor <;> simp [Payoff1, Payoff2]
 
-/-- COROLLARY: Game Theory from Omega Protocol
-    Players = Q-Regions (0D)
-    Strategy interaction = Φ (1D)
-    Payoff matrix = Ω-Metric (2D)
-    Decision time = Informational Viscosity (3D)
-    Equilibrium = RCOD Asymmetry stability (4D) -/
+/-- Legacy export name for dominance in the stipulated payoff table. -/
 theorem gametheory_from_omega (s2 : Strategy) :
   Payoff1 Strategy.Defect s2 ≥ Payoff1 Strategy.Cooperate s2 := by
   exact defect_dominates_p1 s2
@@ -66,5 +58,51 @@ theorem bridge_vol31_mutual_info_nonneg (R₁ R₂ : QRegion) :
     derivation of the physical law the legacy name `nash_from_phi` evoked. -/
 theorem bridge_vol31_metric_self_zero (R : QRegion) : d R R = 0 := by
   exact qregion_self_distance_zero R
+
+/-- No player can improve by any unilateral pure-strategy deviation. -/
+def IsNash (s1 s2 : Strategy) : Prop :=
+  (∀ t, Payoff1 t s2 ≤ Payoff1 s1 s2) ∧
+  (∀ t, Payoff2 s1 t ≤ Payoff2 s1 s2)
+
+theorem defect_strictly_dominates (s2 : Strategy) :
+    Payoff1 Strategy.Cooperate s2 < Payoff1 Strategy.Defect s2 := by
+  cases s2 <;> norm_num [Payoff1]
+
+/-- Complete classification, stronger than checking just one candidate. -/
+theorem nash_iff_mutual_defection (s1 s2 : Strategy) :
+    IsNash s1 s2 ↔ s1 = Strategy.Defect ∧ s2 = Strategy.Defect := by
+  constructor
+  · intro h
+    cases s1 with
+    | Cooperate =>
+        have h1 := h.1 Strategy.Defect
+        have hstrict := defect_strictly_dominates s2
+        omega
+    | Defect =>
+        cases s2 with
+        | Cooperate =>
+            have h2 := h.2 Strategy.Defect
+            norm_num [Payoff2, Payoff1] at h2
+        | Defect => exact ⟨rfl, rfl⟩
+  · rintro ⟨rfl, rfl⟩
+    constructor
+    · intro t
+      cases t <;> norm_num [Payoff1]
+    · intro t
+      cases t <;> norm_num [Payoff2, Payoff1]
+
+theorem pure_nash_exists_unique :
+    ∃! s : Strategy × Strategy, IsNash s.1 s.2 := by
+  refine ⟨(Strategy.Defect, Strategy.Defect), ?_, ?_⟩
+  · exact (nash_iff_mutual_defection _ _).mpr ⟨rfl, rfl⟩
+  · intro s hs
+    obtain ⟨h1, h2⟩ := (nash_iff_mutual_defection s.1 s.2).mp hs
+    exact Prod.ext h1 h2
+
+/-- Nash stability is not the same as jointly optimal welfare. -/
+theorem cooperation_pareto_dominates_equilibrium :
+    Payoff1 .Defect .Defect < Payoff1 .Cooperate .Cooperate ∧
+    Payoff2 .Defect .Defect < Payoff2 .Cooperate .Cooperate := by
+  norm_num [Payoff1, Payoff2]
 
 end OmegaProtocol.Vol31

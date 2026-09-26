@@ -142,4 +142,36 @@ theorem appa_branching_security_guarantee
     child_execute_isolated read, ?_⟩
   exact declassification_gate_bounded derivative h_cond
 
+/-- Branching preserves the entire parent, not just its integrity label. -/
+theorem parent_context_preserved (read : UntrustedRead) :
+    (spawn_isolated read).parent = read.parent := rfl
+
+/-- Executable fail-closed interface. The booleans are supplied by a trusted
+    validator; this model does not establish that the payload itself is safe. -/
+def try_declassify (derivative : SanitizedDerivative) : Option DeclassifiedDerivative :=
+  if derivative.schema_valid && derivative.provenance_valid then
+    some { payload := derivative.payload
+           schema_valid := derivative.schema_valid
+           provenance_valid := derivative.provenance_valid }
+  else none
+
+/-- Acceptance is equivalent to BOTH checks, not just a one-way consequence. -/
+theorem try_declassify_accepts_iff (derivative : SanitizedDerivative) :
+    (∃ result, try_declassify derivative = some result) ↔ GateCondition derivative := by
+  rcases derivative with ⟨payload, schema, provenance⟩
+  cases schema <;> cases provenance <;> simp [try_declassify, GateCondition]
+
+/-- Either failed check blocks the return path. -/
+theorem try_declassify_rejects_iff (derivative : SanitizedDerivative) :
+    try_declassify derivative = none ↔
+      derivative.schema_valid = false ∨ derivative.provenance_valid = false := by
+  rcases derivative with ⟨payload, schema, provenance⟩
+  cases schema <;> cases provenance <;> simp [try_declassify]
+
+/-- The executable interface agrees with the proof-carrying interface. -/
+theorem try_declassify_agrees (derivative : SanitizedDerivative)
+    (h : GateCondition derivative) :
+    try_declassify derivative = some (declassification_gate derivative h) := by
+  simp [try_declassify, declassification_gate, h.1, h.2]
+
 end APPA

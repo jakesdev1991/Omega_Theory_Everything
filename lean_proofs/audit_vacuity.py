@@ -4,7 +4,7 @@
 """Audit vacuous or misleading declarations in the Lean proof corpus.
 
 Complements `audit_axioms.py` (which counts declaration-level `axiom`s) by
-tracking three *honesty* metrics:
+tracking three *honesty* metrics plus a per-export legacy-alias baseline:
 
 1. misleading_trivial
    Theorems whose conclusion is one of the degenerate-model tautologies of
@@ -22,14 +22,20 @@ tracking three *honesty* metrics:
    tell-tale of an un-formalized volume. Model primitives in
    `OmegaAxioms.lean` are deliberate and are exempt.
 
-All three metrics are ratcheted in CI: they may only go down.
+The numeric metrics may only go down. Parameterized Unit definitions are included.
+The optional alias baseline inventories known *_Stmt scope debt by declaration,
+so new legacy-style exports cannot reuse another declaration's quota. None of
+these lexical checks establish satisfiability of hypotheses or semantic scope.
 """
 
 from __future__ import annotations
 
 import argparse
+import json
 import re
 from pathlib import Path
+
+from lean_source import lean_sources, mask_comments_and_strings
 
 # Conclusions that are tautologies of the concrete Q-region model.
 TRIVIAL_CONCLUSION = [
@@ -44,8 +50,16 @@ TRIVIAL_CONCLUSION = [
 ]
 
 UNIT_STUB = re.compile(r"Nonempty\s+\S+\s*:=\s*⟨\(\)⟩")
-UNIT_TYPE = re.compile(r"^\s*def\s+\S+\s*:\s*Type\s*:=\s*Unit\b", re.M)
-THEOREM_HEAD = re.compile(r"^\s*(?:noncomputable\s+)?theorem\s+([A-Za-z0-9_']+)")
+UNIT_TYPE = re.compile(
+    r"^\s*(?:noncomputable\s+)?(?:def|abbrev)\s+\S+"
+    r"(?:\s*(?:\([^)]*\)|\{[^}]*\}|\[[^\]]*\]))*"
+    r"\s*:\s*Type(?:\s+\d+)?\s*:=\s*Unit\b",
+    re.M,
+)
+THEOREM_HEAD = re.compile(
+    r"^\s*(?:@\[[^\]]*\]\s*)*(?:(?:private|protected|noncomputable)\s+)*"
+    r"(?:theorem|lemma)\s+([^\s(:{]+)"
+)
 
 # Bundles that are documented as honest aggregates of structural facts.
 ALLOWED_NAMES = {
@@ -64,7 +78,7 @@ def theorem_declarations(text: str) -> list[tuple[str, str]]:
             continue
         stmt = line
         j = i
-        while ":=" not in stmt and j < min(i + 12, len(lines) - 1):
+        while ":=" not in stmt and j < len(lines) - 1:
             j += 1
             stmt += " " + lines[j].strip()
         out.append((m.group(1), stmt))
@@ -75,20 +89,45 @@ def audit(root: Path) -> tuple[list[str], list[str], list[str]]:
     misleading: list[str] = []
     stubs: list[str] = []
     unit_types: list[str] = []
-    for path in sorted(root.glob("*.lean")):
-        text = path.read_text(encoding="utf-8")
+    for path in lean_sources(root):
+        text = mask_comments_and_strings(path.read_text(encoding="utf-8"))
         for name, stmt in theorem_declarations(text):
             if name.startswith("bridge_") or name in ALLOWED_NAMES:
                 continue
             if any(rx.search(stmt) for rx in TRIVIAL_CONCLUSION):
-                misleading.append(f"{path.name}: {name}")
+                misleading.append(f"{path.relative_to(root)}: {name}")
         for n, line in enumerate(text.splitlines(), 1):
             if UNIT_STUB.search(line):
-                stubs.append(f"{path.name}:{n}: {line.strip()[:90]}")
+                stubs.append(f"{path.relative_to(root)}:{n}: {line.strip()[:90]}")
         if path.name.startswith("Vol"):
             for m in UNIT_TYPE.finditer(text):
-                unit_types.append(f"{path.name}: {m.group(0).strip()}")
+                unit_types.append(f"{path.relative_to(root)}: {m.group(0).strip()}")
     return misleading, stubs, unit_types
+
+
+def statement_aliases(root: Path) -> list[str]:
+    """Inventory theorem conclusions hidden behind legacy *_Stmt names.
+
+    This is a lexical scope-debt detector, NOT a determination that every
+    proposition alias is vacuous. Reviewed legacy exports remain visible in a
+    per-declaration baseline; new aliases cannot silently reuse a numeric quota.
+    """
+    findings: list[str] = []
+    pattern = re.compile(r":\s*([\w.]+_Stmt)\s*:=", re.UNICODE)
+    for path in lean_sources(root):
+        text = mask_comments_and_strings(path.read_text(encoding="utf-8"))
+        for name, statement in theorem_declarations(text):
+            match = pattern.search(statement)
+            if match and not name.startswith("bridge_"):
+                findings.append(f"{path.relative_to(root)}: {name} -> {match.group(1)}")
+    return findings
+
+
+def alias_baseline_errors(root: Path, baseline: Path) -> tuple[list[str], list[str]]:
+    """New debt fails, and removed debt must be deleted from the baseline."""
+    expected = set(json.loads(baseline.read_text(encoding="utf-8")))
+    actual = set(statement_aliases(root))
+    return sorted(actual - expected), sorted(expected - actual)
 
 
 def report(title: str, items: list[str], maximum: int | None) -> int:
@@ -107,6 +146,12 @@ def main() -> int:
     parser.add_argument("--max-misleading", type=int, default=None)
     parser.add_argument("--max-unit-stubs", type=int, default=None)
     parser.add_argument("--max-unit-types", type=int, default=None)
+    parser.add_argument(
+        "--alias-baseline",
+        type=Path,
+        default=None,
+        help="Exact reviewed legacy *_Stmt exports; not a proof certificate",
+    )
     args = parser.parse_args()
 
     misleading, stubs, unit_types = audit(args.root)
@@ -116,6 +161,16 @@ def main() -> int:
     )
     rc |= report("Nonempty-unit stubs", stubs, args.max_unit_stubs)
     rc |= report("Unit-typed volume definitions", unit_types, args.max_unit_types)
+    if args.alias_baseline is not None:
+        new, stale = alias_baseline_errors(args.root, args.alias_baseline)
+        print(
+            f"Legacy statement aliases (scope debt): {len(statement_aliases(args.root))}"
+        )
+        for item in new:
+            print(f"FAIL: unreviewed statement alias: {item}")
+        for item in stale:
+            print(f"FAIL: remove retired baseline entry: {item}")
+        rc |= int(bool(new or stale))
     if rc == 0:
         print("vacuity audit: OK")
     return rc

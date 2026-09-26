@@ -62,3 +62,5 @@ import InformationPhysics
 import DynamicPlanckScale
 import DynamicCODScale
 import RadialMetric
+import LogCorrelationMetric
+import ProofRegression

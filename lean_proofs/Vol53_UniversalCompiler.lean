@@ -78,4 +78,20 @@ theorem depth_compose_ge (f g : Prog) :
 theorem bridge_vol53_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 :=
   monotonicity_lemma R
 
+/-- Expressiveness audit: without an input constructor every program in this
+    grammar computes a constant function. Composition does not fix that. -/
+theorem eval_input_independent (p : Prog) (x y : ℕ) : eval p x = eval p y := by
+  induction p generalizing x y with
+  | const n => rfl
+  | succ p ih => simp only [eval, ih x y]
+  | compose f g ihf ihg => exact ihf (eval g x) (eval g y)
+
+/-- Consequently this grammar cannot even represent the identity function;
+    the legacy `universal_compiler` name asserts inhabitation, not universality. -/
+theorem identity_not_representable : ¬ ∃ p : Prog, ∀ x, eval p x = x := by
+  rintro ⟨p, hp⟩
+  have h := eval_input_independent p 0 1
+  rw [hp 0, hp 1] at h
+  omega
+
 end OmegaProtocol.Vol53

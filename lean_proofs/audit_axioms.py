@@ -12,18 +12,21 @@ import argparse
 import re
 from pathlib import Path
 
-AXIOM = re.compile(r"^\s*axiom\s+([A-Za-z0-9_.'₁₂₃]+)")
+from lean_source import lean_sources, mask_comments_and_strings
+
+AXIOM = re.compile(
+    r"(?m)^[ \t]*(?:@\[[^\]]*\]\s*)*(?:(?:private|protected)\s+)?"
+    r"axiom\s+([^\s:({]+)"
+)
 
 
 def declarations(root: Path) -> list[tuple[Path, int, str]]:
     found: list[tuple[Path, int, str]] = []
-    for path in sorted(root.glob("*.lean")):
-        for line_number, line in enumerate(
-            path.read_text(encoding="utf-8").splitlines(), 1
-        ):
-            match = AXIOM.match(line)
-            if match:
-                found.append((path, line_number, match.group(1)))
+    for path in lean_sources(root):
+        text = mask_comments_and_strings(path.read_text(encoding="utf-8"))
+        for match in AXIOM.finditer(text):
+            line_number = text.count("\n", 0, match.start(1)) + 1
+            found.append((path, line_number, match.group(1)))
     return found
 
 

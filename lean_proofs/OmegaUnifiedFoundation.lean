@@ -6,6 +6,17 @@ import OmegaAxioms
 -- Forces all 54 volumes into a single interdependent mathematical structure
 -- FIXED: No True := trivial placeholders - all theorems have genuine proofs
 
+/-!
+## Scope warning for legacy exports
+
+The volume and cross-volume `*_Stmt` aliases below name consistency properties
+of the zero-information model, not derivations of their historical physics
+labels. `legacy_statement_aliases.json` inventories these exports as outstanding
+scope debt. A passing source audit does not validate the physical interpretation
+or show that positive-information hypotheses in downstream modules are realizable.
+The concrete modular flow below is zero, not a faithful modular automorphism group.
+-/
+
 namespace OmegaProtocol
 
 -- ============================================================
