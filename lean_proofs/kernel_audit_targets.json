@@ -153,5 +153,14 @@
   "OmegaProtocol.Vol03.kms_transitivity",
   "OmegaProtocol.Vol27.IntegratedSystem.experiences_of_strict_integration",
   "OmegaProtocol.Vol44.DeSitterSpace.entropy_pos",
-  "OmegaProtocol.Vol48.Compactification.Geff_pos"
+  "OmegaProtocol.Vol48.Compactification.Geff_pos",
+  "OmegaProtocol.Vol04.Robertson.inner_dev_eq",
+  "OmegaProtocol.Vol04.Robertson.comm_link",
+  "OmegaProtocol.Vol04.Robertson.robertson_uncertainty",
+  "OmegaProtocol.Vol04.hamiltonian_self_adjoint",
+  "OmegaProtocol.Vol04.schrodinger_equation",
+  "OmegaProtocol.Vol09.product_of_correlation_det_zero",
+  "OmegaProtocol.Vol09.isProduct_iff_correlation_det",
+  "OmegaProtocol.Vol09.entangled_iff_correlation_det_ne_zero",
+  "OmegaProtocol.Vol09.er_epr_iff"
 ]

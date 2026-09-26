@@ -274,7 +274,7 @@ python3 lean_proofs/audit_kernel.py
 ```
 
 This command first runs `lake build ToE`, then asks Lean for the transitive
-axioms of the 155 declarations in `kernel_audit_targets.json`. Only `propext`,
+axioms of the 164 declarations in `kernel_audit_targets.json`. Only `propext`,
 `Classical.choice`, and `Quot.sound` are permitted. Missing Lake, failed builds,
 missing/duplicate reports, malformed output, and unapproved axioms all fail;
 there is no static-success fallback. The scratch report lives under ignored
@@ -466,3 +466,39 @@ Local validation: 41 Python/tooling tests, `audit_axioms --max 0` → 0,
 CI grep gate clean, ruff and mypy clean. The Lean build and kernel gate
 run in CI on this branch's PR (no local Lean toolchain is obtainable in
 this environment).
+
+### Ninth pass: Robertson, the exact ER=EPR dictionary, real dynamics
+
+- **Vol04 `Robertson` section (general complex inner product space):**
+  the full Robertson uncertainty relation
+  `Var(A)·Var(B) ≥ (|⟨ψ,[A,B]ψ⟩|/2)²` for self-adjoint `A`, `B` and a
+  normalized state `⟨ψ,ψ⟩ = 1` — via the self-adjoint transfer
+  (`inner_dev_eq`) and the commutator link (`comm_link`), the two steps
+  the file previously documented as MISSING. Nontrivial mathematics
+  (Cauchy–Schwarz + exact cancellation of the scalar corrections under
+  normalization + the triangle bound `‖z − conj z‖ ≤ 2‖z‖`); in the
+  one-dimensional minimal model all commutators vanish, which is why
+  the theorem is stated for an arbitrary `H`.
+- **Vol09 exact dictionary:** `product_of_correlation_det_zero`
+  (2×2 rank-one factorization: `IsProduct ↔ det = 0`) upgrades the
+  ER=EPR dictionary to an equivalence `er_epr_iff : bridge ↔
+  entanglement`, with the Bell state witnessing both sides. Still a
+  model dictionary: no spacetime geometry is derived.
+- **Vol04 genuine Schrödinger dynamics:** `schrodingerTrajectory ω ψ₀ t
+  = exp(−iωt)·ψ₀` with a real `HasDerivAt` derivative solves
+  `iℏ·dψ/dt = H_{ℏω} ψ` for the self-adjoint Hamiltonian `z ↦ ℏω·z`
+  (`hamiltonian_self_adjoint`). The retired P→P theorem stays
+  retired; this is a constructed and verified solution, not a
+  postulate restated.
+- Protocol wrappers: `robertson_uncertainty`, `schrodinger_dynamics`,
+  `cross_vol09_vol22_er_epr_dictionary_iff`. Kernel inventory: 155 →
+  **164** selected declarations; 41 tooling tests; all lexical audits
+  at zero.
+
+**API changes:** purely additive. New Vol04 namespace `Robertson.*`,
+new Vol04 top-level `hamiltonian`/`schrodingerTrajectory`/
+`schrodinger_equation` (the name retired in the eighth pass is
+reused for the genuine theorem — the retirement comment explains the
+history), new Vol09 `product_of_correlation_det_zero`,
+`isProduct_iff_correlation_det`,
+`entangled_iff_correlation_det_ne_zero`, `er_epr_iff`.

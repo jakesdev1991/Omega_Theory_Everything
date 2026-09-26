@@ -181,16 +181,36 @@ theorem clausius_inequality (ρ σ : StateSpace) (hT : Vol03.Temperature ρ > 0)
 theorem bridge_vol04_coupling_symm (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R₂ R₁ := by
   exact Φ_symm R₁ R₂
 
-/-- Cauchy–Schwarz variance bound for deviation vectors. The full
-    Robertson commutator form `Var(A)·Var(B) ≥ (|⟨ψ,[A,B]ψ⟩|/2)²` is NOT
-    established here; see the Vol04 header for the missing steps. -/
+/-- Cauchy–Schwarz variance bound for deviation vectors, on the
+    one-dimensional minimal model. The full Robertson commutator form
+    below does not specialize meaningfully to this model (all
+    commutators vanish in one dimension). -/
 theorem uncertainty_cauchy_schwarz_bound (A B : Operator) (ψ : StateSpace) :
   Vol04.Variance A ψ * Vol04.Variance B ψ ≥ ‖@inner ℂ StateSpace _ (Vol04.deviation A ψ) (Vol04.deviation B ψ)‖ ^ 2 :=
   Vol04.cauchy_schwarz_variance A B ψ
 
--- The retired `schrodinger_equation` delegation restated its dynamics
--- hypothesis verbatim as the conclusion (P→P). The Schrödinger equation
--- is a model postulate; see the Vol04 header.
+/-- THE ROBERTSON UNCERTAINTY RELATION over an arbitrary complex inner
+    product space (Vol04's `Robertson` section): for self-adjoint A, B
+    and a normalized state ψ, Var(A)·Var(B) ≥ (|⟨ψ,[A,B]ψ⟩|/2)². Unlike
+    the one-dimensional delegation above, the commutator here is
+    genuinely nontrivial. -/
+theorem robertson_uncertainty {H : Type*} [NormedAddCommGroup H]
+    [InnerProductSpace ℂ H] (A B : H →L[ℂ] H)
+    (hA : Vol04.Robertson.SelfAdjoint A) (hB : Vol04.Robertson.SelfAdjoint B)
+    (ψ : H) (hψ : @inner ℂ H _ ψ ψ = 1) :
+    Vol04.Robertson.variance A ψ * Vol04.Robertson.variance B ψ
+      ≥ (‖@inner ℂ H _ ψ ((Vol04.Robertson.ccomm A B) ψ)‖ / 2) ^ 2 :=
+  Vol04.Robertson.robertson_uncertainty A B hA hB ψ hψ
+
+/-- Genuine Schrödinger dynamics (Vol04): the explicit trajectory
+    exp(−iωt)·ψ₀ has a real derivative and solves iℏ·dψ/dt = H_{ℏω} ψ
+    for the self-adjoint Hamiltonian z ↦ ℏω·z. The retired P→P
+    `schrodinger_equation` delegation is replaced by this verified
+    solution. -/
+theorem schrodinger_dynamics (ω : ℝ) (ψ₀ : ℂ) (t : ℝ) :
+    Complex.I * (Vol04.hbar : ℂ) * (deriv (Vol04.schrodingerTrajectory ω ψ₀) t)
+      = Vol04.hamiltonian (Vol04.hbar * ω) (Vol04.schrodingerTrajectory ω ψ₀ t) :=
+  Vol04.schrodinger_equation ω ψ₀ t
 
 /-- Consistency bridge (VOL04): the Omega-metric `d` is nonnegative.
     Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
@@ -712,6 +732,14 @@ theorem bridge_cross_v08_v09_mutual_info_nonneg (R₁ R₂ : QRegion) : mutualIn
 theorem cross_vol09_vol22_er_epr_dictionary (ψ : Vol09.BipartiteState)
     (h : Vol09.EinsteinRosenBridge ψ) : Vol09.EPR_Entanglement ψ :=
   Vol09.er_epr_bridge_entails_entanglement ψ h
+
+/-- Full cross-volume dictionary (Vol09 → Vol22): in the two-qubit
+    model the ER-bridge side and the EPR-entanglement side are
+    equivalent — entangled iff the correlation determinant is nonzero
+    (rank-one factorization gives both directions). -/
+theorem cross_vol09_vol22_er_epr_dictionary_iff (ψ : Vol09.BipartiteState) :
+    Vol09.EinsteinRosenBridge ψ ↔ Vol09.EPR_Entanglement ψ :=
+  Vol09.er_epr_iff ψ
 
 /-- Consistency bridge (cross-volume consistency): the Omega-metric `d` is reflexive (`d R R = 0`).
     Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;

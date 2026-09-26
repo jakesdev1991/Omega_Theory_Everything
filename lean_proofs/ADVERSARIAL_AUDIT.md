@@ -305,3 +305,42 @@ findings, and every item is stated with its verifiable remediation.
   (release hosts blocked); the pinned `lake build ToE` and the
   transitive-axiom gate (155 selected declarations) run in Lean CI on
   the branch/PR.
+
+---
+
+# Appendix R.7: ninth-pass additions (2026-09-26)
+
+Content additions on `arena/01a0df96-omega-theory-everything`,
+extending R.6. No audit metric regressed; the kernel inventory grew
+155 → 164.
+
+## R.7.1 Robertson uncertainty (closes Vol04's flagged gap)
+The audit table's Vol04 "Next" item (general Hilbert space, the
+missing commutator link) is implemented: a `Robertson` section over an
+arbitrary complex inner product space proves the full commutator form
+Var(A)·Var(B) ≥ (|⟨ψ,[A,B]ψ⟩|/2)² for self-adjoint A, B, normalized ψ.
+Honesty notes: the statement requires the normalization hypothesis
+⟨ψ,ψ⟩ = 1 (without it the scalar-shift corrections do not cancel); the
+proof uses the triangle bound ‖z − conj z‖ ≤ 2‖z‖ rather than the
+|z|² ≥ Im(z)² route, and the one-dimensional minimal-model delegation
+remains separately (commutators vanish there — the general theorem is
+where the content lives).
+
+## R.7.2 Exact ER=EPR dictionary (completes the Vol09 model)
+The pass-8 dictionary claimed only the sound direction. The converse
+is now proved: a 2×2 matrix factors as an outer product iff its
+determinant vanishes, so `Entangled ↔ det ≠ 0` and the dictionary is
+an exact equivalence `er_epr_iff`. Scope is unchanged: both sides are
+model predicates, no spacetime geometry is derived.
+
+## R.7.3 Genuine Schrödinger dynamics (replaces the retired P→P)
+`schrodingerTrajectory` has a real derivative (`HasDerivAt`) and
+provably solves iℏ·dψ/dt = H_{ℏω} ψ for the self-adjoint Hamiltonian
+z ↦ ℏω·z, in the one-dimensional model. Not derived: which self-adjoint
+operators generate which unitary groups on a general space; the
+trajectory is constructed and verified, not derived from a postulated
+equation.
+
+## R.7.4 Verification
+Local: 41 tests, all lexical audits at zero. CI: full `lake build ToE`
+plus the transitive kernel-axiom gate over 164 selected declarations.

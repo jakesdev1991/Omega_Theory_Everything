@@ -17,10 +17,11 @@ import Vol08_BlackHoleThermodynamics
   3. Black Hole Entropy is Holographic Entanglement Entropy:
      Definitional equality S_CFT = S_BH within the stated model.
   4. ER = EPR dictionary (honest scope): a two-qubit separability model
-     in which the sound direction — a nonvanishing correlation
-     determinant (bridge side) implies nonseparability (entanglement
-     side) — is proven, with the Bell state as an explicit witness.
-     The converse is NOT claimed.
+     in which the dictionary is an EXACT EQUIVALENCE — a state is
+     entangled iff its correlation determinant is nonzero (rank-one
+     factorization of the 2×2 coefficient matrix gives both
+     directions) — with the Bell state as an explicit witness. No
+     spacetime geometry is derived; both sides are model predicates.
 -/
 
 namespace OmegaProtocol.Vol09
@@ -98,8 +99,10 @@ theorem bh_entropy_is_holographic (bh : BHGeometry) :
 -- coefficient matrix factors; entanglement is nonseparability; the
 -- ER-bridge side of the dictionary is a nonvanishing correlation
 -- determinant (full-rank correlation). The proven direction is the sound
--- one — bridge ⇒ entanglement. No claim is made that every entangled
--- state has nonvanishing determinant.
+-- one — bridge ⇒ entanglement — together with its converse via
+-- rank-one factorization (`product_of_correlation_det_zero`), so the
+-- dictionary is an exact equivalence in this model
+-- (`er_epr_iff`).
 -- ============================================================
 
 /-- Pure state of two qubits: amplitudes (a, b, c, d) over the basis
@@ -144,6 +147,37 @@ theorem entangled_of_correlation_det_ne_zero (ψ : BipartiteState)
   intro hprod
   exact h (product_correlation_det_zero ψ hprod)
 
+/-- A vanishing correlation determinant forces separability: a 2×2
+    coefficient matrix factors as an outer product exactly when its
+    determinant is zero (rank ≤ 1). This is the converse direction,
+    so the dictionary below is an EXACT equivalence, not just an
+    implication. -/
+theorem product_of_correlation_det_zero (ψ : BipartiteState)
+    (h : correlationDet ψ = 0) : IsProduct ψ := by
+  have h1 : ψ.a * ψ.d - ψ.b * ψ.c = 0 := by
+    simpa [correlationDet] using h
+  by_cases ha : ψ.a = 0
+  · -- a = 0, so b·c = 0
+    have hbc : ψ.b * ψ.c = 0 := by
+      rw [ha, zero_mul, zero_sub, neg_eq_zero] at h1
+      exact h1
+    rcases mul_eq_zero.mp hbc with hb | hc
+    · exact ⟨0, 1, ψ.c, ψ.d, by simp [ha], by simp [hb], one_mul ψ.c, one_mul ψ.d⟩
+    · exact ⟨ψ.b, ψ.d, 0, 1, by simp [ha, hc], mul_one ψ.b, by simp [hc], mul_one ψ.d⟩
+  · -- a ≠ 0: factor as (a, c) ⊗ (1, b/a)
+    have had : ψ.a * ψ.d = ψ.b * ψ.c := sub_eq_zero.mp h1
+    refine ⟨ψ.a, ψ.c, 1, ψ.b / ψ.a, (mul_one ψ.a).symm, ?_, (mul_one ψ.c).symm, ?_⟩
+    · rw [mul_div, eq_comm, div_eq_iff ha]
+      exact mul_comm ψ.a ψ.b
+    · rw [mul_div, mul_comm ψ.c ψ.b, ← had, div_eq_iff ha]
+      exact mul_comm ψ.a ψ.d
+
+/-- Exact separability criterion for two-qubit pure states: the state
+    is a product iff the correlation determinant vanishes. -/
+theorem isProduct_iff_correlation_det (ψ : BipartiteState) :
+    IsProduct ψ ↔ correlationDet ψ = 0 :=
+  ⟨product_correlation_det_zero ψ, product_of_correlation_det_zero ψ⟩
+
 /-- The EPR side of the dictionary: nonseparability of the pure state. -/
 def EPR_Entanglement (ψ : BipartiteState) : Prop := Entangled ψ
 
@@ -177,5 +211,26 @@ theorem bell_entangled : Entangled bellState := by
 theorem bell_er_epr :
     EinsteinRosenBridge bellState ∧ EPR_Entanglement bellState :=
   ⟨bell_er_bridge, bell_entangled⟩
+
+/-- Exact entanglement criterion for two-qubit pure states: entangled
+    iff the correlation determinant is nonzero (nonseparability is
+    full-rank correlation). -/
+theorem entangled_iff_correlation_det_ne_zero (ψ : BipartiteState) :
+    Entangled ψ ↔ correlationDet ψ ≠ 0 := by
+  constructor
+  · intro hent hdet
+    exact hent (product_of_correlation_det_zero ψ hdet)
+  · exact entangled_of_correlation_det_ne_zero ψ
+
+/-- FULL CROSS-VOLUME DICTIONARY (Vol 09 → Vol 22): in the two-qubit
+    model the dictionary is an EXACT EQUIVALENCE — a state is entangled
+    (EPR side) if and only if it carries a nonvanishing correlation
+    determinant, i.e. a bridge (ER side). Both directions are proved:
+    the sound direction above, and the converse via rank-one
+    factorization of the coefficient matrix. -/
+theorem er_epr_iff (ψ : BipartiteState) :
+    EinsteinRosenBridge ψ ↔ EPR_Entanglement ψ :=
+  ⟨er_epr_bridge_entails_entanglement ψ, fun hent =>
+    (entangled_iff_correlation_det_ne_zero ψ).mp hent⟩
 
 end OmegaProtocol.Vol09

@@ -128,12 +128,12 @@ Unchanged limitations are deliberately recorded rather than hidden by renaming.
 | `Vol01_ClassicalMechanics.lean` | Substantive symplectic/derivative/energy/action algebra; legacy commutator is a singleton operation and mass is zero. Next: general Poisson Jacobi under smoothness and strict action equality cases. |
 | `Vol02_Electromagnetism.lean` | Upgraded `Spacetime` to 4D Minkowski coordinates $(t,x,y,z)$ and `DifferentialForm n` to algebraic components over basis forms, eliminating all Unit stubs while proving gauge invariance and homogeneous Maxwell equations. |
 | `Vol03_Thermodynamics.lean` | The P→P `kms_transitivity`/`zeroth_law` (which hypothesized `β₁ = β₂` and concluded it) now take the KMS-temperature uniqueness law as a genuine hypothesis over every state, so the shared system transfers temperature agreement. Retained macroscopic `ThermoState`/`HeatEngine` Carnot content. The modular-theory bridge still evaluates in the zero model. |
-| `Vol04_QuantumMechanics.lean` | Projection/Born and Cauchy–Schwarz arguments are mathematical; StateSpace is only complex one-space. The P→P `schrodinger_equation` theorem (hypothesis restated as conclusion) was removed; the Schrödinger equation is documented as a model postulate only. The Robertson header overclaim (audit H1) remains corrected: only the variance bound and Im-part lemma are proven. Next: general Hilbert space, the missing commutator link, and actual time derivatives. |
+| `Vol04_QuantumMechanics.lean` | Projection/Born and Cauchy–Schwarz arguments are mathematical; the concrete StateSpace is only complex one-space. The Robertson uncertainty relation is now PROVEN in a general complex inner product space (`Robertson` section): Var(A)·Var(B) ≥ (|⟨ψ,[A,B]ψ⟩|/2)² via the self-adjoint transfer `inner_dev_eq` and the commutator link `comm_link` — the formerly missing steps (b)/(c). Genuine Schrödinger dynamics restored in the one-dimensional model: `schrodingerTrajectory` with a real `HasDerivAt` derivative solves iℏ·dψ/dt = H_{ℏω} ψ for the self-adjoint `hamiltonian`. Next: general-H dynamics (which self-adjoint H generate which unitary groups) is not derived; the legacy `time_derivative` remains zero and unused. |
 | `Vol05_GeneralRelativity.lean` | Retained minimal zero-curvature tensor model; added `SphericallySymmetricSpacetime` with positive mass $M > 0$, horizon radius $r_s = 2GM$, strictly positive exterior lapse $f(r) > 0$, and non-vanishing Kretschmann scalar invariant $K = 48 G^2 M^2 / r^6 > 0$, benchmarking the unit Schwarzschild black hole. |
 | `Vol06_QuantumFieldTheory.lean` | Upgraded `SpacetimeRegion` to 1D intervals $[x_{\min}, x_{\max}]$ with genuine spatial inclusion and disjoint spacelike separation; proved non-vacuous microcausality on realized intervals $[0, 1]$ and $[2, 3]$. Upgraded gauge groups `SU3`, `SU2`, `U1` from Unit to phase parameterizations. |
 | `Vol07_Cosmology.lean` | Retained static minimal model; introduced `FLRWUniverse` with positive scale factor, expansion rate $H > 0$, and density $\rho > 0$. Proved strict positivity of critical density $\rho_c = 3H^2/(8\pi G)$, exact First Friedmann equivalence $H^2 = (8\pi G/3)\rho \iff \rho = \rho_c$, and positive cosmological redshift under expanding scale factors. |
 | `Vol08_BlackHoleThermodynamics.lean` | Replaced Unit geometry with `BHGeometry` parameterized by positive mass, surface gravity, horizon area, angular velocity, and electric potential. Proved strict positivity of Hawking temperature and Bekenstein-Hawking entropy, exact first law equivalence, and benchmarked `standardSchwarzschild` ($T_H = 1/(8\pi), S_{BH} = 4\pi$). |
-| `Vol09_HolographicPrinciple.lean` | Ryu-Takayanagi minimal surface homologous to black hole horizons with the (definitional) holographic equality $S_{CFT} = S_{BH}$ across Vol08 and Vol09. The poisoned `EPR_Entanglement := False` well (audit H2) was replaced by an honest two-qubit separability model: `IsProduct`, `Entangled`, `correlationDet`, product ⇒ det = 0, det ≠ 0 ⇒ entangled, and the Bell-state witness realizing both sides of the ER=EPR dictionary; only the sound direction (bridge ⇒ entanglement) is claimed. |
+| `Vol09_HolographicPrinciple.lean` | Ryu-Takayanagi minimal surface homologous to black hole horizons with the (definitional) holographic equality $S_{CFT} = S_{BH}$ across Vol08 and Vol09. The poisoned `EPR_Entanglement := False` well (audit H2) was replaced by a two-qubit separability model in which the ER=EPR dictionary is now an EXACT EQUIVALENCE: `IsProduct ↔ det = 0` (rank-one factorization `product_of_correlation_det_zero` gives the converse), `Entangled ↔ det ≠ 0`, and `er_epr_iff` — with the Bell-state witness on both sides. No spacetime geometry is derived; both sides are model predicates. |
 | `Vol10_StandardModel.lean` | Generation count and singleton gauge carriers remain legacy parameters. The field carrier is now real, and all signed quartic minimizers are classified as ±v. Nonnegative amplitude gives uniqueness at +v. Next: a genuine complex doublet and gauge action; no full Standard Model is derived. |
 | `Vol11_CondensedMatter.lean` | Added square completion, sharp lower-bound equality, attainable branches and full minimizer characterization for positive quartic/nonpositive quadratic coefficients. Upgraded `BrillouinZone` to coordinates on $\mathbb{R}^2$ and added `ChernBand` with integer topological index $C \in \mathbb{Z}$, proving Hall conductance quantization $\sigma_{xy} = C (e^2/h)$ and benchmarked the $C = 1$ Haldane band. |
 | `Vol12_QuantumInformation.lean` | Replaced Unit by two complex amplitudes and the Hermitian overlap. A normalized (3/5,4/5) witness obstructs universal overlap copying. Upgraded `QubitSystem` from `Unit` to a parameterized structure with qubit count, non-negative entanglement, and capacity $n \ln 2$; proved capacity bound and benchmarked the 2-qubit Bell pair. |
@@ -472,3 +472,44 @@ axiom-name gate, CI grep gate clean, ruff/mypy clean. The pinned Lean
 kernel build and transitive-axiom gate run in CI on this branch (no local
 Lean toolchain is obtainable in this environment; see the Lean CI status
 on the PR).
+
+## Ninth-pass changes: Robertson, the full ER=EPR dictionary, real dynamics
+
+Three content additions on the same branch, each closing a gap the
+audit trail flagged:
+
+- **Robertson uncertainty (Vol04, general complex inner product
+  space).** New `Robertson` section over an arbitrary `H` with
+  `[InnerProductSpace ℂ H]`: `SelfAdjoint`, `expval`, `deviation`,
+  `variance`, `ccomm` (A∘B − B∘A), the self-adjoint transfer
+  `inner_dev_eq` (the former MISSING step (b)), the commutator link
+  `comm_link` (former step (c)), and
+  `robertson_uncertainty : Var(A)·Var(B) ≥ (|⟨ψ,[A,B]ψ⟩|/2)²` for
+  self-adjoint A, B and a normalized state ⟨ψ,ψ⟩ = 1. Unlike the
+  one-dimensional minimal model (where commutators vanish), this is
+  genuinely nontrivial mathematics: Cauchy–Schwarz, the exact
+  cancellation of the scalar-shift corrections under normalization,
+  and the triangle bound ‖z − conj z‖ ≤ 2‖z‖. Protocol wrapper
+  `robertson_uncertainty` added.
+- **Exact ER=EPR dictionary (Vol09).** The converse
+  `product_of_correlation_det_zero` (a 2×2 coefficient matrix factors
+  as an outer product iff its determinant is zero — case split on the
+  pivot entries) upgrades the sound-direction-only dictionary to
+  `er_epr_iff : EinsteinRosenBridge ψ ↔ EPR_Entanglement ψ`, with
+  `isProduct_iff_correlation_det` and
+  `entangled_iff_correlation_det_ne_zero` as the exact criteria.
+  Protocol wrapper `cross_vol09_vol22_er_epr_dictionary_iff` added.
+- **Genuine Schrödinger dynamics (Vol04).** The retired P→P theorem is
+  replaced by a constructed and verified solution:
+  `schrodingerTrajectory ω ψ₀ t = exp(−iωt)·ψ₀` with a real
+  `HasDerivAt` derivative, the self-adjoint `hamiltonian E := z ↦ E·z`
+  (self-adjoint for real energies), and
+  `schrodinger_equation : iℏ·dψ/dt = H_{ℏω} ψ` proved from the
+  derivative — the ℏ-identity holds without unfolding the model's
+  hbar. The legacy zero `time_derivative` remains, documented as
+  unused. Protocol wrapper `schrodinger_dynamics` added.
+- Kernel inventory: 155 → **164** selected declarations.
+
+Local validation: 41 Python/tooling tests, `audit_axioms --max 0` → 0,
+`audit_vacuity` all-zero metrics, CI grep gate clean. The Lean build
+and the transitive kernel-axiom gate run in CI on the branch.
