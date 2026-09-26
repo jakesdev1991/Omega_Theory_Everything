@@ -2,7 +2,9 @@
 
 Date: 2026-09-26. Scope: source review of all 65 pre-existing proof modules,
 plus Lake configuration; the two new proof modules are inventoried below.
-This is a mathematical/source audit, **not a completed kernel certification**.
+The full pinned Lean build and the selected transitive kernel-axiom audit have
+now **passed in GitHub CI**. This does not certify physical interpretations or
+semantic non-vacuity. Earlier pass-status notes below are historical.
 
 ## Main finding and logical next step
 
@@ -53,15 +55,22 @@ QRegion API or pretending to derive physical laws.
 
 ## Validation status
 
-- Lean/Lake were absent in this workspace. Both the raw installer and GitHub
-  release-asset downloads failed (SSL/EOF). No local kernel build was completed.
+- **Remote compiler validation passed:** [Lean CI run 36240687825](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/36240687825)
+  at commit `8329f951a31b2bb44a5d5ff62938de0032290662`, using the pinned
+  Lean/mathlib v4.32.0. `lake build ToE` compiled the full configured target,
+  including `ProofRegression.lean`. The subsequent build-before-report kernel
+  gate passed for all **76 selected declarations**, allowing only `propext`,
+  `Classical.choice`, and `Quot.sound` as foundational axioms.
+- Lean/Lake remain absent locally; the successful compiler execution was on a
+  GitHub-hosted runner, not this workspace. This supersedes earlier pending-build
+  notes. Selected axiom inspection is not a whole-corpus axiom inventory.
 - Passed after pass six: 35 Python source-audit/build-wiring/report-gate tests;
   declaration-axiom audit (0); direct misleading-pattern matches (0);
   Unit stubs (0); remaining counted Unit types (13); exact legacy alias
   baseline (96); prohibited-proof-escape grep; Ruff checks/formatting on
   changed Python tooling; `git diff --check`.
   These results do not establish elaboration or semantic non-vacuity.
-- Run `cd lean_proofs && lake build ToE` with the pinned Lean/mathlib v4.32.0.
+- Reproduce with `cd lean_proofs && lake build ToE && python3 audit_kernel.py`.
   `ProofRegression.lean` is included in that target and `ToE.lean`.
 - Plain `lake build` now has an explicit default target. No dependency versions
   were changed. Most public signatures were retained. Intentional API changes:
@@ -310,3 +319,32 @@ fit separately but exceed the budget together. They remain unexecuted locally.
 The 35 Python/tooling tests and lexical/style checks pass; the kernel inventory
 has 76 selected declarations. The actual kernel gate still exits 2 (Lake absent),
 so all six passes remain pending compiler elaboration and kernel inspection.
+
+## Compiler-validation pass: actual diagnostics and repairs
+
+Opened draft PR #45 and enabled the existing Lean CI workflow on this exact
+session branch. The PR conflicts with newer main changes, so validation ran on
+branch pushes, not a synthetic merged revision. Nothing was merged into main.
+
+The first compiler run found errors in six modules. Repairs preserved the
+mathematical claims and did not add proof escapes:
+
+- Vol12: normalize conjugation of complex numerals explicitly with `map_ofNat`.
+- Vol11: normalize negated quotients before linear arithmetic on Landau bounds.
+- CBwK: prove the headroom subtraction/addition identity explicitly; remove dead
+  branches already closed by `split_ifs`.
+- Vol32: expose the sequence lambda before comparing limit statements.
+- Vol49: use the supplied scalar action and norm law on the wrapped StateSpace;
+  give the nontrivial witness an explicit `unitState` instead of requiring a
+  missing numeral instance on that wrapper.
+- Vol26: keep bundled graph instances consistent, type finite vertex witnesses
+  explicitly, and prove the finite-cardinality equality by a calculation chain.
+
+The successful run also elaborated downstream protocol exports and all Lean
+regression examples. The workflow's error annotations now filter long runner
+command lines so real diagnostics are not truncated by those lines.
+
+**Remaining integration work:** reconcile this draft branch with newer main
+changes, then rerun the full build and selected axiom gate on the reconciled
+revision. Existing nonfatal linter warnings, 13 counted Unit types and 96 legacy
+statement aliases remain; a passing build does not eliminate those limitations.

@@ -9,7 +9,15 @@ or physical derivation of the theory. A kernel-checked statement can still be
 vacuous in its chosen model.
 
 See [PROOF_AUDIT.md](PROOF_AUDIT.md) for the source-review inventory, outstanding
-limitations, and the latest strengthening pass (kernel validation pending).
+limitations, and compiler-validation results.
+
+**Compiler status (2026-09-26):** [Lean CI passed](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/36240687825)
+at commit `8329f951a31b2bb44a5d5ff62938de0032290662`: full `lake build ToE`
+(including Lean regression examples), 35 tooling tests, source gates, and
+transitive kernel-axiom inspection of 76 selected declarations. Lean/mathlib
+remain pinned to v4.32.0. Earlier pass notes saying "pending" describe historical
+local checks and are superseded by this remote build. Draft PR #45 still needs
+conflict reconciliation with newer main changes and a build of that revision.
 
 ## Structure
 
