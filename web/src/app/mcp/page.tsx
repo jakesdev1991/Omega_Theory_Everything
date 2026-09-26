@@ -48,8 +48,8 @@ export default function McpPage() {
               margin: "0 0 40px",
             }}
           >
-            Omega MCP Hub is a FastMCP server with 22 tools supporting a
-            three-currency economy. It runs the economy: it settles accounts,
+            Omega MCP Hub is a FastMCP server with 22 tools operating the
+            C.A.R.E. Economy. It runs the economy: it settles accounts,
             verifies useful work, executes governance, supports participation, and
             anchors release-day coordination. Built to be driven by AI agents —
             and open source, so anyone can extend it.
@@ -140,7 +140,7 @@ export default function McpPage() {
       <Section
         eyebrow="Architecture"
         title="How the hub is built"
-        subtitle="Omega MCP Hub is a single FastMCP stdio server, packaged as a Python package, with a manifest for distribution. It is designed to be the backbone of the Omega three-currency economy — and to be extended by anyone who wants to add tools, internal domains, or integrations."
+        subtitle="Omega MCP Hub is a single FastMCP stdio server, packaged as a Python package, with a manifest for distribution. It is designed to be the operating hub of the C.A.R.E. Economy — and to be extended by anyone who wants to add tools, internal domains, or integrations."
       >
         <div
           style={{
@@ -256,7 +256,7 @@ export default function McpPage() {
       <Section
         eyebrow="Connect"
         title="Run your own hub"
-        subtitle="Spin up Omega MCP Hub locally, connect it to your MCP client, and start operating a three-currency economy with AI agents. The server is stdio-first — drop it into any MCP-compatible toolchain."
+        subtitle="Spin up Omega MCP Hub locally, connect it to your MCP client, and start operating the C.A.R.E. Economy with AI agents. The server is stdio-first — drop it into any MCP-compatible toolchain."
       >
         <RunCard />
         <div style={{ marginTop: "40px", display: "flex", gap: "14px", flexWrap: "wrap" }}>
@@ -321,7 +321,7 @@ function Hero() {
             margin: "0",
           }}
         >
-          A FastMCP server with 22 tools supporting a three-currency economy —
+          A FastMCP server with 22 tools operating the C.A.R.E. Economy —
           operated by AI agents, governed by human choice, and open source for
           anyone to extend.
         </p>
@@ -491,7 +491,7 @@ function RepoCard() {
             "whitepapers/ — tri-token economy spec",
             "tri_token_sovereign_economy_blueprint.md",
             "app/ — customer-facing site source",
-            "Genesis Block novel draft",
+            "Crucible novel draft",
           ].map((item) => (
             <div
               key={item}

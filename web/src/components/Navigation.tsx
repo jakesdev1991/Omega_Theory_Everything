@@ -6,15 +6,17 @@ import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 
 const NAV_LINKS = [
-  { href: "/", label: "Home" },
+  { href: "/vision", label: "Vision" },
   { href: "/economy", label: "Economy" },
+  { href: "/whitepapers", label: "Whitepapers" },
+  { href: "/manifesto", label: "Manifesto" },
   { href: "/wallet", label: "Wallet" },
   { href: "/store", label: "Store" },
   { href: "/testnet", label: "Testnet" },
   { href: "/care", label: "C.A.R.E." },
-  { href: "/novel", label: "The Novel" },
+  { href: "/novel", label: "Novel" },
   { href: "/invest", label: "Invest" },
-  { href: "/mcp", label: "MCP Hub" },
+  { href: "/mcp", label: "MCP" },
   { href: "/ops", label: "Ops" },
 ];
 
@@ -78,17 +80,17 @@ export function Navigation() {
               width: "28px",
               height: "28px",
               borderRadius: "6px",
-              background: "linear-gradient(135deg, var(--color-accent), var(--color-omega))",
+              background: "linear-gradient(135deg, var(--color-care), var(--color-accent))",
               color: "#07080c",
               fontWeight: 700,
               fontSize: "13px",
               fontFamily: "ui-monospace, monospace",
             }}
           >
-            O
+            C
           </span>
           <span style={{ fontFamily: "ui-serif, Georgia, serif", fontWeight: 500 }}>
-            Omega MCP Hub
+            The C.A.R.E. Economy
           </span>
         </Link>
 
@@ -96,7 +98,7 @@ export function Navigation() {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "28px",
+            gap: "18px",
           }}
           className="desktop-nav"
         >
@@ -250,10 +252,10 @@ export function Navigation() {
       )}
 
       <style>{`
-        @media (min-width: 768px) {
+        @media (min-width: 1100px) {
           .desktop-nav { display: flex; }
         }
-        @media (max-width: 767px) {
+        @media (max-width: 1099px) {
           .desktop-nav { display: none; }
         }
       `}</style>

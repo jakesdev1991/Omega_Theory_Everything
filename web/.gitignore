@@ -43,3 +43,6 @@ next-env.d.ts
 
 # generated wallet GUI bundle (rebuilt by scripts/sync-wallet.mjs)
 /public/omega-wallet/
+
+# generated C.A.R.E. Economy document copies (rebuilt by scripts/sync-docs.mjs)
+/content/

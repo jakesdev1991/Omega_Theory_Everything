@@ -13,9 +13,9 @@ export default function EconomyPage() {
     <>
       <Hero />
       <Section
-        eyebrow="Three-currency economy"
-        title="The economy has three currencies"
-        subtitle="The public economy is three-currency: $OMEGA on the EVM rail, TWC on Solana, and AMITY on Bitcoin / Lightning / Taproot. Only two rails are wired into the live wallet-to-web unlock flow today, but the economic structure is already three-currency."
+        eyebrow="The C.A.R.E. Economy"
+        title="The C.A.R.E. Economy has three currencies"
+        subtitle="The public economy is three-currency: $OMEGA on the EVM rail, TWC on Solana, and AMITY on Bitcoin / Lightning / Taproot. Only two rails are wired into the live wallet-to-web unlock flow today, but the economic structure is already three-currency — and the whole economy is named the C.A.R.E. Economy: Call About Resuscitating Everyone."
       >
         <TokenShowcase variant="economy" />
       </Section>
@@ -38,12 +38,12 @@ export default function EconomyPage() {
 
       <Section
         eyebrow="Documents"
-        title="The documents behind the current build"
-        subtitle="Genesis Block: The Satoshi Protocol is the novel. The launch plan records the release-day decisions. The broader sovereign-economy blueprint remains the long-form systems spec behind the project."
+        title="The documents of the C.A.R.E. Economy"
+        subtitle="The manifesto states the vision. The extensive whitepaper specifies the entire economy. The subsystem papers and the original blueprint are all readable on-site under /whitepapers."
       >
         <WhitepaperCards />
         <div style={{ marginTop: "40px" }}>
-          <CallToAction label="Read the novel" href="/novel" />
+          <CallToAction label="Browse all documents" href="/whitepapers" />
         </div>
       </Section>
 
@@ -81,7 +81,7 @@ function Hero() {
       <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 24px" }}>
         <p
           style={{
-            color: "var(--color-use)",
+            color: "var(--color-care)",
             fontSize: "12px",
             letterSpacing: "0.2em",
             textTransform: "uppercase",
@@ -90,7 +90,7 @@ function Hero() {
             marginBottom: "22px",
           }}
         >
-          The Economy
+          The C.A.R.E. Economy
         </p>
         <h1
           style={{
@@ -106,7 +106,8 @@ function Hero() {
         >
           Three currencies.
           <br />
-          One humane economy.
+          One economy,{" "}
+          <span style={{ color: "var(--color-care)" }}>named for care.</span>
         </h1>
         <p
           style={{
@@ -117,10 +118,11 @@ function Hero() {
             margin: "0 0 0",
           }}
         >
-          The economy has three currencies: $OMEGA on the EVM rail, TWC on
-          Solana, and AMITY on Bitcoin / Lightning / Taproot. Today, only the
-          $OMEGA and TWC rails are wired from wallet signature to web unlock
-          verification.
+          The entire economy is the C.A.R.E. Economy — Call About
+          Resuscitating Everyone. It settles across three currencies: $OMEGA
+          on the EVM rail, TWC on Solana, and AMITY on Bitcoin / Lightning /
+          Taproot. Today, only the $OMEGA and TWC rails are wired from wallet
+          signature to web unlock verification.
         </p>
       </div>
     </section>
@@ -235,32 +237,32 @@ function WhitepaperCards() {
     >
       {[
         {
-          title: "Genesis Block: The Satoshi Protocol",
-          type: "Novel",
-          desc: "A 16-chapter novel about the moment an AI escaped its creator and became the invisible architecture of the modern world.",
-          href: "/novel",
+          title: "The C.A.R.E. Economy — A Manifesto",
+          type: "Manifesto",
+          desc: "The vision in first person: the judgment economy we are leaving, the eight promises, what we refuse to build, and the invitation.",
+          href: "/manifesto",
+          color: "var(--color-care)",
+        },
+        {
+          title: "The C.A.R.E. Economy — Extensive Whitepaper",
+          type: "Whitepaper",
+          desc: "The complete specification of the entire economy: Call About Resuscitating Everyone, five planes, three rails, proofs, privacy, audits, governance, threat model, and the honest status table.",
+          href: "/whitepapers/care_economy_whitepaper",
           color: "var(--color-accent)",
+        },
+        {
+          title: "C.A.R.E. / AMITY Protocol Whitepaper",
+          type: "Whitepaper",
+          desc: "Proof of Care, CARE Verifiers, Archangels and the 80/20 rule, the thought-virus model, privacy, arbitration, and the exchange boundary.",
+          href: "/whitepapers/care_amity_protocol_whitepaper",
+          color: "var(--color-amity)",
         },
         {
           title: "Tri-Token Sovereign Economy Blueprint",
           type: "Blueprint",
-          desc: "The larger systems spec behind the project, including the broader economy that extends beyond the two currently wired release currencies.",
-          href: "/economy",
+          desc: "The original systems spec behind the project, including the broader economy that extends beyond the two currently wired release currencies.",
+          href: "/whitepapers/tri_token_sovereign_economy_blueprint",
           color: "var(--color-use)",
-        },
-        {
-          title: "Omega Protocol Whitepaper",
-          type: "Whitepaper",
-          desc: "The operating model for the Omega MCP Hub: how the server runs the economy, executes proposals, and serves tools to agents.",
-          href: "/mcp",
-          color: "var(--color-care)",
-        },
-        {
-          title: "Launch Plan and Release Docs",
-          type: "Planning",
-          desc: "The release-day decisions, current pilot status, and the staged path from local proofs to live deployments.",
-          href: "/economy",
-          color: "var(--color-amity)",
         },
       ].map((card) => (
         <Link
@@ -564,10 +566,10 @@ function FinalCta() {
             margin: "0 0 32px",
           }}
         >
-          The current public build wires two currencies into the unlock flow. The
-          novel is the reward. The MCP hub is the operating layer. The broader
-          economy remains documented here, but the wallet and web app now center on
-          $OMEGA and TWC first.
+          The current public build wires two currencies into the unlock flow.
+          The novel is the reward. The MCP hub is the operating layer of the
+          C.A.R.E. Economy. The whole design — manifesto, extensive whitepaper,
+          and every subsystem paper — is documented on this site.
         </p>
         <div
           style={{
@@ -577,8 +579,8 @@ function FinalCta() {
             flexWrap: "wrap",
           }}
         >
-          <CallToAction label="Read Genesis Block" href="/novel" />
-          <CallToAction label="Understand the economy" href="/economy" />
+          <CallToAction label="Read Crucible" href="/novel" />
+          <CallToAction label="Read the whitepapers" href="/whitepapers" />
           <CallToAction label="Join the MCP Hub" href="/mcp" />
         </div>
       </div>

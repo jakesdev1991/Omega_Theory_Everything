@@ -12,10 +12,11 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+      <VisionSection />
       <Section
-        eyebrow="The Omega MCP Hub"
-        title="Two live rails today. Three currencies in the economy."
-        subtitle="The current wallet-to-web build wires two release-day currencies end to end: $OMEGA on the EVM rail and TWC on Solana. The larger economy is three-currency, with AMITY developing separately on Bitcoin, Lightning, and Taproot."
+        eyebrow="Three currencies, one economy"
+        title="The C.A.R.E. Economy runs on three currencies"
+        subtitle="The public economy is three-currency: $OMEGA on the EVM rail, TWC on Solana, and AMITY on Bitcoin / Lightning / Taproot. The current wallet-to-web build wires two release-day currencies end to end — $OMEGA and TWC — while AMITY develops separately until holder verification exists."
       >
         <TokenShowcase />
         <div style={{ marginTop: "48px" }}>
@@ -23,21 +24,12 @@ export default function HomePage() {
         </div>
       </Section>
 
-      <Section
-        eyebrow="Current wiring"
-        title="What each live currency does right now"
-        subtitle="$OMEGA carries the EVM-side release proof. TWC carries the Solana-side release proof. AMITY is the third currency in the economy, but it remains a separate Bitcoin / Lightning / Taproot workstream until holder verification exists."
-      >
-        <TokenArchitecture />
-        <div style={{ marginTop: "48px" }}>
-          <CallToAction label="Read the Whitepapers" href="/economy" />
-        </div>
-      </Section>
+      <DocumentsSection />
 
       <Section
         eyebrow="The Unlock"
         title="A verified $OMEGA or TWC proof unlocks the novel"
-        subtitle="Genesis Block: The Satoshi Protocol is a 16-chapter novel about the moment an AI escaped its creator and became the invisible architecture of the modern world. In the current build, a verified $OMEGA or TWC proof unlocks the full book."
+        subtitle="Crucible: The Satoshi Protocol is a 16-chapter novel about the moment an AI escaped its creator and became the invisible architecture of the modern world. In the current build, a verified $OMEGA or TWC proof unlocks the full book."
       >
         <NovelUnlockPreview />
         <div style={{ marginTop: "40px" }}>
@@ -63,8 +55,8 @@ export default function HomePage() {
 
       <Section
         eyebrow="Open Source"
-        title="Built to serve a three-currency economy"
-        subtitle="Omega MCP Hub is a FastMCP server with 22 tools supporting a three-currency economy: $OMEGA on EVM, TWC on Solana, and AMITY on Bitcoin / Lightning / Taproot. The website is the public face. The server is the operating hub. Both are open source on GitHub."
+        title="Built in the open, for the C.A.R.E. Economy"
+        subtitle="Omega MCP Hub is a FastMCP server with 22 tools operating the five planes of the C.A.R.E. Economy. The website is the public face. The server is the operating hub. Both are open source on GitHub."
       >
         <OpenSourcePreview />
         <div style={{ marginTop: "48px" }}>
@@ -92,7 +84,7 @@ function Hero() {
           position: "absolute",
           inset: 0,
           background:
-            "radial-gradient(800px 400px at 50% -10%, rgba(192,132,87,0.12), transparent 60%), radial-gradient(600px 400px at 80% 0%, rgba(167,139,250,0.08), transparent 60%)",
+            "radial-gradient(800px 400px at 50% -10%, rgba(244,114,182,0.10), transparent 60%), radial-gradient(600px 400px at 80% 0%, rgba(192,132,87,0.08), transparent 60%)",
           pointerEvents: "none",
         }}
       />
@@ -107,7 +99,7 @@ function Hero() {
       >
         <p
           style={{
-            color: "var(--color-accent)",
+            color: "var(--color-care)",
             fontSize: "12px",
             letterSpacing: "0.2em",
             textTransform: "uppercase",
@@ -116,7 +108,7 @@ function Hero() {
             marginBottom: "24px",
           }}
         >
-          Omega MCP Hub — Public Release
+          The C.A.R.E. Economy — Public Release
         </p>
 
         <h1
@@ -133,9 +125,9 @@ function Hero() {
         >
           A sovereign economy
           <br />
-          <span style={{ color: "var(--color-accent)" }}>operationalized</span>
+          <span style={{ color: "var(--color-accent)" }}>built on care,</span>
           <br />
-          by an open-source AI.
+          operated by open-source AI.
         </h1>
 
         <p
@@ -143,19 +135,23 @@ function Hero() {
             color: "var(--color-muted-strong)",
             fontSize: "clamp(16px, 1.6vw, 20px)",
             lineHeight: 1.7,
-            maxWidth: "680px",
+            maxWidth: "700px",
             margin: "0 0 40px",
           }}
         >
-          Omega MCP Hub is the operating layer behind a three-currency economy
-          built to let people earn while they learn, enter without judgment, and
-          choose privacy first. The public-facing gateway currently wires two
-          live rails — $OMEGA and TWC — to{" "}
+          The entire economy is named the{" "}
+          <strong style={{ color: "var(--color-foreground)", fontWeight: 600 }}>
+            C.A.R.E. Economy
+          </strong>
+          : Call About Resuscitating Everyone. Care is its base layer, so
+          care names the whole. It lets people earn while they learn, enter
+          without judgment, and choose privacy first. The public gateway
+          currently wires two live rails — $OMEGA and TWC — to{" "}
           <em style={{ color: "var(--color-accent-soft)" }}>
-            Genesis Block: The Satoshi Protocol
+            Crucible: The Satoshi Protocol
           </em>{" "}
-          by Akash Varma, while AMITY develops separately on Bitcoin, Lightning,
-          and Taproot.
+          by Akash Varma, while AMITY develops on Bitcoin, Lightning, and
+          Taproot.
         </p>
 
         <div
@@ -166,10 +162,10 @@ function Hero() {
             alignItems: "center",
           }}
         >
-          <CallToAction label="Participate on Release Day" href="/invest" />
+          <CallToAction label="See the Vision" href="/vision" />
           <CallToAction
-            label="Read the novel"
-            href="/novel"
+            label="Read the Manifesto"
+            href="/manifesto"
             variant="ghost"
           />
         </div>
@@ -227,6 +223,219 @@ function Stat({ label, value }: { label: string; value: string | number }) {
         {label}
       </div>
     </div>
+  );
+}
+
+function VisionSection() {
+  return (
+    <Section
+      eyebrow="The Vision"
+      title="Call About Resuscitating Everyone."
+      subtitle="The name C.A.R.E. is the mission. A call — an invitation, not a command. About resuscitation: restoring people, not ranking them. Everyone: no one left outside. Care is the base layer of the economy that answers that call."
+    >
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+          gap: "16px",
+        }}
+      >
+        {[
+          {
+            letter: "C",
+            name: "Call",
+            body: "An invitation, not a command. We reach out before people have to prove they deserve help.",
+            color: "var(--color-care)",
+          },
+          {
+            letter: "A",
+            name: "About",
+            body: "The purpose is specific: bring people back. Not speculation, not engagement, not a ranking of human worth.",
+            color: "var(--color-amity)",
+          },
+          {
+            letter: "R",
+            name: "Resuscitating",
+            body: "The verb. Restore. Revive. Make a path back from every mistake. Proof of Care, peer support, earn while you learn.",
+            color: "var(--color-use)",
+          },
+          {
+            letter: "E",
+            name: "Everyone",
+            body: "The scope. No one left outside the call. No permanent exile. The person at 3 a.m. is a first-class participant.",
+            color: "var(--color-omega)",
+          },
+        ].map((layer) => (
+          <div
+            key={layer.letter}
+            style={{
+              padding: "22px 20px",
+              border: "1px solid var(--color-border)",
+              borderRadius: "14px",
+              background: "rgba(255,255,255,0.012)",
+              position: "relative",
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                height: "2px",
+                background: layer.color,
+                boxShadow: `0 0 18px ${layer.color}66`,
+              }}
+            />
+            <div
+              style={{
+                display: "flex",
+                alignItems: "baseline",
+                gap: "10px",
+                marginBottom: "10px",
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: "ui-serif, Georgia, serif",
+                  fontSize: "34px",
+                  fontWeight: 500,
+                  color: layer.color,
+                  lineHeight: 1,
+                }}
+              >
+                {layer.letter}
+              </span>
+              <span
+                style={{
+                  fontFamily: "ui-monospace, monospace",
+                  fontSize: "12px",
+                  fontWeight: 600,
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  color: layer.color,
+                }}
+              >
+                {layer.name}
+              </span>
+            </div>
+            <p
+              style={{
+                margin: 0,
+                color: "var(--color-muted-strong)",
+                fontSize: "13.5px",
+                lineHeight: 1.6,
+              }}
+            >
+              {layer.body}
+            </p>
+          </div>
+        ))}
+      </div>
+      <div style={{ marginTop: "40px", display: "flex", gap: "14px", flexWrap: "wrap" }}>
+        <CallToAction label="Explore the Vision" href="/vision" />
+        <CallToAction
+          label="Read the Extensive Whitepaper"
+          href="/whitepapers/care_economy_whitepaper"
+          variant="ghost"
+        />
+      </div>
+    </Section>
+  );
+}
+
+function DocumentsSection() {
+  return (
+    <Section
+      eyebrow="The documents"
+      title="The manifesto and the whitepapers — readable right here"
+      subtitle="The manifesto states the vision in plain language. The extensive whitepaper specifies the entire economy: planes, rails, proofs, privacy, audits, governance, the threat model, and the honest table of what exists today. Every subsystem paper is on-site too."
+    >
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+          gap: "18px",
+        }}
+      >
+        {[
+          {
+            href: "/manifesto",
+            tag: "Manifesto",
+            color: "var(--color-care)",
+            title: "The vision, in first person",
+            body: "The judgment economy we are leaving, the eight promises of the C.A.R.E. Economy, what we refuse to build, and the invitation.",
+            cta: "Read the Manifesto →",
+          },
+          {
+            href: "/whitepapers/care_economy_whitepaper",
+            tag: "Extensive Whitepaper",
+            color: "var(--color-accent)",
+            title: "The whole economy, specified",
+            body: "Five planes, three rails, Proof of Care, Proof of Useful Work, Archangels, privacy L0–L4, randomized audits, the AMITY boundary, governance, roadmap, glossary.",
+            cta: "Read the Whitepaper →",
+          },
+          {
+            href: "/whitepapers",
+            tag: "Library",
+            color: "var(--color-amity)",
+            title: "Every subsystem paper",
+            body: "The C.A.R.E./AMITY protocol, the Omega governance model, the Omni-Bridge agent boundaries, the legacy TOKAMAK research, and the original tri-token blueprint.",
+            cta: "Browse the Library →",
+          },
+        ].map((card) => (
+          <Link
+            key={card.href}
+            href={card.href}
+            className="hover-raise"
+            style={{
+              display: "block",
+              padding: "26px 24px",
+              border: "1px solid var(--color-border-strong)",
+              borderRadius: "14px",
+              background: "rgba(255,255,255,0.015)",
+              textDecoration: "none",
+            }}
+          >
+            <div
+              style={{
+                fontFamily: "ui-monospace, monospace",
+                fontSize: "11px",
+                letterSpacing: "0.12em",
+                textTransform: "uppercase",
+                color: card.color,
+                marginBottom: "10px",
+              }}
+            >
+              {card.tag}
+            </div>
+            <h3
+              style={{
+                fontFamily: "ui-serif, Georgia, serif",
+                fontSize: "22px",
+                fontWeight: 500,
+                margin: "0 0 10px",
+                color: "var(--color-foreground)",
+              }}
+            >
+              {card.title}
+            </h3>
+            <p
+              style={{
+                color: "var(--color-muted-strong)",
+                fontSize: "14px",
+                lineHeight: 1.65,
+                margin: "0 0 16px",
+              }}
+            >
+              {card.body}
+            </p>
+            <span style={{ color: card.color, fontSize: "13px", fontWeight: 600 }}>{card.cta}</span>
+          </Link>
+        ))}
+      </div>
+    </Section>
   );
 }
 
@@ -313,74 +522,6 @@ function WalletAndTesting() {
           </p>
           <span style={{ color: card.color, fontSize: "13px", fontWeight: 600 }}>{card.cta}</span>
         </Link>
-      ))}
-    </div>
-  );
-}
-
-function TokenArchitecture() {
-  return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
-        gap: "14px",
-        marginTop: "12px",
-      }}
-    >
-      {[
-        {
-          name: "$OMEGA",
-          color: "var(--color-omega)",
-          desc: "EVM / Sepolia proof rail for full-novel unlocks",
-        },
-        {
-          name: "TWC",
-          color: "var(--color-twc)",
-          desc: "Solana / Devnet proof rail for full-novel unlocks",
-        },
-      ].map((t) => (
-        <div
-          key={t.name}
-          style={{
-            padding: "18px 16px",
-            border: "1px solid var(--color-border)",
-            borderRadius: "12px",
-            background: "rgba(255,255,255,0.015)",
-          }}
-        >
-          <div
-            style={{
-              width: "100%",
-              height: "3px",
-              borderRadius: "3px",
-              background: t.color,
-              marginBottom: "12px",
-              boxShadow: `0 0 16px ${t.color}55`,
-            }}
-          />
-          <div
-            style={{
-              fontFamily: "ui-monospace, monospace",
-              fontSize: "12px",
-              fontWeight: 600,
-              letterSpacing: "0.08em",
-              color: t.color,
-              marginBottom: "6px",
-            }}
-          >
-            {t.name}
-          </div>
-          <div
-            style={{
-              fontSize: "13px",
-              color: "var(--color-muted-strong)",
-              lineHeight: 1.5,
-            }}
-          >
-            {t.desc}
-          </div>
-        </div>
       ))}
     </div>
   );
@@ -628,7 +769,7 @@ function OpenSourcePreview() {
         </div>
         <div style={{ display: "grid", gap: "8px" }}>
           {[
-            { plane: "SOv", count: 4 },
+            { plane: "SOV", count: 4 },
             { plane: "USE", count: 4 },
             { plane: "CARE", count: 5 },
             { plane: "AMITY", count: 4 },
@@ -668,7 +809,7 @@ function FinalCta() {
       style={{
         padding: "80px 0",
         borderTop: "1px solid var(--color-border)",
-        background: "radial-gradient(600px 300px at 50% 0%, rgba(192,132,87,0.08), transparent 70%)",
+        background: "radial-gradient(600px 300px at 50% 0%, rgba(244,114,182,0.08), transparent 70%)",
       }}
     >
       <div
@@ -690,7 +831,9 @@ function FinalCta() {
             lineHeight: 1.15,
           }}
         >
-          The economy is the unlock.
+          Care is the base layer.
+          <br />
+          The economy is the proof.
         </h2>
         <p
           style={{
@@ -701,9 +844,10 @@ function FinalCta() {
             margin: "0 auto 36px",
           }}
         >
-          In the current build, the novel opens to anyone who can produce a
-          verified $OMEGA or TWC proof. Two currencies are wired in today; the
-          broader economy and governance layers remain part of the roadmap.
+          Read the manifesto, argue with the whitepaper, run the pilots
+          yourself. In the current build the novel opens to anyone who can
+          produce a verified $OMEGA or TWC proof; the broader C.A.R.E. Economy
+          and governance layers advance through the staged roadmap.
         </p>
         <CallToAction label="Join the economy" href="/invest" />
       </div>

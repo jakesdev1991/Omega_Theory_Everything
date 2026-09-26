@@ -31,7 +31,7 @@ export const TOKENS: TokenInfo[] = [
     unlockRequirement:
       "Sign an $OMEGA release-day proof from the wired EVM wallet flow to unlock the full novel.",
     description:
-      "$OMEGA is the EVM-side anchor. In the current build it is one of the two wallet-to-web currencies that can sign a release-day proof and unlock Genesis Block in full.",
+      "$OMEGA is the EVM-side anchor. In the current build it is one of the two wallet-to-web currencies that can sign a release-day proof and unlock Crucible in full.",
   },
   {
     id: "twc",

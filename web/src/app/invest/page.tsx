@@ -72,10 +72,11 @@ function Hero() {
         >
           This economy is meant to help people earn while they learn to become
           better people. The current release build wires two live rails into the
-          wallet and web app, inside a larger three-currency economy. Sign with
+          wallet and web app, inside the C.A.R.E. Economy — three currencies,
+          one base layer: care. Sign with
           either live rail to unlock{" "}
           <em style={{ color: "var(--color-accent-soft)" }}>
-            Genesis Block: The Satoshi Protocol
+            Crucible: The Satoshi Protocol
           </em>{" "}
           by Akash Varma.
         </p>
@@ -423,7 +424,7 @@ function TokenParticipate() {
     <Section
       eyebrow="Tokens"
       title="Choose which wired currency you use"
-      subtitle="Two currencies are connected end to end today. You do not need both — a verified $OMEGA proof or a verified TWC proof unlocks Genesis Block in full."
+      subtitle="Two currencies are connected end to end today. You do not need both — a verified $OMEGA proof or a verified TWC proof unlocks Crucible in full."
       id="tokens"
     >
       <div
@@ -592,13 +593,13 @@ function HowItWorks() {
     {
       step: "03",
       title: "Unlock the novel",
-      body: "On release day, a verified $OMEGA or TWC proof unlocks the full text of Genesis Block.",
+      body: "On release day, a verified $OMEGA or TWC proof unlocks the full text of Crucible.",
       color: "var(--color-care)",
     },
     {
       step: "04",
       title: "Grow into the wider economy",
-      body: "The broader economy is three-currency: $OMEGA, TWC, and AMITY. The live release build starts with two rails and expands from there.",
+      body: "The broader economy is the C.A.R.E. Economy: three currencies — $OMEGA, TWC, and AMITY — over one base layer of care. The live release build starts with two rails and expands from there.",
       color: "var(--color-amity)",
     },
     {
@@ -710,12 +711,12 @@ function WalletSection() {
           },
           {
             title: "Release day",
-            desc: "On release day, your signed $OMEGA or TWC proof unlocks Genesis Block. The current release flow opens the whole novel.",
+            desc: "On release day, your signed $OMEGA or TWC proof unlocks Crucible. The current release flow opens the whole novel.",
             color: "var(--color-care)",
           },
           {
             title: "MCP hub",
-            desc: "Operate your position via the Omega MCP Hub — 22 tools supporting a three-currency economy, driven by AI agents.",
+            desc: "Operate your position via the Omega MCP Hub — 22 tools operating the C.A.R.E. Economy, driven by AI agents.",
             color: "var(--color-omega)",
           },
         ].map((item) => (
@@ -791,10 +792,11 @@ function FinalCta() {
           The novel opens on release day.
         </h2>
         <p style={{ color: "var(--color-muted-strong)", fontSize: "17px", lineHeight: 1.6, margin: "0 0 32px" }}>
-          Two currencies are wired in today: $OMEGA and TWC. Genesis Block is the
-          reward. The MCP hub is the operating layer. The broader economy is still
-          larger than this build, but the wallet-to-web unlock path already works
-          across both current rails.
+          Two currencies are wired in today: $OMEGA and TWC. Crucible is the
+          reward, the MCP hub is the operating layer, and the C.A.R.E. Economy is
+          the whole design — its manifesto and extensive whitepaper are readable
+          on this site. The wallet-to-web unlock path already works across both
+          current rails.
         </p>
         <div style={{ display: "flex", gap: "14px", justifyContent: "center", flexWrap: "wrap" }}>
           <CallToAction label="Participate now" href="#tokens" />
