@@ -107,7 +107,6 @@ theorem entropy_formula (S : DeSitterSpace) :
   have hG : S.G ≠ 0 := ne_of_gt S.G_pos
   have hL : S.Lambda ≠ 0 := ne_of_gt S.Lambda_pos
   field_simp
-  ring
 
 /-- Larger Λ means smaller horizon entropy (at fixed G). -/
 theorem entropy_antitone {S₁ S₂ : DeSitterSpace}
