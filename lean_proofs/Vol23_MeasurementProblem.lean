@@ -70,7 +70,6 @@ theorem decoherence_preserves_normalization (ρ : DensityMatrix) :
   Trace (Decohere ρ) = Trace ρ := by
   exact decoherence_trace_preserving ρ
 
-end OmegaProtocol.Vol23
 -- ============================================================
 -- 2x2 DENSITY MATRICES & QUANTUM DEPHASING CHANNELS
 -- ============================================================
@@ -165,3 +164,5 @@ theorem plusState_decohered_purity :
   norm_num
 
 end QubitState
+
+end OmegaProtocol.Vol23

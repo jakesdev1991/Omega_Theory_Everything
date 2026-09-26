@@ -104,7 +104,6 @@ theorem cosmological_constant :
 noncomputable def EMStressEnergy : Geometry.spacetime → Geometry.spacetime → ℝ := Geometry.stress_energy
 theorem em_sources_gravity : Geometry.stress_energy = EMStressEnergy := rfl
 
-end OmegaProtocol.Vol05
 -- ============================================================
 -- CURVED LORENTZIAN GEOMETRY & SCHWARZSCHILD CURVATURE
 -- ============================================================
@@ -173,3 +172,5 @@ theorem unitSchwarzschild_kretschmann_at_horizon :
   norm_num
 
 end SphericallySymmetricSpacetime
+
+end OmegaProtocol.Vol05

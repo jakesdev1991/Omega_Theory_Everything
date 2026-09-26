@@ -66,8 +66,9 @@ theorem freeze_implies_low_integration (R₁ R₂ : QRegion) (h : isFrozen R₁ 
   rw [hval] at hf
   exact hf
 
-end OmegaProtocol.Vol27-- ============================================================
+-- ============================================================
 -- INTEGRATED INFORMATION ARCHITECTURE & PARTITION DEFICIT
+-- (Inside `OmegaProtocol.Vol27`; see the kernel-audit target names.)
 -- ============================================================
 
 /-- Bipartite informational architecture (IIT subsystem)
@@ -138,3 +139,5 @@ theorem cortical_flux_asymmetry_pos : 0 < corticalComplex.fluxAsymmetry := by
   norm_num
 
 end IntegratedSystem
+
+end OmegaProtocol.Vol27

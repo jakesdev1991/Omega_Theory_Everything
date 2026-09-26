@@ -97,7 +97,8 @@ theorem skel_terminal (m : SkelObj) :
   funext x
   have hlt : (g x).val < 1 := (g x).isLt
   have h0 : (g x).val = 0 := by omega
-  exact (Fin.ext h0).symm
+  apply Fin.ext
+  rw [h0]
 
 -- ------------------------------------------------------------
 -- Binary products

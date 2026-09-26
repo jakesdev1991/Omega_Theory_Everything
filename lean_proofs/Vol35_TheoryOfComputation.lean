@@ -136,7 +136,7 @@ theorem loopMachine_diverges (c : ℕ) : ¬ Halts loopMachine c := by
     | succ k ih =>
       rw [run_succ_some _ _ _ _ ih]
   rw [hstay k] at hk
-  exact Option.noConfusion hk
+  nomatch hk
 
 /-- Diagonal machine: on input `c`, loop forever if `e c` halts on `c`,
     else halt immediately. Classical logic is used only to form the
@@ -162,7 +162,7 @@ theorem halts_diagonal (e : ℕ → Machine) :
         exact if_pos hn
     obtain ⟨k, hk⟩ := hM
     rw [hstay k] at hk
-    exact Option.noConfusion hk
+    nomatch hk
   · intro hn
     refine ⟨1, ?_⟩
     have hone : (1 : ℕ) = 0 + 1 := rfl

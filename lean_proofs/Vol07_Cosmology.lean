@@ -118,7 +118,6 @@ theorem criticaldensity (t : CosmologicalTime)
     _ = ((HubbleParameter t)^2 * 3) / (8 * Real.pi * NewtonG) := by rw [← h1]
     _ = 3 * (HubbleParameter t)^2 / (8 * Real.pi * NewtonG) := by ring
 
-end OmegaProtocol.Vol07
 -- ============================================================
 -- EXPANDING COSMOLOGICAL SOLUTIONS (FLRW Dynamics)
 -- ============================================================
@@ -195,3 +194,5 @@ theorem redshift_positive_of_expansion (a_emit a_obs : ℝ)
   linarith
 
 end FLRWUniverse
+
+end OmegaProtocol.Vol07

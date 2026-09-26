@@ -46,8 +46,10 @@ theorem chsh_violation_magnitude : TsirelsonBound - ClassicalCHSHBound > 0 := by
   dsimp [TsirelsonBound, ClassicalCHSHBound] at h ⊢
   linarith
 
-end OmegaProtocol.Vol24-- ============================================================
+-- ============================================================
 -- CHSH CORRELATION OPERATORS & BELL VIOLATION
+-- (Inside `OmegaProtocol.Vol24`: the singlet theorems below refer
+-- to `TsirelsonBound`, `ClassicalCHSHBound` and `bell_violation`.)
 -- ============================================================
 
 /-- Bipartite correlation setup with measurements A, A' on subsystem 1
@@ -161,3 +163,5 @@ theorem singlet_violates_classical_bound :
   exact bell_violation
 
 end CHSHSystem
+
+end OmegaProtocol.Vol24
