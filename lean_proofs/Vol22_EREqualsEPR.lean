@@ -79,3 +79,48 @@ theorem persistent_perfect_overlap_same_entity (A B : RegionHistory) :
   exact perfect_overlap_identifies_regions (A t) (B t) (h t)
 
 end OmegaProtocol.Vol22
+
+-- ============================================================
+-- NON-DEGENERATE ER=EPR BRIDGE (Over General Information Networks)
+-- ============================================================
+
+namespace NetworkER_EPR
+
+variable {α : Type*} (net : InformationNetwork α) (planckScale : ℝ → ℝ)
+
+/-- Geometric bridge throat area in a general network with capacity maxMI. -/
+noncomputable def networkThroatArea (A B : α) : ℝ :=
+  net.metric planckScale A B * net.maxMI
+
+/-- When mutual information reaches the system capacity maxMI,
+    the correlation deficit log(I / maxMI) vanishes, so the geometric throat metric is zero. -/
+theorem capacity_overlap_zero_distance (A B : α)
+    (h_cap : net.mutualInfo A B = net.maxMI)
+    (h_pos : 0 < net.maxMI) :
+    net.metric planckScale A B = 0 := by
+  dsimp [InformationNetwork.metric]
+  have hI_ne : net.mutualInfo A B ≠ 0 := by
+    rw [h_cap]
+    exact ne_of_gt h_pos
+  split_ifs with h_zero
+  · rfl
+  · rw [h_cap, div_self (ne_of_gt h_pos), Real.log_one]
+    ring
+
+/-- At full capacity, the geometric throat area vanishes (ideal ER bridge). -/
+theorem capacity_overlap_zero_throat (A B : α)
+    (h_cap : net.mutualInfo A B = net.maxMI)
+    (h_pos : 0 < net.maxMI) :
+    networkThroatArea net planckScale A B = 0 := by
+  dsimp [networkThroatArea]
+  rw [capacity_overlap_zero_distance net planckScale A B h_cap h_pos]
+  ring
+
+/-- In the concrete BinaryRegion witness, identical regions reach maximal mutual information (1 = maxMI). -/
+theorem binary_identical_zero_throat (A : BinaryRegion) :
+    networkThroatArea BinaryRegion.binaryNetwork planckScale A A = 0 := by
+  apply capacity_overlap_zero_throat
+  · cases A <;> rfl
+  · norm_num [BinaryRegion.binaryNetwork]
+
+end NetworkER_EPR

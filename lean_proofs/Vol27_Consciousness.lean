@@ -66,4 +66,75 @@ theorem freeze_implies_low_integration (R₁ R₂ : QRegion) (h : isFrozen R₁ 
   rw [hval] at hf
   exact hf
 
-end OmegaProtocol.Vol27
+end OmegaProtocol.Vol27-- ============================================================
+-- INTEGRATED INFORMATION ARCHITECTURE & PARTITION DEFICIT
+-- ============================================================
+
+/-- Bipartite informational architecture (IIT subsystem)
+    consisting of two communicating subsystems A and B with marginal entropies
+    H_A, H_B, joint entropy H_AB, and bidirectional information flux.
+    Subadditivity implies H_AB ≤ H_A + H_B.
+    Integrated information Φ is defined as the minimum information loss (mutual information)
+    across the system partition: Φ = H_A + H_B - H_AB. -/
+structure IntegratedSystem where
+  H_A  : ℝ
+  H_B  : ℝ
+  H_AB : ℝ
+  forward_rate : ℝ
+  reverse_rate : ℝ
+  h_subadd : H_AB ≤ H_A + H_B
+  h_flux_bound : forward_rate ≥ 0 ∧ reverse_rate ≥ 0
+
+namespace IntegratedSystem
+
+variable (S : IntegratedSystem)
+
+/-- Tononi integrated information Φ = H(A) + H(B) - H(AB) = I(A : B). -/
+def phi : ℝ := S.H_A + S.H_B - S.H_AB
+
+/-- Integrated information is always non-negative by subadditivity of entropy. -/
+theorem phi_nonneg : 0 ≤ S.phi := by
+  dsimp [phi]
+  linarith [S.h_subadd]
+
+/-- Asymmetry flux between top-down predictive processing and bottom-up sensory feed. -/
+def fluxAsymmetry : ℝ := S.forward_rate - S.reverse_rate
+
+/-- When a system is strictly integrated (joint entropy is strictly less than the partitioned sum),
+    Φ is strictly positive. -/
+theorem phi_pos_of_strict_subadditivity (h : S.H_AB < S.H_A + S.H_B) :
+    0 < S.phi := by
+  dsimp [phi]
+  linarith
+
+/-- Completely partitioned / unintegrated system: H(AB) = H(A) + H(B), yielding Φ = 0. -/
+theorem phi_zero_of_independent (h : S.H_AB = S.H_A + S.H_B) :
+    S.phi = 0 := by
+  dsimp [phi]
+  linarith
+
+/-- Canonical conscious cortical architecture witness:
+    H_A = 1, H_B = 1, H_AB = 1.2 (sharing 0.8 nats of mutual correlation),
+    with forward rate 2.0 and reverse predictive rate 1.5. -/
+def corticalComplex : IntegratedSystem where
+  H_A  := 1
+  H_B  := 1
+  H_AB := 6 / 5
+  forward_rate := 2
+  reverse_rate := 3 / 2
+  h_subadd := by norm_num
+  h_flux_bound := by norm_num
+
+theorem cortical_phi_pos : 0 < corticalComplex.phi := by
+  dsimp [phi, corticalComplex]
+  norm_num
+
+theorem cortical_phi_value : corticalComplex.phi = 4 / 5 := by
+  dsimp [phi, corticalComplex]
+  norm_num
+
+theorem cortical_flux_asymmetry_pos : 0 < corticalComplex.fluxAsymmetry := by
+  dsimp [fluxAsymmetry, corticalComplex]
+  norm_num
+
+end IntegratedSystem
