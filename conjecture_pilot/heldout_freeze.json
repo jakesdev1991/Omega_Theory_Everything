@@ -1,0 +1,381 @@
+{
+  "frozen_at_commit": "356fb8c652ee6da4cbf647a079e10d46636b3b37",
+  "heldout_modules": [
+    "RadialDilation",
+    "RadialMetric",
+    "Vol16_NonEquilibriumThermodynamics",
+    "Vol21_ArrowOfTime"
+  ],
+  "train_modules": [
+    "InformationPhysics",
+    "DynamicPlanckScale",
+    "DynamicCODScale",
+    "LogCorrelationMetric",
+    "OmegaAxioms",
+    "CBwK_Budget_Pacer",
+    "APPA_Context_Branching"
+  ],
+  "masked_modules": [
+    "OmegaProtocol",
+    "ProofRegression",
+    "ToE"
+  ],
+  "families": {
+    "radial": [
+      "RadialDilation",
+      "RadialMetric"
+    ],
+    "entropy": [
+      "Vol16_NonEquilibriumThermodynamics",
+      "Vol21_ArrowOfTime"
+    ]
+  },
+  "inventory": {
+    "RadialDilation": {
+      "sha256": "380d3697d22c2accee285fc658624e761663f87db39c7ed069f4818c0bde2192",
+      "namespaces": [
+        "RadialDilation"
+      ],
+      "imports": [
+        "DynamicCODScale",
+        "Mathlib"
+      ],
+      "statements": [
+        {
+          "name": "sq_le_one_of_Icc",
+          "line": 86,
+          "hypotheses": 2
+        },
+        {
+          "name": "neg_one_lt_of_sq_lt_one",
+          "line": 90,
+          "hypotheses": 1
+        },
+        {
+          "name": "gRR_lpOnly_le_one",
+          "line": 97,
+          "hypotheses": 2
+        },
+        {
+          "name": "gRR_lpOnly_eq_one_imp",
+          "line": 107,
+          "hypotheses": 3
+        },
+        {
+          "name": "gRR_lpOnly_zero",
+          "line": 124,
+          "hypotheses": 0
+        },
+        {
+          "name": "misnerSharpLPOnly_neg",
+          "line": 131,
+          "hypotheses": 3
+        },
+        {
+          "name": "misnerSharpLPOnly_zero",
+          "line": 157,
+          "hypotheses": 0
+        },
+        {
+          "name": "lpRatio_quadratic_deviation",
+          "line": 166,
+          "hypotheses": 1
+        },
+        {
+          "name": "kappaRequired_pos",
+          "line": 179,
+          "hypotheses": 1
+        },
+        {
+          "name": "kappaRequired_zero",
+          "line": 190,
+          "hypotheses": 0
+        },
+        {
+          "name": "kappa_lp_product",
+          "line": 200,
+          "hypotheses": 1
+        },
+        {
+          "name": "isotropic_conformal_reproduction",
+          "line": 209,
+          "hypotheses": 1
+        },
+        {
+          "name": "conformalFactor_strictMono",
+          "line": 219,
+          "hypotheses": 2
+        },
+        {
+          "name": "kappa_outruns_inverse_lp",
+          "line": 236,
+          "hypotheses": 3
+        },
+        {
+          "name": "gRR_schwarzschild_gt_one",
+          "line": 245,
+          "hypotheses": 2
+        },
+        {
+          "name": "gRR_schwarzschild_zero",
+          "line": 262,
+          "hypotheses": 0
+        },
+        {
+          "name": "div_pow_mul_inv_pow",
+          "line": 267,
+          "hypotheses": 2
+        },
+        {
+          "name": "areal_reciprocity",
+          "line": 276,
+          "hypotheses": 2
+        },
+        {
+          "name": "lpRatio_eq_cod_ratio",
+          "line": 284,
+          "hypotheses": 0
+        },
+        {
+          "name": "dilation_reconciliation",
+          "line": 296,
+          "hypotheses": 2
+        }
+      ],
+      "unparsed": []
+    },
+    "RadialMetric": {
+      "sha256": "f91f72ffabe467d0480cd42daf003fd71b21fb66f054b74fb98684eceb7fcab2",
+      "namespaces": [
+        "RadialMetric"
+      ],
+      "imports": [
+        "DynamicCODScale",
+        "Mathlib"
+      ],
+      "statements": [
+        {
+          "name": "two_mul_phiStar",
+          "line": 62,
+          "hypotheses": 0
+        },
+        {
+          "name": "phiStar_pos",
+          "line": 68,
+          "hypotheses": 0
+        },
+        {
+          "name": "phiStar_golden",
+          "line": 77,
+          "hypotheses": 0
+        },
+        {
+          "name": "golden_bottleneck_gap",
+          "line": 96,
+          "hypotheses": 0
+        },
+        {
+          "name": "golden_bottleneck_bound",
+          "line": 133,
+          "hypotheses": 0
+        },
+        {
+          "name": "golden_bottleneck_eq_iff",
+          "line": 140,
+          "hypotheses": 0
+        },
+        {
+          "name": "chainLength_mono",
+          "line": 170,
+          "hypotheses": 2
+        },
+        {
+          "name": "chainLength_const_scale",
+          "line": 181,
+          "hypotheses": 0
+        },
+        {
+          "name": "chainLength_error",
+          "line": 187,
+          "hypotheses": 0
+        },
+        {
+          "name": "chainLength_factorization_iff",
+          "line": 194,
+          "hypotheses": 0
+        },
+        {
+          "name": "arealRadius_at_vacuum",
+          "line": 209,
+          "hypotheses": 0
+        },
+        {
+          "name": "arealRadius_at_horizon",
+          "line": 215,
+          "hypotheses": 0
+        },
+        {
+          "name": "lapse_conformal_identity",
+          "line": 223,
+          "hypotheses": 0
+        },
+        {
+          "name": "cod_profile_matches_lapse",
+          "line": 229,
+          "hypotheses": 1
+        }
+      ],
+      "unparsed": []
+    },
+    "Vol16_NonEquilibriumThermodynamics": {
+      "sha256": "345f4a1bc3ea6337bbc60c130d9e88186566164012dd42798a15dae264430b34",
+      "namespaces": [
+        "OmegaProtocol.Vol16"
+      ],
+      "imports": [
+        "Mathlib",
+        "OmegaUnifiedFoundation"
+      ],
+      "statements": [
+        {
+          "name": "entropy_balance",
+          "line": 36,
+          "hypotheses": 0
+        },
+        {
+          "name": "entropy_production_nonneg",
+          "line": 40,
+          "hypotheses": 0
+        },
+        {
+          "name": "isolated_entropy_nondecreasing",
+          "line": 45,
+          "hypotheses": 1
+        },
+        {
+          "name": "isolated_entropy_monotone",
+          "line": 50,
+          "hypotheses": 1
+        },
+        {
+          "name": "isolated_entropy_strictMono",
+          "line": 57,
+          "hypotheses": 2
+        },
+        {
+          "name": "entropy_nonneg_after_initial",
+          "line": 65,
+          "hypotheses": 3
+        },
+        {
+          "name": "growingProcess_isolated",
+          "line": 91,
+          "hypotheses": 0
+        },
+        {
+          "name": "growingProcess_strictMono",
+          "line": 93,
+          "hypotheses": 0
+        },
+        {
+          "name": "exportingProcess_decreases",
+          "line": 96,
+          "hypotheses": 1
+        },
+        {
+          "name": "nonnegative_production_not_enough",
+          "line": 102,
+          "hypotheses": 0
+        }
+      ],
+      "unparsed": []
+    },
+    "Vol21_ArrowOfTime": {
+      "sha256": "3be56af93c6e782c6baea94690625a5c7bc18a040f1d6f05f60554a78f42b726",
+      "namespaces": [
+        "OmegaProtocol.Vol21"
+      ],
+      "imports": [
+        "Mathlib",
+        "OmegaAxioms",
+        "OmegaUnifiedFoundation",
+        "Vol16_NonEquilibriumThermodynamics"
+      ],
+      "statements": [
+        {
+          "name": "entropy_rate_nonneg",
+          "line": 27,
+          "hypotheses": 1
+        },
+        {
+          "name": "entropy_derivative",
+          "line": 32,
+          "hypotheses": 2
+        },
+        {
+          "name": "arrow_of_time",
+          "line": 38,
+          "hypotheses": 2
+        },
+        {
+          "name": "arrow_of_time_entropy_nonneg",
+          "line": 45,
+          "hypotheses": 3
+        },
+        {
+          "name": "computational_latency_nonneg",
+          "line": 51,
+          "hypotheses": 0
+        }
+      ],
+      "unparsed": []
+    }
+  },
+  "upstream_dependencies_allowed": [
+    "DynamicCODScale",
+    "OmegaAxioms",
+    "OmegaUnifiedFoundation",
+    "Vol16_NonEquilibriumThermodynamics"
+  ],
+  "downstream_leakage_masked": [
+    {
+      "module": "OmegaProtocol",
+      "references": [
+        "import Vol16_NonEquilibriumThermodynamics",
+        "import Vol21_ArrowOfTime"
+      ]
+    },
+    {
+      "module": "ProofRegression",
+      "references": [
+        "OmegaProtocol.Vol16.Entropy",
+        "OmegaProtocol.Vol16.IsIsolated",
+        "OmegaProtocol.Vol16.constantProcess",
+        "OmegaProtocol.Vol16.exportingProcess",
+        "OmegaProtocol.Vol16.growingProcess",
+        "OmegaProtocol.Vol16.growingProcess_isolated",
+        "OmegaProtocol.Vol16.growingProcess_strictMono",
+        "OmegaProtocol.Vol16.nonnegative_production_not_enough",
+        "OmegaProtocol.Vol21.CosmicEntropy",
+        "OmegaProtocol.Vol21.arrow_of_time",
+        "RadialMetric.chainLength",
+        "import RadialMetric",
+        "import Vol16_NonEquilibriumThermodynamics",
+        "import Vol21_ArrowOfTime"
+      ]
+    },
+    {
+      "module": "ToE",
+      "references": [
+        "import RadialDilation",
+        "import RadialMetric",
+        "import Vol16_NonEquilibriumThermodynamics",
+        "import Vol21_ArrowOfTime"
+      ]
+    }
+  ],
+  "policy": {
+    "upstream": "Held-out statements may depend on training lemmas; the statements are unseen, their prerequisites are not.",
+    "downstream": "Any module listed in downstream_leakage_masked is excluded from generator inputs and from retrieval corpora during evaluation."
+  }
+}
