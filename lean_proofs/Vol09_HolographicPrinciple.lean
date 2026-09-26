@@ -162,14 +162,16 @@ theorem product_of_correlation_det_zero (ψ : BipartiteState)
       rw [ha, zero_mul, zero_sub, neg_eq_zero] at h1
       exact h1
     rcases mul_eq_zero.mp hbc with hb | hc
-    · exact ⟨0, 1, ψ.c, ψ.d, by simp [ha], by simp [hb], one_mul ψ.c, one_mul ψ.d⟩
-    · exact ⟨ψ.b, ψ.d, 0, 1, by simp [ha, hc], mul_one ψ.b, by simp [hc], mul_one ψ.d⟩
+    · exact ⟨0, 1, ψ.c, ψ.d, by simp [ha], by simp [hb],
+        (one_mul ψ.c).symm, (one_mul ψ.d).symm⟩
+    · exact ⟨ψ.b, ψ.d, 0, 1, by simp [ha], (mul_one ψ.b).symm,
+        by simp [hc], (mul_one ψ.d).symm⟩
   · -- a ≠ 0: factor as (a, c) ⊗ (1, b/a)
     have had : ψ.a * ψ.d = ψ.b * ψ.c := sub_eq_zero.mp h1
     refine ⟨ψ.a, ψ.c, 1, ψ.b / ψ.a, (mul_one ψ.a).symm, ?_, (mul_one ψ.c).symm, ?_⟩
     · rw [mul_div, eq_comm, div_eq_iff ha]
       exact mul_comm ψ.a ψ.b
-    · rw [mul_div, mul_comm ψ.c ψ.b, ← had, div_eq_iff ha]
+    · rw [mul_div, mul_comm ψ.c ψ.b, ← had, eq_comm, div_eq_iff ha]
       exact mul_comm ψ.a ψ.d
 
 /-- Exact separability criterion for two-qubit pure states: the state

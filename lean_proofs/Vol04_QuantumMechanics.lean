@@ -267,8 +267,8 @@ theorem comm_link (A B : H →L[ℂ] H) (hA : SelfAdjoint A) (hB : SelfAdjoint B
     @inner ℂ H _ (deviation A ψ) (deviation B ψ)
       - @inner ℂ H _ (deviation B ψ) (deviation A ψ)
       = @inner ℂ H _ ψ ((ccomm A B) ψ) := by
-  have e1 := inner_dev_eq A hA B ψ hψ
-  have e2 := inner_dev_eq B hB A ψ hψ
+  have e1 := inner_dev_eq A B hA ψ hψ
+  have e2 := inner_dev_eq B A hB ψ hψ
   rw [e1, e2]
   simp only [ccomm, ContinuousLinearMap.sub_apply, inner_sub_right]
   ring
@@ -296,7 +296,7 @@ theorem robertson_uncertainty (A B : H →L[ℂ] H) (hA : SelfAdjoint A)
   have hlink := comm_link A B hA hB ψ hψ
   have hconj : starRingEnd ℂ (@inner ℂ H _ (deviation A ψ) (deviation B ψ))
       = @inner ℂ H _ (deviation B ψ) (deviation A ψ) :=
-    (inner_conj_symm _ _).symm
+    inner_conj_symm (deviation B ψ) (deviation A ψ)
   rw [← hconj] at hlink
   have htri : ‖@inner ℂ H _ ψ ((ccomm A B) ψ)‖
       ≤ ‖@inner ℂ H _ (deviation A ψ) (deviation B ψ)‖
@@ -338,21 +338,19 @@ noncomputable def time_derivative (_ : ℝ → StateSpace) (_ : ℝ) : StateSpac
 -- one-dimensional solution here is constructed and verified.
 
 /-- The Hamiltonian of the one-dimensional model: multiplication by the
-    real energy E. Self-adjoint because E is real. -/
-noncomputable def hamiltonian (E : ℝ) : Operator :=
-  ((E : ℂ) • ContinuousLinearMap.id : Operator)
+    real energy E. Stated on the ℂ carrier of the one-dimensional state
+    space (a bundled operator construction is unnecessary here, and the
+    `StateSpace` definition is not reducible enough to reuse the ℂ
+    instances syntactically). -/
+noncomputable def hamiltonian (E : ℝ) : ℂ → ℂ :=
+  fun z => (E : ℂ) * z
 
-theorem hamiltonian_apply (E : ℝ) (z : StateSpace) :
-    hamiltonian E z = (E : ℂ) * z := by
-  simp [hamiltonian, ContinuousLinearMap.smul_apply]
-
-/-- The Hamiltonian of the one-dimensional model is self-adjoint
-    (real energies). -/
-theorem hamiltonian_self_adjoint (E : ℝ) : IsSelfAdjoint (hamiltonian E) := by
-  intro ψ φ
-  rw [hamiltonian_apply E ψ, hamiltonian_apply E φ]
-  show @inner ℂ ℂ _ ((E : ℂ) * ψ) φ = @inner ℂ ℂ _ ψ ((E : ℂ) * φ)
-  simp only [RCLike.inner_apply, Complex.conj_mul, Complex.conj_ofReal]
+/-- The Hamiltonian of the one-dimensional model is self-adjoint for
+    real energies: ⟨Hψ, φ⟩ = ⟨ψ, Hφ⟩ on the ℂ carrier. -/
+theorem hamiltonian_self_adjoint (E : ℝ) (ψ φ : ℂ) :
+    @inner ℂ ℂ _ (hamiltonian E ψ) φ = @inner ℂ ℂ _ ψ (hamiltonian E φ) := by
+  simp only [hamiltonian, RCLike.inner_apply, Complex.conj_mul,
+    Complex.conj_ofReal]
   ring
 
 /-- Schrödinger trajectory for angular frequency ω and initial state
@@ -386,9 +384,7 @@ theorem schrodinger_equation (ω : ℝ) (ψ₀ : ℂ) (t : ℝ) :
     Complex.I * (hbar : ℂ) * (deriv (schrodingerTrajectory ω ψ₀) t)
       = hamiltonian (hbar * ω) (schrodingerTrajectory ω ψ₀ t) := by
   rw [(hasDerivAt_schrodingerTrajectory ω ψ₀ t).deriv]
-  simp only [schrodingerTrajectory, hamiltonian, ContinuousLinearMap.smul_apply,
-    ContinuousLinearMap.id_apply, smul_eq_mul, Complex.ofReal_mul,
-    mul_one, one_mul]
+  simp only [schrodingerTrajectory, hamiltonian, Complex.ofReal_mul]
   have key : -(Complex.I * (Complex.I * (ω : ℂ))) = (ω : ℂ) := by
     rw [mul_assoc, Complex.I_mul_I, neg_one_mul, neg_neg]
   linear_combination
