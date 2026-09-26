@@ -28,9 +28,8 @@ inductive Substrate
 /-- Legacy carrier name kept for `OmegaProtocol.lean`. -/
 def SyntheticSubstrate : Type := Substrate
 
-/-- Named bridge (legacy name kept): synthetic substrates exist, witnessed by
-    the hybrid substrate. -/
-theorem post_biological_evolution_axiom : Nonempty SyntheticSubstrate :=
+/-- Synthetic substrates exist, witnessed by the hybrid substrate. -/
+theorem synthetic_substrate_witness : Nonempty SyntheticSubstrate :=
   ⟨Substrate.hybrid⟩
 
 /-- Explicit transition-cost table between substrates. -/

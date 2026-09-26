@@ -232,3 +232,76 @@ Kernel verification (`lake build ToE`) runs in CI; see PR #44.
 - Remaining: P1 (vacuous-hypothesis patterns, `*_axiom` renames, Λ/`Mass`
   reconciliation, harness/README honesty) and P2 (per-file upgrades) as
   listed in §8.
+
+---
+
+# Appendix R.6: P1 remediation log (2026-09-26)
+
+The P1 items listed as remaining in R.5 were implemented on branch
+`arena/01a0df96-omega-theory-everything` (the eighth tightening pass).
+Provenance note: this audit file was committed with a truncated middle
+section (the literal `[truncated … chars]` marker above predates this
+pass); the P1 list below is reconstructed from R.5 and the visible
+findings, and every item is stated with its verifiable remediation.
+
+## R.6.1 `*_axiom` renames + enforcement gate
+- All 70 axiom-named declarations and fields renamed/retired: 44
+  protocol delegations renamed after proved content; 13
+  `OmegaUnifiedFoundation`/`Vol05` law-fields renamed `axiom_*` → `law_*`
+  (model laws as structure data); 10 volume witnesses renamed; 3 pure
+  duplicates deleted (`axiom_gauge_symmetry`, `contextuality`,
+  `axiom_information_preservation`).
+- `audit_vacuity.py` gains `--max-axiom-names` (CI: 0): no declaration or
+  field/assignment name may contain `axiom`. Fixture-tested (detection +
+  prose/`law_*` exemption). Prose mentions of "axiom" in comments and
+  docstrings remain allowed and are comment-masked.
+
+## R.6.2 Vacuous-hypothesis patterns (H2 class)
+- Retired at the source, with non-degenerate restatements:
+  `OmegaAxioms.log_ratio_nonpos` / `log_inequality_from_DPI` /
+  `perfect_overlap_identifies_regions` → `InformationNetwork.log_ratio_nonpos`,
+  `InformationNetwork.log_inequality_of_multiplicative_DPI`,
+  `InformationNetwork.overlap_one_identifies` (strict-separation law);
+  Vol22 `er_bridge_from_phi` / `perfect_overlap_same_entity` /
+  `persistent_perfect_overlap_same_entity` → network versions + the
+  retained `NetworkER_EPR` capacity bridge; Vol27
+  `integrated_information_pos` / `subjectiveexperience` and Vol33
+  `agi_integration_pos` → `IntegratedSystem` strict-subadditivity
+  positivity + explicitly-scoped `Experiences` dictionary; Vol15
+  `inflation_acceleration` → `CosmologicalFluid` acceleration theorems;
+  Vol19 `emergent_information_gain` + zero `ComplexityEntropy` retired
+  (the `ComplexState` model carries the content).
+- Vol09's `EPR_Entanglement := False` / `EinsteinRosenBridge` aliases and
+  the `Iff.rfl` "theorem" replaced by the two-qubit separability model
+  (`IsProduct`, `Entangled`, `correlationDet`; product ⇒ det = 0;
+  det ≠ 0 ⇒ entangled; Bell witness), claiming only the sound
+  bridge ⇒ entanglement direction.
+
+## R.6.3 P→P theorems (H3 class)
+- `Vol04.schrodinger_equation` and its protocol wrapper deleted (the
+  equation is a documented model postulate). Vol03
+  `kms_transitivity` / `zeroth_law` restated with the KMS-temperature
+  uniqueness law as a genuine hypothesis over every state.
+
+## R.6.4 Λ/G reconciliation
+- Vol44's fixed `Λ := 1` legacy cluster and Vol48's fixed
+  `G_higherdim := 1` / `CompactVolume := 1` cluster retired; each module
+  keeps exactly one Λ/G notion (`DeSitterSpace.Lambda`,
+  `Compactification.Gbulk`/`volume`), and `OmegaProtocol.lean` delegates
+  to the parameterized theorems. Vol02's `PhotonMass := 0` is documented
+  as an explicit model postulate.
+
+## R.6.5 Harness/README honesty
+- The tactic harness already reported `UNAVAILABLE` without a local Lean
+  toolchain (unchanged). `lean_proofs/README.md` naming-convention and
+  pass-status text updated to the post-rename state, including the new
+  `law_*` field convention and the axiom-name gate.
+
+## R.6.6 Verification status
+- Local: 41 Python/tooling tests (two new fixtures), `audit_axioms --max 0`
+  → 0, `audit_vacuity` → 0/0/0/0/0 with the axiom-name metric at 0, CI
+  grep gate clean, ruff and mypy clean.
+- Kernel: no local Lean toolchain is obtainable in this environment
+  (release hosts blocked); the pinned `lake build ToE` and the
+  transitive-axiom gate (155 selected declarations) run in Lean CI on
+  the branch/PR.

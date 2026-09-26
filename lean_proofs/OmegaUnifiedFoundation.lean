@@ -6,6 +6,13 @@ import OmegaAxioms
 -- instances. It does NOT derive the 54 physics volumes (the former
 -- `*_Stmt` "unification theorems" were retired as vacuous in the P0 audit
 -- remediation; see the notice at the end of this file).
+--
+-- Naming convention: structure fields named `law_*` are MODEL LAWS carried
+-- as data: every instance must supply them, and they are the postulates of
+-- the packaged model — not Lean `axiom` primitives and not theorems of the
+-- foundation. The repository contains zero `axiom` declarations
+-- (`audit_axioms.py --max 0`), and `audit_vacuity.py` rejects any
+-- declaration or field *named* `axiom_*` / `*_axiom`.
 
 /-!
 ## Scope warning for the concrete model
@@ -32,12 +39,12 @@ structure ModularTheory where
   ModularHamiltonian : StateSpace → OmegaAlgebra
   KMSState : StateSpace → ℝ → Prop
   RelativeEntropy : StateSpace → StateSpace → ℝ
-  axiom_modular_flow_group : ∀ (t s : ℝ), ModularFlow (t + s) = ModularFlow t ∘ ModularFlow s
-  axiom_omega_cyclic_separating : CyclicSeparating OmegaState
-  axiom_modular_operator : ∀ (A : OmegaAlgebra) (t : ℝ), (ModularFlow t A : Operator) = ModularOperator OmegaState ^ (Complex.I * ↑t) * (A : Operator) * ModularOperator OmegaState ^ (-Complex.I * ↑t)
-  axiom_kms_characterization : ∀ (ρ : StateSpace) (β : ℝ), KMSState ρ β ↔ (∀ (A B : OmegaAlgebra), ω_ρ (A * ModularFlow (β * Complex.I) B) = ω_ρ (B * A))
-  axiom_relative_entropy_monotonicity : ∀ (ρ σ : StateSpace) (Φ : CPTPMap), RelativeEntropy (Φ ρ) (Φ σ) ≤ RelativeEntropy ρ σ
-  axiom_qfim_hessian : ∀ (ρ : StateSpace) (X Y : StateSpace → ℝ) (X_op Y_op : Operator), QFIM ρ X_op Y_op = Hessian (RelativeEntropy ρ) X Y
+  law_modular_flow_group : ∀ (t s : ℝ), ModularFlow (t + s) = ModularFlow t ∘ ModularFlow s
+  law_omega_cyclic_separating : CyclicSeparating OmegaState
+  law_modular_operator : ∀ (A : OmegaAlgebra) (t : ℝ), (ModularFlow t A : Operator) = ModularOperator OmegaState ^ (Complex.I * ↑t) * (A : Operator) * ModularOperator OmegaState ^ (-Complex.I * ↑t)
+  law_kms_characterization : ∀ (ρ : StateSpace) (β : ℝ), KMSState ρ β ↔ (∀ (A B : OmegaAlgebra), ω_ρ (A * ModularFlow (β * Complex.I) B) = ω_ρ (B * A))
+  law_relative_entropy_monotonicity : ∀ (ρ σ : StateSpace) (Φ : CPTPMap), RelativeEntropy (Φ ρ) (Φ σ) ≤ RelativeEntropy ρ σ
+  law_qfim_hessian : ∀ (ρ : StateSpace) (X Y : StateSpace → ℝ) (X_op Y_op : Operator), QFIM ρ X_op Y_op = Hessian (RelativeEntropy ρ) X Y
 
 /-- A checked zero-information instance used by the legacy volume bridges.
     It is a value with proofs of every field, not a kernel assumption. -/
@@ -49,25 +56,25 @@ noncomputable def concreteModularTheory : ModularTheory :=
     ModularHamiltonian := fun _ => 0
     KMSState := fun _ _ => True
     RelativeEntropy := fun _ _ => 0
-    axiom_modular_flow_group := by
+    law_modular_flow_group := by
       intro t s
       funext A
       rfl
-    axiom_omega_cyclic_separating := by
+    law_omega_cyclic_separating := by
       exact True.intro
-    axiom_modular_operator := by
+    law_modular_operator := by
       intro A t
       -- Both sides reduce definitionally: the flow is constantly zero and the
       -- zero functional calculus makes the RHS a product with a zero factor.
       change (0 : Operator) = ((0 : Operator).comp (A : Operator)).comp 0
       exact (ContinuousLinearMap.comp_zero _).symm
-    axiom_kms_characterization := by
+    law_kms_characterization := by
       intro ρ β
       simp [ω_ρ]
-    axiom_relative_entropy_monotonicity := by
+    law_relative_entropy_monotonicity := by
       intro ρ σ Φ
       exact le_rfl
-    axiom_qfim_hessian := by
+    law_qfim_hessian := by
       intro ρ X Y X_op Y_op
       rfl }
 
@@ -81,10 +88,10 @@ structure QFIMGeometry where
   scalar_curvature : spacetime → ℝ
   einstein_tensor : spacetime → spacetime → ℝ
   stress_energy : spacetime → spacetime → ℝ
-  axiom_metric_is_qfim : ∀ (x y : spacetime), metric x y = QFIM (state_at x) (tangent_at x) (tangent_at y)
-  axiom_einstein_equations : ∀ (x y : spacetime), einstein_tensor x y = 8 * Real.pi * NewtonG * stress_energy x y
-  axiom_bianchi_identity : ∀ (ν : spacetime), CovariantDivergence einstein_tensor ν = 0
-  axiom_cosmological_constant : ∃ (Λ : ℝ), ∀ (x y : spacetime), einstein_tensor x y + Λ * metric x y = 8 * Real.pi * NewtonG * stress_energy x y
+  law_metric_is_qfim : ∀ (x y : spacetime), metric x y = QFIM (state_at x) (tangent_at x) (tangent_at y)
+  law_einstein_equations : ∀ (x y : spacetime), einstein_tensor x y = 8 * Real.pi * NewtonG * stress_energy x y
+  law_bianchi_identity : ∀ (ν : spacetime), CovariantDivergence einstein_tensor ν = 0
+  law_cosmological_constant : ∃ (Λ : ℝ), ∀ (x y : spacetime), einstein_tensor x y + Λ * metric x y = 8 * Real.pi * NewtonG * stress_energy x y
 
 -- Pillar 3: Type III₁ Algebra Structure
 structure TypeIII1Algebra where
@@ -107,17 +114,17 @@ structure EmergentPhaseSpace where
   hamiltonian_vector_field : (carrier → ℝ) → (carrier → carrier)
   poisson_bracket : (carrier → ℝ) → (carrier → ℝ) → (carrier → ℝ)
   classical_limit : ℝ → (StateSpace → ℝ) → (carrier → ℝ)
-  axiom_commutator_to_poisson : ∀ (R : QRegion), vonNeumannEntropy R ≥ 0
+  law_commutator_to_poisson : ∀ (R : QRegion), vonNeumannEntropy R ≥ 0
 
 structure EmergentSpacetime where
   manifold : Type*
   metric_tensor : manifold → manifold → ℝ
-  axiom_metric_from_qfim : ∀ (x y : manifold), metric_tensor x y = QFIM (vacuum_at x) (tangent_at x) (tangent_at y)
+  law_metric_from_qfim : ∀ (x y : manifold), metric_tensor x y = QFIM (vacuum_at x) (tangent_at x) (tangent_at y)
   connection : manifold → manifold → manifold → ℝ
   curvature : manifold → manifold → manifold → manifold → ℝ
   einstein_tensor : manifold → manifold → ℝ
   matter_stress_energy : manifold → manifold → ℝ
-  axiom_einstein_eqs : ∀ (x y : manifold), einstein_tensor x y = 8 * Real.pi * NewtonG * matter_stress_energy x y
+  law_einstein_eqs : ∀ (x y : manifold), einstein_tensor x y = 8 * Real.pi * NewtonG * matter_stress_energy x y
 
 -- ============================================================
 --   CROSS-VOLUME CONSISTENCY: RETIRED (P0 audit remediation)

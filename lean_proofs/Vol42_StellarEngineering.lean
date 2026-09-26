@@ -25,9 +25,9 @@ structure DysonSphere where
   shells : ℕ
   baseArea : ℕ
 
-/-- Named bridge (legacy name kept for `OmegaProtocol.lean`): Dyson swarms
-    are realizable in the model. -/
-theorem stellar_engineering_axiom : Nonempty DysonSphere :=
+/-- Dyson swarms are realizable in the model, witnessed by a single-shell
+    swarm over a unit star. -/
+theorem dyson_sphere_witness : Nonempty DysonSphere :=
   ⟨⟨1, 1⟩⟩
 
 /-- Cumulative collecting area: shell `k` contributes `2^k` base units,

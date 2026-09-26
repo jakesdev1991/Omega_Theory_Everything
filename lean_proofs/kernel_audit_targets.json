@@ -140,5 +140,18 @@
   "OmegaProtocol.Vol44.DeSitterSpace.entropy_formula",
   "OmegaProtocol.Vol48.Compactification.Geff_eventually_small",
   "OmegaProtocol.Vol54.ex_nihilo_unique",
-  "OmegaProtocol.Vol29.equilibrium_classification"
+  "OmegaProtocol.Vol29.equilibrium_classification",
+  "OmegaProtocol.InformationNetwork.log_ratio_nonpos",
+  "OmegaProtocol.InformationNetwork.log_inequality_of_multiplicative_DPI",
+  "OmegaProtocol.InformationNetwork.overlap_one_identifies",
+  "OmegaProtocol.Vol22.perfect_overlap_same_entity",
+  "OmegaProtocol.Vol22.persistent_perfect_overlap_same_entity",
+  "OmegaProtocol.Vol09.product_correlation_det_zero",
+  "OmegaProtocol.Vol09.entangled_of_correlation_det_ne_zero",
+  "OmegaProtocol.Vol09.er_epr_bridge_entails_entanglement",
+  "OmegaProtocol.Vol09.bell_er_epr",
+  "OmegaProtocol.Vol03.kms_transitivity",
+  "OmegaProtocol.Vol27.IntegratedSystem.experiences_of_strict_integration",
+  "OmegaProtocol.Vol44.DeSitterSpace.entropy_pos",
+  "OmegaProtocol.Vol48.Compactification.Geff_pos"
 ]

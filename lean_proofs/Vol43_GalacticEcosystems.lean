@@ -26,9 +26,8 @@ structure GalacticNetwork where
   symm : ∀ i j, adjacent i j = adjacent j i
   irrefl : ∀ i, adjacent i i = false
 
-/-- Named bridge (legacy name kept for `OmegaProtocol.lean`): the empty
-    network inhabits the type. -/
-theorem galactic_ecosystems_axiom : Nonempty GalacticNetwork :=
+/-- The empty network inhabits the GalacticNetwork type. -/
+theorem galactic_network_witness : Nonempty GalacticNetwork :=
   ⟨⟨0, fun _ _ => false, fun _ _ => rfl, fun _ => rfl⟩⟩
 
 /-- Communication links are genuinely bidirectional. -/

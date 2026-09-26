@@ -15,8 +15,12 @@ import OmegaUnifiedFoundation
 namespace OmegaProtocol.Vol54
 open OmegaProtocol
 def AbsoluteNothingness : Prop := ∀ (R : QRegion), d R R = 0
-/-- AXIOM: Theory of Nothing Axiom -/
-theorem theory_of_nothing_axiom : AbsoluteNothingness := by
+
+/-- The zero model trivially satisfies `AbsoluteNothingness`: every
+    Q-region is at zero self-distance (`qregion_self_distance_zero`). This
+    is a structural fact of the minimal model, not a metaphysical
+    conclusion. -/
+theorem absolute_nothingness_of_zero_model : AbsoluteNothingness := by
   intro R
   exact qregion_self_distance_zero R
 

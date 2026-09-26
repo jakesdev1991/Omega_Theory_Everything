@@ -11,13 +11,16 @@ vacuous in its chosen model.
 See [PROOF_AUDIT.md](PROOF_AUDIT.md) for the source-review inventory, outstanding
 limitations, and compiler-validation results.
 
-**Integrated CI status (2026-09-26):** [Lean CI passed](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/36247075540)
-on revision `524fc6e`, reconciled with main `567afb2`: full `lake build ToE`,
-39 tooling tests, combined source gates, and transitive kernel-axiom inspection
-of **80 selected declarations**. The full repository CI also passed. The PR is
-conflict-free. Main's retired alias exports remain retired (baseline now zero),
-and `RadialDilation` is included. Lean/mathlib remain pinned to v4.32.0. Earlier
-pass-status notes below are historical; no PR merge into main has been performed.
+**Integrated CI status (2026-09-26):** the seventh pass was validated by
+[Lean CI run 36270581122](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/36270581122)
+(PR #47): full `lake build ToE`, all **142** then-selected kernel-audit
+declarations resolving with zero unexpected axioms. The eighth pass
+(P1 remediation: `*_axiom` renames, vacuous-hypothesis retirements,
+naming-convention gate; 155 selected declarations) is queued for the same CI on
+its own PR. Main's retired alias exports remain retired (baseline zero), and
+`RadialDilation` is included. Lean/mathlib remain pinned to v4.32.0. Earlier
+pass-status notes below are historical; no PR merge into main has been performed
+for the seventh or eighth pass.
 
 ## Structure
 
@@ -143,15 +146,22 @@ This corpus is maintained under an explicit honesty policy, enforced in CI:
    checks of the formalization, *not* physics. Such declarations must carry
    the `bridge_*` naming convention and an honest docstring saying so;
    `audit_vacuity.py` fails CI if any other theorem states one of those
-   tautologies. This lexical check is incomplete: it does not unfold aliases
+   tautologies. Hypotheses unsatisfiable in the model (e.g. `Φ = 1`, positive
+   information in the zero model) are retired rather than stated; the
+   non-degenerate restatements live over explicit network/fluid/entropy
+   structures. This lexical check is incomplete: it does not unfold aliases
    or discover contradictory hypotheses; a passing audit is not a semantic
    non-vacuity certificate. Legacy `*_Stmt` exports are separately inventoried
-   by `legacy_statement_aliases.json` (96 outstanding entries); CI rejects
-   new aliases and requires retired entries to be removed.
+   by `legacy_statement_aliases.json` (now empty); CI rejects any new alias.
 4. **No `Unit` stubs.** Existence proofs of the form `Nonempty X := ⟨()⟩`
    and Unit-valued type definitions (including parameterized types) inside the
    volumes are tracked by
    `audit_vacuity.py` and ratcheted so they can only decrease.
+5. **No axiom-*named* declarations.** The corpus contains zero Lean `axiom`
+   primitives, so a theorem or field *named* `axiom_*`/`*_axiom` misrepresents
+   its content. `audit_vacuity.py --max-axiom-names 0` (CI) rejects such
+   names; model laws carried as structure data are named `law_*` with an
+   honest docstring, and witness theorems are named `*_witness`/`*_exists`.
 
 The ratchet values live in `.github/workflows/lean-ci.yml`; lowering them is
 always welcome, raising them is not.
@@ -264,7 +274,7 @@ python3 lean_proofs/audit_kernel.py
 ```
 
 This command first runs `lake build ToE`, then asks Lean for the transitive
-axioms of the 80 declarations in `kernel_audit_targets.json`. Only `propext`,
+axioms of the 155 declarations in `kernel_audit_targets.json`. Only `propext`,
 `Classical.choice`, and `Quot.sound` are permitted. Missing Lake, failed builds,
 missing/duplicate reports, malformed output, and unapproved axioms all fail;
 there is no static-success fallback. The scratch report lives under ignored
@@ -392,3 +402,67 @@ interpreted as actual storage mass or general irreversible erasure cost.
   signatures changed. Kernel validation passes on PR #47 (Lean CI
   run 36270581122, 2026-09-26): full build green, all 142 targets
   resolve with zero unexpected axioms.
+
+### Eighth pass: honest names and realizable hypotheses (P1 remediation)
+
+This pass closes the P1 items from the adversarial audit remediation log:
+naming honesty, vacuous hypotheses, and the two fixed-constant clusters.
+No gate was weakened; the kernel-audit inventory grew from 142 to
+**155** selected declarations, and the Python/tooling suite from 39 to
+**41** tests.
+
+- **Axiom-name gate.** `audit_vacuity.py` gains `--max-axiom-names`
+  (CI: 0): no declaration, structure field, or instance assignment may be
+  *named* `axiom_*`/`*_axiom`. Model laws carried as structure data are
+  named `law_*` (13 fields renamed in `OmegaUnifiedFoundation.lean` and
+  `Vol05_GeneralRelativity.lean`); witness theorems are named
+  `*_witness`/`*_exists` (10 volume renames); three pure-duplicate protocol
+  wrappers were deleted. Prose in comments/docstrings is exempt
+  (comment-masked), and the retired legacy names are recorded in
+  in-file retirement comments for traceability.
+- **Protocol renames.** All 44 `*_axiom` protocol delegations now carry the
+  name of the content they prove (`handshaking_lemma`,
+  `feedback_convergence`, `hadamard_unitary`, `cantor_diagonal`,
+  `wheeler_dewitt_balance`, `dark_energy_deduction`, …). The P→P
+  `schrodinger_equation` wrapper was removed.
+- **Vacuous hypotheses retired.** The unsatisfiable premises are gone at
+  the source and replaced by non-degenerate restatements:
+  `InformationNetwork.log_ratio_nonpos`,
+  `InformationNetwork.log_inequality_of_multiplicative_DPI` (the
+  log-triangle ingredient behind the metric triangle inequality),
+  `InformationNetwork.overlap_one_identifies` and the Vol22 network
+  `perfect_overlap_same_entity` theorems under an explicit
+  strict-separation law, Vol15 `CosmologicalFluid` acceleration, and the
+  Vol27 `IntegratedSystem` positivity results with an honestly scoped
+  `Experiences` dictionary (`def Experiences S := 0 < S.phi`, a model
+  definition, not a claim about consciousness).
+- **Vol09 honest ER=EPR dictionary.** The `EPR_Entanglement := False`
+  poisoned well is replaced by a two-qubit separability model:
+  `BipartiteState`, `IsProduct` (coefficient matrix factors),
+  `Entangled`, `correlationDet` (ad − bc), product ⇒ det = 0,
+  det ≠ 0 ⇒ entangled, and the Bell state witnessing both sides. Only the
+  sound direction (bridge ⇒ entanglement) is claimed; the converse is not.
+- **Λ/G reconciliation.** Vol44's fixed `Λ := 1` legacy cluster and
+  Vol48's fixed `G := 1, V := 1` cluster were retired; each module has
+  exactly one Λ/G notion (the `DeSitterSpace`/`Compactification`
+  structure fields) and `OmegaProtocol.lean` delegates to the
+  parameterized theorems. Vol02's `PhotonMass := 0` carries an explicit
+  model-postulate docstring.
+- **P→P theorems.** `Vol04.schrodinger_equation` (hypothesis restated as
+  conclusion) was removed; Vol03 `kms_transitivity`/`zeroth_law` now take
+  the KMS-temperature uniqueness law as a genuine hypothesis over every
+  state; Vol19's zero-entropy legacy cluster was retired.
+
+**API changes:** protocol theorem names renamed as listed above (old
+names recorded in retirement comments); `OmegaUnifiedFoundation`/
+`Vol05` law-fields renamed `axiom_*` → `law_*`; Vol09 `EPR_Entanglement`
+and `EinsteinRosenBridge` now take a `BipartiteState`; Vol15/Vol19/Vol44/
+Vol48 legacy zero/fixed-constant clusters removed. No proof content was
+weakened: every rename delegates to the same or a stronger kernel-checked
+statement, and the new targets extend the kernel audit.
+
+Local validation: 41 Python/tooling tests, `audit_axioms --max 0` → 0,
+`audit_vacuity` → all-zero metrics including the new axiom-name gate,
+CI grep gate clean, ruff and mypy clean. The Lean build and kernel gate
+run in CI on this branch's PR (no local Lean toolchain is obtainable in
+this environment).

@@ -26,9 +26,8 @@ inductive Layer
 /-- Legacy carrier name kept for `OmegaProtocol.lean`. -/
 def SimulationSubstrate : Type := Layer
 
-/-- Named bridge (legacy name kept): simulation substrates exist, witnessed
-    by the base layer. -/
-theorem simulation_hypothesis_axiom : Nonempty SimulationSubstrate :=
+/-- Simulation substrates exist, witnessed by the base layer. -/
+theorem simulation_substrate_witness : Nonempty SimulationSubstrate :=
   ⟨Layer.base⟩
 
 /-- Simulation depth of a layer. -/

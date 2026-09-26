@@ -187,7 +187,7 @@ theorem orthogonal_exclusive (P Q : Operator)
     _ = 0 := by simp
 
 -- ============================================================
--- PHYSICAL POSTULATES (correctly declared as axioms)
+-- PHYSICAL POSTULATES (model constants; nothing here is a Lean `axiom`)
 -- ============================================================
 
 def hbar : ℝ := 1
@@ -195,14 +195,10 @@ theorem hbar_pos : hbar > 0 := by
   norm_num [hbar]
 noncomputable def time_derivative (_ : ℝ → StateSpace) (_ : ℝ) : StateSpace := 0
 
-/-- The equation is proved from the supplied dynamical law.  Making the law a
-    hypothesis prevents a physical postulate from entering the kernel as an
-    undeclared assumption. -/
-theorem schrodinger_equation (ψ : ℝ → StateSpace) (H : Operator)
-    (hH : IsSelfAdjoint H) (t : ℝ)
-    (h_dynamics : Complex.I • time_derivative ψ t =
-      (1 / (hbar : ℂ)) • H (ψ t)) :
-  Complex.I • time_derivative ψ t = (1 / (hbar : ℂ)) • H (ψ t) := by
-  exact h_dynamics
+-- The retired theorem `schrodinger_equation` restated its hypothesis
+-- `h_dynamics` verbatim as its conclusion (a P→P tautology). The
+-- Schrödinger equation is a dynamical POSTULATE of the model (see the
+-- header); it is not derived here, and no declaration on this file
+-- claims otherwise.
 
 end OmegaProtocol.Vol04

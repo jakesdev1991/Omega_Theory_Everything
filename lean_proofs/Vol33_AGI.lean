@@ -69,11 +69,10 @@ theorem bridge_vol33_metric_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 :=
 theorem bridge_vol33_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 :=
   monotonicity_lemma R
 
-/-- Integration positivity bridge (from Vol27): nonzero RCOD asymmetry gives
-    positive integrated information magnitude. -/
-theorem agi_integration_pos (R₁ R₂ : QRegion) (h : asymmetryTensor R₁ R₂ ≠ 0) :
-    |asymmetryTensor R₁ R₂| > 0 :=
-  abs_pos.mpr h
+-- The retired bridge `agi_integration_pos` restated `abs_pos` under the
+-- hypothesis `asymmetryTensor R₁ R₂ ≠ 0`, unsatisfiable in the concrete
+-- zero model. The genuine, realizable integration content lives in
+-- Vol27's `IntegratedSystem` (see `phi_pos_of_strict_subadditivity`).
 
 -- ============================================================
 -- FINITE RESOURCE-BOUNDED AGENT ALLOCATION & PARETO DOMINANCE

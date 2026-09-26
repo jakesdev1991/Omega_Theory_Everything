@@ -1,49 +1,27 @@
 import Mathlib
 import OmegaUnifiedFoundation
-import Vol07_Cosmology
 
 /-
   Vol15_EarlyUniverse.lean
   REAL mathematical formalization of the Early Universe & Cosmic Inflation.
 
   Contains:
-  1. Legacy minimal model theorem: inflation_acceleration over legacy Vol07 definitions.
-  2. Non-degenerate Inflationary Field Model:
+  1. Non-degenerate Inflationary Fluid Model:
      Scalar inflaton / vacuum energy state with equation-of-state parameter w = p / ρ.
      Proves that when w < -1/3 (e.g. slow-roll scalar field or de Sitter vacuum w = -1),
      ρ + 3p < 0 strictly holds, guaranteeing positive acceleration ä/a > 0 under
      the Friedmann acceleration law.
-  3. Concrete de Sitter / Slow-Roll Benchmark:
+  2. Concrete de Sitter / Slow-Roll Benchmark:
      Demonstrates a realized inflationary state with w = -1 and positive energy density.
+
+  The retired legacy theorem `inflation_acceleration` hypothesized
+  `EnergyDensity t + 3 * Pressure t < 0` over the zero minimal Vol07 model,
+  where `EnergyDensity ≡ 0` and `Pressure ≡ 0` make the hypothesis
+  unsatisfiable; its genuine content is the fluid model below.
 -/
 
 namespace OmegaProtocol.Vol15
 open OmegaProtocol
-open Vol07
-
-/-- Legacy inflation theorem retained for compatibility with the minimal cosmological constants. -/
-theorem inflation_acceleration 
-  (t : CosmologicalTime)
-  (h_lambda : CosmologicalConstant = 0)
-  (h_inflation : EnergyDensity t + 3 * Pressure t < 0) :
-  TimeDerivative (TimeDerivative ScaleFactor) t / ScaleFactor t > 0 := by
-  have h_acc := global_state_dynamics t
-  rw [h_lambda] at h_acc
-  have h_zero : (0 : ℝ) / 3 = 0 := by norm_num
-  rw [h_zero] at h_acc
-  have h_G : 4 * Real.pi * NewtonG / 3 > 0 := by
-    have h1 : (4 : ℝ) > 0 := by norm_num
-    have h2 : Real.pi > 0 := Real.pi_pos
-    have h3 : NewtonG > 0 := NewtonG_pos
-    have h4 : (3 : ℝ) > 0 := by norm_num
-    positivity
-  
-  calc TimeDerivative (TimeDerivative ScaleFactor) t / ScaleFactor t
-    _ = - (4 * Real.pi * NewtonG / 3) * (EnergyDensity t + 3 * Pressure t) + 0 := h_acc
-    _ = - (4 * Real.pi * NewtonG / 3) * (EnergyDensity t + 3 * Pressure t) := by ring
-    _ > 0 := by
-      -- a > 0, b < 0 => -a * b > 0
-      nlinarith
 
 -- ============================================================
 -- PARAMETERIZED INFLATIONARY COSMOLOGY (Realizable Inflaton)

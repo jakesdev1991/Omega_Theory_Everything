@@ -106,10 +106,10 @@ Unchanged limitations are deliberately recorded rather than hidden by renaming.
 
 | Source | Findings / next step |
 |---|---|
-| `OmegaAxioms.lean` | Explicit complex one-space and Unit regions; zero information and stress quantities, placeholder powers/commutator/limit. Positive information, perfect overlap and nonzero asymmetry premises are unrealizable in the minimal model. Added `InformationNetwork` abstract specification and the `BinaryRegion.binaryNetwork` concrete witness with strictly positive mutual information, non-zero separation, and bounded overlap. |
-| `OmegaUnifiedFoundation.lean` | Modular flow is zero and lacks a zero-time identity law; KMS always true; QFIM zero. Main retired the misleading named volume/cross-volume aliases; the baseline is now empty. Symplectic closedness field is not exterior-derivative closedness. Requires model-interface redesign. |
+| `OmegaAxioms.lean` | Explicit complex one-space and Unit regions; zero information and stress quantities, placeholder powers/commutator/limit. Positive information, perfect overlap and nonzero asymmetry premises are unrealizable in the minimal model, so the vacuous-hypothesis bridges `log_ratio_nonpos`, `log_inequality_from_DPI` and `perfect_overlap_identifies_regions` were retired in favor of the genuine `InformationNetwork` restatements (`log_ratio_nonpos`, `log_inequality_of_multiplicative_DPI`, `overlap_one_identifies`) with the `BinaryRegion.binaryNetwork` witness. |
+| `OmegaUnifiedFoundation.lean` | Modular flow is zero and lacks a zero-time identity law; KMS always true; QFIM zero. The misleading named volume/cross-volume aliases remain retired (baseline empty). Structure law-fields are now named `law_*` (formerly `axiom_*`), making explicit that they are model laws carried as data, not postulates; `audit_vacuity.py` now rejects any `axiom_*`/`*_axiom` declaration or field name. Symplectic closedness field is not exterior-derivative closedness. Requires model-interface redesign. |
 | `OmegaDimensionalHierarchy.lean` | Import-only compatibility module; no dimensional hierarchy is constructed here. |
-| `OmegaProtocol.lean` | Mostly wrappers; some genuine Vol01/04 mathematics, many degenerate or hypothesis-only conclusions. Wrapper names do not strengthen imported statements. Vol30/38 wrappers now expose positive-parameter models; misleading game-theory wrapper names have explicit scope notes. |
+| `OmegaProtocol.lean` | Delegation layer. All 44 former `*_axiom`/`axiom_*` names were renamed after the content they prove (e.g. `handshaking_lemma`, `feedback_convergence`, `hadamard_unitary`), duplicates were removed (`axiom_gauge_symmetry`, `contextuality`, `axiom_information_preservation`), and the vacuous delegations were restated over non-degenerate models (Vol15 fluid, Vol22 networks, Vol27 `IntegratedSystem`, Vol44/Vol48 parameterized structures, Vol09 separability dictionary). The P→P `schrodinger_equation` wrapper was removed. Wrapper names do not strengthen imported statements. |
 | `InformationPhysics.lean` | Positive environmental constants and model-dependent energy/mass bookkeeping. Added linearity, strict monotonicity, conversion conservation and output feasibility. Non-ideal Erasure now includes explicit nonnegative excess costs, sharp saturation/zero-cost criteria, batch decomposition and exact aggregate/prefix affordability. The ideal mass/scale API is unchanged. Next: connect excess cost and lower-bound assumptions to an actual thermodynamic protocol; no microscopic derivation is claimed. |
 | `DynamicPlanckScale.lean` | Positive chosen density profile; added global upper bound, contraction iff positive density, baseline iff nonpositive density, and positive-domain identifiability. Next: boundary continuity and limit at infinity. |
 | `DynamicCODScale.lean` | Chosen sqrt profile; added physical-domain injectivity, exact endpoint converses, squared-overlap recovery, evenness and failure of global injectivity. Outside [-1,1], Lean sqrt truncates to zero; no global physical interpretation. |
@@ -127,37 +127,37 @@ Unchanged limitations are deliberately recorded rather than hidden by renaming.
 |---|---|
 | `Vol01_ClassicalMechanics.lean` | Substantive symplectic/derivative/energy/action algebra; legacy commutator is a singleton operation and mass is zero. Next: general Poisson Jacobi under smoothness and strict action equality cases. |
 | `Vol02_Electromagnetism.lean` | Upgraded `Spacetime` to 4D Minkowski coordinates $(t,x,y,z)$ and `DifferentialForm n` to algebraic components over basis forms, eliminating all Unit stubs while proving gauge invariance and homogeneous Maxwell equations. |
-| `Vol03_Thermodynamics.lean` | Retained modular-theory KMS bridge; added macroscopic `ThermoState` with positive temperature and entropy, proving reversible Clausius equality $\Delta S = Q/T$, formulated `HeatEngine` with Carnot efficiency bound $\eta_{\text{Carnot}} = 1 - T_C/T_H$, and benchmarked the exact `idealCarnotEngine`. |
-| `Vol04_QuantumMechanics.lean` | Projection/Born and Cauchy–Schwarz arguments are mathematical; StateSpace is only complex one-space. Time derivative is zero and Schrödinger conclusion is a hypothesis. The Robertson header overclaim (audit H1) is corrected: only the variance bound and Im-part lemma are proven. Next: general Hilbert space, the missing commutator link, and actual time derivatives. |
+| `Vol03_Thermodynamics.lean` | The P→P `kms_transitivity`/`zeroth_law` (which hypothesized `β₁ = β₂` and concluded it) now take the KMS-temperature uniqueness law as a genuine hypothesis over every state, so the shared system transfers temperature agreement. Retained macroscopic `ThermoState`/`HeatEngine` Carnot content. The modular-theory bridge still evaluates in the zero model. |
+| `Vol04_QuantumMechanics.lean` | Projection/Born and Cauchy–Schwarz arguments are mathematical; StateSpace is only complex one-space. The P→P `schrodinger_equation` theorem (hypothesis restated as conclusion) was removed; the Schrödinger equation is documented as a model postulate only. The Robertson header overclaim (audit H1) remains corrected: only the variance bound and Im-part lemma are proven. Next: general Hilbert space, the missing commutator link, and actual time derivatives. |
 | `Vol05_GeneralRelativity.lean` | Retained minimal zero-curvature tensor model; added `SphericallySymmetricSpacetime` with positive mass $M > 0$, horizon radius $r_s = 2GM$, strictly positive exterior lapse $f(r) > 0$, and non-vanishing Kretschmann scalar invariant $K = 48 G^2 M^2 / r^6 > 0$, benchmarking the unit Schwarzschild black hole. |
 | `Vol06_QuantumFieldTheory.lean` | Upgraded `SpacetimeRegion` to 1D intervals $[x_{\min}, x_{\max}]$ with genuine spatial inclusion and disjoint spacelike separation; proved non-vacuous microcausality on realized intervals $[0, 1]$ and $[2, 3]$. Upgraded gauge groups `SU3`, `SU2`, `U1` from Unit to phase parameterizations. |
 | `Vol07_Cosmology.lean` | Retained static minimal model; introduced `FLRWUniverse` with positive scale factor, expansion rate $H > 0$, and density $\rho > 0$. Proved strict positivity of critical density $\rho_c = 3H^2/(8\pi G)$, exact First Friedmann equivalence $H^2 = (8\pi G/3)\rho \iff \rho = \rho_c$, and positive cosmological redshift under expanding scale factors. |
 | `Vol08_BlackHoleThermodynamics.lean` | Replaced Unit geometry with `BHGeometry` parameterized by positive mass, surface gravity, horizon area, angular velocity, and electric potential. Proved strict positivity of Hawking temperature and Bekenstein-Hawking entropy, exact first law equivalence, and benchmarked `standardSchwarzschild` ($T_H = 1/(8\pi), S_{BH} = 4\pi$). |
-| `Vol09_HolographicPrinciple.lean` | Replaced zero-area stub with Ryu-Takayanagi minimal surface homologous to black hole horizons, proving exact holographic equality $S_{CFT} = S_{BH}$ across Vol08 and Vol09. |
+| `Vol09_HolographicPrinciple.lean` | Ryu-Takayanagi minimal surface homologous to black hole horizons with the (definitional) holographic equality $S_{CFT} = S_{BH}$ across Vol08 and Vol09. The poisoned `EPR_Entanglement := False` well (audit H2) was replaced by an honest two-qubit separability model: `IsProduct`, `Entangled`, `correlationDet`, product ⇒ det = 0, det ≠ 0 ⇒ entangled, and the Bell-state witness realizing both sides of the ER=EPR dictionary; only the sound direction (bridge ⇒ entanglement) is claimed. |
 | `Vol10_StandardModel.lean` | Generation count and singleton gauge carriers remain legacy parameters. The field carrier is now real, and all signed quartic minimizers are classified as ±v. Nonnegative amplitude gives uniqueness at +v. Next: a genuine complex doublet and gauge action; no full Standard Model is derived. |
 | `Vol11_CondensedMatter.lean` | Added square completion, sharp lower-bound equality, attainable branches and full minimizer characterization for positive quartic/nonpositive quadratic coefficients. Upgraded `BrillouinZone` to coordinates on $\mathbb{R}^2$ and added `ChernBand` with integer topological index $C \in \mathbb{Z}$, proving Hall conductance quantization $\sigma_{xy} = C (e^2/h)$ and benchmarked the $C = 1$ Haldane band. |
 | `Vol12_QuantumInformation.lean` | Replaced Unit by two complex amplitudes and the Hermitian overlap. A normalized (3/5,4/5) witness obstructs universal overlap copying. Upgraded `QubitSystem` from `Unit` to a parameterized structure with qubit count, non-negative entanglement, and capacity $n \ln 2$; proved capacity bound and benchmarked the 2-qubit Bell pair. |
 | `Vol13_QuantumGravity.lean` | Upgraded `SpinNetwork` to a finite node/edge configuration with LQG minimal area gap $A_{\text{min}} > 0$; upgraded `Graviton` to spin-2 states with helicities $\pm 2$ and distinct chirality witness. Retained Wheeler-DeWitt Hamiltonian balance. |
 | `Vol14_DarkSector.lean` | Retained (0,0,1) constants for legacy compatibility; added parameterized `CosmicDensityBudget` on the 2-simplex with explicit non-negativity, matter-dark energy complement, strict upper bounds, and concrete benchmark `standardLCDM` (0.05, 0.26, 0.69). |
-| `Vol15_EarlyUniverse.lean` | Retained minimal acceleration theorem; added `CosmologicalFluid` with density, pressure, equation of state $w = p/\rho$, and acceleration source $\rho + 3p$. Proved $\rho + 3p < 0$ whenever $w < -1/3$, strictly positive Friedmann acceleration under $G > 0$, and concrete de Sitter vacuum benchmark $w = -1, \rho + 3p = -2$. |
+| `Vol15_EarlyUniverse.lean` | The legacy `inflation_acceleration` (hypothesis $\rho + 3p < 0$ unsatisfiable over the zero Vol07 model) was retired. `CosmologicalFluid` carries the genuine content: equation of state $w = p/\rho$, $\rho + 3p < 0$ whenever $w < -1/3$, strictly positive Friedmann acceleration under $G > 0$, and the de Sitter vacuum benchmark $w = -1, \rho + 3p = -2$. |
 | `Vol16_NonEquilibriumThermodynamics.lean` | Replaced zero functions with EntropyProcess and a HasDerivAt balance hypothesis. Isolation implies monotonicity, positive production implies strict growth, and initial nonnegativity propagates forward. An entropy-exporting witness defeats monotonicity without controlled flux. Next: derive balance/production assumptions from a thermodynamic system. |
 | `Vol17_FluidDynamics.lean` | Replaced zero quantities with a positive FluidTrajectory satisfying material continuity at the derivative level. Incompressibility implies constant density across times; pointwise zero rate iff zero divergence uses strict positivity. Exponential decay at unit divergence witnesses nonconstant behavior. Next: actual spatial velocity fields/PDEs and vacuum handling. |
 | `Vol18_StatisticalMechanics.lean` | Two-state Boltzmann model is nontrivial. Added derived partition positivity, unconditional normalization and strict probability bounds; next: arbitrary finite ensembles. |
-| `Vol19_ComplexSystems.lean` | Retained legacy minimal definitions; introduced `ComplexState` with microscopic degrees of freedom and order parameter, macroscopic entropy functional, provable information gain under entropy increase, concrete emergence witness with $\Delta S = 2$, and positive emergent mutual information from subadditivity. |
+| `Vol19_ComplexSystems.lean` | The legacy zero-entropy cluster (`SystemState`, `ComplexityEntropy := 0`, `emergent_information_gain`, a P→P tautology) was retired. `ComplexState` carries the content: microscopic degrees of freedom and order parameter, macroscopic entropy functional, provable information gain under entropy increase, concrete emergence witness with $\Delta S = 2$, and positive emergent mutual information from subadditivity. |
 | `Vol20_ChaosTheory.lean` | Retained static Lyapunov condition; introduced `ExpandingMap` discrete dynamical systems with expansion factor $\sigma > 1$, proving step-wise strict separation growth and concrete 3-step divergence on the doubling map ($\sigma = 2$). |
 | `Vol21_ArrowOfTime.lean` | Now reuses Vol16 entropy histories and actual derivatives; ordering requires rate/isolation hypotheses. Initial entropy nonnegativity is explicit. Removed the spurious time/latency identification. Next: a specified cosmological system; this remains a conditional entropy arrow, not a derivation of time orientation. |
-| `Vol22_EREqualsEPR.lean` | Retained legacy singleton bridge; added `NetworkER_EPR` connecting general `InformationNetwork` to geometric throat area, proving that capacity saturation ($I = I_{\max}$) yields vanishing throat distance and ideal bridge formation, with concrete realization on `BinaryRegion.binaryNetwork`. |
+| `Vol22_EREqualsEPR.lean` | The legacy `Φ = 1` theorems (unsatisfiable in the zero model) were retired and replaced by network versions: `perfect_overlap_same_entity` and `persistent_perfect_overlap_same_entity` under an explicit strict-separation law, plus the retained `NetworkER_EPR` capacity-overlap bridge ($I = I_{\max}$ ⇒ vanishing throat) with the `BinaryRegion.binaryNetwork` realization. |
 | `Vol23_MeasurementProblem.lean` | Retained minimal density alias; introduced `QubitState` parameterizing 2-level density matrices with positive populations $p_0, p_1 \ge 0$, normalization $p_0 + p_1 = 1$, and positive semidefiniteness $c^2 \le p_0 p_1$. Proved state purity bound $\text{Tr}(\rho^2) \le 1$, trace preservation under dephasing channels, monotonic coherence decay $|c'| \le |c|$, complete basis projection at $\lambda = 0$, and benchmarked the pure plus state decohering to a mixed state of purity $1/2$. |
 | `Vol24_NonLocality.lean` | Retained scalar Tsirelson comparison; introduced `CHSHSystem` with bounded correlation expectation values, proved the local realism bound $|S| \le 2$ via algebraic factorization, and formulated the entangled singlet state `singletBellSystem` attaining the Tsirelson bound $2\sqrt{2}$ and violating the classical limit. |
 | `Vol25_BlackHoleInformation.lean` | Corrected the marginal-sum model: joint entropy is separate; nonnegativity, Araki–Lieb difference bound and joint purity are explicit hypotheses. Derived equal marginals and endpoint iff; added positive-marginal witness. Next: derive the assumed inequality from density matrices and construct dynamics. |
 | `Vol26_NetworkTheory.lean` | Replaced the definitional identity with a finite SimpleGraph bundle, independent neighbor/edge counts, degree-sum theorem, odd-degree parity and a degree-floor bound. Empty graphs and a one-edge/two-vertex graph are witnessed. Next: path/connectivity and weighted information-bearing edges. |
-| `Vol27_Consciousness.lean` | Retained scalar asymmetry bounds; introduced `IntegratedSystem` formalizing Tononi's Integrated Information Theory via subadditive bipartite entropy partitions ($H_{AB} \le H_A + H_B$). Proved nonnegativity of $\Phi \ge 0$, strict positivity under genuine integration, and witnessed the `corticalComplex` with non-zero information integration ($\Phi = 0.8$) and forward flux asymmetry. |
+| `Vol27_Consciousness.lean` | The vacuous `asymmetryTensor ≠ 0` theorems were retired. `IntegratedSystem` (subadditive bipartite entropy partitions) carries the content: $\Phi \ge 0$, strict positivity under genuine integration, the `corticalComplex` witness ($\Phi = 0.8$), and an honestly scoped `Experiences` dictionary with `experiences_of_strict_integration`. |
 | `Vol28_EvolutionaryAlgorithms.lean` | Real OneMax list model. Added exact maximum fitness and domination of both parents; next: population-level elitist invariants. |
 | `Vol29_EcosystemDynamics.lean` | Lotka–Volterra equilibrium is substantive algebra under nonzero parameters. Added full classification: with all rates nonzero every equilibrium is extinction or coexistence; coexistence is positive under positive rates. Next: stability analysis. |
 | `Vol30_PlanetarySystems.lean` | Replaced the zero-denominator model with positive-parameter KeplerSystem and a chosen sqrt period formula. Added period positivity, endpoint iff, strictly increasing periods and a positive-radius ratio law. Next: derive this relation from actual two-body dynamics; no ODE derivation is claimed. |
 | `Vol31_GameTheory.lean` | Concrete prisoner’s-dilemma table now has a full pure-Nash predicate, unique equilibrium classification, strict dominance and a separate Pareto-superiority result. Next: explicitly modeled repeated-game dynamics, not evolution-of-cooperation claims from a static table. |
 | `Vol32_Cybernetics.lean` | Added a scalar feedback trajectory, step equation and actual convergence for 0 ≤ gain < 1. Nonzero initial states at gain one provably do not decay. Next: disturbed or time-varying gains and multidimensional stability. |
-| `Vol33_AGI.lean` | Retained pointwise demand-domination profile model; added `BoundedAgent` formalizing finite resource-bounded multi-task agents subject to budget constraint $\sum c_i \le B$ and task efficiencies $\eta_i > 0$. Proved nonnegativity of utilities, aggregate zero performance when idle, and constructed the `dualTaskAgent` witness achieving total utility 25 under budget 10. |
+| `Vol33_AGI.lean` | Retained pointwise demand-domination profile model and `BoundedAgent` (budget $\sum c_i \le B$, efficiencies $\eta_i > 0$, utilities nonnegative, idle ⇒ zero performance, `dualTaskAgent` witness with utility 25). The vacuous `agi_integration_pos` bridge (hypothesis unrealizable in the zero model) was retired. |
 | `Vol34_QuantumComputing.lean` | Two-symbol gate algebra, not matrices or arbitrary quantum circuits. Next: faithful unitary matrix interpretation. |
 | `Vol35_TheoryOfComputation.lean` | Cantor diagonal is genuine. Added explicit toy computability semantics (`Machine` over ℕ configs): halting propagation, bounded-halt decidability, halting/immediate-loop witnesses, and a halting diagonal theorem. Not a Turing-machine equivalence. Next: complexity bounds. |
 | `Vol36_ToposTheory.lean` | Excluded middle is plain classical logic. Added a concrete skeletal FinSet category (objects ℕ, maps `Fin m → Fin n`): category laws, terminal object, binary products, equalizers, exponentials, and characteristic maps for decidable subsets. Pullback-based subobject classification is still not formalized. |
@@ -168,17 +168,17 @@ Unchanged limitations are deliberately recorded rather than hidden by renaming.
 | `Vol41_PostBiologicalEvolution.lean` | Finite three-substrate cost model, with genuine triangle/separation checks. Next: compose longer paths; physical costs remain stipulated. |
 | `Vol42_StellarEngineering.lean` | Recurrence and fractional capture inequalities have content. Capture bound lacks a lower fraction bound for nonnegativity. Next: fraction in [0,1] and resource conservation. |
 | `Vol43_GalacticEcosystems.lean` | Symmetric irreflexive adjacency has content, but indices need not lie below stars. Next: vertices indexed by Fin stars and actual paths. |
-| `Vol44_UniversalExpansion.lean` | Added `DeSitterSpace` with variable positive Λ and G: positive horizon radius/area/entropy, exact scaling law `S = 3π/(GΛ)`, antitonicity in Λ at fixed G, and the unit benchmark `S = 3π`. Still static horizon thermodynamics, not cosmic dynamics. |
+| `Vol44_UniversalExpansion.lean` | The fixed-Λ legacy cluster (`Lambda_positive := 1` and its derived constants) was retired, leaving `DeSitterSpace` (variable positive Λ and G) as the module's single Λ-notion: positive horizon radius/area/entropy, exact scaling law `S = 3π/(GΛ)`, antitonicity in Λ at fixed G, unit benchmark `S = 3π`. Still static horizon thermodynamics, not cosmic dynamics. |
 | `Vol45_MultiverseTheory.lean` | Binary syntax tree with depth and doubling weight. Weight is not a normalized probability. Next: finite-level counts/measures. |
 | `Vol46_SimulationHypothesis.lean` | Unary layer syntax ordered by depth. Does not establish simulated reality. Next: prove order/level classification and executable resource bounds. |
 | `Vol47_TranscendentArchitectures.lean` | Four stipulated energy tiers; finite case analysis. Next: parameterized resource model with feasibility conditions. |
-| `Vol48_ExtraDimensions.lean` | Added `Compactification` with variable positive bulk coupling and volume: `Geff = G/V` positivity, inverse law, antitonicity in volume, large-volume weak-coupling limit, and the unit benchmark. Dimensional-reduction algebra, not a compactification derivation. |
+| `Vol48_ExtraDimensions.lean` | The fixed-constant legacy cluster (`G_higherdim := 1`, `CompactVolume := 1`, `G_effective`) was retired, leaving `Compactification` (variable positive bulk coupling and volume) as the single coupling-notion: `Geff = G/V` positivity, inverse law, antitonicity in volume, large-volume weak-coupling limit, unit benchmark. Dimensional-reduction algebra, not a compactification derivation. |
 | `Vol49_QuantumReferenceFrames.lean` | Replaced Unit by norm-one complex phases. Ratio transformations compose, have inverse round trips and preserve norms; ±1 phases give a nonidentity witness. Next: multidimensional unitary frames and observer semantics. |
 | `Vol50_UltimateEnsemble.lean` | Inhabited carrier bundle plus Cantor diagonal theorem on Boolean sequences. The diagonal theorem is not directly about enumeration of the bundle. Next: precise universe/encoding statement. |
 | `Vol51_ClosedTimelikeCurves.lean` | Three-state transition system has a unique fixed point and settles in two steps. Next: general finite transition-system convergence, not spacetime causality claims. |
 | `Vol52_OmegaPointTheory.lean` | Natural-number complexity chain has no terminal stage. Does not prove a physical final singularity. Next: distinguish unbounded discrete growth from finite-time blow-up. |
 | `Vol53_UniversalCompiler.lean` | Added proof that every current program is input-independent and identity is unrepresentable. Next: input constructor, semantics-preserving compilation, then an explicit universality target. |
-| `Vol54_TheoryOfNothing.lean` | Legacy metric-reflexivity proposition retained for compatibility. Added the universal property of the empty type: no points, vacuous truth, unique maps out of `Empty`. No metaphysical existence conclusion follows. |
+| `Vol54_TheoryOfNothing.lean` | The legacy proposition is now `absolute_nothingness_of_zero_model` (renamed from `theory_of_nothing_axiom`): the zero model satisfies `AbsoluteNothingness` because every region is at zero self-distance — a structural fact, not a metaphysical conclusion. The universal property of the empty type is retained: no points, vacuous truth, unique maps out of `Empty`. |
 
 ## Second-pass changes and compatibility notes
 
@@ -413,3 +413,62 @@ Along the way the PR also repaired PR #46's merge damage
 (stranded top-level sections re-nested in Vol03/05/07/22/23/24/27/33,
 missing `noncomputable` markers, `λ` parse errors, and 17 missing
 `ProofRegression` imports), so `main` goes from red back to green.
+
+## Eighth-pass changes: P1 remediation — honest names, realizable hypotheses
+
+This pass completes the P1 items left open by the adversarial audit's
+remediation log (R.5): vacuous-hypothesis patterns, the `*_axiom`
+renames, the Λ/G fixed-constant reconciliation, and the naming-convention
+gate. It is the closing pass of the corpus "tightening" program; no gate
+was disabled, and every ratchet only tightened.
+
+- **Gate hardening (`audit_vacuity.py`)**: new `--max-axiom-names` metric —
+  no theorem, lemma, definition, or structure field/assignment may be
+  *named* `axiom_*`/`*_axiom`. The corpus contains zero Lean `axiom`
+  primitives, so such names misrepresent kernel-checked theorems or
+  model-law fields as postulates. CI now runs it at 0; two fixture tests
+  cover detection and prose/`law_*` exemption. Local count: 70 → 0.
+- **`*_axiom` renames (70 total)**: all 44 protocol delegations renamed
+  after the content they prove (`handshaking_lemma`,
+  `feedback_convergence`, `hadamard_unitary`, `cantor_diagonal`,
+  `turing_instability_ratio`, `wheeler_dewitt_balance`, ...); 13
+  foundation law-fields `axiom_*` → `law_*` (they are model laws carried
+  as structure data); 10 volume witness theorems renamed
+  (`great_filter_witness`, `dyson_sphere_witness`, `omega_point_exists`,
+  ...); three pure duplicates deleted (`axiom_gauge_symmetry`,
+  `contextuality`, `axiom_information_preservation`).
+- **Vacuous-hypothesis retirements (audit H2)**: the unsatisfiable-in-model
+  premises (`mutualInformation > 0`, `Φ = 1`, `asymmetryTensor ≠ 0`,
+  `EnergyDensity + 3·Pressure < 0`, `ComplexityEntropy B > … A`) are gone.
+  Genuine restatements over non-degenerate models:
+  `InformationNetwork.log_ratio_nonpos`,
+  `InformationNetwork.log_inequality_of_multiplicative_DPI` (the
+  log-triangle ingredient), `InformationNetwork.overlap_one_identifies`
+  (strict-separation law), Vol22 network `perfect_overlap_same_entity`
+  and persistent version, Vol15 fluid acceleration, Vol27
+  `IntegratedSystem` positivity plus the honestly scoped `Experiences`
+  dictionary.
+- **P→P removals (audit H3)**: `Vol04.schrodinger_equation` and its
+  protocol wrapper (hypothesis restated as conclusion) deleted; the
+  equation is documented as a model postulate. Vol03
+  `kms_transitivity`/`zeroth_law` now take KMS-temperature uniqueness as
+  a genuine hypothesis over every state instead of assuming `β₁ = β₂`.
+  Vol19's zero-entropy legacy cluster retired.
+- **Vol09 poisoned well removed (audit H2)**: `EPR_Entanglement := False`
+  and the `Iff.rfl` "equivalence" replaced by a two-qubit separability
+  model — `IsProduct`, `Entangled`, `correlationDet`, product ⇒ det = 0,
+  det ≠ 0 ⇒ entangled, Bell-state witness on both sides; only the sound
+  ER⇒EPR direction is claimed.
+- **Λ/G reconciliation**: Vol44's fixed `Λ := 1` cluster and Vol48's
+  fixed `G := 1, V := 1` cluster retired; each module now has exactly one
+  Λ/G notion (the `DeSitterSpace`/`Compactification` structure fields),
+  and the protocol delegates to the parameterized theorems.
+- **Kernel inventory**: 142 → 155 selected declarations (the new network,
+  separability, fluid, dictionary, and structure theorems).
+
+Local validation: 41 Python/tooling tests (two new), `audit_axioms --max 0`
+clean, `audit_vacuity` clean at all-zero ratchets including the new
+axiom-name gate, CI grep gate clean, ruff/mypy clean. The pinned Lean
+kernel build and transitive-axiom gate run in CI on this branch (no local
+Lean toolchain is obtainable in this environment; see the Lean CI status
+on the PR).
