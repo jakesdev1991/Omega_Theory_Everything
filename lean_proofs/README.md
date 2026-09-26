@@ -389,4 +389,6 @@ interpreted as actual storage mass or general irreversible erasure cost.
   Vol04 Robertson header overclaim is corrected (comment-only).
 - Ten regression examples and ten kernel-audit targets added
   (142 selected declarations). All changes are additive; no protocol
-  signatures changed. Kernel validation is pending CI on this branch.
+  signatures changed. Kernel validation passes on PR #47 (Lean CI
+  run 36270581122, 2026-09-26): full build green, all 142 targets
+  resolve with zero unexpected axioms.

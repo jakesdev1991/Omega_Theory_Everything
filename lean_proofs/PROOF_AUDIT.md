@@ -406,5 +406,10 @@ its name and signature, and no Lake roots or `ToE` imports changed.
 
 Local validation: 39 Python/tooling tests, axiom/vacuity/trivial audits
 all clean, CI grep gate clean. The pinned Lean kernel build and the
-live transitive-axiom gate are pending CI on the PR for this branch;
-nothing here is claimed kernel-checked until that passes.
+live transitive-axiom gate both pass on PR #47 (Lean CI run
+36270581122, 2026-09-26): full `lake build ToE` green, all 142
+kernel-audit declarations resolve with zero unexpected axioms.
+Along the way the PR also repaired PR #46's merge damage
+(stranded top-level sections re-nested in Vol03/05/07/22/23/24/27/33,
+missing `noncomputable` markers, `λ` parse errors, and 17 missing
+`ProofRegression` imports), so `main` goes from red back to green.
