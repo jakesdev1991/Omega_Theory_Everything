@@ -1,0 +1,20 @@
+[Unit]
+Description=Omega Nostr Relay (Chorus) - sovereign backplane for the Omega economy
+Documentation=https://github.com/mikedilger/chorus
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/home/jake/omega_nostr_build/chorus/target/release/chorus /home/jake/.config/omega-nostr/chorus.conf
+EnvironmentFile=-/home/jake/.config/omega-nostr/keys/env.sh
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/jake/omega_data/nostr
+
+[Install]
+WantedBy=default.target

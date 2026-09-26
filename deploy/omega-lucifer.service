@@ -1,0 +1,19 @@
+[Unit]
+Description=Omega Lucifer NIP-90 executor node (DVM daemon)
+After=omega-nostr-relay.service
+Wants=omega-nostr-relay.service
+
+[Service]
+Type=simple
+EnvironmentFile=-/home/jake/.config/omega-nostr/keys/env.sh
+Environment=LUCIFER_RELAYS=wss://ryzenvoid:8080
+Environment=NODE_EXTRA_CA_CERTS=/home/jake/.config/omega-nostr/tls/omega-ca-cert.pem
+ExecStart=/usr/bin/node /home/jake/Omega_Theory_Everything/mobile-node/lucifer-daemon.mjs
+WorkingDirectory=/home/jake/Omega_Theory_Everything/mobile-node
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=default.target

@@ -6,11 +6,13 @@ import Link from "next/link";
 
 import { Section } from "@/components/Section";
 import { CallToAction } from "@/components/CallToAction";
+import { OmegaVideo } from "@/components/OmegaVideo";
 
 export default function VisionPage() {
   return (
     <>
       <Hero />
+      <OmegaVideo />
       <NameSection />
       <DiagnosisSection />
       <PromisesSection />

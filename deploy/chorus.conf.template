@@ -1,0 +1,41 @@
+# Omega Relay - Chorus configuration template
+#
+# The live config lives at ~/.config/omega-nostr/chorus.conf (NOT committed).
+# The TLS certs are a local CA + host cert for `ryzenvoid` (replaced by Let's
+# Encrypt when a public domain is attached). The admin key is the Omega Nostr
+# root identity (see ~/.config/omega-nostr/keys/env.sh - never committed).
+
+data_directory = "<HOME>/omega_data/nostr/chorus"
+ip_address = "0.0.0.0"          # LAN for now; bind to the public IP when exposed
+port = 8080
+hostname = "ryzenvoid"           # the DNS name clients will use
+use_tls = true                   # the web contract requires strict wss://
+certchain_pem_path = "<HOME>/.config/omega-nostr/tls/ryzenvoid-fullchain.pem"
+key_pem_path = "<HOME>/.config/omega-nostr/tls/ryzenvoid-privkey.pem"
+
+name = "Omega Relay"
+description = "Sovereign personal relay for the Omega Theory Everything economy: app-store backplane (kinds 31990/30017), NIP-90 job execution, economy receipts."
+privacy_policy = "Events are stored locally on the operator machine and served to Nostr clients. No third-party analytics, no logs of IP beyond abuse-rate limiting."
+terms_of_service = "Experimental personal relay for the Omega economy. No warranty. Do not use for anything value-bearing yet."
+
+open_relay = false               # personal relay: publish needs NIP-42 AUTH as an allowed user
+admin_hex_keys = [ "<ROOT_HEX_PUBKEY>" ]   # from keys/env.sh OMEGA_NOSTR_ROOT_HEX
+
+verify_events = true
+allow_scraping = false
+allow_scrape_if_limited_to = 100
+allow_scrape_if_max_seconds = 7200
+
+max_subscriptions = 128
+serve_ephemeral = true
+serve_relay_lists = true
+enable_ip_blocking = true
+minimum_ban_seconds = 1
+timeout_seconds = 60
+max_connections_per_ip = 5
+throttling_bytes_per_second = 1024576
+throttling_burst = 16777216
+
+blossom_directory = "<HOME>/omega_data/nostr/blossom"
+
+enable_negentropy = false
