@@ -128,7 +128,7 @@ Unchanged limitations are deliberately recorded rather than hidden by renaming.
 | `Vol01_ClassicalMechanics.lean` | Substantive symplectic/derivative/energy/action algebra; legacy commutator is a singleton operation and mass is zero. Next: general Poisson Jacobi under smoothness and strict action equality cases. |
 | `Vol02_Electromagnetism.lean` | Upgraded `Spacetime` to 4D Minkowski coordinates $(t,x,y,z)$ and `DifferentialForm n` to algebraic components over basis forms, eliminating all Unit stubs while proving gauge invariance and homogeneous Maxwell equations. |
 | `Vol03_Thermodynamics.lean` | Retained modular-theory KMS bridge; added macroscopic `ThermoState` with positive temperature and entropy, proving reversible Clausius equality $\Delta S = Q/T$, formulated `HeatEngine` with Carnot efficiency bound $\eta_{\text{Carnot}} = 1 - T_C/T_H$, and benchmarked the exact `idealCarnotEngine`. |
-| `Vol04_QuantumMechanics.lean` | Projection/Born and Cauchy–Schwarz arguments are mathematical; StateSpace is only complex one-space. Time derivative is zero and Schrödinger conclusion is a hypothesis. Next: general Hilbert space and actual time derivatives. |
+| `Vol04_QuantumMechanics.lean` | Projection/Born and Cauchy–Schwarz arguments are mathematical; StateSpace is only complex one-space. Time derivative is zero and Schrödinger conclusion is a hypothesis. The Robertson header overclaim (audit H1) is corrected: only the variance bound and Im-part lemma are proven. Next: general Hilbert space, the missing commutator link, and actual time derivatives. |
 | `Vol05_GeneralRelativity.lean` | Retained minimal zero-curvature tensor model; added `SphericallySymmetricSpacetime` with positive mass $M > 0$, horizon radius $r_s = 2GM$, strictly positive exterior lapse $f(r) > 0$, and non-vanishing Kretschmann scalar invariant $K = 48 G^2 M^2 / r^6 > 0$, benchmarking the unit Schwarzschild black hole. |
 | `Vol06_QuantumFieldTheory.lean` | Upgraded `SpacetimeRegion` to 1D intervals $[x_{\min}, x_{\max}]$ with genuine spatial inclusion and disjoint spacelike separation; proved non-vacuous microcausality on realized intervals $[0, 1]$ and $[2, 3]$. Upgraded gauge groups `SU3`, `SU2`, `U1` from Unit to phase parameterizations. |
 | `Vol07_Cosmology.lean` | Retained static minimal model; introduced `FLRWUniverse` with positive scale factor, expansion rate $H > 0$, and density $\rho > 0$. Proved strict positivity of critical density $\rho_c = 3H^2/(8\pi G)$, exact First Friedmann equivalence $H^2 = (8\pi G/3)\rho \iff \rho = \rho_c$, and positive cosmological redshift under expanding scale factors. |
@@ -153,32 +153,32 @@ Unchanged limitations are deliberately recorded rather than hidden by renaming.
 | `Vol26_NetworkTheory.lean` | Replaced the definitional identity with a finite SimpleGraph bundle, independent neighbor/edge counts, degree-sum theorem, odd-degree parity and a degree-floor bound. Empty graphs and a one-edge/two-vertex graph are witnessed. Next: path/connectivity and weighted information-bearing edges. |
 | `Vol27_Consciousness.lean` | Retained scalar asymmetry bounds; introduced `IntegratedSystem` formalizing Tononi's Integrated Information Theory via subadditive bipartite entropy partitions ($H_{AB} \le H_A + H_B$). Proved nonnegativity of $\Phi \ge 0$, strict positivity under genuine integration, and witnessed the `corticalComplex` with non-zero information integration ($\Phi = 0.8$) and forward flux asymmetry. |
 | `Vol28_EvolutionaryAlgorithms.lean` | Real OneMax list model. Added exact maximum fitness and domination of both parents; next: population-level elitist invariants. |
-| `Vol29_EcosystemDynamics.lean` | Lotka–Volterra equilibrium is substantive algebra under nonzero parameters. Next: classify all equilibria and analyze stability under positive parameters. |
+| `Vol29_EcosystemDynamics.lean` | Lotka–Volterra equilibrium is substantive algebra under nonzero parameters. Added full classification: with all rates nonzero every equilibrium is extinction or coexistence; coexistence is positive under positive rates. Next: stability analysis. |
 | `Vol30_PlanetarySystems.lean` | Replaced the zero-denominator model with positive-parameter KeplerSystem and a chosen sqrt period formula. Added period positivity, endpoint iff, strictly increasing periods and a positive-radius ratio law. Next: derive this relation from actual two-body dynamics; no ODE derivation is claimed. |
 | `Vol31_GameTheory.lean` | Concrete prisoner’s-dilemma table now has a full pure-Nash predicate, unique equilibrium classification, strict dominance and a separate Pareto-superiority result. Next: explicitly modeled repeated-game dynamics, not evolution-of-cooperation claims from a static table. |
 | `Vol32_Cybernetics.lean` | Added a scalar feedback trajectory, step equation and actual convergence for 0 ≤ gain < 1. Nonzero initial states at gain one provably do not decay. Next: disturbed or time-varying gains and multidimensional stability. |
 | `Vol33_AGI.lean` | Retained pointwise demand-domination profile model; added `BoundedAgent` formalizing finite resource-bounded multi-task agents subject to budget constraint $\sum c_i \le B$ and task efficiencies $\eta_i > 0$. Proved nonnegativity of utilities, aggregate zero performance when idle, and constructed the `dualTaskAgent` witness achieving total utility 25 under budget 10. |
 | `Vol34_QuantumComputing.lean` | Two-symbol gate algebra, not matrices or arbitrary quantum circuits. Next: faithful unitary matrix interpretation. |
-| `Vol35_TheoryOfComputation.lean` | Valid diagonal non-surjectivity statement; repeated proof. Next: explicit computability semantics before halting/complexity claims. |
-| `Vol36_ToposTheory.lean` | Excluded middle only; no topos/category defined. Next: a concrete category and subobject classifier. |
-| `Vol37_Morphogenesis.lean` | Diffusion constants defined as 1 and 2. Faster inhibitor diffusion alone is not a Turing instability proof. Next: reaction Jacobian and stability conditions. |
+| `Vol35_TheoryOfComputation.lean` | Cantor diagonal is genuine. Added explicit toy computability semantics (`Machine` over ℕ configs): halting propagation, bounded-halt decidability, halting/immediate-loop witnesses, and a halting diagonal theorem. Not a Turing-machine equivalence. Next: complexity bounds. |
+| `Vol36_ToposTheory.lean` | Excluded middle is plain classical logic. Added a concrete skeletal FinSet category (objects ℕ, maps `Fin m → Fin n`): category laws, terminal object, binary products, equalizers, exponentials, and characteristic maps for decidable subsets. Pullback-based subobject classification is still not formalized. |
+| `Vol37_Morphogenesis.lean` | Legacy diffusion comparison retained for compatibility. Added `ReactionSystem` (2-species Jacobian + positive diffusivities): diffusion-driven instability criterion via the minimizing wavenumber, exact inhibitor-faster ratio threshold, and a verified activator-inhibitor witness (stable without diffusion, `dispersion = -9/40` at `k2 = 7/20`). Linear-stability algebra, not a PDE derivation. |
 | `Vol38_Economics.lean` | Replaced zero curves with a LinearMarket with positive slopes/intercept. Derived unique positive equilibrium, positive quantity, choke-price bound and excess-demand sign. Next: nonlinear or clipped curves; total real extensions are not interpreted physically. |
 | `Vol39_SocietalNetworks.lean` | Replaced constants by Vol26 graph counts. No-isolated-vertices explicitly implies n ≤ 2E and the rounded edge bound; the singleton edgeless graph refutes an unconditional version. Next: distinguish reachability/connectivity from the weaker degree assumption. |
 | `Vol40_FermiParadox.lean` | Boolean filter chains and natural-number products are toy combinatorics. Next: survival probabilities and normalization, not physical existence claims. |
 | `Vol41_PostBiologicalEvolution.lean` | Finite three-substrate cost model, with genuine triangle/separation checks. Next: compose longer paths; physical costs remain stipulated. |
 | `Vol42_StellarEngineering.lean` | Recurrence and fractional capture inequalities have content. Capture bound lacks a lower fraction bound for nonnegativity. Next: fraction in [0,1] and resource conservation. |
 | `Vol43_GalacticEcosystems.lean` | Symmetric irreflexive adjacency has content, but indices need not lie below stars. Next: vertices indexed by Fin stars and actual paths. |
-| `Vol44_UniversalExpansion.lean` | Positive de Sitter entropy for a fixed positive Lambda; not a dynamical expansion theorem. Next: variable positive Lambda. |
+| `Vol44_UniversalExpansion.lean` | Added `DeSitterSpace` with variable positive Λ and G: positive horizon radius/area/entropy, exact scaling law `S = 3π/(GΛ)`, antitonicity in Λ at fixed G, and the unit benchmark `S = 3π`. Still static horizon thermodynamics, not cosmic dynamics. |
 | `Vol45_MultiverseTheory.lean` | Binary syntax tree with depth and doubling weight. Weight is not a normalized probability. Next: finite-level counts/measures. |
 | `Vol46_SimulationHypothesis.lean` | Unary layer syntax ordered by depth. Does not establish simulated reality. Next: prove order/level classification and executable resource bounds. |
 | `Vol47_TranscendentArchitectures.lean` | Four stipulated energy tiers; finite case analysis. Next: parameterized resource model with feasibility conditions. |
-| `Vol48_ExtraDimensions.lean` | Higher-dimensional coupling and volume fixed to one. Next: positive variable volume and inverse monotonicity. |
+| `Vol48_ExtraDimensions.lean` | Added `Compactification` with variable positive bulk coupling and volume: `Geff = G/V` positivity, inverse law, antitonicity in volume, large-volume weak-coupling limit, and the unit benchmark. Dimensional-reduction algebra, not a compactification derivation. |
 | `Vol49_QuantumReferenceFrames.lean` | Replaced Unit by norm-one complex phases. Ratio transformations compose, have inverse round trips and preserve norms; ±1 phases give a nonidentity witness. Next: multidimensional unitary frames and observer semantics. |
 | `Vol50_UltimateEnsemble.lean` | Inhabited carrier bundle plus Cantor diagonal theorem on Boolean sequences. The diagonal theorem is not directly about enumeration of the bundle. Next: precise universe/encoding statement. |
 | `Vol51_ClosedTimelikeCurves.lean` | Three-state transition system has a unique fixed point and settles in two steps. Next: general finite transition-system convergence, not spacetime causality claims. |
 | `Vol52_OmegaPointTheory.lean` | Natural-number complexity chain has no terminal stage. Does not prove a physical final singularity. Next: distinguish unbounded discrete growth from finite-time blow-up. |
 | `Vol53_UniversalCompiler.lean` | Added proof that every current program is input-independent and identity is unrepresentable. Next: input constructor, semantics-preserving compilation, then an explicit universality target. |
-| `Vol54_TheoryOfNothing.lean` | AbsoluteNothingness is defined as metric reflexivity. Next: a meaningful formal proposition; no metaphysical existence conclusion follows. |
+| `Vol54_TheoryOfNothing.lean` | Legacy metric-reflexivity proposition retained for compatibility. Added the universal property of the empty type: no points, vacuous truth, unique maps out of `Empty`. No metaphysical existence conclusion follows. |
 
 ## Second-pass changes and compatibility notes
 
@@ -379,3 +379,32 @@ Both Kepler formulations remain: the positive-parameter model keeps
 The selected kernel inventory is now 80 declarations, including both of those
 imported results and two RadialDilation results. Combined-revision Lean CI and the full repository CI have passed.
 The draft PR is conflict-free; no PR merge into main has been performed.
+
+## Seventh-pass changes: computation, categories, pattern, expansion
+
+This pass clears the remaining legacy-hype cluster (Vol35–37, Vol44,
+Vol48, Vol54), classifies the Vol29 equilibria, and corrects the Vol04
+Robertson header overclaim (adversarial-audit item H1). All changes are
+purely additive: every declaration consumed by `OmegaProtocol.lean` keeps
+its name and signature, and no Lake roots or `ToE` imports changed.
+
+- Vol35 adds a toy computability semantics (`Machine`, `run`, `Halts`)
+  with halting propagation, bounded-halt decidability, halt/loop
+  witnesses, and the halting diagonal theorem `halts_diagonal`.
+- Vol36 adds a skeletal FinSet category with products, equalizers,
+  exponentials and subset characteristic maps. It is honestly scoped:
+  not a full elementary topos.
+- Vol37 adds `ReactionSystem` with the Turing instability criterion,
+  the exact diffusivity-ratio threshold, and a verified witness.
+- Vol44/Vol48 replace fixed constants with variable positive
+  parameters (`DeSitterSpace`, `Compactification`), scaling/inverse
+  laws, antitonicity, and benchmarks.
+- Vol54 adds the empty type's universal property.
+- Vol29 classifies all Lotka–Volterra equilibria under nonzero rates.
+- Ten regression examples and ten kernel-audit targets were added
+  (inventory now 142 selected declarations).
+
+Local validation: 39 Python/tooling tests, axiom/vacuity/trivial audits
+all clean, CI grep gate clean. The pinned Lean kernel build and the
+live transitive-axiom gate are pending CI on the PR for this branch;
+nothing here is claimed kernel-checked until that passes.

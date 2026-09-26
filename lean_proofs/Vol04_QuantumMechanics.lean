@@ -7,8 +7,10 @@ import OmegaUnifiedFoundation
   Genuinely proven theorems:
   1. Born Rule — from projection idempotence + self-adjointness
   2. Cauchy-Schwarz Uncertainty — Var(A)·Var(B) ≥ |⟨u,v⟩|²
-  3. Robertson Uncertainty — full ≥ (|⟨ψ,[A,B]ψ⟩|/2)² via
-     self-adjointness connecting deviation inner product to commutator
+  3. Norm-squared dominates imaginary-part-squared (a complex-number
+     lemma used toward Robertson) — the Robertson commutator
+     corollary ≥ (|⟨ψ,[A,B]ψ⟩|/2)² itself is NOT proven here: the
+     commutator link (steps (b)-(c) below) is missing
   4. Expectation value is real for self-adjoint operators
   5. Projection probabilities are non-negative and ≤ 1
   6. Orthogonal projections give exclusive outcomes
@@ -129,20 +131,19 @@ theorem cauchy_schwarz_variance (A B : Operator) (ψ : StateSpace) :
   linarith
 
 -- ============================================================
--- THEOREM 5: Robertson Uncertainty (GENUINE PROOF)
--- The full uncertainty principle connecting to the commutator:
---   Var(A)·Var(B) ≥ |⟨ψ,[A,B]ψ⟩|²/4
---
--- Proof chain:
--- (a) Cauchy-Schwarz: Var(A)·Var(B) ≥ |⟨u,v⟩|²
+-- THEOREM 5: Toward Robertson Uncertainty (PARTIAL — see below)
+-- The full uncertainty principle connecting to the commutator,
+--   Var(A)·Var(B) ≥ |⟨ψ,[A,B]ψ⟩|²/4,
+-- is NOT proven in this file. Proof chain and its gap:
+-- (a) Cauchy-Schwarz: Var(A)·Var(B) ≥ |⟨u,v⟩|²  [PROVEN above]
 -- (b) Self-adjointness: ⟨u,v⟩ = ⟨(A-⟨A⟩)ψ, (B-⟨B⟩)ψ⟩
---     = ⟨ψ, (A-⟨A⟩)(B-⟨B⟩)ψ⟩ when A is self-adjoint
--- (c) Decompose: (A-⟨A⟩)(B-⟨B⟩) = ½[A',B'] + ½{A',B'}
--- (d) |⟨u,v⟩|² ≥ |Im⟨u,v⟩|² = |⟨ψ,[A,B]ψ⟩|²/4
+--     = ⟨ψ, (A-⟨A⟩)(B-⟨B⟩)ψ⟩ when A is self-adjoint  [MISSING]
+-- (c) Decompose: (A-⟨A⟩)(B-⟨B⟩) = ½[A',B'] + ½{A',B'}  [MISSING]
+-- (d) |⟨u,v⟩|² ≥ |Im⟨u,v⟩|²  [PROVEN below as `norm_sq_ge_im_sq`]
 --
--- We prove (a) above and (d) below: that ‖z‖² ≥ |Im(z)|².
--- The connection (b)-(c) requires the self-adjointness hypothesis
--- applied to the shifted operators.
+-- Only (a) and the complex-number lemma (d) are proven. The
+-- commutator identification in (d)'s right-hand side
+-- (|Im⟨u,v⟩|² = |⟨ψ,[A,B]ψ⟩|²/4) depends on the missing (b)-(c).
 -- ============================================================
 
 /-- Norm squared dominates imaginary part squared.

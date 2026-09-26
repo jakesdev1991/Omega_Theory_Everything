@@ -20,6 +20,13 @@ import Vol31_GameTheory
 import Vol32_Cybernetics
 import Vol38_Economics
 import Vol53_UniversalCompiler
+import Vol29_EcosystemDynamics
+import Vol35_TheoryOfComputation
+import Vol36_ToposTheory
+import Vol37_Morphogenesis
+import Vol44_UniversalExpansion
+import Vol48_ExtraDimensions
+import Vol54_TheoryOfNothing
 
 /-! Boundary and non-degeneracy regression checks. Included in `lake build ToE`. -/
 
@@ -537,3 +544,34 @@ example : Vol33.BoundedAgent.dualTaskAgent.totalUtility = 25 :=
 
 example : 0 < Vol33.BoundedAgent.dualTaskAgent.totalUtility :=
   Vol33.BoundedAgent.dualTask_totalUtility_pos
+
+/-! Computation, categories, pattern, expansion, dimensions, nothing. -/
+
+example (c : ℕ) : Vol35.run Vol35.haltMachine c 1 = none := rfl
+
+example (c : ℕ) : Vol35.run Vol35.loopMachine c 0 = some c := rfl
+
+example (c : ℕ) : Vol35.Halts Vol35.haltMachine c :=
+  Vol35.haltMachine_halts c
+
+example (c : ℕ) : ¬ Vol35.Halts Vol35.loopMachine c :=
+  Vol35.loopMachine_diverges c
+
+example (m n : Vol36.SkelObj) (f : Vol36.SkelHom m n) :
+    Vol36.skelComp (Vol36.skelId m) f = f :=
+  Vol36.skelId_left f
+
+example : Vol37.ReactionSystem.turingWitness.dispersion (7 / 20) = -9 / 40 :=
+  Vol37.ReactionSystem.turingWitness_optimal_value
+
+example : Vol44.DeSitterSpace.unitDeSitter.entropy = 3 * Real.pi :=
+  Vol44.DeSitterSpace.unitDeSitter_entropy
+
+example : Vol48.Compactification.unitCompact.Geff = 1 :=
+  Vol48.Compactification.unitCompact_Geff
+
+example (f g : Empty → Bool) : f = g :=
+  Vol54.ex_nihilo_maps_unique Bool f g
+
+example : Vol29.PreyRate 1 2 0 0 = 0 ∧ Vol29.PredatorRate 3 4 0 0 = 0 :=
+  Vol29.extinction_equilibrium 1 2 3 4
