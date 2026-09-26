@@ -73,5 +73,6 @@ lean_lib ToE where
     `InformationPhysics,
     `DynamicPlanckScale,
     `DynamicCODScale,
-    `RadialMetric
+    `RadialMetric,
+    `RadialDilation
   ]
