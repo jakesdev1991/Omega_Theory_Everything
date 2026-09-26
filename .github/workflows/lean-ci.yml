@@ -5,7 +5,8 @@ name: Lean CI
 
 on:
   push:
-    branches: [main]
+    # Also validate this review snapshot when PR merge conflicts block PR checks.
+    branches: [main, arena/01a0dc87-omega-theory-everything]
     paths:
       - 'lean_proofs/**'
       - '.github/workflows/lean-ci.yml'
