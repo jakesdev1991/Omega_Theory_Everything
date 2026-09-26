@@ -27,7 +27,9 @@ theorem frame_compose (A B C : ReferenceFrame) :
     FrameTransform A C = FrameTransform B C ∘L FrameTransform A B := by
   apply ContinuousLinearMap.ext
   intro ψ
-  change (C.1 / A.1) * ψ = (C.1 / B.1) * ((B.1 / A.1) * ψ)
+  change (C.1 / A.1) • ψ = (C.1 / B.1) • ((B.1 / A.1) • ψ)
+  rw [smul_smul]
+  congr 1
   field_simp [frame_phase_ne_zero A, frame_phase_ne_zero B] <;> ring
 
 theorem frame_identity (A : ReferenceFrame) :
@@ -49,16 +51,18 @@ theorem frame_round_trip (A B : ReferenceFrame) (ψ : StateSpace) :
 
 theorem frame_preserves_norm (A B : ReferenceFrame) (ψ : StateSpace) :
     ‖FrameTransform A B ψ‖ = ‖ψ‖ := by
-  change ‖(B.1 / A.1) * (ψ : ℂ)‖ = ‖(ψ : ℂ)‖
-  rw [norm_mul, norm_div, A.2, B.2]
+  change ‖(B.1 / A.1) • ψ‖ = ‖ψ‖
+  rw [norm_smul, norm_div, A.2, B.2]
   norm_num
 
 noncomputable def positiveFrame : ReferenceFrame := ⟨1, by simp⟩
 noncomputable def negativeFrame : ReferenceFrame := ⟨-1, by simp⟩
 
+def unitState : StateSpace := (1 : ℂ)
+
 /-- Unlike the old singleton model, a frame change can change a state. -/
 theorem frame_change_nontrivial :
-    FrameTransform positiveFrame negativeFrame (1 : StateSpace) = -1 := by
+    FrameTransform positiveFrame negativeFrame unitState = -unitState := by
   change ((-1 : ℂ) / 1) * 1 = -1
   norm_num
 

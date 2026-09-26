@@ -68,10 +68,10 @@ theorem spend_conserves_headroom (state : PacerState) (cost : Nat)
 theorem settle_after_spend (state : PacerState) (cost : Nat)
     (h : cost ≤ state.headroom) :
     settle (spend state cost h) cost = state := by
-  cases state
-  simp only [settle, spend]
-  congr 1
-  omega
+  cases state with
+  | mk headroom =>
+      have he : headroom - cost + cost = headroom := Nat.sub_add_cancel h
+      simpa only [settle, spend, he]
 
 /-- A run rejects the first unaffordable cost, rather than using saturating
     subtraction to hide an overrun. Each later cost uses the updated balance. -/
@@ -188,7 +188,6 @@ theorem reserveLedger_effect (state out : Ledger) (cost : Nat)
   · simp only [Option.some.injEq] at h
     subst out
     exact ⟨rfl, by dsimp; omega, rfl, rfl⟩
-  · cases h
 
 theorem settleLedger_effect (state out : Ledger) (charged released : Nat)
     (h : settleLedger state charged released = some out) :
@@ -199,7 +198,6 @@ theorem settleLedger_effect (state out : Ledger) (charged released : Nat)
   · simp only [Option.some.injEq] at h
     subst out
     exact ⟨rfl, rfl, rfl, by dsimp; omega⟩
-  · cases h
 
 theorem settleLedger_rejects_overdraw (state : Ledger) (charged released : Nat)
     (h : state.reserved < charged + released) : settleLedger state charged released = none := by

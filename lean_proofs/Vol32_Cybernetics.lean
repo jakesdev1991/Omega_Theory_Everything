@@ -54,7 +54,8 @@ theorem feedback_tends_to_zero (g initial : ℝ) (hg0 : 0 ≤ g) (hg1 : g < 1) :
     tendsto_pow_atTop_nhds_zero_of_lt_one hg0 hg1
   have h : Filter.Tendsto (fun n : ℕ => initial * g ^ n)
       Filter.atTop (nhds (initial * 0)) := tendsto_const_nhds.mul hg
-  simpa [feedbackState] using h
+  change Filter.Tendsto (fun n : ℕ => initial * g ^ n) Filter.atTop (nhds 0)
+  simpa only [mul_zero] using h
 
 theorem unit_gain_preserves_state (initial : ℝ) (n : ℕ) :
     feedbackState 1 initial n = initial := by
@@ -66,7 +67,8 @@ theorem unit_gain_not_decay (initial : ℝ) (hi : initial ≠ 0) :
   intro hzero
   have hconstant : Filter.Tendsto (feedbackState 1 initial)
       Filter.atTop (nhds initial) := by
-    simpa only [feedbackState, one_pow, mul_one] using
+    change Filter.Tendsto (fun n : ℕ => initial * (1 : ℝ) ^ n) Filter.atTop (nhds initial)
+    simpa only [one_pow, mul_one] using
       (tendsto_const_nhds : Filter.Tendsto (fun _ : ℕ => initial) Filter.atTop (nhds initial))
   exact hi (tendsto_nhds_unique hconstant hzero)
 

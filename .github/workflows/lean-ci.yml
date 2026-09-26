@@ -79,7 +79,7 @@ jobs:
           rc=$?
           # Emit every compiler diagnostic (not just the tail) as
           # annotations; include continuation lines of multi-line errors.
-          awk '/error|warning|failures/{p=8} p>0{print; p--}' /tmp/lake-build.log \
+          sed '/^trace: /d' /tmp/lake-build.log | awk '/^error:|failures/{p=18} p>0{print; p--}' \
             | awk 'BEGIN{ORS=""} {buf = buf $0 "\\n"; n++; if (n % 25 == 0) {print "::error::LOG>> " substr(buf, 1, 8000) "\n"; buf=""}} END{if (buf != "") print "::error::LOG>> " substr(buf, 1, 8000)}'
           if [ "$rc" -eq 0 ]; then
             echo "::notice::lake build re-run exited 0 (original failure was transient)"

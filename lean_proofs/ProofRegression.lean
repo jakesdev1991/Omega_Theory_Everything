@@ -73,7 +73,7 @@ example : OmegaProtocol.Vol25.VonNeumannEntropy
 
 example : OmegaProtocol.Vol49.FrameTransform
     OmegaProtocol.Vol49.positiveFrame OmegaProtocol.Vol49.negativeFrame
-      (1 : OmegaProtocol.StateSpace) ≠ 1 := by
+      OmegaProtocol.Vol49.unitState ≠ OmegaProtocol.Vol49.unitState := by
   rw [OmegaProtocol.Vol49.frame_change_nontrivial]
   change (-1 : ℂ) ≠ 1
   norm_num

@@ -57,6 +57,7 @@ theorem landau_completed_square (a b T Tc m : ℝ) (hb : 0 < b) :
 theorem landau_global_lower_bound (a b T Tc m : ℝ) (hb : 0 < b) :
     -((a * (T - Tc)) ^ 2) / (4 * b) ≤ LandauFreeEnergy a b T Tc m := by
   rw [landau_completed_square a b T Tc m hb]
+  simp only [neg_div]
   have hn := mul_nonneg hb.le (sq_nonneg (m ^ 2 + a * (T - Tc) / (2 * b)))
   linarith
 
@@ -65,6 +66,7 @@ theorem landau_lower_bound_eq_iff (a b T Tc m : ℝ) (hb : 0 < b) :
     LandauFreeEnergy a b T Tc m = -((a * (T - Tc)) ^ 2) / (4 * b) ↔
       m ^ 2 = -(a * (T - Tc)) / (2 * b) := by
   rw [landau_completed_square a b T Tc m hb]
+  simp only [neg_div]
   constructor
   · intro h
     have hz : b * (m ^ 2 + a * (T - Tc) / (2 * b)) ^ 2 = 0 := by linarith

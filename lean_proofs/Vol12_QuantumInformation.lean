@@ -55,7 +55,7 @@ theorem no_cloning_theorem (psi phi : InfoState)
 noncomputable def tiltedState : InfoState := (3 / 5, 4 / 5)
 
 theorem tiltedState_normalized : IsNormalized tiltedState := by
-  norm_num [IsNormalized, state_inner, tiltedState]
+  norm_num [IsNormalized, state_inner, tiltedState, map_ofNat]
 
 theorem blank_tilted_overlap : state_inner BlankState tiltedState = 3 / 5 := by
   norm_num [state_inner, BlankState, tiltedState]
