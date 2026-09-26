@@ -392,7 +392,7 @@ namespace BinaryRegion
 /-- An explicit non-degenerate information witness on two regions where
     mutual information and joint entropy are strictly positive,
     and distinct regions have positive separation. -/
-def binaryMI : BinaryRegion → BinaryRegion → ℝ
+noncomputable def binaryMI : BinaryRegion → BinaryRegion → ℝ
   | BinaryRegion.alpha, BinaryRegion.alpha => 1
   | BinaryRegion.beta,  BinaryRegion.beta  => 1
   | _,                  _                  => 1 / 2
@@ -418,11 +418,15 @@ noncomputable def binaryNetwork : InformationNetwork BinaryRegion where
 
 theorem binary_overlap_self (A : BinaryRegion) :
     binaryNetwork.overlap A A = 1 / 2 := by
-  cases A <;> rfl
+  cases A <;> {
+    dsimp [InformationNetwork.overlap, binaryNetwork, binaryMI]
+    norm_num
+  }
 
 theorem binary_overlap_cross :
     binaryNetwork.overlap BinaryRegion.alpha BinaryRegion.beta = 1 / 4 := by
-  rfl
+  dsimp [InformationNetwork.overlap, binaryNetwork, binaryMI]
+  norm_num
 
 theorem binary_mi_pos (A B : BinaryRegion) :
     0 < binaryNetwork.mutualInfo A B := by
