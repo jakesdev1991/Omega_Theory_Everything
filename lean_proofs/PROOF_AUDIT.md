@@ -55,6 +55,16 @@ QRegion API or pretending to derive physical laws.
 
 ## Validation status
 
+**Current integrated revision:** `524fc6e` incorporates main `567afb2` and is
+conflict-free. [Merged-revision Lean CI](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/36247075540)
+passed the full ToE build and the **80-declaration** kernel audit. The full
+[repository CI](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/36247075525)
+also passed Python, Rust, EVM, Solana, web, mobile-node, security and documentation
+checks. There are **39 tooling tests**, **zero legacy alias exports**, and 13
+counted Unit types. Earlier numbered-pass counts below are historical.
+
+### Earlier standalone-branch validation
+
 - **Remote compiler validation passed:** [Lean CI run 36240687825](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/36240687825)
   at commit `8329f951a31b2bb44a5d5ff62938de0032290662`, using the pinned
   Lean/mathlib v4.32.0. `lake build ToE` compiled the full configured target,
@@ -97,7 +107,7 @@ Unchanged limitations are deliberately recorded rather than hidden by renaming.
 | Source | Findings / next step |
 |---|---|
 | `OmegaAxioms.lean` | Explicit complex one-space and Unit regions; zero information and stress quantities, placeholder powers/commutator/limit. Positive information, perfect overlap and nonzero asymmetry premises are unrealizable. Replace primitives through an explicit model interface with nontrivial witnesses before porting physical claims. |
-| `OmegaUnifiedFoundation.lean` | Modular flow is zero and lacks a zero-time identity law; KMS always true; QFIM zero. Most named volume/cross-volume results are aliases for elementary zero-model facts, not the named laws. Symplectic closedness field is not exterior-derivative closedness. Requires model-interface redesign. |
+| `OmegaUnifiedFoundation.lean` | Modular flow is zero and lacks a zero-time identity law; KMS always true; QFIM zero. Main retired the misleading named volume/cross-volume aliases; the baseline is now empty. Symplectic closedness field is not exterior-derivative closedness. Requires model-interface redesign. |
 | `OmegaDimensionalHierarchy.lean` | Import-only compatibility module; no dimensional hierarchy is constructed here. |
 | `OmegaProtocol.lean` | Mostly wrappers; some genuine Vol01/04 mathematics, many degenerate or hypothesis-only conclusions. Wrapper names do not strengthen imported statements. Vol30/38 wrappers now expose positive-parameter models; misleading game-theory wrapper names have explicit scope notes. |
 | `InformationPhysics.lean` | Positive environmental constants and model-dependent energy/mass bookkeeping. Added linearity, strict monotonicity, conversion conservation and output feasibility. Non-ideal Erasure now includes explicit nonnegative excess costs, sharp saturation/zero-cost criteria, batch decomposition and exact aggregate/prefix affordability. The ideal mass/scale API is unchanged. Next: connect excess cost and lower-bound assumptions to an actual thermodynamic protocol; no microscopic derivation is claimed. |
@@ -344,7 +354,7 @@ The successful run also elaborated downstream protocol exports and all Lean
 regression examples. The workflow's error annotations now filter long runner
 command lines so real diagnostics are not truncated by those lines.
 
-**Remaining integration work:** reconcile this draft branch with newer main
+**Historical integration work (completed below):** reconcile this draft branch with newer main
 changes, then rerun the full build and selected axiom gate on the reconciled
 revision. Existing nonfatal linter warnings, 13 counted Unit types and 96 legacy
 statement aliases remain; a passing build does not eliminate those limitations.
@@ -367,5 +377,5 @@ Both Kepler formulations remain: the positive-parameter model keeps
 `kepler_ratio_constant`; main's general conditional algebra is retained as
 `kepler_ratio_constant_of_squared_laws`, alongside `kepler_period_squared`.
 The selected kernel inventory is now 80 declarations, including both of those
-imported results and two RadialDilation results. Combined-revision CI is pending;
-earlier green runs certify the pre-integration revision only.
+imported results and two RadialDilation results. Combined-revision Lean CI and the full repository CI have passed.
+The draft PR is conflict-free; no PR merge into main has been performed.

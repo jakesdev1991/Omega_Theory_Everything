@@ -11,13 +11,13 @@ vacuous in its chosen model.
 See [PROOF_AUDIT.md](PROOF_AUDIT.md) for the source-review inventory, outstanding
 limitations, and compiler-validation results.
 
-**Compiler status (2026-09-26):** [Lean CI passed](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/36240687825)
-at commit `8329f951a31b2bb44a5d5ff62938de0032290662`: full `lake build ToE`
-(including Lean regression examples), 35 tooling tests, source gates, and
-transitive kernel-axiom inspection of 76 selected declarations. Lean/mathlib
-remain pinned to v4.32.0. Earlier pass notes saying "pending" describe historical
-local checks and are superseded by this remote build. Draft PR #45 still needs
-conflict reconciliation with newer main changes and a build of that revision.
+**Integrated CI status (2026-09-26):** [Lean CI passed](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/36247075540)
+on revision `524fc6e`, reconciled with main `567afb2`: full `lake build ToE`,
+39 tooling tests, combined source gates, and transitive kernel-axiom inspection
+of **80 selected declarations**. The full repository CI also passed. The PR is
+conflict-free. Main's retired alias exports remain retired (baseline now zero),
+and `RadialDilation` is included. Lean/mathlib remain pinned to v4.32.0. Earlier
+pass-status notes below are historical; no PR merge into main has been performed.
 
 ## Structure
 
@@ -264,7 +264,7 @@ python3 lean_proofs/audit_kernel.py
 ```
 
 This command first runs `lake build ToE`, then asks Lean for the transitive
-axioms of the 76 declarations in `kernel_audit_targets.json`. Only `propext`,
+axioms of the 80 declarations in `kernel_audit_targets.json`. Only `propext`,
 `Classical.choice`, and `Quot.sound` are permitted. Missing Lake, failed builds,
 missing/duplicate reports, malformed output, and unapproved axioms all fail;
 there is no static-success fallback. The scratch report lives under ignored
