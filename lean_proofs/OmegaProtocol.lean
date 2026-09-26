@@ -285,7 +285,9 @@ theorem bridge_vol08_metric_triangle (R₁ R₂ R₃ : QRegion) : d R₁ R₃ �
 theorem bridge_vol09_entropy_bounded (R : QRegion) : vonNeumannEntropy R ≤ Real.pi := by
   exact entropy_bounded R
 
-theorem bulk_reconstruction (R₁ R₂ : QRegion) : forwardFlux R₁ R₂ = Φ R₁ R₂ := by
+/-- Definitional restatement: in the concrete model `forwardFlux` is defined as
+    `Φ`. Named `bridge_` because it certifies coherence, not bulk physics. -/
+theorem bridge_bulk_reconstruction (R₁ R₂ : QRegion) : forwardFlux R₁ R₂ = Φ R₁ R₂ := by
   rfl
 
 /-- Consistency bridge (VOL09): the Omega-metric `d` is reflexive (`d R R = 0`).
@@ -442,10 +444,12 @@ theorem ecosystem_dynamics_axiom (alpha beta delta gamma : ℝ) (hd : delta ≠ 
   Vol29.PredatorRate delta gamma (gamma / delta) (alpha / beta) = 0 := by
   exact Vol29.lotka_volterra_equilibrium alpha beta delta gamma hd hb
 
--- Vol 30: Planetary Systems
-theorem planetary_systems_axiom (a₁ a₂ : ℝ) (ha1 : a₁^3 ≠ 0) (ha2 : a₂^3 ≠ 0) :
-  (Vol30.OrbitalPeriod a₁)^2 / a₁^3 = (Vol30.OrbitalPeriod a₂)^2 / a₂^3 := by
-  exact Vol30.kepler_ratio_constant a₁ a₂ ha1 ha2
+-- Vol 30: Planetary Systems (delegates to the honest conditional algebra in Vol30)
+theorem planetary_systems_axiom (T₁ T₂ a₁ a₂ C : ℝ)
+    (h1 : T₁ ^ 2 = C * a₁ ^ 3) (h2 : T₂ ^ 2 = C * a₂ ^ 3)
+    (ha1 : a₁ ^ 3 ≠ 0) (ha2 : a₂ ^ 3 ≠ 0) :
+    T₁ ^ 2 / a₁ ^ 3 = T₂ ^ 2 / a₂ ^ 3 :=
+  Vol30.kepler_ratio_constant T₁ T₂ a₁ a₂ C h1 h2 ha1 ha2
 
 -- Vol 31: Game Theory
 theorem axiom_nash_convergence (s2 : Vol31.Strategy) :
@@ -722,5 +726,8 @@ theorem omega_theory_structural_consistency (R₁ R₂ R₃ : QRegion) :
    monotonicity_lemma R₁,
    entropy_bounded R₁,
    mutualInformation_nonneg R₁ R₂⟩
+
+end OmegaProtocol
+nformation_nonneg R₁ R₂⟩
 
 end OmegaProtocol

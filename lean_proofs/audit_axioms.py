@@ -2,8 +2,12 @@
 """Audit trusted Lean declarations without counting comments or field names.
 
 The audit is intentionally lexical: it is useful in CI before a full Lean
-installation is available.  It reports declaration-level ``axiom`` commands,
-not occurrences of the word in documentation or structure field names.
+installation is available.  It reports declaration-level ``axiom`` and
+``opaque`` commands (``opaque`` constants are trusted in the same sense:
+the kernel accepts their stated type with no definition to check), not
+occurrences of the words in documentation or structure field names.
+Visibility modifiers (``private``/``protected``) do not exempt a
+declaration from this audit.
 """
 
 from __future__ import annotations
@@ -12,7 +16,8 @@ import argparse
 import re
 from pathlib import Path
 
-AXIOM = re.compile(r"^\s*axiom\s+([A-Za-z0-9_.'₁₂₃]+)")
+AXIOM = re.compile(r"^\s*(?:(?:private|protected)\s+)?axiom\s+([A-Za-z0-9_.'₁₂₃]+)")
+OPAQUE = re.compile(r"^\s*(?:(?:private|protected)\s+)?opaque\s+([A-Za-z0-9_.'₁₂₃]+)")
 
 
 def declarations(root: Path) -> list[tuple[Path, int, str]]:
@@ -23,7 +28,11 @@ def declarations(root: Path) -> list[tuple[Path, int, str]]:
         ):
             match = AXIOM.match(line)
             if match:
-                found.append((path, line_number, match.group(1)))
+                found.append((path, line_number, f"axiom {match.group(1)}"))
+                continue
+            match = OPAQUE.match(line)
+            if match:
+                found.append((path, line_number, f"opaque {match.group(1)}"))
     return found
 
 
@@ -34,7 +43,7 @@ def main() -> int:
     args = parser.parse_args()
 
     found = declarations(args.root)
-    print(f"axiom declarations: {len(found)}")
+    print(f"axiom/opaque declarations: {len(found)}")
     by_file: dict[Path, int] = {}
     for path, line, name in found:
         by_file[path] = by_file.get(path, 0) + 1

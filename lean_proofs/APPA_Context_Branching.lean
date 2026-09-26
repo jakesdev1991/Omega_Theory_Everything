@@ -33,7 +33,7 @@ theorem low_le_all (label : IntegrityLabel) : IntegrityLabel.low ≤ label := by
   cases label <;> trivial
 
 theorem high_le_high : IntegrityLabel.high ≤ IntegrityLabel.high := by
-  trivial
+  exact True.intro
 
 end IntegrityLabel
 

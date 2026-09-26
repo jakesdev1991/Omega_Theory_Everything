@@ -3,6 +3,7 @@ import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Topology.Instances.Complex
 import Mathlib.Data.Complex.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import DynamicCODScale
 
 namespace OmegaProtocol
 
@@ -16,7 +17,10 @@ small, explicit zero-information model instead:
 
 * `StateSpace` is `ℂ` and `QRegion` is `Unit`;
 * all informational observables are zero;
-* the operator and entropy constructions are real definitions; and
+* the operator and entropy constructions are real definitions;
+* the metric's Planck-scale factor is the canonical COD profile
+  `ℓ_P(Φ) = ℓ_P0·√(1-Φ²)` from `DynamicCODScale` (evaluated at `ℓ_P0 = 1`),
+  shared with every other file that needs a Planck scale; and
 * the properties that follow from this model are proved below.
 
 This is intentionally a model, not a claim that the physical Omega theory has
@@ -91,16 +95,21 @@ noncomputable def chainOverlapDensity (R₁ R₂ : QRegion) : ℝ :=
 noncomputable def Φ (R₁ R₂ : QRegion) : ℝ :=
   chainOverlapDensity R₁ R₂
 
-noncomputable def planckLength (Φ : ℝ) : ℝ :=
-  Real.sqrt (Real.pi * Φ + 1)
-
 noncomputable def maxMutualInformation : ℝ := 1
+
+/-- Unit-base-scale COD environment: the zero-model evaluates the canonical
+    `DynamicCODScale` profile at `ℓ_P0 = 1`, so the metric's Planck factor is
+    `√(1 - Φ²)` — the same profile used everywhere else in the project.
+    (A previous revision used a bespoke `√(πΦ+1)` here; see C3 in
+    ADVERSARIAL_AUDIT.md.) -/
+noncomputable def canonicalCODEnv : DynamicCODScale.CODEnvironment :=
+  ⟨1, by norm_num⟩
 
 noncomputable def omegaMetric (R₁ R₂ : QRegion) : ℝ :=
   let Φ_val := Φ R₁ R₂
   let I := mutualInformation R₁ R₂
   if I = 0 then 0
-  else -planckLength Φ_val * Real.log (I / (1 : ℝ))
+  else -DynamicCODScale.dynamicPlanckCOD canonicalCODEnv Φ_val * Real.log (I / (1 : ℝ))
 
 noncomputable def d (R₁ R₂ : QRegion) : ℝ := omegaMetric R₁ R₂
 
@@ -205,13 +214,17 @@ theorem qregion_self_distance_zero :
   intro
   simp [d, omegaMetric, mutualInformation]
 
-theorem planckLength_triangle :
+theorem codProfile_triangle :
   ∀ (R₁ R₂ R₃ : QRegion),
-    Real.sqrt (Real.pi * Φ R₁ R₃ + 1) ≤
-      Real.sqrt (Real.pi * Φ R₁ R₂ + 1) +
-      Real.sqrt (Real.pi * Φ R₂ R₃ + 1) := by
-  intros
-  norm_num [Φ, chainOverlapDensity, jointEntropy]
+    DynamicCODScale.dynamicPlanckCOD canonicalCODEnv (Φ R₁ R₃) ≤
+      DynamicCODScale.dynamicPlanckCOD canonicalCODEnv (Φ R₁ R₂) +
+      DynamicCODScale.dynamicPlanckCOD canonicalCODEnv (Φ R₂ R₃) := by
+  intro R₁ R₂ R₃
+  have hΦ : ∀ (A B : QRegion), Φ A B = 0 := fun A B => by
+    norm_num [Φ, chainOverlapDensity, jointEntropy]
+  rw [hΦ, hΦ, hΦ, DynamicCODScale.dynamicPlanckCOD_zero,
+    DynamicCODScale.dynamicPlanckCOD_zero, DynamicCODScale.dynamicPlanckCOD_zero]
+  norm_num [canonicalCODEnv]
 
 theorem log_inequality_from_DPI :
   ∀ (R₁ R₂ R₃ : QRegion),
@@ -235,10 +248,14 @@ theorem distance_nonneg :
   intros
   simp [d, omegaMetric, mutualInformation]
 
-theorem planckLength_pos :
-  ∀ (R₁ R₂ : QRegion), 0 < Real.sqrt (Real.pi * Φ R₁ R₂ + 1) := by
-  intros
-  norm_num [Φ, chainOverlapDensity, jointEntropy]
+theorem codProfile_pos :
+  ∀ (R₁ R₂ : QRegion),
+    0 < DynamicCODScale.dynamicPlanckCOD canonicalCODEnv (Φ R₁ R₂) := by
+  intro R₁ R₂
+  have hΦ : Φ R₁ R₂ = 0 := by
+    norm_num [Φ, chainOverlapDensity, jointEntropy]
+  rw [hΦ, DynamicCODScale.dynamicPlanckCOD_zero]
+  norm_num [canonicalCODEnv]
 
 theorem zero_product_implies_zero :
   ∀ (R₁ R₂ R₃ : QRegion),
