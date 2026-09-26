@@ -421,9 +421,9 @@ example (planckScale : ℝ → ℝ) :
 
 end CosmicAndDynamicsRegression
 
-/-- File-scope resolution for the bare `VolXX.*` references used by all
-    regression examples below (the earlier `open OmegaProtocol` commands
-    are scoped inside the namespaces above and do not reach this far). -/
+-- File-scope resolution for the bare `VolXX.*` references used by all
+-- regression examples below (the earlier `open OmegaProtocol` commands
+-- are scoped inside the namespaces above and do not reach this far).
 open OmegaProtocol
 
 example : Vol08.standardSchwarzschild.mass = 1 := rfl
