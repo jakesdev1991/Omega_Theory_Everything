@@ -117,7 +117,7 @@ theorem entropy_antitone {S₁ S₂ : DeSitterSpace}
   have hpi : (0 : ℝ) < 3 * Real.pi := by positivity
   have h1 : 0 < S₂.G * S₁.Lambda := mul_pos S₂.G_pos S₁.Lambda_pos
   have h2 : 0 < S₂.G * S₂.Lambda := mul_pos S₂.G_pos S₂.Lambda_pos
-  rw [div_lt_div_iff h2 h1]
+  rw [div_lt_div_iff₀ h2 h1]
   have hGΛ : S₂.G * S₁.Lambda < S₂.G * S₂.Lambda :=
     mul_lt_mul_of_pos_left hΛ S₂.G_pos
   exact mul_lt_mul_of_pos_left hGΛ hpi

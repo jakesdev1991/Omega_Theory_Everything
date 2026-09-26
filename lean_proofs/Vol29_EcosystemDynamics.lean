@@ -79,12 +79,12 @@ theorem equilibrium_classification (alpha beta delta gamma x y : ℝ)
     (x = 0 ∧ y = 0) ∨ (x = gamma / delta ∧ y = alpha / beta) := by
   have hfactor1 : x * (alpha - beta * y) = 0 := by
     have hform : x * (alpha - beta * y) = PreyRate alpha beta x y := by
-      simp [PreyRate]
+      simp only [PreyRate]
       ring
     rw [hform, hprey]
   have hfactor2 : y * (delta * x - gamma) = 0 := by
     have hform : y * (delta * x - gamma) = PredatorRate delta gamma x y := by
-      simp [PredatorRate]
+      simp only [PredatorRate]
       ring
     rw [hform, hpred]
   rcases mul_eq_zero.mp hfactor1 with hx | hy

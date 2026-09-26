@@ -278,9 +278,8 @@ theorem skelExp_beta {z m n : SkelObj} (f : SkelHom (skelProd z m) n) :
     skelComp (skelProdMap (skelCurry f)) skelEval = f := by
   funext p
   have hpair : finProdFinEquiv ((finProdFinEquiv.symm p).1,
-      (finProdFinEquiv.symm p).2) = p := by
-    rw [Prod.mk.eta (finProdFinEquiv.symm p)]
-    exact Equiv.apply_symm_apply _ _
+      (finProdFinEquiv.symm p).2) = p :=
+    Equiv.apply_symm_apply finProdFinEquiv p
   have hcomp : (skelComp (skelProdMap (skelCurry f)) skelEval) p =
       skelEval (skelProdMap (skelCurry f) p) := rfl
   rw [hcomp, ← hpair, skelProdMap_apply, skelExp_beta_pt]

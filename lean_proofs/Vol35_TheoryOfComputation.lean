@@ -158,7 +158,8 @@ theorem halts_diagonal (e : ℕ → Machine) :
       | zero => rfl
       | succ k ih =>
         rw [run_succ_some _ _ _ _ ih]
-        simp [diagMachine, hn]
+        show (if Halts (e n) n then some n else none) = some n
+        exact if_pos hn
     obtain ⟨k, hk⟩ := hM
     rw [hstay k] at hk
     exact Option.noConfusion hk
@@ -166,6 +167,7 @@ theorem halts_diagonal (e : ℕ → Machine) :
     refine ⟨1, ?_⟩
     have hone : (1 : ℕ) = 0 + 1 := rfl
     rw [hone, run_succ_some _ _ _ _ (run_zero _ _)]
-    simp [diagMachine, hn]
+    show (if Halts (e n) n then some n else none) = none
+    exact if_neg hn
 
 end OmegaProtocol.Vol35

@@ -575,3 +575,6 @@ example (f g : Empty → Bool) : f = g :=
 
 example : Vol29.PreyRate 1 2 0 0 = 0 ∧ Vol29.PredatorRate 3 4 0 0 = 0 :=
   Vol29.extinction_equilibrium 1 2 3 4
+
+example (c : ℕ) : Vol35.haltsWithin Vol35.haltMachine c 1 = true :=
+  (Vol35.haltsWithin_correct Vol35.haltMachine c 1).mpr ⟨1, by decide, rfl⟩
