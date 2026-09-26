@@ -407,8 +407,8 @@ example : Vol15.CosmologicalFluid.deSitterVacuum.accelerationSource = -2 :=
   Vol15.CosmologicalFluid.deSitter_source_neg
 
 example : 0 < - (4 * Real.pi * 1 / 3) * Vol15.CosmologicalFluid.deSitterVacuum.accelerationSource :=
-  Vol15.CosmologicalFluid.cosmic_acceleration_positive _ (by norm_num)
-    (by rw [Vol15.CosmologicalFluid.deSitter_source_neg]; norm_num)
+  Vol15.CosmologicalFluid.cosmic_acceleration_positive Vol15.CosmologicalFluid.deSitterVacuum 1
+    (by norm_num) (by rw [Vol15.CosmologicalFluid.deSitter_source_neg]; norm_num)
 
 example : Vol12.QubitSystem.bellPairSystem.entanglement <
     Vol12.QubitSystem.bellPairSystem.capacity :=
@@ -421,7 +421,10 @@ example (planckScale : ℝ → ℝ) :
 
 end CosmicAndDynamicsRegression
 
-
+/-- File-scope resolution for the bare `VolXX.*` references used by all
+    regression examples below (the earlier `open OmegaProtocol` commands
+    are scoped inside the namespaces above and do not reach this far). -/
+open OmegaProtocol
 
 example : Vol08.standardSchwarzschild.mass = 1 := rfl
 
