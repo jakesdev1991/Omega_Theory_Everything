@@ -80,14 +80,14 @@ theorem emptyGraph_numEdges (n : ℕ) : NumEdges (emptyGraph n) = 0 := by
 /-- Every vertex of the two-vertex complete graph has one neighbor. -/
 theorem twoVertexEdge_degree (v : Fin 2) : Degree twoVertexEdge v = 1 := by
   classical
-  change (⊤ : SimpleGraph (Fin 2)).degree v = 1
-  have hpos : 0 < (⊤ : SimpleGraph (Fin 2)).degree v := by
-    apply ((⊤ : SimpleGraph (Fin 2)).degree_pos_iff_exists_adj v).mpr
+  have hpos : 0 < twoVertexEdge.edges.degree v := by
+    apply (twoVertexEdge.edges.degree_pos_iff_exists_adj v).mpr
     fin_cases v
-    · exact ⟨1, by simp⟩
-    · exact ⟨0, by simp⟩
-  have hbound : (⊤ : SimpleGraph (Fin 2)).degree v < 2 := by
-    simpa only [Fintype.card_fin] using (⊤ : SimpleGraph (Fin 2)).degree_lt_card_verts v
+    · exact ⟨(1 : Fin 2), by change (0 : Fin 2) ≠ 1; decide⟩
+    · exact ⟨(0 : Fin 2), by change (1 : Fin 2) ≠ 0; decide⟩
+  have hbound : twoVertexEdge.edges.degree v < 2 := by
+    simpa only [Fintype.card_fin, twoVertexEdge] using twoVertexEdge.edges.degree_lt_card_verts v
+  change twoVertexEdge.edges.degree v = 1
   omega
 
 theorem twoVertexEdge_counts : DegreeSum twoVertexEdge = 2 ∧ NumEdges twoVertexEdge = 1 := by
