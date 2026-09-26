@@ -55,7 +55,7 @@ jobs:
           npx tauri build --target-dir target ${{ matrix.args }}
 
       - name: Upload installer artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: omega-wallet-${{ matrix.platform }}
           path: desktop/src-tauri/target/release/bundle/**/*
