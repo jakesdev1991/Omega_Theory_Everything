@@ -27,7 +27,7 @@ Lean CI job kernel-checks them.
    `chainLength_const_scale`). A chain of `n` links whose `i`-th link carries
    local scale `s i` and local weight `w i` has proper length `∑ s i · w i`.
    It is monotone in the scale, and the single-scale formula factors out
-   *exactly* when the scale is link-independent — the only case in which the
+   when the scale is link-independent — a sufficient condition under which the
    finite §2.1 formula `d = -ℓ_P ln K` is exact. That is the discrete content
    of `g_rr = (ℓ_P κ)²`: the two factors enter per link as a product, never as
    a sum.
@@ -91,15 +91,12 @@ theorem phiStar_golden : phiStar * phiStar + phiStar - 1 = 0 := by
   have h4 : 4 * (phiStar * phiStar + phiStar - 1) = 0 := by rw [key, hval]
   exact Or.resolve_left (mul_eq_zero.mp h4) (by norm_num)
 
-/-- **The golden-ratio bottleneck.** For every real `Φ`,
-`exp(2Φ) · (1 - Φ²) ≤ Φ* · exp(2Φ*)`, with equality only at `Φ = Φ*`.
-
-The bound holds on all of `ℝ`: outside `(-1, 1)` the left side is negative and
-the inequality is trivial, while on `(-1, 1)` this is the global minimum of
-Sim3's disformal causality band `exp(-Φ) / (√β √(1-Φ²))`, whose minimum value
-is `exp(-Φ*) / √(β Φ*)`. -/
-theorem golden_bottleneck_bound (Φ : ℝ) :
-    Real.exp (2 * Φ) * (1 - Φ * Φ) ≤ phiStar * Real.exp (2 * phiStar) := by
+/-- Quantitative stability: the deficit from the maximum controls a
+    strictly positive weight times the squared distance from the maximizer. -/
+theorem golden_bottleneck_gap (Φ : ℝ) :
+    Real.exp (2 * Φ) * (1 - Φ * Φ) +
+      Real.exp (2 * Φ) * (Φ - phiStar) ^ 2 ≤
+      phiStar * Real.exp (2 * phiStar) := by
   have hg : phiStar * phiStar + phiStar - 1 = 0 := phiStar_golden
   have hφ : 0 < phiStar := phiStar_pos
   -- Step 1: the algebraic identity 1 - Φ² = Φ*(1 - 2t) - t² with t = Φ - Φ*.
@@ -112,8 +109,7 @@ theorem golden_bottleneck_bound (Φ : ℝ) :
   have h2 : 1 - 2 * (Φ - phiStar) ≤ Real.exp (-2 * (Φ - phiStar)) := by
     have h := Real.add_one_le_exp (-2 * (Φ - phiStar))
     linarith
-  -- Step 3: drop the -t² term and use h2.
-  have hsq : 0 ≤ (Φ - phiStar) * (Φ - phiStar) := mul_self_nonneg _
+  -- Step 3: retain the squared error and use h2.
   have hmul : phiStar * (1 - 2 * (Φ - phiStar))
             ≤ phiStar * Real.exp (-2 * (Φ - phiStar)) :=
     mul_le_mul_of_nonneg_left h2 hφ.le
@@ -123,15 +119,42 @@ theorem golden_bottleneck_bound (Φ : ℝ) :
     rw [← Real.exp_add]
     congr 1
     ring
-  calc Real.exp (2 * Φ) * (1 - Φ * Φ)
-      = Real.exp (2 * Φ)
-          * (phiStar * (1 - 2 * (Φ - phiStar)) - (Φ - phiStar) * (Φ - phiStar)) := by
-        rw [halg]
+  calc Real.exp (2 * Φ) * (1 - Φ * Φ) +
+        Real.exp (2 * Φ) * (Φ - phiStar) ^ 2
+      = Real.exp (2 * Φ) * (phiStar * (1 - 2 * (Φ - phiStar))) := by
+          rw [halg]
+          ring
     _ ≤ Real.exp (2 * Φ) * (phiStar * Real.exp (-2 * (Φ - phiStar))) :=
-        mul_le_mul_of_nonneg_left
-          (by linarith [hsq, hmul]) (le_of_lt (Real.exp_pos _))
+        mul_le_mul_of_nonneg_left hmul (Real.exp_pos _).le
     _ = phiStar * (Real.exp (2 * Φ) * Real.exp (-2 * (Φ - phiStar))) := by ring
     _ = phiStar * Real.exp (2 * phiStar) := by rw [hexp]
+
+/-- The global upper bound, now a consequence of the stronger gap estimate. -/
+theorem golden_bottleneck_bound (Φ : ℝ) :
+    Real.exp (2 * Φ) * (1 - Φ * Φ) ≤ phiStar * Real.exp (2 * phiStar) := by
+  have h := golden_bottleneck_gap Φ
+  have hn := mul_nonneg (Real.exp_pos (2 * Φ)).le (sq_nonneg (Φ - phiStar))
+  linarith
+
+/-- The equality case promised by the original documentation. -/
+theorem golden_bottleneck_eq_iff (Φ : ℝ) :
+    Real.exp (2 * Φ) * (1 - Φ * Φ) = phiStar * Real.exp (2 * phiStar) ↔
+      Φ = phiStar := by
+  constructor
+  · intro h
+    have hgap := golden_bottleneck_gap Φ
+    have hs : (Φ - phiStar) ^ 2 = 0 := by
+      have hw : Real.exp (2 * Φ) * (Φ - phiStar) ^ 2 ≤ 0 := by linarith
+      have hn := sq_nonneg (Φ - phiStar)
+      have hp := Real.exp_pos (2 * Φ)
+      have hz : Real.exp (2 * Φ) * (Φ - phiStar) ^ 2 = 0 :=
+        le_antisymm hw (mul_nonneg hp.le hn)
+      exact (mul_eq_zero.mp hz).resolve_left (ne_of_gt hp)
+    exact sub_eq_zero.mp (sq_eq_zero_iff.mp hs)
+  · rintro rfl
+    have hg := phiStar_golden
+    have hid : 1 - phiStar * phiStar = phiStar := by linarith
+    rw [hid, mul_comm]
 
 /-! ## 2. The finite-chain two-factor law -/
 
@@ -153,13 +176,26 @@ theorem chainLength_mono (s t w : ℕ → ℝ) (n : ℕ)
 
 /-- **The single-scale formula factors out exactly.** If the local scale does not
 vary along the chain, the chain length is the scale times the total weight.
-This is the only case in which the finite §2.1 formula `d = -ℓ_P ln K` is exact;
-with a varying `Φ` the chain sum and the single-scale formula differ, which
-`Sim7_Radial_Metric.py` measures at 6–52 % for the canonical profile. -/
+This is a sufficient condition, not a necessary one: zero weights or
+cancellation can also make a varying-scale chain agree with a chosen scale. -/
 theorem chainLength_const_scale (a : ℝ) (w : ℕ → ℝ) (n : ℕ) :
     chainLength (fun _ => a) w n = a * ∑ i ∈ Finset.range n, w i := by
   unfold chainLength
   simp only [Finset.mul_sum]
+
+/-- Exact error relative to a reference scale, including varying scales. -/
+theorem chainLength_error (s w : ℕ → ℝ) (a : ℝ) (n : ℕ) :
+    chainLength s w n - a * ∑ i ∈ Finset.range n, w i =
+      ∑ i ∈ Finset.range n, (s i - a) * w i := by
+  unfold chainLength
+  simp only [sub_mul, Finset.sum_sub_distrib, Finset.mul_sum]
+
+/-- A necessary and sufficient condition for reference-scale factorization. -/
+theorem chainLength_factorization_iff (s w : ℕ → ℝ) (a : ℝ) (n : ℕ) :
+    chainLength s w n = a * ∑ i ∈ Finset.range n, w i ↔
+      (∑ i ∈ Finset.range n, (s i - a) * w i) = 0 := by
+  rw [← chainLength_error]
+  exact sub_eq_zero.symm
 
 /-! ## 3. The `Φ`-form Schwarzschild identities -/
 

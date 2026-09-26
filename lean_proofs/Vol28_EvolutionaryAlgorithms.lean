@@ -56,6 +56,20 @@ theorem fitness_bounded_by_length : ∀ g : Genome, fitness g ≤ g.length := by
 def selectBest (a b : Genome) : Genome :=
   if fitness a ≥ fitness b then a else b
 
+/-- Exact optimality, stronger than merely beating the worse candidate. -/
+theorem selection_fitness_eq_max (a b : Genome) :
+    fitness (selectBest a b) = max (fitness a) (fitness b) := by
+  unfold selectBest
+  split_ifs with h
+  · exact (max_eq_left h).symm
+  · exact (max_eq_right (le_of_not_ge h)).symm
+
+theorem selection_dominates_both (a b : Genome) :
+    fitness a ≤ fitness (selectBest a b) ∧
+    fitness b ≤ fitness (selectBest a b) := by
+  rw [selection_fitness_eq_max]
+  exact ⟨le_max_left _ _, le_max_right _ _⟩
+
 /-- Selection is safe: the winner's fitness is at least the worse of the two
     candidates. -/
 theorem selection_never_decreases (a b : Genome) :

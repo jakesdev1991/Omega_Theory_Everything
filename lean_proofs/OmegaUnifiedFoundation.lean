@@ -7,6 +7,16 @@ import OmegaAxioms
 -- `*_Stmt` "unification theorems" were retired as vacuous in the P0 audit
 -- remediation; see the notice at the end of this file).
 
+/-!
+## Scope warning for the concrete model
+
+The historical volume/cross-volume statement aliases have been retired.
+The empty `legacy_statement_aliases.json` baseline prevents their silent return.
+A passing source audit does not validate physical interpretations or show that
+positive-information hypotheses in downstream modules are realizable.
+The concrete modular flow below is zero, not a faithful modular automorphism group.
+-/
+
 namespace OmegaProtocol
 
 -- ============================================================

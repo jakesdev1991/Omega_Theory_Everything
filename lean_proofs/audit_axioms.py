@@ -2,12 +2,10 @@
 """Audit trusted Lean declarations without counting comments or field names.
 
 The audit is intentionally lexical: it is useful in CI before a full Lean
-installation is available.  It reports declaration-level ``axiom`` and
-``opaque`` commands (``opaque`` constants are trusted in the same sense:
-the kernel accepts their stated type with no definition to check), not
-occurrences of the words in documentation or structure field names.
-Visibility modifiers (``private``/``protected``) do not exempt a
-declaration from this audit.
+installation is available.  It reports declaration-level ``axiom`` commands,
+not occurrences of the word in documentation or structure field names.
+The source policy also rejects `opaque` declarations (including ones with bodies);
+this is a conservative policy, not a claim that all opaque definitions are axioms.
 """
 
 from __future__ import annotations
@@ -16,23 +14,21 @@ import argparse
 import re
 from pathlib import Path
 
-AXIOM = re.compile(r"^\s*(?:(?:private|protected)\s+)?axiom\s+([A-Za-z0-9_.'₁₂₃]+)")
-OPAQUE = re.compile(r"^\s*(?:(?:private|protected)\s+)?opaque\s+([A-Za-z0-9_.'₁₂₃]+)")
+from lean_source import lean_sources, mask_comments_and_strings
+
+AXIOM = re.compile(
+    r"(?m)^[ \t]*(?:@\[[^\]]*\]\s*)*(?:(?:private|protected)\s+)?"
+    r"(?:axiom|opaque)\s+([^\s:({]+)"
+)
 
 
 def declarations(root: Path) -> list[tuple[Path, int, str]]:
     found: list[tuple[Path, int, str]] = []
-    for path in sorted(root.glob("*.lean")):
-        for line_number, line in enumerate(
-            path.read_text(encoding="utf-8").splitlines(), 1
-        ):
-            match = AXIOM.match(line)
-            if match:
-                found.append((path, line_number, f"axiom {match.group(1)}"))
-                continue
-            match = OPAQUE.match(line)
-            if match:
-                found.append((path, line_number, f"opaque {match.group(1)}"))
+    for path in lean_sources(root):
+        text = mask_comments_and_strings(path.read_text(encoding="utf-8"))
+        for match in AXIOM.finditer(text):
+            line_number = text.count("\n", 0, match.start(1)) + 1
+            found.append((path, line_number, match.group(1)))
     return found
 
 

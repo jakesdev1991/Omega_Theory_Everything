@@ -7,6 +7,7 @@ require mathlib4 from git
 package OmegaTheory where
 
 /-- The Omega Theory formalization in Lean 4 -/
+@[default_target]
 lean_lib ToE where
   roots := #[
     `OmegaAxioms,
@@ -73,6 +74,8 @@ lean_lib ToE where
     `InformationPhysics,
     `DynamicPlanckScale,
     `DynamicCODScale,
+    `ProofRegression,
+    `LogCorrelationMetric,
     `RadialMetric,
     `RadialDilation
   ]

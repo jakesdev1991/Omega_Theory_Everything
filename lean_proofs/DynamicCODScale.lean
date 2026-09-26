@@ -10,12 +10,12 @@ fundamental primitive of Omega Theory:
     ℓ_P(Φ) = ℓ_P0 · √(1 − Φ²)
 
 * `Φ → 0` (pure vacuum, no shared state): the scale stays at its relaxed baseline.
-* `Φ → 1` (bound matter, maximal overlap): the spatial distance between the
-  overlapping states vanishes and the operational scale collapses to zero.
+* `Φ → 1` (bound matter, maximal overlap): the chosen operational scale
+  collapses to zero. This alone does not establish a distance law for regions.
 
 ## Proven results
 1. `dynamicPlanckCOD_zero` — `ℓ_P(0) = ℓ_P0` (vacuum baseline).
-2. `dynamicPlanckCOD_one` — `ℓ_P(1) = 0` (maximal overlap collapses distance).
+2. `dynamicPlanckCOD_one` — `ℓ_P(1) = 0` (maximal overlap gives zero scale).
 3. `dynamicPlanckCOD_nonneg`, `dynamicPlanckCOD_pos` — the scale is never negative
    and is strictly positive whenever the overlap is imperfect (`Φ² < 1`).
 4. `dynamicPlanckCOD_le` — the scale never exceeds the baseline.
@@ -33,7 +33,8 @@ fundamental primitive of Omega Theory:
   `ℓ_P0 · exp((1 − Φ)/φ_c)` heuristic, which pointed the *opposite* way (stretching
   the scale as `Φ` falls); the relation to that macroscopic picture is an open item.
 * The definition is total on `ℝ` (Mathlib's `Real.sqrt` is `0` on negative inputs), but
-  the theorems below only claim anything on the physical range `0 ≤ Φ ≤ 1`.
+  physical interpretation is restricted to `0 ≤ Φ ≤ 1`. Several algebraic
+  bounds hold globally; injectivity and endpoint converses are range-restricted.
 -/
 
 namespace DynamicCODScale
@@ -56,7 +57,7 @@ theorem dynamicPlanckCOD_zero (env : CODEnvironment) : dynamicPlanckCOD env 0 = 
   unfold dynamicPlanckCOD
   norm_num
 
-/-- Maximal overlap (`Φ = 1`): spatial distance collapses to zero. -/
+/-- Maximal overlap (`Φ = 1`): the chosen operational scale is zero. -/
 theorem dynamicPlanckCOD_one (env : CODEnvironment) : dynamicPlanckCOD env 1 = 0 := by
   unfold dynamicPlanckCOD
   norm_num
@@ -116,5 +117,51 @@ theorem dynamicPlanckCOD_strictAntiOn (env : CODEnvironment) :
     StrictAntiOn (dynamicPlanckCOD env) (Set.Icc 0 1) := by
   intro a ha b hb hab
   exact cod_monotonic_contraction env a b (Set.mem_Icc.mp ha).1 hab (Set.mem_Icc.mp hb).2
+
+/-- Scale measurements determine overlap uniquely only on the physical range.
+    Globally the profile is even and vanishes outside [-1,1]. -/
+theorem dynamicPlanckCOD_injOn (env : CODEnvironment) :
+    Set.InjOn (dynamicPlanckCOD env) (Set.Icc 0 1) :=
+  (dynamicPlanckCOD_strictAntiOn env).injOn
+
+theorem dynamicPlanckCOD_zero_iff (env : CODEnvironment) (Φ : ℝ)
+    (hΦ : Φ ∈ Set.Icc (0 : ℝ) 1) :
+    dynamicPlanckCOD env Φ = 0 ↔ Φ = 1 := by
+  constructor
+  · intro h
+    apply dynamicPlanckCOD_injOn env hΦ (by constructor <;> norm_num)
+    rw [h, dynamicPlanckCOD_one]
+  · rintro rfl
+    exact dynamicPlanckCOD_one env
+
+theorem dynamicPlanckCOD_baseline_iff (env : CODEnvironment) (Φ : ℝ)
+    (hΦ : Φ ∈ Set.Icc (0 : ℝ) 1) :
+    dynamicPlanckCOD env Φ = env.lP0 ↔ Φ = 0 := by
+  constructor
+  · intro h
+    apply dynamicPlanckCOD_injOn env hΦ (by constructor <;> norm_num)
+    rw [h, dynamicPlanckCOD_zero]
+  · rintro rfl
+    exact dynamicPlanckCOD_zero env
+
+/-- Squared scales recover the squared overlap without taking a signed inverse. -/
+theorem cod_squared_recovery (env : CODEnvironment) (Φ : ℝ)
+    (hΦ : 0 ≤ 1 - Φ ^ 2) :
+    dynamicPlanckCOD env Φ ^ 2 + env.lP0 ^ 2 * Φ ^ 2 = env.lP0 ^ 2 := by
+  unfold dynamicPlanckCOD
+  rw [mul_pow, Real.sq_sqrt hΦ]
+  ring
+
+/-- The total real extension is even, so injectivity outside the physical
+    interval would be false even before square-root truncation is considered. -/
+theorem dynamicPlanckCOD_even (env : CODEnvironment) (Φ : ℝ) :
+    dynamicPlanckCOD env (-Φ) = dynamicPlanckCOD env Φ := by
+  simp [dynamicPlanckCOD]
+
+theorem dynamicPlanckCOD_not_globally_injective (env : CODEnvironment) :
+    ¬ Function.Injective (dynamicPlanckCOD env) := by
+  intro h
+  have heq := h (dynamicPlanckCOD_even env 1)
+  norm_num at heq
 
 end DynamicCODScale

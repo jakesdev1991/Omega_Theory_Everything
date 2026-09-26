@@ -1,59 +1,76 @@
 import Mathlib
 import OmegaAxioms
 import OmegaUnifiedFoundation
+import Vol26_NetworkTheory
 
-/-
-  Vol39_SocietalNetworks.lean
-  REAL formalization: Societal Networks.
+/-!
+# Finite social-network counting model
 
-  Using Omega Protocol:
-  - 0D: Individuals = Q-Regions
-  - 1D: Social ties = Φ (mutual information)
-  - 2D: Ω-Metric = social distance
-  - 3D: Informational Viscosity = information propagation time
-  - 4D: RCOD Asymmetry = influence asymmetry
+This module reuses the finite simple graphs of Vol26. A minimum connection
+bound requires a no-isolated-vertices hypothesis; it is not true for arbitrary
+networks, or even for the connected one-vertex graph. We state this local
+hypothesis instead of silently assuming connectivity implies positive degree.
+
+No sociological interpretation is derived from these combinatorial counts.
+API change: node, edge and degree quantities now depend on a graph, and lower
+bounds require explicit degree assumptions.
 -/
-
 namespace OmegaProtocol.Vol39
 open OmegaProtocol
 
-def NumNodes : ℕ := 0
-def NumConnections : ℕ := 0
-def TotalDegree : ℕ := 0
+abbrev SocialNetwork := Vol26.Graph
 
-theorem degree_sum_formula : TotalDegree = 2 * NumConnections := by
-  rfl
+def NumNodes (G : SocialNetwork) : ℕ := G.vertexCount
+noncomputable def NumConnections (G : SocialNetwork) : ℕ := Vol26.NumEdges G
+noncomputable def TotalDegree (G : SocialNetwork) : ℕ := Vol26.DegreeSum G
 
-theorem min_degree : TotalDegree ≥ NumNodes := by
-  rfl
+def NoIsolatedVertices (G : SocialNetwork) : Prop := ∀ v, 1 ≤ Vol26.Degree G v
 
-/-- THEOREM: Minimum connections in a connected network (GENUINE PROOF) -/
-theorem min_connections : 2 * NumConnections ≥ NumNodes := by
-  have h1 := degree_sum_formula
-  have h2 := min_degree
-  linarith
+theorem degree_sum_formula (G : SocialNetwork) : TotalDegree G = 2 * NumConnections G :=
+  Vol26.handshaking_lemma G
 
-/-- COROLLARY: Societal Networks from Omega Protocol
-    Individuals = Q-Regions (0D)
-    Social ties = Φ (1D)
-    Social distance = Ω-Metric (2D)
-    Information flow = Informational Viscosity (3D)
-    Influence = RCOD Asymmetry (4D) -/
-theorem society_from_omega : 2 * NumConnections ≥ NumNodes := by
-  exact min_connections
+theorem min_degree (G : SocialNetwork) (h : NoIsolatedVertices G) :
+    NumNodes G ≤ TotalDegree G := by
+  simpa [NumNodes, TotalDegree] using Vol26.degree_sum_lower_bound G 1 h
 
-/-- Consistency bridge (VOL39): the von Neumann entropy is nonnegative.
-    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
-    it certifies internal coherence of the formalization and is NOT a
-    derivation of the physical law the legacy name `society_entropy_nonneg` evoked. -/
-theorem bridge_vol39_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
-  exact monotonicity_lemma R
+theorem min_connections (G : SocialNetwork) (h : NoIsolatedVertices G) :
+    NumNodes G ≤ 2 * NumConnections G := by
+  have hd := min_degree G h
+  rwa [degree_sum_formula] at hd
 
-/-- Consistency bridge (VOL39): the Omega-metric `d` is reflexive (`d R R = 0`).
-    Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
-    it certifies internal coherence of the formalization and is NOT a
-    derivation of the physical law the legacy name `social_distance_self` evoked. -/
-theorem bridge_vol39_metric_self_zero (R : QRegion) : d R R = 0 := by
-  exact qregion_self_distance_zero R
+/-- Natural-number rounding makes the edge lower bound explicit. -/
+theorem min_connections_rounded (G : SocialNetwork) (h : NoIsolatedVertices G) :
+    (NumNodes G + 1) / 2 ≤ NumConnections G := by
+  have hbound := min_connections G h
+  omega
+
+/-- Legacy export name for a conditional counting bound, not a social law. -/
+theorem society_from_omega (G : SocialNetwork) (h : NoIsolatedVertices G) :
+    NumNodes G ≤ 2 * NumConnections G := min_connections G h
+
+theorem twoVertexEdge_no_isolated : NoIsolatedVertices Vol26.twoVertexEdge := by
+  intro v
+  simpa only [Vol26.twoVertexEdge_degree] using (le_refl (1 : ℕ))
+
+/-- The degree assumption cannot be dropped: one vertex and no edges fails it. -/
+theorem singleton_has_isolated_vertex : ¬ NoIsolatedVertices (Vol26.emptyGraph 1) := by
+  intro h
+  have hd := h (0 : Fin 1)
+  rw [Vol26.emptyGraph_degree] at hd
+  omega
+
+theorem unconditioned_bound_fails :
+    ¬ NumNodes (Vol26.emptyGraph 1) ≤ 2 * NumConnections (Vol26.emptyGraph 1) := by
+  change ¬ (1 ≤ 2 * Vol26.NumEdges (Vol26.emptyGraph 1))
+  rw [Vol26.emptyGraph_numEdges]
+  norm_num
+
+/-- Structural consistency of the separate zero-information model only. -/
+theorem bridge_vol39_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 :=
+  monotonicity_lemma R
+
+/-- Structural consistency of the separate zero-information model only. -/
+theorem bridge_vol39_metric_self_zero (R : QRegion) : d R R = 0 :=
+  qregion_self_distance_zero R
 
 end OmegaProtocol.Vol39

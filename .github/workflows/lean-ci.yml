@@ -1,12 +1,12 @@
 name: Lean CI
 
-# Temporary gate: kernel-checks the Omega Protocol Lean formalization.
-# Path-filtered so non-Lean pushes don't pay for it.
-# Delete this file to remove the job.
+# Kernel-checks the Lean formalization and runs source-honesty gates.
+# Path-filtered so unrelated pushes do not pay for a Lean build.
 
 on:
   push:
-    branches: [main]
+    # Also validate this review snapshot when PR merge conflicts block PR checks.
+    branches: [main, arena/01a0dc87-omega-theory-everything]
     paths:
       - 'lean_proofs/**'
       - '.github/workflows/lean-ci.yml'
@@ -30,38 +30,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Official Lean action: installs elan + pinned toolchain, fetches
-      # prebuilt mathlib oleans, and runs `lake build ToE` in lean_proofs/.
-      - uses: leanprover/lean-action@v1
-        with:
-          lake-package-directory: lean_proofs
-          auto-config: false
-          use-github-cache: true
-          use-mathlib-cache: true
-          build: true
-          build-args: "ToE"
-          test: false
-          lint: false
-
-      # Re-run the build when lean-action fails and surface the compiler
-      # diagnostics as check-run annotations (the raw action log is otherwise
-      # hard to find).
-      - name: Surface Lean build errors
-        if: failure()
-        working-directory: lean_proofs
-        run: |
-          set +e
-          lake build ToE > /tmp/lake-build.log 2>&1
-          rc=$?
-          # Emit every compiler diagnostic (not just the tail) as
-          # annotations; include continuation lines of multi-line errors.
-          awk '/error|warning|failures/{p=8} p>0{print; p--}' /tmp/lake-build.log \
-            | awk 'BEGIN{ORS=""} {buf = buf $0 "\\n"; n++; if (n % 25 == 0) {print "::error::LOG>> " substr(buf, 1, 8000) "\n"; buf=""}} END{if (buf != "") print "::error::LOG>> " substr(buf, 1, 8000)}'
-          if [ "$rc" -eq 0 ]; then
-            echo "::notice::lake build re-run exited 0 (original failure was transient)"
-          else
-            echo "::error::lake build re-run exited $rc"
-          fi
+      - name: Check source audits and proof build coverage
+        run: python3 -m unittest discover -s lean_proofs -p 'test_*.py'
 
       - name: Gate - no sorry / trivial stubs in sources
         working-directory: lean_proofs
@@ -74,8 +44,45 @@ jobs:
           echo "Clean: no sorry/trivial stubs."
           python3 audit_axioms.py --max 0
           # Honesty ratchet: degenerate-model tautologies may only exist under
-          # the `bridge_*` naming convention (`*_Stmt` aliases included),
-          # `Nonempty Unit` stubs and `Unit`-typed volume definitions may only
-          # decrease, and no proof may consist of exactly `trivial`. See
-          # audit_vacuity.py for the definitions of the four metrics.
-          python3 audit_vacuity.py --max-misleading 0 --max-unit-stubs 0 --max-unit-types 15 --max-trivial-proofs 0
+          # the `bridge_*` naming convention, `Nonempty Unit` stubs and
+          # `Unit`-typed volume definitions may only decrease. See
+          # audit_vacuity.py for the definitions of the three metrics.
+          python3 audit_vacuity.py --max-misleading 0 --max-unit-stubs 0 --max-unit-types 13 --alias-baseline legacy_statement_aliases.json --max-trivial-proofs 0
+
+      # Official Lean action: installs elan + pinned toolchain, fetches
+      # prebuilt mathlib oleans, and runs `lake build ToE` in lean_proofs/.
+      - uses: leanprover/lean-action@v1
+        id: lean_build
+        with:
+          lake-package-directory: lean_proofs
+          auto-config: false
+          use-github-cache: true
+          use-mathlib-cache: true
+          build: true
+          build-args: "ToE"
+          test: false
+          lint: false
+
+      - name: Audit transitive kernel axioms of key declarations
+        working-directory: lean_proofs
+        run: python3 audit_kernel.py
+
+      # Re-run the build when lean-action fails and surface the compiler
+      # diagnostics as check-run annotations (the raw action log is otherwise
+      # hard to find).
+      - name: Surface Lean build errors
+        if: failure() && steps.lean_build.outcome == 'failure'
+        working-directory: lean_proofs
+        run: |
+          set +e
+          lake build ToE > /tmp/lake-build.log 2>&1
+          rc=$?
+          # Emit every compiler diagnostic (not just the tail) as
+          # annotations; include continuation lines of multi-line errors.
+          sed '/^trace: /d' /tmp/lake-build.log | awk '/^error:|failures/{p=18} p>0{print; p--}' \
+            | awk 'BEGIN{ORS=""} {buf = buf $0 "\\n"; n++; if (n % 25 == 0) {print "::error::LOG>> " substr(buf, 1, 8000) "\n"; buf=""}} END{if (buf != "") print "::error::LOG>> " substr(buf, 1, 8000)}'
+          if [ "$rc" -eq 0 ]; then
+            echo "::notice::lake build re-run exited 0 (original failure was transient)"
+          else
+            echo "::error::lake build re-run exited $rc"
+          fi

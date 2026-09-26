@@ -139,4 +139,38 @@ theorem information_contracts_planck_scale (penv : InformationPhysics.Environmen
     dynamicPlanckLength senv (informationDensity penv I V) < senv.lP0 :=
   planck_scale_contraction senv _ (informationDensity_pos penv hI hV)
 
+/-- The density profile never expands above its baseline, including the
+    explicitly clamped nonpositive-density branch. -/
+theorem dynamicPlanckLength_le (env : ScaleEnvironment) (rho : ℝ) :
+    dynamicPlanckLength env rho ≤ env.lP0 := by
+  by_cases h : 0 < rho
+  · exact (planck_scale_contraction env rho h).le
+  · rw [dynamicPlanckLength_of_nonpos env (le_of_not_gt h)]
+
+/-- Contraction characterizes positive density, not merely one implication. -/
+theorem planck_scale_contraction_iff (env : ScaleEnvironment) (rho : ℝ) :
+    dynamicPlanckLength env rho < env.lP0 ↔ 0 < rho := by
+  constructor
+  · intro h
+    by_contra hn
+    rw [dynamicPlanckLength_of_nonpos env (le_of_not_gt hn)] at h
+    exact (lt_irrefl _ h)
+  · exact planck_scale_contraction env rho
+
+theorem planck_scale_baseline_iff (env : ScaleEnvironment) (rho : ℝ) :
+    dynamicPlanckLength env rho = env.lP0 ↔ rho ≤ 0 := by
+  constructor
+  · intro h
+    by_contra hn
+    have hc := planck_scale_contraction env rho (lt_of_not_ge hn)
+    rw [h] at hc
+    exact lt_irrefl _ hc
+  · exact dynamicPlanckLength_of_nonpos env
+
+/-- Positive-density readings are identifiable; the clamped negative branch
+    deliberately prevents an injectivity claim on all real densities. -/
+theorem dynamicPlanckLength_injOn (env : ScaleEnvironment) :
+    Set.InjOn (dynamicPlanckLength env) (Set.Ioi 0) :=
+  (dynamicPlanckLength_strictAntiOn env).injOn
+
 end DynamicGeometry
