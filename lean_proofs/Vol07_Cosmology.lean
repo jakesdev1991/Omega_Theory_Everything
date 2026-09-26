@@ -119,3 +119,79 @@ theorem criticaldensity (t : CosmologicalTime)
     _ = 3 * (HubbleParameter t)^2 / (8 * Real.pi * NewtonG) := by ring
 
 end OmegaProtocol.Vol07
+-- ============================================================
+-- EXPANDING COSMOLOGICAL SOLUTIONS (FLRW Dynamics)
+-- ============================================================
+
+/-- General FLRW cosmological evolution characterized by scale factor a(t)
+    and expansion rate ȧ(t). -/
+structure FLRWUniverse where
+  scaleFactor : ℝ
+  hubbleRate : ℝ
+  density : ℝ
+  a_pos : 0 < scaleFactor
+  H_pos : 0 < hubbleRate
+  rho_pos : 0 < density
+
+namespace FLRWUniverse
+
+variable (U : FLRWUniverse)
+
+/-- Critical density associated with the expansion rate: ρ_c = 3H² / (8πG). -/
+noncomputable def criticalDensity (G : ℝ) : ℝ :=
+  3 * (U.hubbleRate ^ 2) / (8 * Real.pi * G)
+
+theorem criticalDensity_pos (G : ℝ) (hG : 0 < G) :
+    0 < U.criticalDensity G := by
+  dsimp [criticalDensity]
+  have hnum : 0 < 3 * (U.hubbleRate ^ 2) := by
+    have : 0 < (3 : ℝ) := by norm_num
+    have hsq : 0 < U.hubbleRate ^ 2 := sq_pos_of_pos U.H_pos
+    positivity
+  have hden : 0 < 8 * Real.pi * G := by
+    have : 0 < (8 : ℝ) := by norm_num
+    have hpi : 0 < Real.pi := Real.pi_pos
+    positivity
+  exact div_pos hnum hden
+
+/-- A flat universe matches critical density: H² = (8πG/3)·ρ ↔ ρ = 3H²/(8πG). -/
+theorem flat_friedmann_critical_density_eq (G : ℝ) (hG : 0 < G) :
+    U.hubbleRate ^ 2 = (8 * Real.pi * G / 3) * U.density ↔
+    U.density = U.criticalDensity G := by
+  dsimp [criticalDensity]
+  have hG_ne : 8 * Real.pi * G ≠ 0 := by
+    have : 0 < 8 * Real.pi * G := by
+      have : 0 < (8 : ℝ) := by norm_num
+      have hpi : 0 < Real.pi := Real.pi_pos
+      positivity
+    exact ne_of_gt this
+  constructor
+  · intro h
+    calc U.density
+      _ = (U.density * (8 * Real.pi * G / 3)) * 3 / (8 * Real.pi * G) := by
+          have : 8 * Real.pi * G / 3 * 3 = 8 * Real.pi * G := by ring
+          have : U.density * (8 * Real.pi * G / 3) * 3 = U.density * (8 * Real.pi * G) := by ring
+          rw [this]
+          exact (mul_div_cancel_right₀ U.density hG_ne).symm
+      _ = ((8 * Real.pi * G / 3) * U.density) * 3 / (8 * Real.pi * G) := by ring
+      _ = (U.hubbleRate ^ 2) * 3 / (8 * Real.pi * G) := by rw [h]
+      _ = 3 * (U.hubbleRate ^ 2) / (8 * Real.pi * G) := by ring
+  · intro h
+    rw [h]
+    calc (8 * Real.pi * G / 3) * (3 * (U.hubbleRate ^ 2) / (8 * Real.pi * G))
+      _ = ((8 * Real.pi * G) / 3 * 3) * (U.hubbleRate ^ 2) / (8 * Real.pi * G) := by ring
+      _ = (8 * Real.pi * G) * (U.hubbleRate ^ 2) / (8 * Real.pi * G) := by ring
+      _ = U.hubbleRate ^ 2 := mul_div_cancel_left₀ _ hG_ne
+
+/-- Cosmological redshift between emitted and observed scale factors. -/
+noncomputable def redshift (a_emit a_obs : ℝ) : ℝ :=
+  a_obs / a_emit - 1
+
+theorem redshift_positive_of_expansion (a_emit a_obs : ℝ)
+    (ha_emit : 0 < a_emit) (h_exp : a_emit < a_obs) :
+    0 < redshift a_emit a_obs := by
+  dsimp [redshift]
+  have : 1 < a_obs / a_emit := (one_lt_div ha_emit).mpr h_exp
+  linarith
+
+end FLRWUniverse

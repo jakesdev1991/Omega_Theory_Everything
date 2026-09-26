@@ -63,6 +63,9 @@ import Vol54_TheoryOfNothing
 --     concrete Q-region model from `OmegaAxioms.lean`. They are honest
 --     theorems about the formalization itself; they do not claim to derive
 --     the physical law their section heading refers to.
+--   * Declarations historically named `*_axiom` or `axiom_*` are kernel-checked
+--     `theorem`s delegating to underlying volume definitions or structural bounds;
+--     they are NOT Lean `axiom` primitives (the repository contains 0 axioms).
 --   * All other declarations are either genuine mathematical proofs or
 --     explicit re-statements of volume-level results.
 

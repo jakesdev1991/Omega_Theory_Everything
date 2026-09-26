@@ -110,3 +110,99 @@ theorem bh_entropy_formula :
   ∀ (ρ : StateSpace), BHEntropy ρ = BlackHoleArea ρ / 4 := fun _ => rfl
 
 end OmegaProtocol.Vol03
+-- ============================================================
+-- MACROSCOPIC THERMODYNAMIC PROCESSES & CARNOT EFFICIENCY
+-- ============================================================
+
+/-- Macroscopic thermodynamic equilibrium state with strictly positive temperature
+    and well-defined entropy. -/
+structure ThermoState where
+  temp : ℝ
+  entropy : ℝ
+  temp_pos : 0 < temp
+  entropy_nonneg : 0 ≤ entropy
+
+/-- Reversible heat exchange at temperature T satisfies Q = T · ΔS. -/
+def heatExchange (initial final : ThermoState) : ℝ :=
+  initial.temp * (final.entropy - initial.entropy)
+
+theorem heatExchange_nonneg_of_entropy_growth (s1 s2 : ThermoState)
+    (hS : s1.entropy ≤ s2.entropy) :
+    0 ≤ heatExchange s1 s2 := by
+  dsimp [heatExchange]
+  have hT := le_of_lt s1.temp_pos
+  have hdiff : 0 ≤ s2.entropy - s1.entropy := sub_nonneg.mpr hS
+  exact mul_nonneg hT hdiff
+
+/-- Clausius equality for a reversible process: ΔS = Q / T. -/
+theorem clausius_reversible_equality (s1 s2 : ThermoState) :
+    s2.entropy - s1.entropy = heatExchange s1 s2 / s1.temp := by
+  dsimp [heatExchange]
+  have hT := ne_of_gt s1.temp_pos
+  exact (mul_div_cancel_left₀ _ hT).symm
+
+/-- Heat engine operating between two thermal reservoirs: hot reservoir T_H and cold reservoir T_C. -/
+structure HeatEngine where
+  tempHot : ℝ
+  tempCold : ℝ
+  workOutput : ℝ
+  heatInput : ℝ
+  th_pos : 0 < tempHot
+  tc_pos : 0 < tempCold
+  t_order : tempCold < tempHot
+  heat_pos : 0 < heatInput
+  work_nonneg : 0 ≤ workOutput
+  work_le_heat : workOutput ≤ heatInput
+
+namespace HeatEngine
+
+variable (E : HeatEngine)
+
+/-- Thermal efficiency η = W / Q_H. -/
+noncomputable def efficiency : ℝ := E.workOutput / E.heatInput
+
+/-- Carnot maximum theoretical efficiency η_Carnot = 1 - T_C / T_H. -/
+noncomputable def carnotEfficiency : ℝ := 1 - E.tempCold / E.tempHot
+
+theorem carnot_efficiency_pos : 0 < E.carnotEfficiency := by
+  dsimp [carnotEfficiency]
+  have hdiv : E.tempCold / E.tempHot < 1 := by
+    exact (div_lt_one E.th_pos).mpr E.t_order
+  linarith
+
+theorem carnot_efficiency_lt_one : E.carnotEfficiency < 1 := by
+  dsimp [carnotEfficiency]
+  have hdiv : 0 < E.tempCold / E.tempHot := div_pos E.tc_pos E.th_pos
+  linarith
+
+theorem efficiency_nonneg : 0 ≤ E.efficiency :=
+  div_nonneg E.work_nonneg (le_of_lt E.heat_pos)
+
+/-- Reversible Carnot cycle benchmark attaining exact Carnot efficiency. -/
+noncomputable def idealCarnotEngine (TC TH : ℝ) (hC : 0 < TC) (hH : 0 < TH) (h_ord : TC < TH) (Qin : ℝ) (hQ : 0 < Qin) : HeatEngine where
+  tempHot := TH
+  tempCold := TC
+  workOutput := (1 - TC / TH) * Qin
+  heatInput := Qin
+  th_pos := hH
+  tc_pos := hC
+  t_order := h_ord
+  heat_pos := hQ
+  work_nonneg := by
+    have h_carnot : 0 ≤ 1 - TC / TH := by
+      have : TC / TH < 1 := (div_lt_one hH).mpr h_ord
+      linarith
+    exact mul_nonneg h_carnot (le_of_lt hQ)
+  work_le_heat := by
+    have h_div_pos : 0 < TC / TH := div_pos hC hH
+    have h_factor : 1 - TC / TH ≤ 1 := by linarith
+    nlinarith
+
+theorem idealCarnotEngine_attains_carnot (TC TH : ℝ) (hC : 0 < TC) (hH : 0 < TH) (h_ord : TC < TH) (Qin : ℝ) (hQ : 0 < Qin) :
+    (idealCarnotEngine TC TH hC hH h_ord Qin hQ).efficiency =
+    (idealCarnotEngine TC TH hC hH h_ord Qin hQ).carnotEfficiency := by
+  dsimp [efficiency, carnotEfficiency, idealCarnotEngine]
+  have hQne : Qin ≠ 0 := ne_of_gt hQ
+  exact mul_div_cancel_right₀ _ hQne
+
+end HeatEngine

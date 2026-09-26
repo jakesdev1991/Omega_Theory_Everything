@@ -306,4 +306,127 @@ theorem phase_transition_at_freeze (R₁ R₂ : QRegion) :
   intro
   simp [asymmetryTensor, reverseFlux, vonNeumannEntropy]
 
+/-!
+### Non-degenerate Information Network & Witness
+
+The minimal zero-information model above ensures internal consistency,
+but cannot realize positive mutual information, non-zero asymmetry,
+or genuine metric separation. Below we formalize the abstract class
+of non-degenerate information networks and construct an explicit
+two-region witness.
+-/
+
+/-- Abstract specification of an information network over regions.
+    Encapsulates mutual information, joint entropy, and bounds. -/
+structure InformationNetwork (α : Type*) where
+  mutualInfo : α → α → ℝ
+  jointEnt   : α → α → ℝ
+  maxMI      : ℝ
+  mi_symm    : ∀ A B, mutualInfo A B = mutualInfo B A
+  mi_nonneg  : ∀ A B, 0 ≤ mutualInfo A B
+  mi_le_max  : ∀ A B, mutualInfo A B ≤ maxMI
+  je_symm    : ∀ A B, jointEnt A B = jointEnt B A
+  je_pos     : ∀ A B, 0 < jointEnt A B
+  mi_le_je   : ∀ A B, mutualInfo A B ≤ jointEnt A B
+
+namespace InformationNetwork
+
+variable {α : Type*} (net : InformationNetwork α)
+
+/-- Chain overlap density Φ(A, B) = I(A : B) / S(A, B) in the general model. -/
+noncomputable def overlap (A B : α) : ℝ :=
+  net.mutualInfo A B / net.jointEnt A B
+
+theorem overlap_nonneg (A B : α) : 0 ≤ net.overlap A B :=
+  div_nonneg (net.mi_nonneg A B) (le_of_lt (net.je_pos A B))
+
+theorem overlap_le_one (A B : α) : net.overlap A B ≤ 1 :=
+  div_le_one_of_le₀ (net.mi_le_je A B) (le_of_lt (net.je_pos A B))
+
+theorem overlap_symm (A B : α) : net.overlap A B = net.overlap B A := by
+  dsimp [overlap]
+  rw [net.mi_symm, net.je_symm]
+
+/-- Omega metric induced by an InformationNetwork with a given Planck scale factor. -/
+noncomputable def metric (planckScale : ℝ → ℝ) (A B : α) : ℝ :=
+  let I := net.mutualInfo A B
+  let phi := net.overlap A B
+  if I = 0 then 0
+  else -planckScale phi * Real.log (I / net.maxMI)
+
+theorem metric_nonneg_of_le_max (planckScale : ℝ → ℝ)
+    (h_scale_nonneg : ∀ x, 0 ≤ planckScale x)
+    (h_max_pos : 0 < net.maxMI) (A B : α) :
+    0 ≤ net.metric planckScale A B := by
+  dsimp [metric]
+  split_ifs with hI
+  · exact le_rfl
+  · have hI_pos : 0 < net.mutualInfo A B :=
+      lt_of_le_of_ne (net.mi_nonneg A B) (Ne.symm hI)
+    have h_ratio_pos : 0 < net.mutualInfo A B / net.maxMI :=
+      div_pos hI_pos h_max_pos
+    have h_ratio_le : net.mutualInfo A B / net.maxMI ≤ 1 :=
+      div_le_one_of_le₀ (net.mi_le_max A B) (le_of_lt h_max_pos)
+    have h_log_nonpos : Real.log (net.mutualInfo A B / net.maxMI) ≤ 0 :=
+      Real.log_le_zero_of_le_one h_ratio_pos h_ratio_le
+    have h_neg_log_nonneg : 0 ≤ -Real.log (net.mutualInfo A B / net.maxMI) :=
+      neg_nonneg.mpr h_log_nonpos
+    have h_scale := h_scale_nonneg (net.overlap A B)
+    calc 0
+      _ ≤ planckScale (net.overlap A B) * (-Real.log (net.mutualInfo A B / net.maxMI)) :=
+          mul_nonneg h_scale h_neg_log_nonneg
+      _ = -planckScale (net.overlap A B) * Real.log (net.mutualInfo A B / net.maxMI) := by ring
+
+end InformationNetwork
+
+/-- Two-region discrete label type to witness non-degeneracy. -/
+inductive BinaryRegion : Type
+  | alpha : BinaryRegion
+  | beta  : BinaryRegion
+  deriving DecidableEq
+
+namespace BinaryRegion
+
+/-- An explicit non-degenerate information witness on two regions where
+    mutual information and joint entropy are strictly positive,
+    and distinct regions have positive separation. -/
+def binaryNetwork : InformationNetwork BinaryRegion where
+  mutualInfo := fun A B => if A = B then 1 else (1 / 2 : ℝ)
+  jointEnt   := fun _ _ => 2
+  maxMI      := 1
+  mi_symm    := by
+    intro A B
+    cases A <;> cases B <;> simp
+  mi_nonneg  := by
+    intro A B
+    cases A <;> cases B <;> norm_num
+  mi_le_max  := by
+    intro A B
+    cases A <;> cases B <;> norm_num
+  je_symm    := by intros; rfl
+  je_pos     := by intros; norm_num
+  mi_le_je   := by
+    intro A B
+    cases A <;> cases B <;> norm_num
+
+theorem binary_overlap_self (A : BinaryRegion) :
+    binaryNetwork.overlap A A = 1 / 2 := by
+  cases A <;> { dsimp [InformationNetwork.overlap, binaryNetwork]; norm_num }
+
+theorem binary_overlap_cross :
+    binaryNetwork.overlap BinaryRegion.alpha BinaryRegion.beta = 1 / 4 := by
+  dsimp [InformationNetwork.overlap, binaryNetwork]
+  norm_num
+
+theorem binary_mi_pos (A B : BinaryRegion) :
+    0 < binaryNetwork.mutualInfo A B := by
+  cases A <;> cases B <;> norm_num [binaryNetwork]
+
+theorem binary_distinct_regions :
+    BinaryRegion.alpha ≠ BinaryRegion.beta := by
+  intro h
+  cases h
+
+end BinaryRegion
+
 end OmegaProtocol

@@ -332,3 +332,208 @@ example (e : Environment) (mass : ℝ) (xs ys : List Erasure) :
   remainingMass_append e mass xs ys
 
 end ErasureRegression
+
+/-! Non-degenerate Information Network regression examples. -/
+namespace InformationNetworkRegression
+open OmegaProtocol
+
+example : 0 ≤ BinaryRegion.binaryNetwork.overlap BinaryRegion.alpha BinaryRegion.beta :=
+  BinaryRegion.binaryNetwork.overlap_nonneg _ _
+
+example : BinaryRegion.binaryNetwork.overlap BinaryRegion.alpha BinaryRegion.beta ≤ 1 :=
+  BinaryRegion.binaryNetwork.overlap_le_one _ _
+
+example : BinaryRegion.binaryNetwork.overlap BinaryRegion.alpha BinaryRegion.beta =
+    BinaryRegion.binaryNetwork.overlap BinaryRegion.beta BinaryRegion.alpha :=
+  BinaryRegion.binaryNetwork.overlap_symm _ _
+
+example : BinaryRegion.binaryNetwork.overlap BinaryRegion.alpha BinaryRegion.beta = 1 / 4 :=
+  BinaryRegion.binary_overlap_cross
+
+example : 0 < BinaryRegion.binaryNetwork.mutualInfo BinaryRegion.alpha BinaryRegion.beta :=
+  BinaryRegion.binary_mi_pos _ _
+
+end InformationNetworkRegression
+
+/-! Non-degenerate Cosmic Density & Dynamics regression examples. -/
+namespace CosmicAndDynamicsRegression
+open OmegaProtocol
+
+example : Vol14.CosmicDensityBudget.standardLCDM.omegaMatter = 31 / 100 :=
+  Vol14.CosmicDensityBudget.standardLCDM_matter
+
+example : Vol14.CosmicDensityBudget.standardLCDM.omegaMatter <
+    Vol14.CosmicDensityBudget.standardLCDM.omegaDE :=
+  Vol14.CosmicDensityBudget.standardLCDM_dark_energy_dominant
+
+example : Vol19.macroEntropy Vol19.disorderedState <
+    Vol19.macroEntropy Vol19.organizedState :=
+  Vol19.emergence_witness
+
+example : Vol19.informationGain Vol19.disorderedState Vol19.organizedState = 2 :=
+  Vol19.emergence_witness_gain
+
+example (d0 : ℝ) : Vol20.ExpandingMap.doublingMap.separation d0 3 = 8 * d0 :=
+  Vol20.ExpandingMap.doubling_separation_after_3_steps d0
+
+example : Vol15.CosmologicalFluid.deSitterVacuum.w = -1 :=
+  Vol15.CosmologicalFluid.deSitter_w
+
+example : Vol15.CosmologicalFluid.deSitterVacuum.accelerationSource = -2 :=
+  Vol15.CosmologicalFluid.deSitter_source_neg
+
+example : 0 < - (4 * Real.pi * 1 / 3) * Vol15.CosmologicalFluid.deSitterVacuum.accelerationSource :=
+  Vol15.CosmologicalFluid.cosmic_acceleration_positive _ (by norm_num)
+    (by rw [Vol15.CosmologicalFluid.deSitter_source_neg]; norm_num)
+
+example : Vol12.QubitSystem.bellPairSystem.entanglement <
+    Vol12.QubitSystem.bellPairSystem.capacity :=
+  Vol12.QubitSystem.bellPair_strictly_below_capacity
+
+example (planckScale : ℝ → ℝ) :
+    Vol22.NetworkER_EPR.networkThroatArea BinaryRegion.binaryNetwork planckScale
+      BinaryRegion.alpha BinaryRegion.alpha = 0 :=
+  Vol22.NetworkER_EPR.binary_identical_zero_throat planckScale BinaryRegion.alpha
+
+end CosmicAndDynamicsRegression
+
+
+
+example : Vol08.standardSchwarzschild.mass = 1 := rfl
+
+example : 0 < Vol08.HawkingTemperature Vol08.standardSchwarzschild :=
+  Vol08.hawkingtemperature_pos Vol08.standardSchwarzschild
+
+example : Vol08.BHEntropy Vol08.standardSchwarzschild = 4 * Real.pi :=
+  Vol08.standardSchwarzschild_entropy
+
+example : Vol09.EntanglementEntropy Vol08.standardSchwarzschild =
+    Vol08.BHEntropy Vol08.standardSchwarzschild :=
+  Vol09.bh_entropy_is_holographic Vol08.standardSchwarzschild
+
+example : Vol11.ChernBand.haldaneBand.chernNumber = 1 :=
+  Vol11.ChernBand.haldane_chern_number
+
+example (e h : ℝ) : Vol11.ChernBand.haldaneBand.hallConductance e h = e^2 / h :=
+  Vol11.ChernBand.haldane_hall_conductance e h
+
+example : 0 < Vol13.SpinNetwork.areaGap 1 1 (by norm_num) (by norm_num) :=
+  Vol13.SpinNetwork.areaGap_pos 1 1 (by norm_num) (by norm_num)
+
+example : Vol13.Graviton.plusGraviton.helicity ≠ Vol13.Graviton.minusGraviton.helicity :=
+  Vol13.Graviton.distinct_helicities
+
+example : Vol06.spacelike_separated Vol06.regionA Vol06.regionB :=
+  Vol06.regionA_B_spacelike
+
+example (h12 : Vol06.subset_region Vol06.regionA Vol06.regionA)
+    (h34 : Vol06.subset_region Vol06.regionB Vol06.regionB)
+    (A B : ↥OmegaAlgebra) (hA : A ∈ Vol06.LocalNet Vol06.regionA)
+    (hB : B ∈ Vol06.LocalNet Vol06.regionB) :
+    A * B = B * A :=
+  Vol06.nested_microcausality Vol06.regionA Vol06.regionA Vol06.regionB Vol06.regionB
+    h12 h34 Vol06.regionA_B_spacelike A B hA hB
+
+example : Vol02.FineStructureConstant > 0 :=
+  Vol02.fine_structure_positive
+
+example (em : Vol02.ElectromagneticField) :
+    Vol02.ExteriorDerivative em.F = 0 :=
+  Vol02.homogeneous_maxwell em
+
+example (s1 s2 : Vol03.ThermoState) :
+    s2.entropy - s1.entropy = Vol03.heatExchange s1 s2 / s1.temp :=
+  Vol03.clausius_reversible_equality s1 s2
+
+example (TC TH Qin : ℝ) (hC : 0 < TC) (hH : 0 < TH) (h_ord : TC < TH) (hQ : 0 < Qin) :
+    0 < (Vol03.HeatEngine.idealCarnotEngine TC TH hC hH h_ord Qin hQ).carnotEfficiency :=
+  (Vol03.HeatEngine.idealCarnotEngine TC TH hC hH h_ord Qin hQ).carnot_efficiency_pos
+
+example (TC TH Qin : ℝ) (hC : 0 < TC) (hH : 0 < TH) (h_ord : TC < TH) (hQ : 0 < Qin) :
+    (Vol03.HeatEngine.idealCarnotEngine TC TH hC hH h_ord Qin hQ).efficiency =
+    (Vol03.HeatEngine.idealCarnotEngine TC TH hC hH h_ord Qin hQ).carnotEfficiency :=
+  Vol03.HeatEngine.idealCarnotEngine_attains_carnot TC TH hC hH h_ord Qin hQ
+
+example (U : Vol07.FLRWUniverse) (G : ℝ) (hG : 0 < G) :
+    0 < U.criticalDensity G :=
+  U.criticalDensity_pos G hG
+
+example (U : Vol07.FLRWUniverse) (G : ℝ) (hG : 0 < G) :
+    U.hubbleRate ^ 2 = (8 * Real.pi * G / 3) * U.density ↔
+    U.density = U.criticalDensity G :=
+  U.flat_friedmann_critical_density_eq G hG
+
+example (a_emit a_obs : ℝ) (ha : 0 < a_emit) (h : a_emit < a_obs) :
+    0 < Vol07.FLRWUniverse.redshift a_emit a_obs :=
+  Vol07.FLRWUniverse.redshift_positive_of_expansion a_emit a_obs ha h
+
+example (S : Vol05.SphericallySymmetricSpacetime) (G r : ℝ) (hG : 0 < G) (hr : S.horizonRadius G < r) :
+    0 < S.lapseFunction G r :=
+  S.lapse_strictly_positive G r hG hr
+
+example (S : Vol05.SphericallySymmetricSpacetime) (G r : ℝ) (hG : 0 < G) (hr : 0 < r) :
+    0 < S.kretschmannInvariant G r :=
+  S.kretschmann_pos G r hG hr
+
+example : Vol05.SphericallySymmetricSpacetime.unitSchwarzschild.horizonRadius 1 = 2 :=
+  Vol05.SphericallySymmetricSpacetime.unitSchwarzschild_horizon
+
+example : Vol05.SphericallySymmetricSpacetime.unitSchwarzschild.kretschmannInvariant 1 2 = 3 / 4 :=
+  Vol05.SphericallySymmetricSpacetime.unitSchwarzschild_kretschmann_at_horizon
+
+example (a a' b b' : ℝ) (ha : |a| ≤ 1) (ha' : |a'| ≤ 1) (hb : b = 1 ∨ b = -1) (hb' : b' = 1 ∨ b' = -1) :
+    |a * b + a * b' + a' * b - a' * b'| ≤ 2 :=
+  Vol24.CHSHSystem.local_realism_bound a a' b b' ha ha' hb hb'
+
+example : Vol24.CHSHSystem.singletBellSystem.chshParameter = Vol24.TsirelsonBound :=
+  Vol24.CHSHSystem.singlet_chsh_attains_tsirelson
+
+example : Vol24.CHSHSystem.singletBellSystem.chshParameter > Vol24.ClassicalCHSHBound :=
+  Vol24.CHSHSystem.singlet_violates_classical_bound
+
+example (S : Vol23.QubitState) : S.trace = 1 :=
+  S.trace_eq_one
+
+example (S : Vol23.QubitState) : S.purity ≤ 1 :=
+  S.purity_le_one
+
+example (S : Vol23.QubitState) (λ : ℝ) (hλ0 : 0 ≤ λ) (hλ1 : λ ≤ 1) :
+    (S.dephase λ hλ0 hλ1).trace = S.trace :=
+  S.dephase_trace_preserving λ hλ0 hλ1
+
+example (S : Vol23.QubitState) (λ : ℝ) (hλ0 : 0 ≤ λ) (hλ1 : λ ≤ 1) :
+    |(S.dephase λ hλ0 hλ1).c| ≤ |S.c| :=
+  S.dephase_coherence_decay λ hλ0 hλ1
+
+example : Vol23.QubitState.plusState.purity = 1 :=
+  Vol23.QubitState.plusState_pure
+
+example : (Vol23.QubitState.plusState.dephase 0 (by norm_num) (by norm_num)).purity = 1 / 2 :=
+  Vol23.QubitState.plusState_decohered_purity
+
+example (S : Vol27.IntegratedSystem) : 0 ≤ S.phi :=
+  S.phi_nonneg
+
+example (S : Vol27.IntegratedSystem) (h : S.H_AB < S.H_A + S.H_B) : 0 < S.phi :=
+  S.phi_pos_of_strict_subadditivity h
+
+example : 0 < Vol27.IntegratedSystem.corticalComplex.phi :=
+  Vol27.IntegratedSystem.cortical_phi_pos
+
+example : Vol27.IntegratedSystem.corticalComplex.phi = 4 / 5 :=
+  Vol27.IntegratedSystem.cortical_phi_value
+
+example : 0 < Vol27.IntegratedSystem.corticalComplex.fluxAsymmetry :=
+  Vol27.IntegratedSystem.cortical_flux_asymmetry_pos
+
+example {n : ℕ} (A : Vol33.BoundedAgent n) (i : Fin n) : 0 ≤ A.utility i :=
+  A.utility_nonneg i
+
+example {n : ℕ} (A : Vol33.BoundedAgent n) : 0 ≤ A.totalUtility :=
+  A.totalUtility_nonneg
+
+example : Vol33.BoundedAgent.dualTaskAgent.totalUtility = 25 :=
+  Vol33.BoundedAgent.dualTask_totalUtility_value
+
+example : 0 < Vol33.BoundedAgent.dualTaskAgent.totalUtility :=
+  Vol33.BoundedAgent.dualTask_totalUtility_pos

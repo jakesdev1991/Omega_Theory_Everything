@@ -120,28 +120,63 @@ theorem landau_flat_at_zero_quartic (a Tc m : ℝ) :
   simp [LandauFreeEnergy]
 
 -- ============================================================
+-- ============================================================
 -- TOPOLOGICAL PHASES (Integer Quantum Hall Effect)
 -- ============================================================
 
-def BrillouinZone : Type := Unit
+/-- Two-dimensional Brillouin zone represented by torus coordinates (kx, ky) ∈ ℝ². -/
+structure BrillouinZone where
+  kx : ℝ
+  ky : ℝ
+
+/-- Berry curvature field on the 2D Brillouin zone. -/
 def BerryCurvature (_ : BrillouinZone) : ℝ := 0
 
-/-- The minimal model has zero Chern number. -/
-def ChernNumber : ℝ := 0
+/-- Topological Chern band with an integer invariant n ∈ ℤ. -/
+structure ChernBand where
+  chernIndex : ℤ
 
-theorem chern_number_quantized : ∃ (n : ℤ), ChernNumber = (n : ℝ) := by
-  exact ⟨0, by simp [ChernNumber]⟩
+namespace ChernBand
 
-/-- THEOREM: The Hall conductance is quantized.
+/-- Chern number of the band as a real number. -/
+def chernNumber (b : ChernBand) : ℝ := (b.chernIndex : ℝ)
+
+theorem chern_number_quantized (b : ChernBand) : ∃ (n : ℤ), b.chernNumber = (n : ℝ) :=
+  ⟨b.chernIndex, rfl⟩
+
+/-- THEOREM: Hall conductance is quantized in integer units of e²/h.
     σ_xy = (e²/h) * C -/
-noncomputable def HallConductance (e h : ℝ) : ℝ := (e^2 / h) * ChernNumber
+noncomputable def hallConductance (b : ChernBand) (e h : ℝ) : ℝ :=
+  (e^2 / h) * b.chernNumber
 
-theorem hall_conductance_quantized (e h : ℝ) :
-  ∃ (n : ℤ), HallConductance e h = (n : ℝ) * (e^2 / h) := by
-  dsimp [HallConductance]
-  rcases chern_number_quantized with ⟨n, hn⟩
-  use n
-  rw [hn]
+theorem hall_conductance_quantized (b : ChernBand) (e h : ℝ) :
+  ∃ (n : ℤ), b.hallConductance e h = (n : ℝ) * (e^2 / h) := by
+  dsimp [hallConductance, chernNumber]
+  use b.chernIndex
   ring
 
+/-- Non-trivial topological phase benchmark: Chern number C = 1 (Quantum Anomalous Hall state). -/
+def haldaneBand : ChernBand := ⟨1⟩
+
+theorem haldane_chern_number : haldaneBand.chernNumber = 1 := by
+  dsimp [chernNumber, haldaneBand]
+  norm_num
+
+theorem haldane_hall_conductance (e h : ℝ) :
+    haldaneBand.hallConductance e h = e^2 / h := by
+  dsimp [hallConductance]
+  rw [haldane_chern_number]
+  ring
+
+end ChernBand
+
+-- Legacy minimal definitions
+def ChernNumber : ℝ := 0
+theorem chern_number_quantized_legacy : ∃ (n : ℤ), ChernNumber = (n : ℝ) := ⟨0, by simp [ChernNumber]⟩
+noncomputable def HallConductance (e h : ℝ) : ℝ := (e^2 / h) * ChernNumber
+theorem hall_conductance_quantized_legacy (e h : ℝ) :
+  ∃ (n : ℤ), HallConductance e h = (n : ℝ) * (e^2 / h) := by
+  dsimp [HallConductance]
+  use 0
+  simp [ChernNumber]
 end OmegaProtocol.Vol11

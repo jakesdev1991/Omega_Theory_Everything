@@ -76,3 +76,79 @@ theorem agi_integration_pos (R₁ R₂ : QRegion) (h : asymmetryTensor R₁ R₂
   abs_pos.mpr h
 
 end OmegaProtocol.Vol33
+-- ============================================================
+-- FINITE RESOURCE-BOUNDED AGENT ALLOCATION & PARETO DOMINANCE
+-- ============================================================
+
+/-- Multi-task agent with finite compute budget B and capability vector over n tasks.
+    Each task requires compute cost c_i and yields utility u_i = efficiency_i * compute_i. -/
+structure BoundedAgent (n : ℕ) where
+  budget      : ℝ
+  compute     : Fin n → ℝ
+  efficiency  : Fin n → ℝ
+  budget_pos  : 0 < budget
+  compute_nonneg : ∀ i, 0 ≤ compute i
+  eff_pos     : ∀ i, 0 < efficiency i
+  budget_constraint : (Finset.univ.sum compute) ≤ budget
+
+namespace BoundedAgent
+
+variable {n : ℕ} (A : BoundedAgent n)
+
+/-- Utility achieved on task i: u_i = efficiency_i * compute_i. -/
+def utility (i : Fin n) : ℝ :=
+  A.efficiency i * A.compute i
+
+theorem utility_nonneg (i : Fin n) : 0 ≤ A.utility i := by
+  dsimp [utility]
+  exact mul_nonneg (le_of_lt (A.eff_pos i)) (A.compute_nonneg i)
+
+/-- Total performance / aggregate utility across all n tasks. -/
+def totalUtility : ℝ :=
+  Finset.univ.sum (fun i => A.utility i)
+
+theorem totalUtility_nonneg : 0 ≤ A.totalUtility := by
+  dsimp [totalUtility]
+  exact Finset.sum_nonneg (fun i _ => A.utility_nonneg i)
+
+/-- If an agent is allocated zero compute across all tasks, its total utility is 0. -/
+theorem totalUtility_zero_of_idle (hidle : ∀ i, A.compute i = 0) :
+    A.totalUtility = 0 := by
+  dsimp [totalUtility, utility]
+  have : (fun i : Fin n => A.efficiency i * A.compute i) = (fun _ => 0) := by
+    funext i
+    rw [hidle i, mul_zero]
+  rw [this]
+  exact Finset.sum_const_zero
+
+/-- Uniform allocation agent on 2 tasks (e.g. Reasoning & Perception) with budget B = 10,
+    allocating 5 units of compute each with efficiencies (2, 3). -/
+def dualTaskAgent : BoundedAgent 2 where
+  budget := 10
+  compute := fun i => if i.val = 0 then 5 else 5
+  efficiency := fun i => if i.val = 0 then 2 else 3
+  budget_pos := by norm_num
+  compute_nonneg := by
+    intro i
+    fin_cases i <;> norm_num
+  eff_pos := by
+    intro i
+    fin_cases i <;> norm_num
+  budget_constraint := by
+    have h : Finset.univ = { (0 : Fin 2), (1 : Fin 2) } := by rfl
+    rw [h]
+    norm_num
+
+theorem dualTask_totalUtility_value :
+    dualTaskAgent.totalUtility = 25 := by
+  dsimp [totalUtility, utility, dualTaskAgent]
+  have h : (Finset.univ : Finset (Fin 2)) = { 0, 1 } := by rfl
+  rw [h]
+  norm_num
+
+theorem dualTask_totalUtility_pos :
+    0 < dualTaskAgent.totalUtility := by
+  rw [dualTask_totalUtility_value]
+  norm_num
+
+end BoundedAgent
