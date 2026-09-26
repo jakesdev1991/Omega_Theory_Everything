@@ -9,3 +9,7 @@ __pycache__/
 
 # JS/Node dependencies (mobile-node, desktop tooling)
 node_modules/
+
+# Conjecture pilot: regenerable ledgers and Lean scratch files (never commit sorry-bearing scratch)
+conjecture_pilot/out/
+conjecture_pilot/.scratch/
