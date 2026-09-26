@@ -133,7 +133,7 @@ def correlationDet (ψ : BipartiteState) : ℂ := ψ.a * ψ.d - ψ.b * ψ.c
 /-- Product states have vanishing correlation determinant. -/
 theorem product_correlation_det_zero (ψ : BipartiteState) (h : IsProduct ψ) :
     correlationDet ψ = 0 := by
-  rintro ⟨u, v, w, z, ha, hb, hc, hd⟩
+  obtain ⟨u, v, w, z, ha, hb, hc, hd⟩ := h
   dsimp [correlationDet]
   rw [ha, hb, hc, hd]
   ring
