@@ -290,7 +290,7 @@ theorem robertson_uncertainty (A B : H →L[ℂ] H) (hA : SelfAdjoint A)
   have h1 : ‖@inner ℂ H _ (deviation A ψ) (deviation B ψ)‖ ^ 2
       ≤ (‖deviation A ψ‖ * ‖deviation B ψ‖) ^ 2 := by
     apply sq_le_sq'
-    · exact norm_nonneg (@inner ℂ H _ (deviation A ψ) (deviation B ψ))
+    · linarith [norm_nonneg (@inner ℂ H _ (deviation A ψ) (deviation B ψ))]
     · exact hcs
   rw [mul_pow] at h1
   have hlink := comm_link A B hA hB ψ hψ
@@ -313,7 +313,7 @@ theorem robertson_uncertainty (A B : H →L[ℂ] H) (hA : SelfAdjoint A)
   have hfin : (‖@inner ℂ H _ ψ ((ccomm A B) ψ)‖ / 2) ^ 2
       ≤ ‖@inner ℂ H _ (deviation A ψ) (deviation B ψ)‖ ^ 2 := by
     apply sq_le_sq'
-    · exact div_nonneg (norm_nonneg (@inner ℂ H _ ψ ((ccomm A B) ψ))) two_pos.le
+    · linarith [norm_nonneg (@inner ℂ H _ ψ ((ccomm A B) ψ))]
     · exact hdiv
   show ‖deviation A ψ‖ ^ 2 * ‖deviation B ψ‖ ^ 2 ≥ _
   linarith
