@@ -28,9 +28,8 @@ inductive Branch
 /-- Legacy carrier name kept for `OmegaProtocol.lean`. -/
 def MultiverseEnsemble : Type := Branch
 
-/-- Named bridge (legacy name kept): the multiverse ensemble is inhabited by
-    the root branch. -/
-theorem multiverse_theory_axiom : Nonempty MultiverseEnsemble :=
+/-- The multiverse ensemble is inhabited by the root branch. -/
+theorem multiverse_ensemble_witness : Nonempty MultiverseEnsemble :=
   ⟨Branch.root⟩
 
 /-- Generation depth of a branch. -/

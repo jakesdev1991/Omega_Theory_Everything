@@ -21,20 +21,13 @@ open OmegaProtocol
 noncomputable def IntegratedInformation (R₁ R₂ : QRegion) : ℝ :=
   |asymmetryTensor R₁ R₂|
 
-/-- THEOREM: Integrated Information > 0 for conscious systems -/
-theorem integrated_information_pos (R₁ R₂ : QRegion) (h : asymmetryTensor R₁ R₂ ≠ 0) :
-  IntegratedInformation R₁ R₂ > 0 := by
-  have h₁ : IntegratedInformation R₁ R₂ = |asymmetryTensor R₁ R₂| := rfl
-  rw [h₁]
-  have h₂ : asymmetryTensor R₁ R₂ ≠ 0 := h
-  have h₃ : |asymmetryTensor R₁ R₂| > 0 := by
-    exact abs_pos.mpr h₂
-  exact h₃
-
-/-- THEOREM: Subjective Experience - integration generates consciousness -/
-theorem subjectiveexperience (R₁ R₂ : QRegion) (h : asymmetryTensor R₁ R₂ ≠ 0) :
-  IntegratedInformation R₁ R₂ > 0 := by
-  exact integrated_information_pos R₁ R₂ h
+-- The retired legacy theorems `integrated_information_pos` and
+-- `subjectiveexperience` hypothesized `asymmetryTensor R₁ R₂ ≠ 0`, which
+-- is unsatisfiable in the concrete zero model (`asymmetryTensor ≡ 0`).
+-- The genuine non-degenerate content is the `IntegratedSystem` model
+-- below: strictly subadditive systems have strictly positive integrated
+-- information, and the IIT "experience" dictionary is an explicit
+-- definition on that model.
 
 /-- THEOREM: Substrate Independence - integrated info is substrate independent -/
 theorem substrateindependence (R₁ R₂ : QRegion) :
@@ -113,6 +106,18 @@ theorem phi_zero_of_independent (h : S.H_AB = S.H_A + S.H_B) :
     S.phi = 0 := by
   dsimp [phi]
   linarith
+
+/-- IIT dictionary (toy, stated honestly): a system "experiences" exactly
+    when its integrated information is strictly positive. This is a
+    definition within the model, not a claim about physical
+    consciousness. -/
+def Experiences (S : IntegratedSystem) : Prop := 0 < S.phi
+
+/-- Strictly integrated systems (joint entropy strictly below the
+    partitioned sum) experience, in the sense of the dictionary above. -/
+theorem experiences_of_strict_integration (h : S.H_AB < S.H_A + S.H_B) :
+    S.Experiences :=
+  phi_pos_of_strict_subadditivity S h
 
 /-- Canonical conscious cortical architecture witness:
     H_A = 1, H_B = 1, H_AB = 1.2 (sharing 0.8 nats of mutual correlation),

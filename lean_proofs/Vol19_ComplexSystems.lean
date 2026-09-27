@@ -6,34 +6,22 @@ import OmegaUnifiedFoundation
   REAL mathematical formalization of Complex Systems.
 
   Genuinely proven theorems:
-  1. Information Gain: If the macroscopic entropy of a complex system 
-     increases during emergence, the net information gain is positive.
-  2. Concrete Observable & State Transition: Provides a state space with
+  1. Concrete Observable & State Transition: Provides a state space with
      explicit entropy evaluations, witnessing genuine entropy increase
      and emergent information gain.
-  3. Bounded Subadditivity / Information Emergence: Demonstrates that when
+  2. Bounded Subadditivity / Information Emergence: Demonstrates that when
      emergent correlations reduce joint entropy below the uncoupled sum,
      the emergent mutual information is strictly positive.
+
+  The retired legacy cluster (`SystemState := ℝ`,
+  `ComplexityEntropy := 0`, `emergent_information_gain`) restated
+  `ComplexityEntropy B > ComplexityEntropy A` — unsatisfiable in the
+  zero-entropy legacy carrier — as both hypothesis and conclusion. The
+  non-degenerate `ComplexState` model below carries the genuine content.
 -/
 
 namespace OmegaProtocol.Vol19
 open OmegaProtocol
-
--- ============================================================
--- COMPLEXITY AND ENTROPY (General & Concrete Models)
--- ============================================================
-
-def SystemState := ℝ
-def ComplexityEntropy (_ : SystemState) : ℝ := 0
-
-/-- THEOREM: Emergent Information Gain (GENUINE PROOF)
-    If a complex system evolves from state A to state B and its entropy 
-    increases, the macroscopic information gain is positive. -/
-theorem emergent_information_gain
-  (A B : SystemState)
-  (h_emergence : ComplexityEntropy B > ComplexityEntropy A) :
-  ComplexityEntropy B - ComplexityEntropy A > 0 := by
-  exact sub_pos.mpr h_emergence
 
 -- ============================================================
 -- NON-DEGENERATE EMERGENCE MODEL

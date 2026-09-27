@@ -14,16 +14,16 @@ noncomputable def Geometry : QFIMGeometry :=
     scalar_curvature := fun _ => 0
     einstein_tensor := fun _ _ => 0
     stress_energy := fun _ _ => 0
-    axiom_metric_is_qfim := by
+    law_metric_is_qfim := by
       intro x y
       rfl
-    axiom_einstein_equations := by
+    law_einstein_equations := by
       intro x y
       simp
-    axiom_bianchi_identity := by
+    law_bianchi_identity := by
       intro ν
       rfl
-    axiom_cosmological_constant := by
+    law_cosmological_constant := by
       refine ⟨0, ?_⟩
       intro x y
       simp }
@@ -36,13 +36,13 @@ noncomputable def Geometry : QFIMGeometry :=
     This is the central claim of the Omega Protocol for gravity. -/
 theorem metric_is_qfim (x y : Geometry.spacetime) :
   Geometry.metric x y = QFIM (state_at x) (tangent_at x) (tangent_at y) :=
-  Geometry.axiom_metric_is_qfim x y
+  Geometry.law_metric_is_qfim x y
 
 /-- MODEL CLAIM: Einstein Field Equations
     G_μν = 8πG T_μν -/
 theorem einstein_field_equations (x y : Geometry.spacetime) :
   Geometry.einstein_tensor x y = 8 * Real.pi * NewtonG * Geometry.stress_energy x y :=
-  Geometry.axiom_einstein_equations x y
+  Geometry.law_einstein_equations x y
 
 -- ============================================================
 -- GEOMETRIC IDENTITIES (Mathematical Truths)
@@ -53,7 +53,7 @@ theorem einstein_field_equations (x y : Geometry.spacetime) :
     Modeled here until Mathlib's Riemannian geometry is complete. -/
 theorem bianchi_identity (ν : Geometry.spacetime) :
   CovariantDivergence Geometry.einstein_tensor ν = 0 :=
-  Geometry.axiom_bianchi_identity ν
+  Geometry.law_bianchi_identity ν
 
 /-- MODEL CLAIM: Covariant divergence is linear with respect to scalar multiplication.
     ∇_μ (c * T^μν) = c * ∇_μ T^μν -/
@@ -76,7 +76,7 @@ theorem conservation_of_energy_momentum (ν : Geometry.spacetime) :
   CovariantDivergence Geometry.stress_energy ν = 0 := by
   have h_efe : Geometry.einstein_tensor = fun x y => (8 * Real.pi * NewtonG) * Geometry.stress_energy x y := by
     funext x y
-    exact Geometry.axiom_einstein_equations x y
+    exact Geometry.law_einstein_equations x y
   have h_div : CovariantDivergence Geometry.einstein_tensor ν =
                CovariantDivergence (fun x y => (8 * Real.pi * NewtonG) * Geometry.stress_energy x y) ν := by
     rw [h_efe]
@@ -99,7 +99,7 @@ theorem conservation_of_energy_momentum (ν : Geometry.spacetime) :
 theorem cosmological_constant :
   ∃ (Λ : ℝ), ∀ (x y : Geometry.spacetime),
   Geometry.einstein_tensor x y + Λ * Geometry.metric x y = 8 * Real.pi * NewtonG * Geometry.stress_energy x y :=
-  Geometry.axiom_cosmological_constant
+  Geometry.law_cosmological_constant
 
 noncomputable def EMStressEnergy : Geometry.spacetime → Geometry.spacetime → ℝ := Geometry.stress_energy
 theorem em_sources_gravity : Geometry.stress_energy = EMStressEnergy := rfl

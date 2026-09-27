@@ -34,9 +34,8 @@ def trivialStructure : MathematicalStructure := ⟨Unit, ⟨()⟩⟩
     different shapes. -/
 def boolStructure : MathematicalStructure := ⟨Bool, ⟨true⟩⟩
 
-/-- Named bridge (legacy name kept for `OmegaProtocol.lean`): the ensemble is
-    nonempty, witnessed by `trivialStructure`. -/
-theorem ultimate_ensemble_axiom : Nonempty MathematicalStructure :=
+/-- The ensemble is nonempty, witnessed by `trivialStructure`. -/
+theorem mathematical_structure_witness : Nonempty MathematicalStructure :=
   ⟨trivialStructure⟩
 
 /-- Cantor's diagonal argument: for any proposed enumeration of predicates

@@ -11,6 +11,7 @@ from audit_axioms import declarations
 from audit_vacuity import (
     alias_baseline_errors,
     audit,
+    axiom_named_declarations,
     statement_aliases,
     trivial_proofs,
 )
@@ -165,6 +166,34 @@ class SourceAuditTests(unittest.TestCase):
             "theorem b : True := by exact True.intro\n"
         )
         self.assertEqual(trivial_proofs(self.root), [])
+
+    def test_axiom_named_declarations_and_fields_are_flagged(self):
+        self.source(
+            "theorem great_filter_axiom : Nonempty Filter := witness\n"
+            "theorem axiom_kms_law : True := trivial\n"
+            "structure Model where\n"
+            "  axiom_metric : ℕ\n"
+            "instance : Model where\n"
+            "  axiom_metric := 0\n"
+        )
+        self.assertEqual(
+            axiom_named_declarations(self.root),
+            [
+                "Vol01_Test.lean: axiom_kms_law",
+                "Vol01_Test.lean: axiom_metric",
+                "Vol01_Test.lean: great_filter_axiom",
+            ],
+        )
+
+    def test_axiom_prose_and_law_fields_are_not_flagged(self):
+        self.source(
+            "/- the legacy name `foo_axiom` was retired: no axioms exist -/\n"
+            'def note := "not an _axiom name"\n'
+            "structure Model where\n"
+            "  law_einstein_equations : ℕ\n"
+            "theorem bell_violation : True := trivial\n"
+        )
+        self.assertEqual(axiom_named_declarations(self.root), [])
 
 
 if __name__ == "__main__":

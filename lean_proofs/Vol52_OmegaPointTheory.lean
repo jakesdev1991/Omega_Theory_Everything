@@ -35,9 +35,9 @@ theorem precedes_transitive {s t u : Stage}
 def OmegaPoint : Prop :=
   ∃ (chain : ℕ → Stage), ∀ n, (chain n).complexity = n
 
-/-- Named bridge (legacy name kept): the Omega Point ideal exists in the
-    model, witnessed by the identity chain. -/
-theorem omega_point_theory_axiom : OmegaPoint :=
+/-- The Omega Point ideal exists in the model, witnessed by the identity
+    chain. -/
+theorem omega_point_exists : OmegaPoint :=
   ⟨fun n => ⟨n⟩, fun n => rfl⟩
 
 /-- No stage is terminal: every stage is strictly preceded by another. This

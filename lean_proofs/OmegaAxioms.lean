@@ -188,11 +188,14 @@ theorem mutualInformation_bounded :
   intros
   simp [mutualInformation, maxMutualInformation]
 
-theorem log_ratio_nonpos :
-  ∀ (R₁ R₂ : QRegion), mutualInformation R₁ R₂ > 0 →
-    Real.log (mutualInformation R₁ R₂ / (1 : ℝ)) ≤ 0 := by
-  intro R₁ R₂ h
-  simp [mutualInformation] at h
+-- The legacy vacuous-hypothesis bridges `log_ratio_nonpos`,
+-- `log_inequality_from_DPI` and `perfect_overlap_identifies_regions`
+-- (hypotheses `mutualInformation > 0` / `Φ = 1`, unsatisfiable in this
+-- zero model) were RETIRED. Their genuine, non-degenerate restatements
+-- live in the `InformationNetwork` namespace below:
+-- `InformationNetwork.log_ratio_nonpos`,
+-- `InformationNetwork.log_inequality_of_multiplicative_DPI`,
+-- `InformationNetwork.overlap_one_identifies`.
 
 theorem Φ_nonneg :
   ∀ (R₁ R₂ : QRegion), Φ R₁ R₂ ≥ 0 := by
@@ -203,11 +206,6 @@ theorem Φ_symm :
   ∀ (R₁ R₂ : QRegion), Φ R₁ R₂ = Φ R₂ R₁ := by
   intros
   simp [Φ, chainOverlapDensity, jointEntropy]
-
-theorem perfect_overlap_identifies_regions :
-  ∀ (R₁ R₂ : QRegion), Φ R₁ R₂ = 1 → R₁ = R₂ := by
-  intro R₁ R₂ h
-  simp [Φ, chainOverlapDensity, jointEntropy] at h
 
 theorem qregion_self_distance_zero :
   ∀ (R : QRegion), d R R = 0 := by
@@ -224,17 +222,6 @@ theorem codProfile_triangle :
     norm_num [Φ, chainOverlapDensity, jointEntropy]
   rw [hΦ, hΦ, hΦ, DynamicCODScale.dynamicPlanckCOD_zero]
   norm_num [canonicalCODEnv]
-
-theorem log_inequality_from_DPI :
-  ∀ (R₁ R₂ R₃ : QRegion),
-    mutualInformation R₁ R₃ > 0 →
-    mutualInformation R₁ R₂ > 0 →
-    mutualInformation R₂ R₃ > 0 →
-    Real.log (mutualInformation R₁ R₃ / (1 : ℝ)) ≤
-      Real.log (mutualInformation R₁ R₂ / (1 : ℝ)) +
-      Real.log (mutualInformation R₂ R₃ / (1 : ℝ)) := by
-  intro R₁ R₂ R₃ h₁ h₂ h₃
-  simp [mutualInformation] at h₁
 
 theorem distance_zero_when_I_zero :
   ∀ (R₁ R₂ : QRegion),
@@ -378,6 +365,62 @@ theorem metric_nonneg_of_le_max (planckScale : ℝ → ℝ)
       _ ≤ planckScale (net.overlap A B) * (-Real.log (net.mutualInfo A B / net.maxMI)) :=
           mul_nonneg h_scale h_neg_log_nonneg
       _ = -planckScale (net.overlap A B) * Real.log (net.mutualInfo A B / net.maxMI) := by ring
+
+/-- Non-degenerate restatement of the legacy `log_ratio_nonpos` bridge:
+    for a network with positive capacity, any positive mutual information
+    sits at or below capacity, so its normalized log is nonpositive. Unlike
+    the retired zero-model version, the hypothesis `0 < mutualInfo A B` is
+    realizable (e.g. by `BinaryRegion.binaryNetwork`). -/
+theorem log_ratio_nonpos (h_max : 0 < net.maxMI) {A B : α}
+    (h : 0 < net.mutualInfo A B) :
+    Real.log (net.mutualInfo A B / net.maxMI) ≤ 0 := by
+  have h_ratio_pos : 0 < net.mutualInfo A B / net.maxMI :=
+    div_pos h h_max
+  have h_ratio_le : net.mutualInfo A B / net.maxMI ≤ 1 :=
+    div_le_one_of_le₀ (net.mi_le_max A B) (le_of_lt h_max)
+  have h_le := Real.log_le_log h_ratio_pos h_ratio_le
+  rwa [Real.log_one] at h_le
+
+/-- Non-degenerate restatement of the legacy `log_inequality_from_DPI`
+    bridge: the log-triangle ingredient behind the metric triangle
+    inequality. If a multiplicative data-processing bound holds in
+    normalized form,
+    `I(A:C)/maxMI ≤ (I(A:B)/maxMI) · (I(B:C)/maxMI)`,
+    with all three informations positive and positive capacity, then the
+    normalized log of `I(A:C)` is at most the sum of the normalized logs.
+    Every hypothesis is realizable in a non-degenerate network; in the
+    retired zero-model version the positivity hypotheses were
+    unsatisfiable. -/
+theorem log_inequality_of_multiplicative_DPI (h_max : 0 < net.maxMI)
+    (A B C : α) (hA : 0 < net.mutualInfo A C) (hB : 0 < net.mutualInfo A B)
+    (hC : 0 < net.mutualInfo B C)
+    (h : net.mutualInfo A C / net.maxMI ≤
+        (net.mutualInfo A B / net.maxMI) * (net.mutualInfo B C / net.maxMI)) :
+    Real.log (net.mutualInfo A C / net.maxMI) ≤
+      Real.log (net.mutualInfo A B / net.maxMI) +
+      Real.log (net.mutualInfo B C / net.maxMI) := by
+  have h1 := Real.log_le_log (div_pos hA h_max) h
+  rwa [Real.log_mul (ne_of_gt (div_pos hB h_max))
+    (ne_of_gt (div_pos hC h_max))] at h1
+
+/-- Non-degenerate restatement of the legacy
+    `perfect_overlap_identifies_regions` bridge: if a network separates
+    distinct regions strictly (`mutualInfo < jointEnt` whenever `X ≠ Y`),
+    then unit chain-overlap density forces `A = B`. The separation
+    hypothesis is an explicit non-degeneracy assumption, satisfiable e.g.
+    by any network whose distinct regions share less information than
+    their joint entropy; in the retired zero-model version the hypothesis
+    `Φ = 1` was unsatisfiable. -/
+theorem overlap_one_identifies
+    (h_sep : ∀ X Y : α, X ≠ Y → net.mutualInfo X Y < net.jointEnt X Y)
+    {A B : α} (h : net.overlap A B = 1) : A = B := by
+  by_contra hne
+  have hlt : net.mutualInfo A B < net.jointEnt A B := h_sep A B hne
+  have hdiv : net.mutualInfo A B / net.jointEnt A B < 1 := by
+    rw [div_lt_iff₀ (net.je_pos A B)]
+    linarith
+  dsimp [InformationNetwork.overlap] at h
+  linarith
 
 end InformationNetwork
 

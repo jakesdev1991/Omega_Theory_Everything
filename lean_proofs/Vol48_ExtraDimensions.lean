@@ -7,43 +7,23 @@ import OmegaUnifiedFoundation
   Formalization of Extra Dimensions (Kaluza-Klein).
 
   Model scope (stated honestly):
-  * The legacy fixed-constant coupling positivity is kept for
-    `OmegaProtocol.lean`; it is not Kaluza-Klein theory.
   * `Compactification` carries variable positive bulk coupling and
     compact volume. The effective coupling `G_eff = G/V` is proven
     positive, inverse to the volume, antitone in the volume at fixed
     bulk coupling, and arbitrarily small at large volume. A unit
     benchmark is included. This is dimensional-reduction algebra in a
     stated model, not a compactification derivation.
+  * The retired legacy cluster fixed `G_higherdim := 1` and
+    `CompactVolume := 1` in bare definitions (`G_effective`); that
+    duplicate coupling-notion was removed so this module has exactly
+    one: the `Compactification` structure fields. `OmegaProtocol.lean`
+    now delegates to the parameterized theorems.
   * Omega-Protocol mapping: branes = Q-regions (0D), bulk fields = Φ
     (1D), compactification distance = Ω-metric (2D).
 -/
 
 namespace OmegaProtocol.Vol48
 open OmegaProtocol
-
-def G_higherdim : ℝ := 1
-def CompactVolume : ℝ := 1
-theorem g_hd_pos : G_higherdim > 0 := by
-  norm_num [G_higherdim]
-theorem vol_pos : CompactVolume > 0 := by
-  norm_num [CompactVolume]
-
-noncomputable def G_effective : ℝ := G_higherdim / CompactVolume
-
-/-- THEOREM: Effective 4D coupling is positive (GENUINE PROOF) -/
-theorem effective_coupling_positive : G_effective > 0 := by
-  dsimp [G_effective]
-  exact div_pos g_hd_pos vol_pos
-
-/-- COROLLARY: Extra Dimensions from Omega Protocol
-    Branes = Q-Regions (0D)
-    Bulk fields = Φ (1D)
-    Distance = Ω-Metric (2D)
-    KK modes = Informational Viscosity (3D)
-    Coupling = RCOD Asymmetry (4D) -/
-theorem extradim_from_omega : G_effective > 0 := by
-  exact effective_coupling_positive
 
 /-- Consistency bridge (VOL48): the Omega-metric `d` is reflexive (`d R R = 0`).
     Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;

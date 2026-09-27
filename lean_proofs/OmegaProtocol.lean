@@ -63,9 +63,13 @@ import Vol54_TheoryOfNothing
 --     concrete Q-region model from `OmegaAxioms.lean`. They are honest
 --     theorems about the formalization itself; they do not claim to derive
 --     the physical law their section heading refers to.
---   * Declarations historically named `*_axiom` or `axiom_*` are kernel-checked
---     `theorem`s delegating to underlying volume definitions or structural bounds;
---     they are NOT Lean `axiom` primitives (the repository contains 0 axioms).
+--   * No declaration or structure field may be *named* `*_axiom` / `axiom_*`
+--     (rejected by `audit_vacuity.py --max-axiom-names 0`): the repository
+--     contains 0 Lean `axiom` primitives, so such names misrepresent
+--     kernel-checked theorems or model-law fields as postulates. Every
+--     former `*_axiom` delegation below was renamed after the content it
+--     actually proves; model laws packaged as structure data use the
+--     `law_*` field prefix (see `OmegaUnifiedFoundation.lean`).
 --   * All other declarations are either genuine mathematical proofs or
 --     explicit re-statements of volume-level results.
 
@@ -138,23 +142,28 @@ theorem bridge_vol02_metric_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := 
   exact distance_nonneg R₁ R₂
 
 -- Vol 03: Thermodynamics
-theorem axiom_kms_transitivity (ρ₁ ρ₂ ρ₃ : StateSpace) (β₁ β₂ : ℝ)
-  (h_unique : β₁ = β₂)
+/-- Zeroth law, conditional on KMS-temperature uniqueness being supplied
+    as a hypothesis over every state (the minimal model does not derive
+    it; in the concrete model `KMSState` is constantly `True`). -/
+theorem kms_transitivity (ρ₁ ρ₂ ρ₃ : StateSpace) (β₁ β₂ : ℝ)
+  (h_unique : ∀ (ρ : StateSpace) (β β' : ℝ), Vol03.MT.KMSState ρ β → Vol03.MT.KMSState ρ β' → β = β')
   (h1 : Vol03.MT.KMSState ρ₁ β₁ ∧ Vol03.MT.KMSState ρ₂ β₁)
   (h2 : Vol03.MT.KMSState ρ₂ β₂ ∧ Vol03.MT.KMSState ρ₃ β₂) :
-  β₁ = β₂ := by
-  exact Vol03.kms_transitivity ρ₁ ρ₂ ρ₃ β₁ β₂ h_unique h1 h2
+  β₁ = β₂ :=
+  Vol03.kms_transitivity ρ₁ ρ₂ ρ₃ β₁ β₂ h_unique h1 h2
 
-theorem axiom_relative_entropy_monotonicity (ρ σ : StateSpace) (Φ : CPTPMap) :
-  Vol03.MT.RelativeEntropy (Φ ρ) (Φ σ) ≤ Vol03.MT.RelativeEntropy ρ σ := by
-  exact Vol03.MT.axiom_relative_entropy_monotonicity ρ σ Φ
+/-- Relative entropy decreases under CPTP maps in the modular-theory
+    model (the monotonicity law is field data of `ModularTheory`). -/
+theorem relative_entropy_monotonicity (ρ σ : StateSpace) (Φ : CPTPMap) :
+  Vol03.MT.RelativeEntropy (Φ ρ) (Φ σ) ≤ Vol03.MT.RelativeEntropy ρ σ :=
+  Vol03.second_law ρ σ Φ
 
 theorem zeroth_law_thermodynamics (ρ₁ ρ₂ ρ₃ : StateSpace) (β₁ β₂ : ℝ)
-  (h_unique : β₁ = β₂)
+  (h_unique : ∀ (ρ : StateSpace) (β β' : ℝ), Vol03.MT.KMSState ρ β → Vol03.MT.KMSState ρ β' → β = β')
   (h1 : Vol03.MT.KMSState ρ₁ β₁ ∧ Vol03.MT.KMSState ρ₂ β₁)
   (h2 : Vol03.MT.KMSState ρ₂ β₂ ∧ Vol03.MT.KMSState ρ₃ β₂) :
-  β₁ = β₂ := by
-  exact Vol03.zeroth_law ρ₁ ρ₂ ρ₃ β₁ β₂ h_unique h1 h2
+  β₁ = β₂ :=
+  Vol03.zeroth_law ρ₁ ρ₂ ρ₃ β₁ β₂ h_unique h1 h2
 
 theorem second_law_thermodynamics (ρ σ : StateSpace) (Φ : CPTPMap) :
   Vol03.MT.RelativeEntropy (Φ ρ) (Φ σ) ≤ Vol03.MT.RelativeEntropy ρ σ := by
@@ -172,16 +181,36 @@ theorem clausius_inequality (ρ σ : StateSpace) (hT : Vol03.Temperature ρ > 0)
 theorem bridge_vol04_coupling_symm (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R₂ R₁ := by
   exact Φ_symm R₁ R₂
 
-theorem heisenberg_uncertainty (A B : Operator) (ψ : StateSpace) :
-  Vol04.Variance A ψ * Vol04.Variance B ψ ≥ ‖@inner ℂ StateSpace _ (Vol04.deviation A ψ) (Vol04.deviation B ψ)‖ ^ 2 := by
-  exact Vol04.cauchy_schwarz_variance A B ψ
+/-- Cauchy–Schwarz variance bound for deviation vectors, on the
+    one-dimensional minimal model. The full Robertson commutator form
+    below does not specialize meaningfully to this model (all
+    commutators vanish in one dimension). -/
+theorem uncertainty_cauchy_schwarz_bound (A B : Operator) (ψ : StateSpace) :
+  Vol04.Variance A ψ * Vol04.Variance B ψ ≥ ‖@inner ℂ StateSpace _ (Vol04.deviation A ψ) (Vol04.deviation B ψ)‖ ^ 2 :=
+  Vol04.cauchy_schwarz_variance A B ψ
 
-theorem schrodinger_equation (ψ : ℝ → StateSpace) (H : Operator)
-  (hH : Vol04.IsSelfAdjoint H) (t : ℝ)
-  (h_dynamics : Complex.I • Vol04.time_derivative ψ t =
-    (1 / (Vol04.hbar : ℂ)) • H (ψ t)) :
-  Complex.I • Vol04.time_derivative ψ t = (1 / (Vol04.hbar : ℂ)) • H (ψ t) := by
-  exact Vol04.schrodinger_equation ψ H hH t h_dynamics
+/-- THE ROBERTSON UNCERTAINTY RELATION over an arbitrary complex inner
+    product space (Vol04's `Robertson` section): for self-adjoint A, B
+    and a normalized state ψ, Var(A)·Var(B) ≥ (|⟨ψ,[A,B]ψ⟩|/2)². Unlike
+    the one-dimensional delegation above, the commutator here is
+    genuinely nontrivial. -/
+theorem robertson_uncertainty {H : Type*} [NormedAddCommGroup H]
+    [InnerProductSpace ℂ H] (A B : H →L[ℂ] H)
+    (hA : Vol04.Robertson.SelfAdjoint A) (hB : Vol04.Robertson.SelfAdjoint B)
+    (ψ : H) (hψ : @inner ℂ H _ ψ ψ = 1) :
+    Vol04.Robertson.variance A ψ * Vol04.Robertson.variance B ψ
+      ≥ (‖@inner ℂ H _ ψ ((Vol04.Robertson.ccomm A B) ψ)‖ / 2) ^ 2 :=
+  Vol04.Robertson.robertson_uncertainty A B hA hB ψ hψ
+
+/-- Genuine Schrödinger dynamics (Vol04): the explicit trajectory
+    exp(−iωt)·ψ₀ has a real derivative and solves iℏ·dψ/dt = H_{ℏω} ψ
+    for the self-adjoint Hamiltonian z ↦ ℏω·z. The retired P→P
+    `schrodinger_equation` delegation is replaced by this verified
+    solution. -/
+theorem schrodinger_dynamics (ω : ℝ) (ψ₀ : ℂ) (t : ℝ) :
+    Complex.I * (Vol04.hbar : ℂ) * (deriv (Vol04.schrodingerTrajectory ω ψ₀) t)
+      = Vol04.hamiltonian (Vol04.hbar * ω) (Vol04.schrodingerTrajectory ω ψ₀ t) :=
+  Vol04.schrodinger_equation ω ψ₀ t
 
 /-- Consistency bridge (VOL04): the Omega-metric `d` is nonnegative.
     Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
@@ -191,9 +220,11 @@ theorem bridge_vol04_metric_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := 
   exact distance_nonneg R₁ R₂
 
 -- Vol 05: General Relativity
-theorem axiom_metric_is_qfim (x y : Vol05.Geometry.spacetime) :
-  Vol05.Geometry.metric x y = QFIM (state_at x) (tangent_at x) (tangent_at y) := by
-  exact Vol05.metric_is_qfim x y
+/-- Restatement of the QFIMGeometry model law `law_metric_is_qfim` at the
+    concrete zero-curvature instance. -/
+theorem metric_is_qfim (x y : Vol05.Geometry.spacetime) :
+  Vol05.Geometry.metric x y = QFIM (state_at x) (tangent_at x) (tangent_at y) :=
+  Vol05.metric_is_qfim x y
 
 theorem einstein_field_equations (x y : Vol05.Geometry.spacetime) :
   Vol05.Geometry.einstein_tensor x y = 8 * Real.pi * NewtonG * Vol05.Geometry.stress_energy x y := by
@@ -234,10 +265,10 @@ theorem bridge_vol06_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 :=
   exact monotonicity_lemma R
 
 -- Vol 07: Cosmology
-theorem axiom_global_state_dynamics (t : Vol07.CosmologicalTime) :
+theorem global_state_dynamics (t : Vol07.CosmologicalTime) :
   Vol07.TimeDerivative (Vol07.TimeDerivative Vol07.ScaleFactor) t / Vol07.ScaleFactor t =
-  - (4 * Real.pi * NewtonG / 3) * (Vol07.EnergyDensity t + 3 * Vol07.Pressure t) + Vol07.CosmologicalConstant / 3 := by
-  exact Vol07.global_state_dynamics t
+  - (4 * Real.pi * NewtonG / 3) * (Vol07.EnergyDensity t + 3 * Vol07.Pressure t) + Vol07.CosmologicalConstant / 3 :=
+  Vol07.global_state_dynamics t
 
 theorem friedmann_equations (t : Vol07.CosmologicalTime) :
   (Vol07.HubbleParameter t)^2 =
@@ -301,8 +332,9 @@ theorem bridge_vol09_metric_self_zero (R : QRegion) : d R R = 0 := by
   exact qregion_self_distance_zero R
 
 -- Vol 10: Standard Model
-theorem axiom_gauge_symmetry : Vol10.SM_Gauge_Group = (Vol06.SU3 × Vol06.SU2 × Vol06.U1) := by
-  exact Vol10.gauge_symmetry
+-- (The gauge-group delegation is `standard_model_gauge_group` in the
+-- Vol 06 section above; the former duplicate `axiom_gauge_symmetry` was
+-- removed.)
 
 theorem higgs_mechanism (phi_mag : ℝ) : Vol10.HiggsPotential phi_mag ≥ 0 := by
   exact Vol10.higgs_bounded_below phi_mag
@@ -323,22 +355,29 @@ theorem bridge_vol12_mutual_info_nonneg (R₁ R₂ : QRegion) : mutualInformatio
   exact mutualInformation_nonneg R₁ R₂
 
 -- Vol 13: Quantum Gravity
-theorem quantum_gravity_axiom (Ψ : StateSpace) : Vol13.H_matter Ψ = - Vol13.H_gravity Ψ := by
-  exact Vol13.wheeler_dewitt_balance Ψ
+theorem wheeler_dewitt_balance (Ψ : StateSpace) : Vol13.H_matter Ψ = - Vol13.H_gravity Ψ :=
+  Vol13.wheeler_dewitt_balance Ψ
 
 -- Vol 14: Dark Sector
-theorem dark_sector_axiom : Vol14.OmegaDarkEnergy = 1 - Vol14.OmegaBaryon - Vol14.OmegaDarkMatter := by
-  exact Vol14.dark_energy_deduction
+theorem dark_energy_deduction : Vol14.OmegaDarkEnergy = 1 - Vol14.OmegaBaryon - Vol14.OmegaDarkMatter :=
+  Vol14.dark_energy_deduction
 
 -- Vol 15: Early Universe
-theorem early_universe_axiom (t : Vol07.CosmologicalTime) (h_lambda : Vol07.CosmologicalConstant = 0)
-  (h_inflation : Vol07.EnergyDensity t + 3 * Vol07.Pressure t < 0) :
-  Vol07.TimeDerivative (Vol07.TimeDerivative Vol07.ScaleFactor) t / Vol07.ScaleFactor t > 0 := by
-  exact Vol15.inflation_acceleration t h_lambda h_inflation
+/-- Inflationary acceleration, restated over the non-degenerate fluid
+    model: whenever the equation of state satisfies w < −1/3, the
+    acceleration source ρ + 3p is strictly negative and the normalized
+    Friedmann acceleration is positive for any positive G. The retired
+    legacy form hypothesized `EnergyDensity + 3·Pressure < 0` over the
+    zero Vol07 model, where it is unsatisfiable. -/
+theorem inflationary_acceleration_positive (F : Vol15.CosmologicalFluid)
+    (G : ℝ) (hG : 0 < G) (h_w : Vol15.CosmologicalFluid.w F < -1 / 3) :
+    0 < - (4 * Real.pi * G / 3) * Vol15.CosmologicalFluid.accelerationSource F :=
+  Vol15.CosmologicalFluid.cosmic_acceleration_positive F G hG
+    (Vol15.CosmologicalFluid.accelerationSource_neg_of_w_lt F h_w)
 
 -- Vol 16: Non-Equilibrium Thermodynamics
 /-- Pointwise consequence of a supplied differentiable entropy-balance model. -/
-theorem non_equilibrium_axiom (sys : Vol16.EntropyProcess) (t : Vol16.ThermoTime)
+theorem isolated_entropy_nondecreasing (sys : Vol16.EntropyProcess) (t : Vol16.ThermoTime)
     (h_isolated : Vol16.EntropyFlux sys t = 0) :
     0 ≤ Vol16.TimeDeriv (Vol16.Entropy sys) t :=
   Vol16.isolated_entropy_nondecreasing sys t h_isolated
@@ -368,38 +407,50 @@ theorem bridge_vol19_coupling_symm (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R�
   exact Φ_symm R₁ R₂
 
 -- Vol 20: Chaos Theory
-theorem chaos_theory_axiom (t : ℝ) (ht : t > 0) : Vol20.LyapunovExponent * t > 0 := by
-  exact Vol20.sensitive_dependence t ht
+theorem sensitive_dependence (t : ℝ) (ht : t > 0) : Vol20.LyapunovExponent * t > 0 :=
+  Vol20.sensitive_dependence t ht
 
 -- Vol 21: Arrow of Time
 /-- Conditional entropy ordering, not a derivation of cosmological time. -/
-theorem arrow_of_time_axiom (history : Vol21.CosmicHistory)
+theorem arrow_of_time (history : Vol21.CosmicHistory)
     (h_isolated : Vol16.IsIsolated history) (t₁ t₂ : Vol21.CosmicTime) (h : t₁ ≤ t₂) :
     Vol21.CosmicEntropy history t₁ ≤ Vol21.CosmicEntropy history t₂ :=
   Vol21.arrow_of_time history h_isolated t₁ t₂ h
 
 -- Vol 22: ER = EPR
-theorem axiom_er_epr (A B : Vol22.Subsystem) (h : Φ A B = 1) : d A B = 0 := by
-  exact Vol22.er_bridge_from_phi A B h
+/-- The proven ER = EPR bridge direction: in any information network,
+    mutual information at full capacity (the EPR side) produces a
+    vanishing geometric throat area (the ER side). -/
+theorem er_epr_bridge {α : Type*} (net : InformationNetwork α)
+    (planckScale : ℝ → ℝ) (A B : α)
+    (h_cap : net.mutualInfo A B = net.maxMI) (h_pos : 0 < net.maxMI) :
+    Vol22.NetworkER_EPR.networkThroatArea net planckScale A B = 0 :=
+  Vol22.NetworkER_EPR.capacity_overlap_zero_throat net planckScale A B h_cap h_pos
 
-theorem entanglement_geometry (A B : Vol22.Subsystem) (h : Φ A B = 1) : A = B := by
-  exact Vol22.perfect_overlap_same_entity A B h
+/-- Perfect overlap identifies regions, given an explicit separation law
+    for distinct regions (a non-degeneracy hypothesis; the retired legacy
+    form hypothesized `Φ A B = 1` in the zero model where it is
+    unsatisfiable). -/
+theorem perfect_overlap_identifies {α : Type*} (net : InformationNetwork α)
+    (h_sep : ∀ X Y : α, X ≠ Y → net.mutualInfo X Y < net.jointEnt X Y)
+    {A B : α} (h : net.overlap A B = 1) : A = B :=
+  Vol22.perfect_overlap_same_entity net h_sep h
 
 theorem wormhole_traversability (A B : Vol22.Subsystem) (h_no_ent : Vol22.MutualInformation A B ≤ 0) :
   Vol22.ThroatArea A B ≤ 0 := by
   exact Vol22.no_entanglement_no_bridge A B h_no_ent
 
 -- Vol 23: Measurement Problem
-theorem measurement_problem_axiom (ρ : Vol23.DensityMatrix) :
-  Vol23.Trace (Vol23.Decohere ρ) = 1 := by
-  exact Vol23.decoherence_normalized ρ
+theorem decoherence_normalized (ρ : Vol23.DensityMatrix) :
+  Vol23.Trace (Vol23.Decohere ρ) = 1 :=
+  Vol23.decoherence_normalized ρ
 
 -- Vol 24: Non-Locality
-theorem axiom_bell_violation : Vol24.TsirelsonBound > Vol24.ClassicalCHSHBound := by
-  exact Vol24.bell_violation
+theorem bell_violation : Vol24.TsirelsonBound > Vol24.ClassicalCHSHBound :=
+  Vol24.bell_violation
 
-theorem contextuality : Vol24.TsirelsonBound > Vol24.ClassicalCHSHBound := by
-  exact Vol24.bell_violation
+-- (The former duplicate `contextuality` — an identical restatement of
+-- `bell_violation` under a stronger-sounding name — was removed.)
 
 /-- Consistency bridge (VOL24): the Omega-metric `d` is nonnegative.
     Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
@@ -409,9 +460,8 @@ theorem bridge_vol24_metric_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := 
   exact distance_nonneg R₁ R₂
 
 -- Vol 25: Black Hole Information
-theorem axiom_information_preservation (s_final : Vol25.BHState) (h_evaporated : Vol25.VonNeumannEntropy s_final = 0) :
-  Vol25.RadiationEntropy s_final = 0 := by
-  exact Vol25.page_curve_endpoint s_final h_evaporated
+-- (The former duplicate `axiom_information_preservation` — an identical
+-- restatement of `page_curve` — was removed.)
 
 theorem page_curve (s_final : Vol25.BHState) (h_evaporated : Vol25.VonNeumannEntropy s_final = 0) :
   Vol25.RadiationEntropy s_final = 0 := by
@@ -425,35 +475,42 @@ theorem bridge_vol25_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 :=
   exact monotonicity_lemma R
 
 -- Vol 26: Network Theory
-theorem network_theory_axiom (G : Vol26.Graph) : Vol26.DegreeSum G = 2 * Vol26.NumEdges G := by
-  exact Vol26.handshaking_lemma G
+theorem handshaking_lemma (G : Vol26.Graph) : Vol26.DegreeSum G = 2 * Vol26.NumEdges G :=
+  Vol26.handshaking_lemma G
 
 -- Vol 27: Consciousness
-theorem axiom_integrated_information (R₁ R₂ : QRegion) (h : asymmetryTensor R₁ R₂ ≠ 0) :
-  Vol27.IntegratedInformation R₁ R₂ > 0 := by
-  exact Vol27.integrated_information_pos R₁ R₂ h
+/-- Strictly integrated systems have strictly positive integrated
+    information (Tononi Φ) in the bipartite entropy model. -/
+theorem integrated_information_positive (S : Vol27.IntegratedSystem)
+    (h : S.H_AB < S.H_A + S.H_B) :
+    0 < Vol27.IntegratedSystem.phi S :=
+  Vol27.IntegratedSystem.phi_pos_of_strict_subadditivity S h
 
-theorem subjective_experience (R₁ R₂ : QRegion) (h : asymmetryTensor R₁ R₂ ≠ 0) :
-  Vol27.IntegratedInformation R₁ R₂ > 0 := by
-  exact Vol27.subjectiveexperience R₁ R₂ h
+/-- IIT "experience" dictionary: strictly integrated systems experience,
+    in the explicitly-scoped sense of `Vol27.IntegratedSystem.Experiences`
+    (a definition inside the model, not a claim about consciousness). -/
+theorem subjective_experience (S : Vol27.IntegratedSystem)
+    (h : S.H_AB < S.H_A + S.H_B) :
+    Vol27.IntegratedSystem.Experiences S :=
+  Vol27.IntegratedSystem.experiences_of_strict_integration S h
 
 theorem substrate_independence (R₁ R₂ : QRegion) :
   Vol27.IntegratedInformation R₁ R₂ = informationalImpedance R₁ R₂ := by
   exact Vol27.substrateindependence R₁ R₂
 
 -- Vol 28: Evolutionary Algorithms
-theorem evolutionary_algorithms_axiom : Nonempty Vol28.FitnessLandscape := by
-  exact Vol28.evolutionary_algorithms_axiom
+theorem fitness_landscape_exists : Nonempty Vol28.FitnessLandscape :=
+  Vol28.fitness_landscape_exists
 
 -- Vol 29: Ecosystem Dynamics
-theorem ecosystem_dynamics_axiom (alpha beta delta gamma : ℝ) (hd : delta ≠ 0) (hb : beta ≠ 0) :
+theorem lotka_volterra_coexistence (alpha beta delta gamma : ℝ) (hd : delta ≠ 0) (hb : beta ≠ 0) :
   Vol29.PreyRate alpha beta (gamma / delta) (alpha / beta) = 0 ∧
-  Vol29.PredatorRate delta gamma (gamma / delta) (alpha / beta) = 0 := by
-  exact Vol29.lotka_volterra_equilibrium alpha beta delta gamma hd hb
+  Vol29.PredatorRate delta gamma (gamma / delta) (alpha / beta) = 0 :=
+  Vol29.lotka_volterra_equilibrium alpha beta delta gamma hd hb
 
 -- Vol 30: Planetary Systems
 /-- Conditional consequence of the chosen positive-parameter Kepler formula. -/
-theorem planetary_systems_axiom (sys : Vol30.KeplerSystem) (a₁ a₂ : ℝ)
+theorem kepler_ratio_constant (sys : Vol30.KeplerSystem) (a₁ a₂ : ℝ)
     (ha1 : 0 < a₁) (ha2 : 0 < a₂) :
     Vol30.OrbitalPeriod sys a₁ ^ 2 / a₁ ^ 3 =
       Vol30.OrbitalPeriod sys a₂ ^ 2 / a₂ ^ 3 :=
@@ -461,15 +518,16 @@ theorem planetary_systems_axiom (sys : Vol30.KeplerSystem) (a₁ a₂ : ℝ)
 
 -- Vol 31: Game Theory
 /-- Legacy name: this states payoff dominance, not convergence of a learning process. -/
-theorem axiom_nash_convergence (s2 : Vol31.Strategy) :
-  Vol31.Payoff1 Vol31.Strategy.Defect s2 ≥ Vol31.Payoff1 Vol31.Strategy.Cooperate s2 := by
-  exact Vol31.defect_dominates_p1 s2
+theorem defect_dominates_p1 (s2 : Vol31.Strategy) :
+  Vol31.Payoff1 Vol31.Strategy.Defect s2 ≥ Vol31.Payoff1 Vol31.Strategy.Cooperate s2 :=
+  Vol31.defect_dominates_p1 s2
 
-/-- Legacy name: this is mutual defection stability, not an evolution theorem. -/
-theorem evolution_of_cooperation :
+/-- Mutual defection is a pure Nash equilibrium of the one-shot model
+    (stability, not an evolutionary result). -/
+theorem mutual_defection_stable :
   (Vol31.Payoff1 Vol31.Strategy.Defect Vol31.Strategy.Defect ≥ Vol31.Payoff1 Vol31.Strategy.Cooperate Vol31.Strategy.Defect) ∧
-  (Vol31.Payoff2 Vol31.Strategy.Defect Vol31.Strategy.Defect ≥ Vol31.Payoff2 Vol31.Strategy.Defect Vol31.Strategy.Cooperate) := by
-  exact Vol31.nash_equilibrium_defect
+  (Vol31.Payoff2 Vol31.Strategy.Defect Vol31.Strategy.Defect ≥ Vol31.Payoff2 Vol31.Strategy.Defect Vol31.Strategy.Cooperate) :=
+  Vol31.nash_equilibrium_defect
 
 /-- Consistency bridge (VOL31): the Omega-metric `d` is nonnegative.
     Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
@@ -479,13 +537,13 @@ theorem bridge_vol31_metric_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := 
   exact distance_nonneg R₁ R₂
 
 -- Vol 32: Cybernetics
-theorem cybernetics_axiom (g : ℝ) (hg0 : 0 ≤ g) (hg1 : g ≤ 1) (n : ℕ) :
-  g ^ (n + 1) ≤ g ^ n := by
-  exact Vol32.feedback_convergence g hg0 hg1 n
+theorem feedback_convergence (g : ℝ) (hg0 : 0 ≤ g) (hg1 : g ≤ 1) (n : ℕ) :
+  g ^ (n + 1) ≤ g ^ n :=
+  Vol32.feedback_convergence g hg0 hg1 n
 
 -- Vol 33: AGI
-theorem axiom_general_intelligence : Nonempty Vol33.ArtificialGeneralIntelligence := by
-  exact Vol33.general_intelligence
+theorem general_intelligence_exists : Nonempty Vol33.ArtificialGeneralIntelligence :=
+  Vol33.general_intelligence
 
 /-- Consistency bridge (VOL33): the Omega-metric `d` is reflexive (`d R R = 0`).
     Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
@@ -502,66 +560,69 @@ theorem bridge_vol33_coupling_symm (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R�
   exact Φ_symm R₁ R₂
 
 -- Vol 34: Quantum Computing
-theorem quantum_computing_axiom :
-  Vol34.GateCompose (Vol34.GateAdjoint Vol34.HadamardGate) Vol34.HadamardGate = Vol34.GateIdentity := by
-  exact Vol34.hadamard_unitary
+theorem hadamard_unitary :
+  Vol34.GateCompose (Vol34.GateAdjoint Vol34.HadamardGate) Vol34.HadamardGate = Vol34.GateIdentity :=
+  Vol34.hadamard_unitary
 
 -- Vol 35: Theory of Computation
-theorem theory_of_computation_axiom : ¬ Function.Surjective (f : ℕ → ℕ → Bool) := by
-  exact Vol35.cantor_diagonal
+theorem cantor_diagonal : ¬ Function.Surjective (f : ℕ → ℕ → Bool) :=
+  Vol35.cantor_diagonal
 
 -- Vol 36: Topos Theory
-theorem topos_theory_axiom (a : Prop) [Decidable a] : a ∨ ¬a := by
-  exact Vol36.boolean_excluded_middle a
+theorem boolean_excluded_middle (a : Prop) [Decidable a] : a ∨ ¬a :=
+  Vol36.boolean_excluded_middle a
 
 -- Vol 37: Morphogenesis
-theorem morphogenesis_axiom (h_pos : Vol37.ActivatorDiffusion > 0) :
-  Vol37.InhibitorDiffusion / Vol37.ActivatorDiffusion > 1 := by
-  exact Vol37.turing_instability_ratio h_pos
+theorem turing_instability_ratio (h_pos : Vol37.ActivatorDiffusion > 0) :
+  Vol37.InhibitorDiffusion / Vol37.ActivatorDiffusion > 1 :=
+  Vol37.turing_instability_ratio h_pos
 
 -- Vol 38: Economics
 /-- Clearing in the explicit linear-market model, not general equilibrium. -/
-theorem economics_axiom (market : Vol38.LinearMarket) :
+theorem equilibrium_clears_market (market : Vol38.LinearMarket) :
     Vol38.ExcessDemand market (Vol38.equilibrium_price market) = 0 :=
   Vol38.equilibrium_excess_demand_zero market
 
 -- Vol 39: Societal Networks
 /-- Conditional graph-counting bound; no-isolated-vertices is essential. -/
-theorem societal_networks_axiom (G : Vol39.SocialNetwork) (h : Vol39.NoIsolatedVertices G) :
+theorem min_connections_bound (G : Vol39.SocialNetwork) (h : Vol39.NoIsolatedVertices G) :
     Vol39.NumNodes G ≤ 2 * Vol39.NumConnections G :=
   Vol39.min_connections G h
 
 -- Vol 40: Fermi Paradox
-theorem fermi_paradox_axiom : Nonempty Vol40.GreatFilter := by
-  exact Vol40.fermi_paradox_axiom
+theorem great_filter_exists : Nonempty Vol40.GreatFilter :=
+  Vol40.great_filter_witness
 
 -- Vol 41: Post-Biological Evolution
-theorem post_biological_evolution_axiom : Nonempty Vol41.SyntheticSubstrate := by
-  exact Vol41.post_biological_evolution_axiom
+theorem synthetic_substrate_exists : Nonempty Vol41.SyntheticSubstrate :=
+  Vol41.synthetic_substrate_witness
 
 -- Vol 42: Stellar Engineering
-theorem stellar_engineering_axiom : Nonempty Vol42.DysonSphere := by
-  exact Vol42.stellar_engineering_axiom
+theorem dyson_sphere_exists : Nonempty Vol42.DysonSphere :=
+  Vol42.dyson_sphere_witness
 
 -- Vol 43: Galactic Ecosystems
-theorem galactic_ecosystems_axiom : Nonempty Vol43.GalacticNetwork := by
-  exact Vol43.galactic_ecosystems_axiom
+theorem galactic_network_exists : Nonempty Vol43.GalacticNetwork :=
+  Vol43.galactic_network_witness
 
 -- Vol 44: Universal Expansion
-theorem universal_expansion_axiom : Vol44.DeSitterEntropy > 0 := by
-  exact Vol44.desitter_entropy_positive
+/-- De Sitter horizon entropy is positive for every positive Λ and G
+    (the retired legacy form fixed `Λ := 1` in bare definitions). -/
+theorem de_sitter_entropy_positive (S : Vol44.DeSitterSpace) :
+    0 < Vol44.DeSitterSpace.entropy S :=
+  Vol44.DeSitterSpace.entropy_pos S
 
 -- Vol 45: Multiverse Theory
-theorem multiverse_theory_axiom : Nonempty Vol45.MultiverseEnsemble := by
-  exact Vol45.multiverse_theory_axiom
+theorem multiverse_ensemble_exists : Nonempty Vol45.MultiverseEnsemble :=
+  Vol45.multiverse_ensemble_witness
 
 -- Vol 46: Simulation Hypothesis
-theorem simulation_hypothesis_axiom : Nonempty Vol46.SimulationSubstrate := by
-  exact Vol46.simulation_hypothesis_axiom
+theorem simulation_substrate_exists : Nonempty Vol46.SimulationSubstrate :=
+  Vol46.simulation_substrate_witness
 
 -- Vol 47: Transcendent Architectures
-theorem axiom_type_iv_civilization : Nonempty Vol47.TranscendentCivilization := by
-  exact Vol47.type_iv_civilization
+theorem transcendent_civilization_exists : Nonempty Vol47.TranscendentCivilization :=
+  Vol47.type_iv_civilization
 
 /-- Consistency bridge (VOL47): the Omega-metric `d` is reflexive (`d R R = 0`).
     Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
@@ -578,22 +639,26 @@ theorem bridge_vol47_coupling_symm (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R�
   exact Φ_symm R₁ R₂
 
 -- Vol 48: Extra Dimensions
-theorem extra_dimensions_axiom : Vol48.G_effective > 0 := by
-  exact Vol48.effective_coupling_positive
+/-- The effective 4D coupling is positive for every positive bulk
+    coupling and compact volume (the retired legacy form fixed
+    `G_higherdim := 1`, `CompactVolume := 1` in bare definitions). -/
+theorem effective_coupling_positive (C : Vol48.Compactification) :
+    0 < Vol48.Compactification.Geff C :=
+  Vol48.Compactification.Geff_pos C
 
 -- Vol 49: Quantum Reference Frames
-theorem quantum_reference_frames_axiom (A : Vol49.ReferenceFrame) (ψ : StateSpace) :
-  Vol49.FrameTransform A A ψ = ψ := by
-  exact Vol49.frame_self_identity A ψ
+theorem frame_self_identity (A : Vol49.ReferenceFrame) (ψ : StateSpace) :
+  Vol49.FrameTransform A A ψ = ψ :=
+  Vol49.frame_self_identity A ψ
 
 -- Vol 50: Ultimate Ensemble
-theorem ultimate_ensemble_axiom : Nonempty Vol50.MathematicalStructure := by
-  exact Vol50.ultimate_ensemble_axiom
+theorem mathematical_structure_exists : Nonempty Vol50.MathematicalStructure :=
+  Vol50.mathematical_structure_witness
 
 -- Vol 51: Closed Timelike Curves
-theorem closed_timelike_curves_axiom (h : Vol51.History) (hc : Vol51.IsConsistent h) :
-  Vol51.TimeLoopOperator (Vol51.TimeLoopOperator h) = Vol51.TimeLoopOperator h := by
-  exact Vol51.novikov_consistency h hc
+theorem novikov_consistency (h : Vol51.History) (hc : Vol51.IsConsistent h) :
+  Vol51.TimeLoopOperator (Vol51.TimeLoopOperator h) = Vol51.TimeLoopOperator h :=
+  Vol51.novikov_consistency h hc
 
 -- Vol 52: Omega Point Theory
 /-- Consistency bridge (VOL52): the Omega-metric `d` is reflexive (`d R R = 0`).
@@ -604,8 +669,8 @@ theorem bridge_vol52_metric_self_zero (R : QRegion) : d R R = 0 := by
   exact qregion_self_distance_zero R
 
 -- Vol 53: Universal Compiler
-theorem axiom_universal_compiler : Nonempty Vol53.CosmicCompiler := by
-  exact Vol53.universal_compiler
+theorem universal_compiler_exists : Nonempty Vol53.CosmicCompiler :=
+  Vol53.universal_compiler
 
 /-- Consistency bridge (VOL53): the Omega-metric `d` is reflexive (`d R R = 0`).
     Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
@@ -622,8 +687,10 @@ theorem bridge_vol53_coupling_symm (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R�
   exact Φ_symm R₁ R₂
 
 -- Vol 54: Theory of Nothing
-theorem theory_of_nothing_axiom : Vol54.AbsoluteNothingness := by
-  exact Vol54.theory_of_nothing_axiom
+/-- The zero model satisfies `AbsoluteNothingness`: every Q-region is at
+    zero self-distance. A structural fact, not a metaphysical conclusion. -/
+theorem absolute_nothingness_of_zero_model : Vol54.AbsoluteNothingness :=
+  Vol54.absolute_nothingness_of_zero_model
 
 -- Cross Volume
 /-- Consistency bridge (cross-volume consistency): the coupling `Φ` is symmetric.
@@ -658,8 +725,21 @@ theorem cross_vol05_vol07_flrw (t : Vol07.CosmologicalTime) :
 theorem bridge_cross_v08_v09_mutual_info_nonneg (R₁ R₂ : QRegion) : mutualInformation R₁ R₂ ≥ 0 := by
   exact mutualInformation_nonneg R₁ R₂
 
-theorem cross_vol09_vol22_holography_er_epr (A B : Vol22.Subsystem) (h : Φ A B = 1) : A = B := by
-  exact Vol22.perfect_overlap_same_entity A B h
+/-- Cross-volume dictionary (Vol09 → Vol22): the sound ER = EPR
+    direction in the two-qubit separability model — a nonvanishing
+    correlation determinant (bridge side) entails nonseparability
+    (entanglement side). -/
+theorem cross_vol09_vol22_er_epr_dictionary (ψ : Vol09.BipartiteState)
+    (h : Vol09.EinsteinRosenBridge ψ) : Vol09.EPR_Entanglement ψ :=
+  Vol09.er_epr_bridge_entails_entanglement ψ h
+
+/-- Full cross-volume dictionary (Vol09 → Vol22): in the two-qubit
+    model the ER-bridge side and the EPR-entanglement side are
+    equivalent — entangled iff the correlation determinant is nonzero
+    (rank-one factorization gives both directions). -/
+theorem cross_vol09_vol22_er_epr_dictionary_iff (ψ : Vol09.BipartiteState) :
+    Vol09.EinsteinRosenBridge ψ ↔ Vol09.EPR_Entanglement ψ :=
+  Vol09.er_epr_iff ψ
 
 /-- Consistency bridge (cross-volume consistency): the Omega-metric `d` is reflexive (`d R R = 0`).
     Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;

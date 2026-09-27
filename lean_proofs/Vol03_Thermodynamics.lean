@@ -36,21 +36,24 @@ noncomputable abbrev MT : ModularTheory := concreteModularTheory
 -- a given temperature: if ρ is KMS at β₁ and β₂, then β₁ = β₂.
 -- ============================================================
 
-/-- KMS transitivity with the uniqueness condition made explicit.
-    The minimal model deliberately does not pretend to derive uniqueness from
-    the KMS predicate; callers must supply that physical hypothesis. -/
+/-- KMS transitivity with the uniqueness condition made explicit as a
+    hypothesis over every state. The minimal model deliberately does not
+    derive uniqueness from the KMS predicate (in the concrete model
+    `KMSState` is constantly `True`, so uniqueness fails there and the
+    hypothesis is genuinely restrictive); callers must supply it. When it
+    holds, the shared system `ρ₂` transfers the temperature agreement. -/
 theorem kms_transitivity :
   ∀ (ρ₁ ρ₂ ρ₃ : StateSpace) (β₁ β₂ : ℝ),
-  β₁ = β₂ →
+  (∀ (ρ : StateSpace) (β β' : ℝ), MT.KMSState ρ β → MT.KMSState ρ β' → β = β') →
   (MT.KMSState ρ₁ β₁ ∧ MT.KMSState ρ₂ β₁) →
   (MT.KMSState ρ₂ β₂ ∧ MT.KMSState ρ₃ β₂) →
   β₁ = β₂ := by
   intro ρ₁ ρ₂ ρ₃ β₁ β₂ h_unique h1 h2
-  exact h_unique
+  exact h_unique ρ₂ β₁ β₂ h1.2 h2.1
 
 theorem zeroth_law :
   ∀ (ρ₁ ρ₂ ρ₃ : StateSpace) (β₁ β₂ : ℝ),
-  β₁ = β₂ →
+  (∀ (ρ : StateSpace) (β β' : ℝ), MT.KMSState ρ β → MT.KMSState ρ β' → β = β') →
   (MT.KMSState ρ₁ β₁ ∧ MT.KMSState ρ₂ β₁) →
   (MT.KMSState ρ₂ β₂ ∧ MT.KMSState ρ₃ β₂) →
   β₁ = β₂ :=
@@ -72,7 +75,7 @@ theorem zeroth_law :
 theorem second_law :
   ∀ (ρ σ : StateSpace) (Φ : CPTPMap),
   MT.RelativeEntropy (Φ ρ) (Φ σ) ≤ MT.RelativeEntropy ρ σ :=
-  MT.axiom_relative_entropy_monotonicity
+  MT.law_relative_entropy_monotonicity
 
 -- ============================================================
 -- THEOREM 3: CLAUSIUS INEQUALITY (GENUINE PROOF)

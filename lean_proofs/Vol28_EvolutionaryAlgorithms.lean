@@ -27,12 +27,7 @@ def Genome : Type := List Bool
     is the genome space. -/
 def FitnessLandscape : Type := Genome
 
-/-- Named bridge (legacy name kept): the landscape is inhabited by the empty
-    genome. -/
-theorem evolutionary_algorithms_axiom : Nonempty FitnessLandscape :=
-  ⟨[]⟩
-
-/-- Duplicate of the bridge above, kept under its legacy name. -/
+/-- The fitness landscape is inhabited, witnessed by the empty genome. -/
 theorem fitness_landscape_exists : Nonempty FitnessLandscape :=
   ⟨[]⟩
 

@@ -40,9 +40,6 @@ theorem mutual_info_area_bound (A B : Subsystem) :
   simp [MutualInformation, mutualInformation, ThroatArea, d,
     omegaMetric, maxMutualInformation]
 
-/-- Region histories indexed by the same time parameter. -/
-def RegionHistory := ℝ → Subsystem
-
 /-- THEOREM: No Entanglement implies No Wormhole (GENUINE PROOF)
     Contrapositive of ER=EPR: if mutual information is zero, 
     there is no geometric bridge. -/
@@ -56,27 +53,31 @@ theorem no_entanglement_no_bridge (A B : Subsystem)
   have h_mi_nonneg : MutualInformation A B ≥ 0 := mutualInformation_nonneg A B
   linarith
 
-/-- COROLLARY: ER Bridge from Omega Protocol
-    High Φ (COD) → low d (Ω-Metric) → ER bridge exists -/
-theorem er_bridge_from_phi (A B : Subsystem) :
-  Φ A B = 1 → d A B = 0 := by
-  intro h
-  have h_same : A = B := perfect_overlap_identifies_regions A B h
-  subst B
-  exact qregion_self_distance_zero A
+-- The retired legacy theorems `er_bridge_from_phi`,
+-- `perfect_overlap_same_entity` and
+-- `persistent_perfect_overlap_same_entity` stated their conclusions under
+-- the hypothesis `Φ A B = 1`, which is unsatisfiable in the concrete
+-- zero-information model (`Φ ≡ 0`). They are replaced by the genuinely
+-- conditional network theorems below and by the capacity-overlap bridge
+-- in the `NetworkER_EPR` section.
 
-/-- THEOREM: Perfect overlap means there were not two distinct Q-Regions. -/
-theorem perfect_overlap_same_entity (A B : Subsystem) :
-  Φ A B = 1 → A = B := by
-  intro h
-  exact perfect_overlap_identifies_regions A B h
+/-- THEOREM: Perfect overlap identifies regions — over a general
+    information network whose distinct regions are separated
+    (`mutualInfo X Y < jointEnt X Y` whenever `X ≠ Y`, an explicit
+    non-degeneracy law). Unit chain-overlap density then forces `A = B`. -/
+theorem perfect_overlap_same_entity {α : Type*} (net : InformationNetwork α)
+    (h_sep : ∀ X Y : α, X ≠ Y → net.mutualInfo X Y < net.jointEnt X Y)
+    {A B : α} (h : net.overlap A B = 1) : A = B :=
+  InformationNetwork.overlap_one_identifies net h_sep h
 
-/-- THEOREM: Persistent perfect overlap identifies histories pointwise. -/
-theorem persistent_perfect_overlap_same_entity (A B : RegionHistory) :
-  (∀ t, Φ (A t) (B t) = 1) → A = B := by
-  intro h
+/-- THEOREM: Persistent perfect overlap identifies histories pointwise,
+    under the same explicit separation law. -/
+theorem persistent_perfect_overlap_same_entity {α : Type*}
+    (net : InformationNetwork α)
+    (h_sep : ∀ X Y : α, X ≠ Y → net.mutualInfo X Y < net.jointEnt X Y)
+    (A B : ℝ → α) (h : ∀ t, net.overlap (A t) (B t) = 1) : A = B := by
   funext t
-  exact perfect_overlap_identifies_regions (A t) (B t) (h t)
+  exact InformationNetwork.overlap_one_identifies net h_sep (h t)
 
 
 -- ============================================================

@@ -4,7 +4,7 @@
 """Audit vacuous or misleading declarations in the Lean proof corpus.
 
 Complements `audit_axioms.py` (which counts declaration-level `axiom`s) by
-tracking three *honesty* metrics plus a per-export legacy-alias baseline:
+tracking five *honesty* metrics plus a per-export legacy-alias baseline:
 
 1. misleading_trivial
    Theorems whose conclusion is one of the degenerate-model tautologies of
@@ -13,14 +13,26 @@ tracking three *honesty* metrics plus a per-export legacy-alias baseline:
    dresses a structural consistency check up as a physical law, which is
    exactly what the `bridge_*` convention exists to prevent.
 
-2. unit_stubs
+2. misleading_axiom_names
+   No theorem, lemma, definition, or structure field/assignment may be
+   *named* `*_axiom` / `axiom_*`: the corpus contains zero Lean `axiom`
+   primitives, so a declaration carrying "axiom" in its name misrepresents
+   either its proof status or its role. Structure law-fields use the
+   `law_*` prefix instead; model laws carried as data are fields, not
+   axioms.
+
+3. unit_stubs
    Existence "proofs" of the form `Nonempty X := ⟨()⟩` - placeholders that
    assert nothing beyond the inhabitation of `Unit`.
 
-3. unit_types
+4. unit_types
    `def X : Type := Unit` inside the volume files (Vol*.lean). These are the
    tell-tale of an un-formalized volume. Model primitives in
    `OmegaAxioms.lean` are deliberate and are exempt.
+
+5. trivial_proofs
+   Proof scripts that consist of exactly `trivial` prove nothing and are
+   rejected outright.
 
 The numeric metrics may only go down. Parameterized Unit definitions are included.
 The optional alias baseline inventories known *_Stmt scope debt by declaration,
@@ -60,6 +72,13 @@ THEOREM_HEAD = re.compile(
     r"^\s*(?:@\[[^\]]*\]\s*)*(?:(?:private|protected|noncomputable)\s+)*"
     r"(?:theorem|lemma)\s+([^\s(:{]+)"
 )
+# Declaration names (after a declaration keyword) and bare structure
+# field/assignment lines whose identifier contains "axiom".
+DECL_NAME = re.compile(
+    r"\b(?:theorem|lemma|def|abbrev|instance|structure|inductive|class)\s+"
+    r"([A-Za-z_][A-Za-z0-9_']*)"
+)
+FIELD_LINE = re.compile(r"^[\t ]*([A-Za-z_][A-Za-z0-9_'.]*)[\t ]*:(?:=|[\t ])", re.M)
 
 # Bundles that are documented as honest aggregates of structural facts.
 ALLOWED_NAMES = {
@@ -103,6 +122,26 @@ def audit(root: Path) -> tuple[list[str], list[str], list[str]]:
             for m in UNIT_TYPE.finditer(text):
                 unit_types.append(f"{path.relative_to(root)}: {m.group(0).strip()}")
     return misleading, stubs, unit_types
+
+
+def axiom_named_declarations(root: Path) -> list[str]:
+    """Flag declaration names and structure fields/assignments containing
+    `axiom`. The corpus has zero Lean `axiom` primitives; such names
+    misrepresent kernel-checked theorems or data fields as postulates.
+    Comments and strings are masked, so prose mentions do not match."""
+    findings: list[str] = []
+    for path in lean_sources(root):
+        text = mask_comments_and_strings(path.read_text(encoding="utf-8"))
+        hits: set[str] = set()
+        for match in DECL_NAME.finditer(text):
+            if "axiom" in match.group(1):
+                hits.add(match.group(1))
+        for match in FIELD_LINE.finditer(text):
+            if "axiom" in match.group(1):
+                hits.add(match.group(1))
+        for name in sorted(hits):
+            findings.append(f"{path.relative_to(root)}: {name}")
+    return findings
 
 
 def statement_aliases(root: Path) -> list[str]:
@@ -156,6 +195,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parent)
     parser.add_argument("--max-misleading", type=int, default=None)
+    parser.add_argument("--max-axiom-names", type=int, default=None)
     parser.add_argument("--max-unit-stubs", type=int, default=None)
     parser.add_argument("--max-unit-types", type=int, default=None)
     parser.add_argument(
@@ -171,6 +211,11 @@ def main() -> int:
     rc = 0
     rc |= report(
         "misleading trivially-stated theorems", misleading, args.max_misleading
+    )
+    rc |= report(
+        "axiom-named declarations (zero real axioms exist)",
+        axiom_named_declarations(args.root),
+        args.max_axiom_names,
     )
     rc |= report("Nonempty-unit stubs", stubs, args.max_unit_stubs)
     rc |= report("Unit-typed volume definitions", unit_types, args.max_unit_types)

@@ -33,10 +33,9 @@ structure GreatFilter where
   index : ℕ
   lethal : Bool
 
-/-- Named bridge (legacy name kept for `OmegaProtocol.lean`): the Great
-    Filter type is inhabited — witnessed by a lethal stage-0 filter, the
-    strongest possible silence condition. -/
-theorem fermi_paradox_axiom : Nonempty GreatFilter :=
+/-- The Great Filter type is inhabited — witnessed by a lethal stage-0
+    filter, the strongest possible silence condition. -/
+theorem great_filter_witness : Nonempty GreatFilter :=
   ⟨⟨0, true⟩⟩
 
 /-- One failed filter silences the whole chain. -/

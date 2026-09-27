@@ -128,7 +128,12 @@ theorem maxwells_equations (em : ElectromagneticField) :
 -- PHYSICAL CONSTANTS
 -- ============================================================
 
+/-- Model postulate, stated as a definition: the gauge field of the minimal
+    model is taken massless (`PhotonMass := 0`). This is not a derived
+    result; the realizable content is the definitional restatement below. -/
 noncomputable def PhotonMass : ℝ := 0
+
+/-- Definitional restatement of the masslessness postulate above. -/
 theorem photon_massless : PhotonMass = 0 := rfl
 
 noncomputable def FineStructureConstant : ℝ := 1 / 137.035999
