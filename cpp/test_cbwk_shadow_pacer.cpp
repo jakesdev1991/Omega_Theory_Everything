@@ -16,6 +16,7 @@
 #include "cbwk_shadow_pacer.hpp"
 
 #include <atomic>
+#include <chrono>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -269,6 +270,27 @@ void t5_seqlock() {
     if (r.has_value()) p.commit(*r);
     p.on_interval();
   }
+
+  // The correctness assertion below is `!bad` (no torn price vectors). The
+  // `reads > 1000` assertion is only a progress check proving the reader ran
+  // concurrently with the writer -- and as written it was a wall-clock race:
+  // the reader was spun up and then raced a fixed 2000-iteration writer loop.
+  // On a loaded 2-vCPU CI runner the reader thread can be starved for that
+  // entire loop and the check fails with 0 reads (reproduced 2/8 runs locally;
+  // this is what turned the new cpp-suites CI job red intermittently).
+  //
+  // Yield to a starved reader until it has made progress, bounded by a
+  // deadline so a pathological scheduler fails loudly instead of hanging. The
+  // writer deliberately stops calling on_interval() here: driving lambda for
+  // another ten seconds could push it to infinity and trip the reader's
+  // isfinite() check, which would be a new false failure.
+  const auto deadline =
+      std::chrono::steady_clock::now() + std::chrono::seconds(10);
+  while (reads.load(std::memory_order_relaxed) <= 1000 &&
+         std::chrono::steady_clock::now() < deadline) {
+    std::this_thread::yield();
+  }
+
   stop.store(true);
   rt.join();
   CHECK(!bad.load());

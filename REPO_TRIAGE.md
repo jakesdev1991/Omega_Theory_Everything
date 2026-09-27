@@ -19,7 +19,7 @@ Fixed on this branch (see the commit message and `git diff` for details):
 | §1 Security Scan fails on schedule | **Fixed** — both URI fixtures tagged, lockfiles excluded, Box hit localized to `evm/package-lock.json:719` (`"license": "MIT",`; a false positive on the package names `hardhat-toolbox`/`boxen`/`cli-boxes`). `workflow_dispatch` added so the full-history scan is re-runnable on demand. |
 | §2 `pytest` at root does not run | **Fixed** — `pytest.ini` excludes `mcp/`; `pytest` now exits 0 with 65 passed. |
 | §3 CI never runs pytest | **Fixed** — `Python tests` step added to `python-checks`. |
-| §4 Suites with no CI job | **Fixed** — new `amity-pilot`, `nostr-client`, `cpp-suites` (full sanitizer matrix) and `mcp-hub` jobs. `ai-governor` still has no build script at all and is **not** covered. |
+| §4 Suites with no CI job | **Fixed** — new `amity-pilot`, `nostr-client`, `cpp-suites` (full sanitizer matrix) and `mcp-hub` jobs. `ai-governor` still has no build script at all and is **not** covered. Adding `cpp-suites` immediately surfaced a latent flake — see §18. |
 | §5 Dependabot coverage | **Fixed** — 4 → 11 ecosystems. `amity/` and `desktop/` given lockfiles so they can `npm ci`. |
 | §6 `update_discovery.sh` clobbers README | **Fixed** — deleted, README reference removed. |
 | §7 `wallet-desktop.yml` artifact path | **Fixed** — verified against Tauri source; `desktop/target`, `npm ci`. |
@@ -280,13 +280,47 @@ or drop it from the roadmap.
 
 ---
 
+## Found while fixing the above
+
+### 18. `cpp/test_cbwk_shadow_pacer.cpp` T5 was flaky (fixed)
+
+Adding the `cpp-suites` CI job turned it red intermittently. Reproduced locally:
+**2 of 8 runs failed**, always identically:
+
+```
+CHECK FAILED test_cbwk_shadow_pacer.cpp:275: reads.load() > 1000
+T5 seqlock prices .......... OK  [0 concurrent reads]
+```
+
+T5 spins up a reader thread that samples `p.prices()` and flags torn reads, then
+races it against a fixed 2000-iteration writer loop and asserts the reader got
+more than 1000 reads in. That second assertion is a **wall-clock race**, not a
+correctness property: on a loaded 2-vCPU runner the reader thread can be starved
+for the entire writer loop and report 0. The real assertion — `!bad`, i.e. no
+torn price vectors — was never the problem.
+
+Fixed by yielding to a starved reader until it has made progress, bounded by a
+10-second deadline so a pathological scheduler fails loudly instead of hanging.
+The writer deliberately stops calling `on_interval()` during that wait: driving
+lambda for ten more seconds could push it to infinity and trip the reader's
+`isfinite()` check, which would be a new false failure.
+
+**After: 15/15 runs pass**, read counts 2,075–49,679. `omni-bridge`'s suite was
+stress-tested alongside it: **6/6 pass**, no equivalent flake.
+
+---
+
 ## Suggested order
 
-1. **Fix Security Scan** (§1) — get `main` green on the Sunday cron, and pull the job log to localize the Box hit.
-2. **Add a `pytest` step + pytest config** (§2, §3) — two small changes, makes 65 tests enforced.
-3. **Delete or neutralize `update_discovery.sh`** (§6) — it is one accidental run away from wiping the README.
-4. **Close #14, decide #34 and #27, batch-triage Dependabot** (§11).
-5. **Extend CI to amity / nostr-client / C++** (§4) and **extend Dependabot** (§5).
-6. **Fix `wallet-desktop.yml`'s artifact path before the first `wallet-v*` tag** (§7).
-7. **Make the book decision** (§12) — it is the only item on this list that is externally visible and irreversible.
+Items 1–6 below are **done** on this branch; what remains is the owner-decision
+track.
+
+1. ~~**Fix Security Scan** (§1)~~ — done. Confirmed green on CI run 36311119579.
+2. ~~**Add a `pytest` step + pytest config** (§2, §3)~~ — done. 65 tests enforced.
+3. ~~**Delete `update_discovery.sh`** (§6)~~ — done.
+4. **Close #14, decide #34 and #27, batch-triage the 21 Dependabot PRs** (§11).
+5. ~~**Extend CI to amity / nostr-client / C++ / mcp, and extend Dependabot** (§4, §5)~~ — done. `ai-governor/` still has no build script and no coverage.
+6. ~~**Fix `wallet-desktop.yml`'s artifact path**~~ — done, before any `wallet-v*` tag exists.
+7. **Make the book decision** (§12) — the only remaining item that is externally visible and irreversible.
 8. Then the product/legal track (§13), the pilot freeze (§14), and the research-scope calls (§15–§17).
+9. **Bump the `actions/*` majors** (§10) via Dependabot PRs #2/#16 before `ubuntu-latest` becomes Ubuntu 26 on 2026-10-19.
