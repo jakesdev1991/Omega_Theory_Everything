@@ -290,7 +290,7 @@ theorem robertson_uncertainty (A B : H →L[ℂ] H) (hA : SelfAdjoint A)
   have h1 : ‖@inner ℂ H _ (deviation A ψ) (deviation B ψ)‖ ^ 2
       ≤ (‖deviation A ψ‖ * ‖deviation B ψ‖) ^ 2 := by
     apply sq_le_sq'
-    · exact norm_nonneg _
+    · exact norm_nonneg (@inner ℂ H _ (deviation A ψ) (deviation B ψ))
     · exact hcs
   rw [mul_pow] at h1
   have hlink := comm_link A B hA hB ψ hψ
@@ -304,15 +304,17 @@ theorem robertson_uncertainty (A B : H →L[ℂ] H) (hA : SelfAdjoint A)
     rw [← hlink]
     exact norm_sub_le _ _
   have hcj : ‖starRingEnd ℂ (@inner ℂ H _ (deviation A ψ) (deviation B ψ))‖
-      = ‖@inner ℂ H _ (deviation A ψ) (deviation B ψ)‖ := by
-    rw [Complex.norm_eq_abs, Complex.abs_conj, ← Complex.norm_eq_abs]
+      = ‖@inner ℂ H _ (deviation A ψ) (deviation B ψ)‖ :=
+    Complex.norm_conj _
   have hdiv : ‖@inner ℂ H _ ψ ((ccomm A B) ψ)‖ / 2
       ≤ ‖@inner ℂ H _ (deviation A ψ) (deviation B ψ)‖ := by
     rw [div_le_iff₀ two_pos]
     linarith
   have hfin : (‖@inner ℂ H _ ψ ((ccomm A B) ψ)‖ / 2) ^ 2
-      ≤ ‖@inner ℂ H _ (deviation A ψ) (deviation B ψ)‖ ^ 2 :=
-    sq_le_sq' (by positivity) hdiv
+      ≤ ‖@inner ℂ H _ (deviation A ψ) (deviation B ψ)‖ ^ 2 := by
+    apply sq_le_sq'
+    · exact div_nonneg (norm_nonneg (@inner ℂ H _ ψ ((ccomm A B) ψ))) two_pos.le
+    · exact hdiv
   show ‖deviation A ψ‖ ^ 2 * ‖deviation B ψ‖ ^ 2 ≥ _
   linarith
 
@@ -349,8 +351,7 @@ noncomputable def hamiltonian (E : ℝ) : ℂ → ℂ :=
     real energies: ⟨Hψ, φ⟩ = ⟨ψ, Hφ⟩ on the ℂ carrier. -/
 theorem hamiltonian_self_adjoint (E : ℝ) (ψ φ : ℂ) :
     @inner ℂ ℂ _ (hamiltonian E ψ) φ = @inner ℂ ℂ _ ψ (hamiltonian E φ) := by
-  simp only [hamiltonian, RCLike.inner_apply, Complex.conj_mul,
-    Complex.conj_ofReal]
+  simp only [hamiltonian, RCLike.inner_apply, map_mul, Complex.conj_ofReal]
   ring
 
 /-- Schrödinger trajectory for angular frequency ω and initial state
@@ -364,8 +365,10 @@ theorem hasDerivAt_schrodingerTrajectory (ω : ℝ) (ψ₀ : ℂ) (t : ℝ) :
     HasDerivAt (schrodingerTrajectory ω ψ₀)
       (Complex.exp (-(t * (Complex.I * (ω : ℂ)))) * ψ₀
         * -(Complex.I * (ω : ℂ))) t := by
-  have h1 : HasDerivAt (fun t : ℝ => t * (Complex.I * (ω : ℂ)))
-      (1 * (Complex.I * (ω : ℂ))) t := (hasDerivAt_id t).mul_const _
+  have h1 : HasDerivAt (fun t : ℝ => (t : ℂ) * (Complex.I * (ω : ℂ)))
+      ((1 : ℂ) * (Complex.I * (ω : ℂ))) t := by
+    simpa only [id_eq, Complex.ofReal_one] using
+      (HasDerivAt.ofReal_comp (hasDerivAt_id t)).mul_const (Complex.I * (ω : ℂ))
   have h2 : HasDerivAt (fun t : ℝ => -(t * (Complex.I * (ω : ℂ))))
       (-(1 * (Complex.I * (ω : ℂ)))) t := h1.neg
   have h3 := h2.cexp
@@ -386,7 +389,7 @@ theorem schrodinger_equation (ω : ℝ) (ψ₀ : ℂ) (t : ℝ) :
   rw [(hasDerivAt_schrodingerTrajectory ω ψ₀ t).deriv]
   simp only [schrodingerTrajectory, hamiltonian, Complex.ofReal_mul]
   have key : -(Complex.I * (Complex.I * (ω : ℂ))) = (ω : ℂ) := by
-    rw [mul_assoc, Complex.I_mul_I, neg_one_mul, neg_neg]
+    rw [← mul_assoc, Complex.I_mul_I, neg_one_mul, neg_neg]
   linear_combination
     (Complex.exp (-(t * (Complex.I * (ω : ℂ)))) * ψ₀ * (hbar : ℂ)) * key
 
