@@ -5,8 +5,12 @@ name: Lean CI
 
 on:
   push:
-    # Also validate this review snapshot when PR merge conflicts block PR checks.
-    branches: [main, arena/01a0dc87-omega-theory-everything, arena/01a0df96-omega-theory-everything]
+    # The two arena/* branches that used to be listed here were temporary
+    # review snapshots ("also validate this snapshot when PR merge conflicts
+    # block PR checks"). Both were merged (PRs #45 and #49) and no longer
+    # exist, so main is the only branch that needs a push trigger; every other
+    # branch is covered by the pull_request trigger below.
+    branches: [main]
     paths:
       - 'lean_proofs/**'
       - '.github/workflows/lean-ci.yml'

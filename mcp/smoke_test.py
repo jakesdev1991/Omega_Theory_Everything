@@ -7,11 +7,18 @@ from __future__ import annotations
 import asyncio
 import json
 import sys
+from pathlib import Path
 
 # Point at the repo-local package so we don't depend on a global install.
-sys.path.insert(0, "/tmp/omwga/mcp")
+# The path is derived from this file's own location — it used to be a
+# hard-coded "/tmp/omwga/mcp", which only worked on the machine that first
+# ran it. Keep this as a bare sys.path statement: ruff's E402 carves out
+# sys.path manipulation before imports, but not other module-level code.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from omega_mcp import OmegaState, mcp
+
+HERE = Path(__file__).resolve().parent
 
 
 async def async_checks() -> list[str]:
@@ -55,7 +62,7 @@ async def run_stdio_serve_then_stop() -> str:
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        cwd="/tmp/omwga/mcp",
+        cwd=HERE,
         text=True,
     )
     try:

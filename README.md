@@ -114,7 +114,7 @@ Omega_Theory_Everything/
 ├── web/                      # Next.js site: current $OMEGA + TWC unlock rails + gated novel chapters
 ├── novel/                    # Novel release plan + sealed-manuscript staging
 ├── launch/                   # Day-one launch plan documents
-├── update_discovery.sh
+├── conjecture_pilot/         # Measurement-first conjecture generator + pre-registration
 ├── requirements.txt
 └── *.md
 ```
