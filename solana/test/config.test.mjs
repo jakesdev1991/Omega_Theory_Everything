@@ -33,7 +33,12 @@ test("metadata URI constraints exclude placeholders and credentials", () => {
     "http://arweave.net/abc",
     "https://example.invalid/twc.json",
     "https://localhost/twc.json",
-    "https://user:pass@arweave.net/twc.json",
+    // Fixture only: the assertion below is that a credential-bearing metadata
+    // URI is *rejected*. The trailing tag suppresses the TruffleHog URI
+    // detector on this single line (engine.go looks for "trufflehog:ignore" in
+    // the remainder of the line after the match) so the full-history secret
+    // scan does not fail on a string that is not a secret.
+    "https://user:pass@arweave.net/twc.json", // trufflehog:ignore
   ]) {
     assert.throws(() => validateMetadataUri(invalid));
   }

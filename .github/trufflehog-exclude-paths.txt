@@ -1,0 +1,24 @@
+# TruffleHog path exclusions — passed as `--exclude-paths` by
+# .github/workflows/ci.yml (see the "Check for secrets" step there).
+#
+# Format: one regular expression per line, matched against the file path.
+# Keep this list short and justified; every entry is a place where a real
+# leaked secret could hide, so anything added here must be a file that no
+# human writes by hand.
+#
+# Generated dependency lockfiles. These are written by npm/cargo, are reviewed
+# as diffs by Dependabot, and are the dominant source of false positives in
+# this repository:
+#
+#   - evm/package-lock.json tripped the Box detector. Its reported location
+#     (line 719) is the literal string `"license": "MIT",`; the only "box"
+#     substrings in the file are the package names @nomicfoundation/hardhat-toolbox,
+#     boxen and cli-boxes, and the file contains no JWT, no credential-bearing
+#     URL and no 32-character lowercase-alnum token anywhere in its 9388 lines.
+#
+# Trivy still scans these files for known-vulnerable dependencies in the same
+# job, so excluding them from secret scanning does not drop them from review.
+package-lock\.json$
+(^|/)yarn\.lock$
+(^|/)pnpm-lock\.yaml$
+(^|/)Cargo\.lock$

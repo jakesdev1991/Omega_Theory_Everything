@@ -9,6 +9,11 @@ on:
     branches: [main]
   schedule:
     - cron: '0 2 * * 0'
+  # TruffleHog derives its commit range from the event: push = before..after,
+  # pull_request = base..head, but schedule AND workflow_dispatch = full history.
+  # So this is the only way to re-run the full-history secret scan on demand
+  # instead of waiting for the Sunday cron.
+  workflow_dispatch:
 
 jobs:
   python-checks:
@@ -36,6 +41,12 @@ jobs:
       
       - name: MyPy type check
         run: mypy . --ignore-missing-imports
+      
+      - name: Python tests
+        # conjecture_pilot (24) + lean_proofs source/build/kernel audits (41).
+        # pytest.ini keeps mcp/ out of collection: it needs the MCP SDK on its
+        # own uv/venv boundary (see the comment in that file).
+        run: python -m pytest -v
       
       - name: Run simulations (smoke test)
         run: |
@@ -170,6 +181,98 @@ jobs:
         working-directory: mobile-node
         run: npm test
 
+  amity-pilot:
+    name: AMITY Testnet Scaffold Checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: amity/package-lock.json
+
+      - name: Install locked dependencies
+        working-directory: amity
+        run: npm ci
+
+      - name: Run config, manifest, proof, policy, and holder-verification tests
+        working-directory: amity
+        run: npm test
+
+  nostr-client:
+    name: Nostr Client Checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: nostr-client/package-lock.json
+
+      - name: Install locked dependencies
+        working-directory: nostr-client
+        run: npm ci
+
+      # test/live.test.mjs needs a reachable relay and skips itself without one,
+      # so this runs the unit and integration suites offline.
+      - name: Run unit and integration tests
+        working-directory: nostr-client
+        run: npm test
+
+  cpp-suites:
+    name: C++ Acceptance Suites (CBwK pacer + Omni-Bridge)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # ubuntu-latest ships GCC with C++23 support, which both suites require.
+      - name: Compiler version
+        run: g++ --version
+
+      # Both scripts run their full config matrix: a strict
+      # -Wall -Wextra -Werror build, then ThreadSanitizer, then
+      # AddressSanitizer + UBSan (cpp/ adds a forced pre-C++23 fallback build).
+      # They complete in well under a minute, so there is no reason to run the
+      # weaker --quick path in CI.
+      - name: CBwK shadow-price pacer suite
+        working-directory: cpp
+        run: ./build.sh
+
+      - name: Omni-Bridge control-boundary acceptance suite
+        working-directory: omni-bridge/cpp
+        run: ./build.sh
+
+  mcp-hub:
+    name: Omega MCP Hub Smoke Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          # mcp/pyproject.toml declares requires-python = ">=3.12"; the root
+          # python-checks job stays on 3.11 and deliberately does not collect
+          # mcp/ (see pytest.ini).
+          python-version: '3.12'
+
+      - name: Install the hub and its dependencies
+        run: |
+          python -m pip install -U pip
+          python -m pip install -e ./mcp
+
+      # smoke_test.py imports the server, lists all 22 tools, checks the five
+      # plane state attributes, and does a real stdio JSON-RPC round trip
+      # against `python -m omega_mcp`.
+      - name: Run smoke test
+        run: python mcp/smoke_test.py
+
   security-scan:
     name: Security Scan
     runs-on: ubuntu-latest
@@ -186,7 +289,9 @@ jobs:
           fetch-depth: 0
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        # Pinned to a tag, not @master: a floating ref on a security job is a
+        # supply-chain risk (any upstream push lands here unreviewed).
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: 'fs'
           scan-ref: '.'
@@ -207,12 +312,23 @@ jobs:
       - name: Check for secrets
         # Run regardless of whether the SARIF upload succeeded.
         if: ${{ !cancelled() }}
-        uses: trufflesecurity/trufflehog@main
+        # Pinned to a tag, not @main — see the note on trivy-action above.
+        uses: trufflesecurity/trufflehog@v3.97.9
         with:
           # No explicit base/head: the action derives the range from the event
-          # (push: before..after, pull_request: base..head, schedule: full history).
+          # (push: before..after, pull_request: base..head, schedule and
+          # workflow_dispatch: full history).
           # Hard-coding base=main/head=HEAD fails on pushes to main (BASE == HEAD).
           path: .
+          # -x/--exclude-paths: file of newline-separated regexes. Generated
+          # lockfiles are excluded because they are machine-written and are the
+          # single largest source of false positives here (the Box detector
+          # fires on the package names `hardhat-toolbox`, `boxen` and
+          # `cli-boxes` inside evm/package-lock.json, which contains no
+          # credentials — only npm sha512 integrity hashes). Dependabot
+          # regenerates these files, and Trivy already scans them for
+          # vulnerable dependencies. Every hand-written file stays scanned.
+          extra_args: --exclude-paths=.github/trufflehog-exclude-paths.txt
 
   docs:
     name: Documentation Check
