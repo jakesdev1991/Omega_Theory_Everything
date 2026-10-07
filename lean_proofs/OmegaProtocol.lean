@@ -122,17 +122,26 @@ theorem least_action_principle (N : ℕ) (x η : ℕ → ℝ) (k : ℝ)
 theorem bridge_metric_triangle (R₁ R₂ R₃ : QRegion) : d R₁ R₃ ≤ d R₁ R₂ + d R₂ R₃ := by
   exact bridge_distance_triangle_inequality R₁ R₂ R₃
 
+/-- Vol02 bridge: the homogeneous Maxwell equation `dF = 0` for the field
+    strength `F = dA` of a smooth potential, derived from `d² = 0` over
+    Mathlib's exterior derivative `extDeriv` (the former zero-operator
+    `ExteriorDerivative` model is retired). -/
 theorem gauss_law_magnetism (em : Vol02.ElectromagneticField) :
-  Vol02.ExteriorDerivative em.F = 0 := by
+  Vol02.d em.F = 0 := by
   exact Vol02.homogeneous_maxwell em
 
+/-- Vol02 bridge: Faraday's law is the homogeneous Maxwell equation. -/
 theorem faradays_law (em : Vol02.ElectromagneticField) :
-  Vol02.ExteriorDerivative em.F = 0 := by
+  Vol02.d em.F = 0 := by
   exact Vol02.homogeneous_maxwell em
 
-theorem ampere_maxwell_law (em : Vol02.ElectromagneticField) :
-  Vol02.ExteriorDerivative (Vol02.HodgeStar em.F) = Vol02.HodgeStar Vol02.J := by
-  exact Vol02.inhomogeneous_maxwell em
+/-- Vol02 bridge: the inhomogeneous Maxwell equation `d ⋆F = ⋆J` of a sourced
+    configuration — the model law carried by `SourcedField.law_dual_maxwell`
+    (Mathlib has no Hodge star, so the dual field and current are data, not a
+    zero placeholder). -/
+theorem ampere_maxwell_law (S : Vol02.SourcedField) :
+  Vol02.d S.starF = S.starJ := by
+  exact Vol02.inhomogeneous_maxwell S
 
 /-- Consistency bridge (VOL02): the Omega-metric `d` is nonnegative.
     Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
@@ -142,36 +151,44 @@ theorem bridge_vol02_metric_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := 
   exact bridge_distance_nonneg R₁ R₂
 
 -- Vol 03: Thermodynamics
-/-- Zeroth law, conditional on KMS-temperature uniqueness being supplied
-    as a hypothesis over every state (the minimal model does not derive
-    it; in the concrete model `KMSState` is constantly `True`). -/
-theorem kms_transitivity (ρ₁ ρ₂ ρ₃ : StateSpace) (β₁ β₂ : ℝ)
-  (h_unique : ∀ (ρ : StateSpace) (β β' : ℝ), Vol03.MT.KMSState ρ β → Vol03.MT.KMSState ρ β' → β = β')
-  (h1 : Vol03.MT.KMSState ρ₁ β₁ ∧ Vol03.MT.KMSState ρ₂ β₁)
-  (h2 : Vol03.MT.KMSState ρ₂ β₂ ∧ Vol03.MT.KMSState ρ₃ β₂) :
-  β₁ = β₂ :=
-  Vol03.kms_transitivity ρ₁ ρ₂ ρ₃ β₁ β₂ h_unique h1 h2
+/-- Vol03 bridge: the concrete modular model is tracial, so it is KMS at every
+    inverse temperature.  The former `kms_transitivity` bridge — conditional on
+    a KMS-temperature uniqueness hypothesis — is retired, because that premise
+    is *refuted* in this model (`Vol03.kms_temperature_uniqueness_fails`). -/
+theorem kms_holds_at_every_temperature (ρ : StateSpace) (β : ℝ) :
+  Vol03.MT.KMSState ρ β :=
+  Vol03.kms_holds_at_every_temperature ρ β
+
+/-- Vol03 bridge: the model's KMS predicate determines no temperature, so
+    temperature data must be carried explicitly by downstream statements. -/
+theorem kms_temperature_uniqueness_fails :
+  ¬ (∀ (ρ : StateSpace) (β β' : ℝ),
+    Vol03.MT.KMSState ρ β → Vol03.MT.KMSState ρ β' → β = β') :=
+  Vol03.kms_temperature_uniqueness_fails
 
 /-- Relative entropy decreases under CPTP maps in the modular-theory
-    model (the monotonicity law is field data of `ModularTheory`). -/
+    model (the monotonicity law is field data of `ModularTheory`, proved for
+    the concrete model's relative entropy). -/
 theorem relative_entropy_monotonicity (ρ σ : StateSpace) (Φ : CPTPMap) :
   Vol03.MT.RelativeEntropy (Φ ρ) (Φ σ) ≤ Vol03.MT.RelativeEntropy ρ σ :=
   Vol03.second_law ρ σ Φ
 
-theorem zeroth_law_thermodynamics (ρ₁ ρ₂ ρ₃ : StateSpace) (β₁ β₂ : ℝ)
-  (h_unique : ∀ (ρ : StateSpace) (β β' : ℝ), Vol03.MT.KMSState ρ β → Vol03.MT.KMSState ρ β' → β = β')
-  (h1 : Vol03.MT.KMSState ρ₁ β₁ ∧ Vol03.MT.KMSState ρ₂ β₁)
-  (h2 : Vol03.MT.KMSState ρ₂ β₂ ∧ Vol03.MT.KMSState ρ₃ β₂) :
-  β₁ = β₂ :=
-  Vol03.zeroth_law ρ₁ ρ₂ ρ₃ β₁ β₂ h_unique h1 h2
+/-- Zeroth law bridge: thermal equilibrium, understood as equality of
+    temperatures, is transitive. -/
+theorem zeroth_law_thermodynamics (T : StateSpace → ℝ) (ρ₁ ρ₂ ρ₃ : StateSpace)
+  (h₁₂ : Vol03.InEquilibrium T ρ₁ ρ₂) (h₂₃ : Vol03.InEquilibrium T ρ₂ ρ₃) :
+  Vol03.InEquilibrium T ρ₁ ρ₃ :=
+  Vol03.zeroth_law T ρ₁ ρ₂ ρ₃ h₁₂ h₂₃
 
 theorem second_law_thermodynamics (ρ σ : StateSpace) (Φ : CPTPMap) :
   Vol03.MT.RelativeEntropy (Φ ρ) (Φ σ) ≤ Vol03.MT.RelativeEntropy ρ σ := by
   exact Vol03.second_law ρ σ Φ
 
-theorem clausius_inequality (ρ σ : StateSpace) (hT : Vol03.Temperature ρ > 0) :
-  Vol03.Entropy σ - Vol03.Entropy ρ ≥ Vol03.Heat ρ σ / Vol03.Temperature ρ := by
-  exact Vol03.clausius_inequality ρ σ hT
+/-- Vol03 bridge: the Clausius inequality `Q/T ≤ ΔS` for a thermodynamic
+    process at positive temperature (the entropy balance of `ThermoProcess`). -/
+theorem clausius_inequality (P : Vol03.ThermoProcess) :
+  P.Q / P.T ≤ P.S₂ - P.S₁ := by
+  exact Vol03.clausius_inequality P
 
 -- Vol 04: Quantum Mechanics
 /-- Consistency bridge (VOL04): the coupling `Φ` is symmetric.
@@ -358,8 +375,13 @@ theorem bridge_vol12_mutual_info_nonneg (R₁ R₂ : QRegion) : mutualInformatio
   exact bridge_mutualInformation_nonneg R₁ R₂
 
 -- Vol 13: Quantum Gravity
-theorem wheeler_dewitt_balance (Ψ : StateSpace) : Vol13.H_matter Ψ = - Vol13.H_gravity Ψ :=
-  Vol13.wheeler_dewitt_balance Ψ
+/-- Vol13 bridge: the Wheeler-DeWitt balance over arbitrary matter and gravity
+    operators — whenever the total constraint annihilates a state, the two
+    contributions on that state are exact negatives.  The former zero-Hamiltonian
+    model (`H_matter := 0`, `H_gravity := 0`) is retired. -/
+theorem wheeler_dewitt_balance (H_m H_g : Operator) (Ψ : StateSpace)
+    (h : (H_m + H_g) Ψ = 0) : H_m Ψ = - H_g Ψ :=
+  Vol13.wheeler_dewitt_balance H_m H_g Ψ h
 
 -- Vol 14: Dark Sector
 theorem dark_energy_deduction : Vol14.OmegaDarkEnergy = 1 - Vol14.OmegaBaryon - Vol14.OmegaDarkMatter :=
@@ -713,8 +735,16 @@ theorem bridge_cross_v01_v04_coupling_symm (R₁ R₂ : QRegion) : Φ R₁ R₂ 
 theorem cross_vol02_vol05_em_stress_energy : Vol05.Geometry.stress_energy = Vol05.EMStressEnergy := by
   exact Vol05.em_sources_gravity
 
-theorem cross_vol03_vol08_bh_thermo (ρ : StateSpace) : Vol03.BHEntropy ρ = Vol03.BlackHoleArea ρ / 4 := by
-  exact Vol03.bh_entropy_formula ρ
+/-- Cross-volume bridge (VOL03/VOL08): the Vol08 Bekenstein-Hawking entropy
+    (in natural units `G = 1`) agrees with the Vol03 black-hole entropy
+    whenever the horizon areas agree.  The former constant-zero `BHEntropy`/
+    `BlackHoleArea` pair on `StateSpace` is retired. -/
+theorem cross_vol03_vol08_bh_thermo (T : Vol03.BlackHoleThermo) (bh : Vol08.BHGeometry)
+    (h_area : bh.horizonArea = T.horizonArea) :
+    Vol08.BHEntropy bh = T.entropy := by
+  have hG : (4 : ℝ) * NewtonG = 4 := by norm_num [NewtonG]
+  dsimp only [Vol08.BHEntropy]
+  rw [T.law_bekenstein_hawking, ← h_area, hG]
 
 /-- Consistency bridge (cross-volume consistency): the von Neumann entropy is nonnegative.
     Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
