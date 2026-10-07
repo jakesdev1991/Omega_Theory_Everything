@@ -74,11 +74,11 @@ theorem no_final_generation (b : Branch) :
 /-- Structural bridge: Q-region entropy is nonnegative in the model used for
     branch entropies. -/
 theorem bridge_vol45_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 :=
-  monotonicity_lemma R
+  bridge_vonNeumannEntropy_nonneg R
 
 /-- Structural bridge: branch distances in the Q-region model are
     nonnegative. -/
 theorem bridge_vol45_metric_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 :=
-  distance_nonneg R₁ R₂
+  bridge_distance_nonneg R₁ R₂
 
 end OmegaProtocol.Vol45

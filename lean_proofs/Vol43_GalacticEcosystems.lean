@@ -68,12 +68,12 @@ theorem travel_time_monotone (d₁ d₂ v : ℝ) (hv : 0 < v) (h : d₁ ≤ d₂
 /-- Structural bridge: interstellar distances in the Q-region model are
     nonnegative. -/
 theorem bridge_vol43_metric_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 :=
-  distance_nonneg R₁ R₂
+  bridge_distance_nonneg R₁ R₂
 
 /-- Structural bridge: the holographic entropy bound holds in the Q-region
     model used for galactic horizons. -/
 theorem bridge_vol43_entropy_bounded (R : QRegion) :
     vonNeumannEntropy R ≤ Real.pi :=
-  entropy_bounded R
+  bridge_vonNeumannEntropy_le_pi R
 
 end OmegaProtocol.Vol43

@@ -50,7 +50,7 @@ theorem no_entanglement_no_bridge (A B : Subsystem)
   push_neg at h_pos
   have h_ent := (er_epr_correspondence A B).mpr h_pos
   have h_mi : MutualInformation A B > 0 := by linarith
-  have h_mi_nonneg : MutualInformation A B ≥ 0 := mutualInformation_nonneg A B
+  have h_mi_nonneg : MutualInformation A B ≥ 0 := bridge_mutualInformation_nonneg A B
   linarith
 
 -- The retired legacy theorems `er_bridge_from_phi`,

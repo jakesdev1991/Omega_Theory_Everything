@@ -119,10 +119,10 @@ theorem economics_from_omega (market : LinearMarket) :
 
 /-- Structural consistency of the separate zero-information model only. -/
 theorem bridge_vol38_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 :=
-  monotonicity_lemma R
+  bridge_vonNeumannEntropy_nonneg R
 
 /-- Structural consistency of the separate zero-information model only. -/
 theorem bridge_vol38_coupling_symm (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R₂ R₁ :=
-  Φ_symm R₁ R₂
+  bridge_overlapDensity_symm R₁ R₂
 
 end OmegaProtocol.Vol38

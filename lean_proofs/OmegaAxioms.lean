@@ -25,7 +25,12 @@ small, explicit zero-information model instead:
 
 This is intentionally a model, not a claim that the physical Omega theory has
 been derived.  Theorems depending on a richer physical model must add those
-assumptions as hypotheses rather than hiding them in axioms.
+assumptions as hypotheses rather than hiding them in axioms.  Consequences of
+the degeneracy are proved under the `bridge_*` naming convention (zero-model
+consistency witnesses); no declaration in this file asserts a physical law,
+and the substantive counterparts live in `InformationNetwork` and the
+`dynamicPlanckCOD` development.  Retired names and their replacements are
+recorded in `PROOF_AUDIT.md` (tenth pass).
 -/
 
 /-- The concrete Hilbert space used by the minimal model. -/
@@ -129,12 +134,29 @@ noncomputable def informationNovelty (R : QRegion) : ℝ :=
 noncomputable def processingSpeed (R : QRegion) (baseRate : ℝ) : ℝ :=
   baseRate * (1 - informationNovelty R)
 
-/-- The existence statement is constructive for every discrete trajectory. -/
-theorem schrodinger_from_discrete_limit :
-  ∀ (ψ : ℝ → QRegion) (H : QRegion → QRegion),
-    (∀ t, ψ (t + 1) = H (ψ t)) → ∃ (c : ℝ), c = c := by
-  intro ψ H h
-  exact ⟨0, rfl⟩
+/-- A one-step recurrence trajectory is determined by its initial state:
+    trajectories obeying the same law `ψ(t+1) = H (ψ t)` that agree at time
+    zero agree everywhere. This replaces the retired
+    `schrodinger_from_discrete_limit`, whose conclusion `∃ c, c = c` was
+    satisfiable by every real number and whose hypothesis was unused — a
+    tautology wearing a physics name. The present statement has content for
+    an arbitrary state type; the Schrödinger limit itself is not formalized. -/
+theorem discrete_recurrence_unique {α : Type*} (H : α → α) (ψ ψ' : ℕ → α)
+    (hψ : ∀ t, ψ t.succ = H (ψ t)) (hψ' : ∀ t, ψ' t.succ = H (ψ' t))
+    (h0 : ψ 0 = ψ' 0) : ψ = ψ' := by
+  funext n
+  induction n with
+  | zero => exact h0
+  | succ k ih => rw [hψ k, hψ' k, ih]
+
+/-- The iterate trajectory solves the discrete recurrence: the successor point
+    of `fun k => H^[k] x` is obtained from the current one by `H`. -/
+theorem discrete_recurrence_iterate {α : Type*} (H : α → α) (x : α) :
+    ∀ n : ℕ,
+      (fun k : ℕ => (H^[k]) x) n.succ = H ((fun k : ℕ => (H^[k]) x) n) := by
+  intro n
+  show H^[n.succ] x = H (H^[n] x)
+  rw [Function.iterate_succ_apply']
 
 noncomputable def forwardFlux (R₁ R₂ : QRegion) : ℝ := Φ R₁ R₂
 
@@ -154,36 +176,35 @@ def freezeBoundaryThreshold : ℝ := 0.012
 def isFrozen (R₁ R₂ : QRegion) : Prop :=
   forwardFlux R₁ R₂ ≤ freezeBoundaryThreshold
 
-/-- Every information quantity in the minimal model is zero. -/
-theorem data_processing_inequality :
-  ∀ (R₁ R₂ R₃ : QRegion),
-    mutualInformation R₁ R₃ ≤ mutualInformation R₁ R₂ := by
-  intros
-  exact le_rfl
+-- RETIRED: `data_processing_inequality` and
+-- `data_processing_inequality_multiplicative`. On the zero model both sides
+-- of each inequality are identically zero, so the names asserted a
+-- data-processing theorem while proving `0 ≤ 0`. A data-processing
+-- inequality needs a channel model; the honest, hypothesis-carrying
+-- ingredient used by the metric layer is
+-- `InformationNetwork.log_inequality_of_multiplicative_DPI` below.
+-- The remaining `bridge_*` declarations in this section are consistency
+-- witnesses of the degenerate model (every information quantity is zero),
+-- named so that no physical law is attributed to them. Their non-degenerate
+-- counterparts live in `InformationNetwork`.
 
-theorem data_processing_inequality_multiplicative :
-  ∀ (R₁ R₂ R₃ : QRegion),
-    mutualInformation R₁ R₃ ≤ mutualInformation R₁ R₂ * mutualInformation R₂ R₃ / maxMutualInformation := by
-  intros
-  simp [mutualInformation, maxMutualInformation]
-
-theorem monotonicity_lemma :
+theorem bridge_vonNeumannEntropy_nonneg :
   ∀ (R : QRegion), vonNeumannEntropy R ≥ 0 := by
   intro
   exact le_rfl
 
-theorem entropy_bounded :
+theorem bridge_vonNeumannEntropy_le_pi :
   ∀ (R : QRegion), vonNeumannEntropy R ≤ Real.pi := by
   intro
   have : (0 : ℝ) ≤ Real.pi := le_of_lt Real.pi_pos
   simpa [vonNeumannEntropy] using this
 
-theorem mutualInformation_nonneg :
+theorem bridge_mutualInformation_nonneg :
   ∀ (R₁ R₂ : QRegion), mutualInformation R₁ R₂ ≥ 0 := by
   intros
   exact le_rfl
 
-theorem mutualInformation_bounded :
+theorem bridge_mutualInformation_le_max :
   ∀ (R₁ R₂ : QRegion), mutualInformation R₁ R₂ ≤ maxMutualInformation := by
   intros
   simp [mutualInformation, maxMutualInformation]
@@ -197,22 +218,22 @@ theorem mutualInformation_bounded :
 -- `InformationNetwork.log_inequality_of_multiplicative_DPI`,
 -- `InformationNetwork.overlap_one_identifies`.
 
-theorem Φ_nonneg :
+theorem bridge_overlapDensity_nonneg :
   ∀ (R₁ R₂ : QRegion), Φ R₁ R₂ ≥ 0 := by
   intros
   simp [Φ, chainOverlapDensity, jointEntropy]
 
-theorem Φ_symm :
+theorem bridge_overlapDensity_symm :
   ∀ (R₁ R₂ : QRegion), Φ R₁ R₂ = Φ R₂ R₁ := by
   intros
   simp [Φ, chainOverlapDensity, jointEntropy]
 
-theorem qregion_self_distance_zero :
+theorem bridge_qregion_self_distance_zero :
   ∀ (R : QRegion), d R R = 0 := by
   intro
   simp [d, omegaMetric, mutualInformation]
 
-theorem codProfile_triangle :
+theorem bridge_codProfile_triangle :
   ∀ (R₁ R₂ R₃ : QRegion),
     DynamicCODScale.dynamicPlanckCOD canonicalCODEnv (Φ R₁ R₃) ≤
       DynamicCODScale.dynamicPlanckCOD canonicalCODEnv (Φ R₁ R₂) +
@@ -223,18 +244,18 @@ theorem codProfile_triangle :
   rw [hΦ, hΦ, hΦ, DynamicCODScale.dynamicPlanckCOD_zero]
   norm_num [canonicalCODEnv]
 
-theorem distance_zero_when_I_zero :
+theorem bridge_distance_zero_when_I_zero :
   ∀ (R₁ R₂ : QRegion),
     mutualInformation R₁ R₂ = 0 → d R₁ R₂ = 0 := by
   intros
   simp [d, omegaMetric, mutualInformation]
 
-theorem distance_nonneg :
+theorem bridge_distance_nonneg :
   ∀ (R₁ R₂ : QRegion), d R₁ R₂ ≥ 0 := by
   intros
   simp [d, omegaMetric, mutualInformation]
 
-theorem codProfile_pos :
+theorem bridge_codProfile_pos :
   ∀ (R₁ R₂ : QRegion),
     0 < DynamicCODScale.dynamicPlanckCOD canonicalCODEnv (Φ R₁ R₂) := by
   intro R₁ R₂
@@ -243,55 +264,82 @@ theorem codProfile_pos :
   rw [hΦ, DynamicCODScale.dynamicPlanckCOD_zero]
   norm_num [canonicalCODEnv]
 
-theorem zero_product_implies_zero :
+theorem bridge_zero_product_implies_zero :
   ∀ (R₁ R₂ R₃ : QRegion),
     mutualInformation R₁ R₂ = 0 → mutualInformation R₂ R₃ = 0 →
     mutualInformation R₁ R₃ = 0 := by
   intros
   rfl
 
-theorem distance_triangle_inequality :
+theorem bridge_distance_triangle_inequality :
   ∀ (R₁ R₂ R₃ : QRegion),
     d R₁ R₃ ≤ d R₁ R₂ + d R₂ R₃ := by
   intros
   simp [d, omegaMetric, mutualInformation]
 
-theorem freeze_boundary_value : (freezeBoundaryThreshold : ℝ) = 0.012 := by
-  rfl
-
-theorem freeze_boundary_reverse_flux_vanishes :
-  ∀ (R₁ R₂ : QRegion),
-    isFrozen R₁ R₂ → reverseFlux R₁ R₂ = 0 := by
+/-- Zero-model law: the reverse flux vanishes identically (both entropies
+    are zero), so the retired hypothesis `isFrozen R₁ R₂` in
+    `freeze_boundary_reverse_flux_vanishes` was decorative. -/
+theorem bridge_reverseFlux_zero_zero_model :
+  ∀ (R₁ R₂ : QRegion), reverseFlux R₁ R₂ = 0 := by
   intros
   simp [reverseFlux, vonNeumannEntropy]
 
-theorem freeze_boundary_theorem (R₁ R₂ : QRegion) :
-  isFrozen R₁ R₂ → forwardFlux R₁ R₂ ≤ freezeBoundaryThreshold := by
-  intro h
-  exact h
+/-- Definitional unfolding of the freeze predicate at the model's chosen
+    threshold: `isFrozen` *is* `forwardFlux ≤ freezeBoundaryThreshold`, and
+    `freezeBoundaryThreshold := 0.012`, so this `↔` is `Iff.rfl`.  Stated once
+    here instead of proliferating as grand-named restatements (the retired
+    `freeze_boundary_theorem`, `consciousness_from_omega` and
+    `freeze_implies_low_integration` were all this same definitional
+    content). -/
+theorem bridge_isFrozen_iff (R₁ R₂ : QRegion) :
+  isFrozen R₁ R₂ ↔ forwardFlux R₁ R₂ ≤ (0.012 : ℝ) :=
+  Iff.rfl
 
 /-- Consistency bridge (protocol core): the Omega-metric `d` satisfies the triangle inequality.
     Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
     it certifies internal coherence of the formalization and is NOT a
     derivation of the physical law the legacy name `triangle_inequality_from_DPI` evoked. -/
 theorem bridge_metric_triangle_from_DPI (R₁ R₂ R₃ : QRegion) :
-  d R₁ R₃ ≤ d R₁ R₂ + d R₂ R₃ := by
-  exact distance_triangle_inequality R₁ R₂ R₃
+  d R₁ R₃ ≤ d R₁ R₂ + d R₂ R₃ :=
+  bridge_distance_triangle_inequality R₁ R₂ R₃
 
-theorem time_dilation_as_lag (R : QRegion) (baseRate : ℝ) (h_base : baseRate ≥ 0) :
-  processingSpeed R baseRate ≤ baseRate := by
+/-- Arithmetic core of the "time dilation as processing lag" reading: a rate
+    reduced by a novelty factor in `[0, 1]` never exceeds the base rate. This
+    is the non-degenerate statement (all three hypotheses are used); the zero
+    model cannot witness an actual lag, since its novelty is identically zero. -/
+theorem speed_reduction_of_novelty (baseRate novelty : ℝ)
+    (h_base : 0 ≤ baseRate) (h_novelty0 : 0 ≤ novelty) (h_novelty1 : novelty ≤ 1) :
+    baseRate * (1 - novelty) ≤ baseRate := by
+  calc baseRate * (1 - novelty) = baseRate - baseRate * novelty := by ring
+    _ ≤ baseRate := by
+      have hprod : 0 ≤ baseRate * novelty := mul_nonneg h_base h_novelty0
+      linarith
+
+/-- Zero-model identity (no physics content): the model's novelty factor is
+    identically zero, so its processing speed equals the base rate. -/
+theorem bridge_processingSpeed_zero_model (R : QRegion) (baseRate : ℝ) :
+    processingSpeed R baseRate = baseRate := by
   simp [processingSpeed, informationNovelty, vonNeumannEntropy]
 
-theorem asymmetry_generates_stress_energy (R₁ R₂ : QRegion) :
-  asymmetryTensor R₁ R₂ ≠ 0 → informationalImpedance R₁ R₂ > 0 := by
-  intro h
+/-- The impedance is positive exactly when the asymmetry tensor is nonzero —
+    an identity about the absolute-value definition. The retired
+    `asymmetry_generates_stress_energy` stated one direction under a
+    hypothesis that is unsatisfiable in the zero model (`asymmetryTensor ≡ 0`),
+    so it could never fire. -/
+theorem informationalImpedance_pos_iff (R₁ R₂ : QRegion) :
+    0 < informationalImpedance R₁ R₂ ↔ asymmetryTensor R₁ R₂ ≠ 0 := by
   dsimp [informationalImpedance]
-  exact abs_pos.mpr h
+  exact abs_pos
 
-theorem phase_transition_at_freeze (R₁ R₂ : QRegion) :
-  isFrozen R₁ R₂ → asymmetryTensor R₁ R₂ = forwardFlux R₁ R₂ := by
-  intro
-  simp [asymmetryTensor, reverseFlux, vonNeumannEntropy]
+/-- Vanishing reverse flux is what makes the asymmetry tensor equal the
+    forward flux. The retired `phase_transition_at_freeze` used a frozen-phase
+    hypothesis that its proof never consumed; here the hypothesis is the one
+    actually needed. -/
+theorem asymmetryTensor_eq_forward_of_reverseFlux_zero (R₁ R₂ : QRegion)
+    (h : reverseFlux R₂ R₁ = 0) : asymmetryTensor R₁ R₂ = forwardFlux R₁ R₂ := by
+  dsimp [asymmetryTensor]
+  rw [h, sub_zero]
 
 /-!
 ### Non-degenerate Information Network & Witness

@@ -73,10 +73,10 @@ theorem hybrid_cheapest_bridge :
 /-- Structural bridge: substrate coupling in the Q-region model is
     nonnegative. -/
 theorem bridge_vol41_coupling_nonneg (R₁ R₂ : QRegion) : Φ R₁ R₂ ≥ 0 :=
-  Φ_nonneg R₁ R₂
+  bridge_overlapDensity_nonneg R₁ R₂
 
 /-- Structural bridge: the Ω-metric is reflexive on the Q-region model. -/
 theorem bridge_vol41_metric_self_zero (R : QRegion) : d R R = 0 :=
-  qregion_self_distance_zero R
+  bridge_qregion_self_distance_zero R
 
 end OmegaProtocol.Vol41

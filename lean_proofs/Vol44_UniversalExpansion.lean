@@ -28,14 +28,14 @@ open OmegaProtocol
     it certifies internal coherence of the formalization and is NOT a
     derivation of the physical law the legacy name `expansion_distance_self` evoked. -/
 theorem bridge_vol44_metric_self_zero (R : QRegion) : d R R = 0 := by
-  exact qregion_self_distance_zero R
+  exact bridge_qregion_self_distance_zero R
 
 /-- Consistency bridge (VOL44): the coupling `Φ` is nonnegative.
     Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
     it certifies internal coherence of the formalization and is NOT a
     derivation of the physical law the legacy name `expansion_phi_nonneg` evoked. -/
 theorem bridge_vol44_coupling_nonneg (R₁ R₂ : QRegion) : Φ R₁ R₂ ≥ 0 := by
-  exact Φ_nonneg R₁ R₂
+  exact bridge_overlapDensity_nonneg R₁ R₂
 
 -- ============================================================
 -- DE SITTER SPACE AT VARIABLE COSMOLOGICAL CONSTANT

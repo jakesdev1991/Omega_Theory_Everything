@@ -42,14 +42,14 @@ theorem topos_from_omega (a : Prop) [Decidable a] : a ∨ ¬a := by
     it certifies internal coherence of the formalization and is NOT a
     derivation of the physical law the legacy name `topos_entropy_bound` evoked. -/
 theorem bridge_vol36_entropy_bounded (R : QRegion) : vonNeumannEntropy R ≤ Real.pi := by
-  exact entropy_bounded R
+  exact bridge_vonNeumannEntropy_le_pi R
 
 /-- Consistency bridge (VOL36): the coupling `Φ` is symmetric.
     Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
     it certifies internal coherence of the formalization and is NOT a
     derivation of the physical law the legacy name `topos_phi_symm` evoked. -/
 theorem bridge_vol36_coupling_symm (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R₂ R₁ := by
-  exact Φ_symm R₁ R₂
+  exact bridge_overlapDensity_symm R₁ R₂
 
 -- ============================================================
 -- A CONCRETE SKELETAL CATEGORY: FINITE SETS AS `Fin n`

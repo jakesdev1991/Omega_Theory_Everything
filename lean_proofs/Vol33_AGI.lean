@@ -62,12 +62,12 @@ theorem specialization_gap (agent : ℕ → ℕ) (hzero : ∀ t, agent t = 0) :
 /-- Structural bridge: agent-state distances in the Q-region model are
     nonnegative. -/
 theorem bridge_vol33_metric_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 :=
-  distance_nonneg R₁ R₂
+  bridge_distance_nonneg R₁ R₂
 
 /-- Structural bridge: agent-state entropy in the Q-region model is
     nonnegative. -/
 theorem bridge_vol33_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 :=
-  monotonicity_lemma R
+  bridge_vonNeumannEntropy_nonneg R
 
 -- The retired bridge `agi_integration_pos` restated `abs_pos` under the
 -- hypothesis `asymmetryTensor R₁ R₂ ≠ 0`, unsatisfiable in the concrete
