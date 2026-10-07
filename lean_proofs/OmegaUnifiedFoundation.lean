@@ -106,7 +106,13 @@ theorem concreteRelativeEntropy_mono (ρ σ : StateSpace) (Φ : CPTPMap) :
     (a tracial state, `Δ = 1`), the relative entropy is the (non-constant)
     discrete metric `concreteRelativeEntropy`, and the modular flow
     `α_t(A) = Δ^{it} A Δ^{-it}` is the identity on the algebra.  It is a value
-    with proofs of every field, not a kernel assumption. -/
+    with proofs of every field, not a kernel assumption: the `Ω`-state is
+    cyclic and separating (`law_omega_cyclic_separating` is proved from
+    surjectivity of `A ↦ A 1` and from `operator_eq_smul_one`, while
+    `not_cyclicSeparating_zero` shows the predicate is not trivially true), and
+    `law_modular_operator` is a computation in the model's genuine functional
+    calculus `A ^ z = (A 1) ^ z • 1` (`op_pow_of_one`), not the former
+    placeholder `A ^ z = A`. -/
 noncomputable def concreteModularTheory : ModularTheory :=
   { ModularOperator := fun _ => 1
     ModularConjugation := fun _ => 1
@@ -120,12 +126,24 @@ noncomputable def concreteModularTheory : ModularTheory :=
       funext A
       rfl
     law_omega_cyclic_separating := by
-      exact True.intro
+      constructor
+      · -- Cyclicity: `A ↦ A·1` is surjective, since every `z` is `(z • 1) 1`.
+        intro y
+        have hsurj : Function.Surjective
+            (fun A : ↥OmegaAlgebra => (A : Operator) (1 : StateSpace)) := by
+          intro z
+          exact ⟨⟨z • (1 : Operator), Subalgebra.mem_top⟩, by simp [smul_eq_mul]⟩
+        rw [hsurj.range_eq, closure_univ]
+        exact Set.mem_univ y
+      · -- Separating: `A·1 = 0` pins `A` down by `operator_eq_smul_one`.
+        intro A hA
+        apply Subtype.ext
+        rw [operator_eq_smul_one (A : Operator), hA, zero_smul]
     law_modular_operator := by
       -- `Δ = 1` (tracial state) and in the model calculus `1 ^ z = 1`, so both
       -- sides reduce to `1 * A * 1`, which is `A` by the operator monoid laws.
       intro A t
-      simp [op_pow_eq]
+      simp only [op_pow_of_one, one_mul, mul_one]
     law_kms_characterization := by
       -- The KMS predicate *is* the trace equation, and with the identity flow
       -- `α_{iβ}(B) = B` the characterising equation is the same equation.

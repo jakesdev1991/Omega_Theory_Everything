@@ -19,8 +19,12 @@ small, explicit zero-information model instead:
 * `StateSpace` is `ℂ` and `QRegion` is `Unit`;
 * most informational observables are zero, but the state functional `ω_ρ` is
   the algebraic trace (a genuine, non-constant tracial state — see
-  `ω_ρ_trace` in `OmegaUnifiedFoundation.lean`), and the model's functional
-  calculus is the explicit placeholder `A ^ z := A` (see `op_pow`);
+  `ω_ρ_trace` in `OmegaUnifiedFoundation.lean`), and the functional calculus is
+  the honest one for a one-dimensional state space,
+  `A ^ z = (A 1) ^ z • 1` (see `op_pow`, with the algebraic laws `op_pow_zero`,
+  `op_pow_one`, `op_pow_add`, `op_pow_of_one`); `CyclicSeparating` is the
+  genuine cyclic-and-separating predicate (`not_cyclicSeparating_zero` shows it
+  is not trivially true);
 * the operator and entropy constructions are real definitions;
 * the metric's Planck-scale factor is the canonical COD profile
   `ℓ_P(Φ) = ℓ_P0·√(1-Φ²)` from `DynamicCODScale` (evaluated at `ℓ_P0 = 1`),
@@ -52,24 +56,56 @@ noncomputable def OmegaAlgebra : StarSubalgebra ℂ (StateSpace →L[ℂ] StateS
 
 abbrev Operator := StateSpace →L[ℂ] StateSpace
 
-/-- The model's scalar functional calculus `A ↦ A ^ z`.  The analytic calculus
-    is deliberately not modelled; the model records the placeholder `A ^ z := A`,
-    which agrees with the intended calculus at the identity (`1 ^ z = 1`, the
-    tracial modular operator used by the modular flow law below) and at zero
-    (`0 ^ z = 0` for `z ≠ 0`).  It is the only place the model constrains `^`;
-    see `law_modular_operator` in `OmegaUnifiedFoundation.lean`. -/
-noncomputable def op_pow (A : Operator) (_ : ℂ) : Operator := A
+/-- The model's scalar functional calculus `A ↦ A ^ z`.  The state space is
+    one-dimensional, so an operator is determined by its single value `A 1`
+    (`operator_eq_smul_one`), and the honest calculus is the complex power of
+    that value transported back to the operator:
+    `A ^ z = (A 1) ^ z • 1`.  This is *not* the constant placeholder `A ^ z = A`
+    used before the eleventh pass: the algebraic laws `op_pow_zero`,
+    `op_pow_one`, `op_pow_add` and `op_pow_of_one` below are genuine (the
+    additive law needs the base to be nonzero, exactly as `Complex.cpow_add`
+    does), and `law_modular_operator` in `OmegaUnifiedFoundation.lean` is now a
+    computation in this calculus rather than a definitional restatement. -/
+noncomputable def op_pow (A : Operator) (z : ℂ) : Operator := (A 1) ^ z • (1 : Operator)
 @[default_instance] noncomputable instance instHPowOperator : HPow Operator ℂ Operator where
   hPow := op_pow
 
-/-- In the model calculus `A ^ z = A` (definitional unfolding of `op_pow`).
-    Stated for an arbitrary base so that the simplifier can reduce powers
-    without first normalising the base expression. -/
-theorem op_pow_eq (A : Operator) (z : ℂ) : A ^ z = A := rfl
+/-- **Every operator on the one-dimensional state space is scalar
+    multiplication by its value at `1`.**  This is the structural fact that
+    makes the model's functional calculus honest. -/
+theorem operator_eq_smul_one (A : Operator) : A = A 1 • (1 : Operator) := by
+  ext v
+  calc A v = A (v • (1 : StateSpace)) := by rw [smul_eq_mul, mul_one]
+    _ = v • A 1 := map_smul A v 1
+    _ = (A 1 • (1 : Operator)) v := by
+        rw [smul_apply, one_apply_eq_self, smul_eq_mul, mul_comm]
 
-/-- In the model calculus every power of the identity operator is the
-    identity — the case exercised by the tracial modular operator `Δ = 1`. -/
-theorem op_pow_one (z : ℂ) : (1 : Operator) ^ z = 1 := op_pow_eq 1 z
+/-- Model calculus: the zeroth complex power is the identity operator
+    (`Complex.cpow_zero` together with `1 • 1 = 1`). -/
+theorem op_pow_zero (A : Operator) : A ^ (0 : ℂ) = 1 := by
+  rw [op_pow, Complex.cpow_zero, one_smul]
+
+/-- Model calculus: the first complex power is the operator itself, because the
+    operator is determined by its value at `1` (`operator_eq_smul_one`). -/
+theorem op_pow_one (A : Operator) : A ^ (1 : ℂ) = A := by
+  rw [op_pow, Complex.cpow_one]
+  exact (operator_eq_smul_one A).symm
+
+/-- Model calculus: powers of the identity operator are the identity — the case
+    exercised by the tracial modular operator `Δ = 1`. -/
+theorem op_pow_of_one (z : ℂ) : (1 : Operator) ^ z = 1 := by
+  rw [op_pow, one_apply_eq_self, Complex.one_cpow, one_smul]
+
+/-- Model calculus is multiplicative on the exponent of a nonzero base: the
+    complex-power law `x ^ (z + w) = x ^ z * x ^ w` for `x = A 1 ≠ 0`.  The
+    hypothesis is genuine — `Complex.cpow_add` needs it, and `0 ^ z` is not
+    multiplicative in `z`. -/
+theorem op_pow_add (A : Operator) (h : A 1 ≠ 0) (z w : ℂ) :
+    A ^ (z + w) = A ^ z * A ^ w := by
+  rw [op_pow, op_pow, op_pow, Complex.cpow_add z w h]
+  ext v
+  simp only [smul_apply, mul_apply_eq_comp, one_apply_eq_self, smul_eq_mul]
+  ring
 
 @[default_instance] noncomputable instance instCoeOmegaAlgebraOperator :
     Coe ↥OmegaAlgebra Operator where
@@ -78,7 +114,32 @@ theorem op_pow_one (z : ℂ) : (1 : Operator) ^ z = 1 := op_pow_eq 1 z
 @[default_instance] noncomputable instance instMulOperator : Mul Operator where
   mul A B := A.comp B
 
-def CyclicSeparating (_ : StateSpace) : Prop := True
+/-- **The model vector is cyclic and separating** for the top algebra, in the
+    standard von Neumann-algebra sense: the orbit map `A ↦ A·ξ` has dense range
+    in the state space (cyclicity) and `A·ξ = 0` forces `A = 0` (separating).
+
+    Both conjuncts have content: `CyclicSeparating 0` is *false*
+    (`not_cyclicSeparating_zero` below: the zero vector is not separating),
+    while both are *proved* for the model's `Ω`-state `1` in
+    `OmegaUnifiedFoundation.concreteModularTheory`
+    (`law_omega_cyclic_separating`), where cyclicity uses surjectivity of
+    `A ↦ A 1` and separatingness uses `operator_eq_smul_one`. -/
+def CyclicSeparating (ξ : StateSpace) : Prop :=
+  DenseRange (fun A : ↥OmegaAlgebra => (A : Operator) ξ) ∧
+    (∀ A : ↥OmegaAlgebra, (A : Operator) ξ = 0 → A = 0)
+
+/-- **Non-vacuity witness**: the zero vector is not cyclic-and-separating —
+    the orbit through `0` vanishes for *every* algebra element, so separation
+    fails at `A = 1 ≠ 0`. -/
+theorem not_cyclicSeparating_zero : ¬ CyclicSeparating (0 : StateSpace) := by
+  rintro ⟨_, hsep⟩
+  have h0 : ((1 : ↥OmegaAlgebra) : Operator) (0 : StateSpace) = 0 := map_zero _
+  have h1 : (1 : ↥OmegaAlgebra) = 0 := hsep 1 h0
+  have h2 : (1 : Operator) = 0 := by
+    simpa using congrArg (fun A : ↥OmegaAlgebra => (A : Operator)) h1
+  have h3 : (1 : StateSpace) = 0 := by
+    simpa using congrArg (fun f : Operator => f (1 : StateSpace)) h2
+  exact one_ne_zero h3
 
 /-- The model state functional: the algebraic trace of the operator in the
     one-dimensional representation, `A ↦ tr A`.  Non-constant (`tr 0 = 0` vs
