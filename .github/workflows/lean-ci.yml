@@ -6,7 +6,7 @@ name: Lean CI
 on:
   push:
     # Also validate this review snapshot when PR merge conflicts block PR checks.
-    branches: [main, arena/01a0dc87-omega-theory-everything, arena/01a0df96-omega-theory-everything]
+    branches: [main, arena/01a0dc87-omega-theory-everything, arena/01a0df96-omega-theory-everything, arena/ccde3398-omega-theory-everything]
     paths:
       - 'lean_proofs/**'
       - '.github/workflows/lean-ci.yml'
@@ -47,9 +47,17 @@ jobs:
           # the `bridge_*` naming convention, `Nonempty Unit` stubs and
           # `Unit`-typed volume definitions may only decrease, and no
           # declaration/field may be *named* `axiom_*`/`*_axiom` (the corpus
-          # contains zero real axioms). See audit_vacuity.py for the metric
+          # contains zero real axioms). Decorative hypotheses (unused in
+          # statement and proof), hypotheses whose type is a closed truth
+          # (`0 ≤ 0`), and identity proofs (`P → P`, tactic- or term-mode) are
+          # ratcheted at zero as well. See audit_vacuity.py for the metric
           # definitions.
-          python3 audit_vacuity.py --max-misleading 0 --max-axiom-names 0 --max-unit-stubs 0 --max-unit-types 0 --alias-baseline legacy_statement_aliases.json --max-trivial-proofs 0
+          python3 audit_vacuity.py \
+            --max-misleading 0 --max-axiom-names 0 \
+            --max-unit-stubs 0 --max-unit-types 0 \
+            --max-decorative-hypotheses 0 --max-trivial-hypotheses 0 \
+            --max-identity-proofs 0 --max-trivial-proofs 0 \
+            --alias-baseline legacy_statement_aliases.json
 
       # Official Lean action: installs elan + pinned toolchain, fetches
       # prebuilt mathlib oleans, and runs `lake build ToE` in lean_proofs/.
