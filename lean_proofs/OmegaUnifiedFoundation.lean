@@ -95,13 +95,11 @@ theorem concreteRelativeEntropy_mono (ρ σ : StateSpace) (Φ : CPTPMap) :
   by_cases h : ρ = σ
   · subst h
     simp [concreteRelativeEntropy]
-  · simp only [concreteRelativeEntropy]
-    rw [if_neg h]
-    by_cases h' : Φ ρ = Φ σ
-    · rw [if_pos h']
-      norm_num
-    · rw [if_neg h']
-      norm_num
+  · by_cases h' : Φ ρ = Φ σ
+    · simp only [concreteRelativeEntropy, if_pos h', if_neg h]
+      exact zero_le_one
+    · simp only [concreteRelativeEntropy, if_neg h', if_neg h]
+      exact le_rfl
 
 /-- A checked concrete instance used by the legacy volume bridges: the algebra
     is the top `StarSubalgebra`, the state functional is the algebraic trace
