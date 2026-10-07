@@ -47,12 +47,12 @@ namespace MiniSuperspace
 
 /-- Matter (scalar-field) density `p²/(2a³)` at scale factor `a` and momentum
     `p`; a genuine, non-constant function of the minisuperspace data. -/
-def matterDensity (a p : ℝ) : ℝ := p ^ 2 / (2 * a ^ 3)
+noncomputable def matterDensity (a p : ℝ) : ℝ := p ^ 2 / (2 * a ^ 3)
 
 variable (M : MiniSuperspace)
 
 /-- Curvature (gravity) term `-k·a` at scale factor `a`. -/
-def gravityTerm (a : ℝ) : ℝ := - M.k * a
+noncomputable def gravityTerm (a : ℝ) : ℝ := - M.k * a
 
 /-- The constraint is *satisfiable*: `a = 1`, `p = √(2k)` solves it. -/
 theorem constraint_satisfiable :

@@ -52,7 +52,7 @@ abbrev Form (n : ℕ) := Spacetime4 → ContinuousAlternatingMap ℝ Spacetime4 
 
 /-- The exterior derivative: Mathlib's `extDeriv`, i.e.
     `dω(x; v₀,…,vₙ) = Σᵢ (-1)ⁱ Dω(x; …, v̂ᵢ, …)·vᵢ`. -/
-noncomputable def d {n : ℕ} (ω : Form n) : Form (n + 1) := extDeriv ω
+noncomputable def d {n : ℕ} (η : Form n) : Form (n + 1) := extDeriv η
 
 /-- **`d² = 0` for smooth forms** — the direction of the Poincaré lemma behind
     the homogeneous Maxwell equations.  This is Mathlib's
@@ -60,39 +60,39 @@ noncomputable def d {n : ℕ} (ω : Form n) : Form (n + 1) := extDeriv ω
     (Clairaut/Schwarz); the smoothness hypothesis is genuine, and the operator
     is Mathlib's non-trivial exterior derivative rather than the former `0`.
 
-    The regularity input is taken in the finite form `ContDiff ℝ 2 ω`, supplied
+    The regularity input is taken in the finite form `ContDiff ℝ 2 η`, supplied
     by `contDiff_infty` from the `C^∞` hypothesis, and the `minSmoothness`
     bound is discharged by the `@[simp]` fact `minSmoothness ℝ n = n`. -/
-theorem d_squared_zero {n : ℕ} (ω : Form n) (hω : ContDiff ℝ ∞ ω) :
-    d (d ω) = 0 :=
+theorem d_squared_zero {n : ℕ} (η : Form n) (hω : ContDiff ℝ ∞ η) :
+    d (d η) = 0 :=
   extDeriv_extDeriv ((contDiff_infty.mp hω) 2) (by simp)
 
-/-- **Derivative regularity from derivative-map regularity**: `d ω` is `fderiv ω`
+/-- **Derivative regularity from derivative-map regularity**: `d η` is `fderiv η`
     followed by the continuous linear map
     `ContinuousAlternatingMap.alternatizeUncurryFinCLM` (whose defining
-    property is `alternatizeUncurryFinCLM_apply`), so `d ω` is `C^k` whenever
-    `fderiv ω` is. -/
-theorem contDiff_d_of_contDiff_fderiv {n : ℕ} {k : ℕ∞ω} {ω : Form n}
-    (hf : ContDiff ℝ k (fderiv ℝ ω)) : ContDiff ℝ k (d ω) := by
+    property is `alternatizeUncurryFinCLM_apply`), so `d η` is `C^k` whenever
+    `fderiv η` is. -/
+theorem contDiff_d_of_contDiff_fderiv {n : ℕ} {k : ℕ∞ω} {η : Form n}
+    (hf : ContDiff ℝ k (fderiv ℝ η)) : ContDiff ℝ k (d η) := by
   have hcomp : ContDiff ℝ k
       (fun x => ContinuousAlternatingMap.alternatizeUncurryFinCLM ℝ Spacetime4 ℝ
-        (n := n) (fderiv ℝ ω x)) :=
+        (n := n) (fderiv ℝ η x)) :=
     (ContinuousLinearMap.contDiff
       (ContinuousAlternatingMap.alternatizeUncurryFinCLM ℝ Spacetime4 ℝ (n := n))).fun_comp hf
-  have h_eq : d ω = fun x =>
+  have h_eq : d η = fun x =>
       ContinuousAlternatingMap.alternatizeUncurryFinCLM ℝ Spacetime4 ℝ (n := n)
-        (fderiv ℝ ω x) := by
+        (fderiv ℝ η x) := by
     funext x
-    rw [ContinuousAlternatingMap.alternatizeUncurryFinCLM_apply]
+    simp only [d, extDeriv, ContinuousAlternatingMap.alternatizeUncurryFinCLM_apply]
   rw [h_eq]
   exact hcomp
 
-/-- **Smoothness of the exterior derivative**: for a smooth form, `d ω` is
-    smooth.  `contDiff_infty_iff_fderiv` supplies the smoothness of `fderiv ω`
-    from `ContDiff ℝ ∞ ω`, and `contDiff_d_of_contDiff_fderiv` composes with
+/-- **Smoothness of the exterior derivative**: for a smooth form, `d η` is
+    smooth.  `contDiff_infty_iff_fderiv` supplies the smoothness of `fderiv η`
+    from `ContDiff ℝ ∞ η`, and `contDiff_d_of_contDiff_fderiv` composes with
     the linear map `alternatizeUncurryFinCLM`. -/
-theorem contDiff_d {n : ℕ} {ω : Form n} (hω : ContDiff ℝ ∞ ω) :
-    ContDiff ℝ ∞ (d ω) :=
+theorem contDiff_d {n : ℕ} {η : Form n} (hω : ContDiff ℝ ∞ η) :
+    ContDiff ℝ ∞ (d η) :=
   contDiff_d_of_contDiff_fderiv (contDiff_infty_iff_fderiv.mp hω).2
 
 /-- `d` is additive on smooth forms.  (The differentiability hypotheses of
@@ -106,9 +106,9 @@ theorem d_add {n : ℕ} {ω₁ ω₂ : Form n}
     (((contDiff_infty.mp h₂) 1).contDiffAt.differentiableAt_one)
 
 /-- `d` commutes with scalar multiplication. -/
-theorem d_smul {n : ℕ} (c : ℝ) (ω : Form n) : d (c • ω) = c • d ω := by
+theorem d_smul {n : ℕ} (c : ℝ) (η : Form n) : d (c • η) = c • d η := by
   funext x
-  exact extDeriv_smul c ω
+  exact extDeriv_smul c η
 
 -- ============================================================
 -- THE ELECTROMAGNETIC FIELD
@@ -126,7 +126,7 @@ structure ElectromagneticField where
     potential.  Derived from `d² = 0`, not assumed. -/
 theorem homogeneous_maxwell (em : ElectromagneticField) :
     d em.F = 0 := by
-  rw [em.F_eq_dA, d_squared_zero em.A em.smooth_A]
+  simp only [em.F_eq_dA, d_squared_zero em.A em.smooth_A]
 
 -- ============================================================
 -- GAUGE INVARIANCE
@@ -145,7 +145,7 @@ theorem field_strength_gauge_invariant {A : Form 1} {χ : Form 0}
   have hdχ : ContDiff ℝ ∞ (d χ) := contDiff_d hχ
   have hd2χ : d (d χ) = 0 := d_squared_zero χ hχ
   change d (A + d χ) = d A
-  rw [d_add hA hdχ, hd2χ, add_zero]
+  simp only [d_add hA hdχ, hd2χ, add_zero]
 
 /-- Gauge transformations compose additively: `(A + dχ) + dψ = A + d(χ + ψ)`. -/
 theorem gauge_transform_comp {A : Form 1} {χ ψ : Form 0}
