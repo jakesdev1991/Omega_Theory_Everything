@@ -55,7 +55,8 @@ QRegion API or pretending to derive physical laws.
 
 ## Validation status
 
-**Current integrated revision:** `524fc6e` incorporates main `567afb2` and is
+**Current integrated revision:** the eleventh-pass redesign (`f99c792`, with the
+compile fixes `aa2c275`, `52c45fd`, `9b7aa5a`) incorporates main `567afb2` and is
 conflict-free. [Merged-revision Lean CI](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/36247075540)
 passed the full ToE build and the **80-declaration** kernel audit. The full
 [repository CI](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/36247075525)
@@ -126,18 +127,18 @@ Unchanged limitations are deliberately recorded rather than hidden by renaming.
 | Source | Findings / next step |
 |---|---|
 | `Vol01_ClassicalMechanics.lean` | Substantive symplectic/derivative/energy/action algebra; legacy commutator is a singleton operation and mass is zero. Next: general Poisson Jacobi under smoothness and strict action equality cases. |
-| `Vol02_Electromagnetism.lean` | Upgraded `Spacetime` to 4D Minkowski coordinates $(t,x,y,z)$ and `DifferentialForm n` to algebraic components over basis forms, eliminating all Unit stubs while proving gauge invariance and homogeneous Maxwell equations. |
-| `Vol03_Thermodynamics.lean` | The P→P `kms_transitivity`/`zeroth_law` (which hypothesized `β₁ = β₂` and concluded it) now take the KMS-temperature uniqueness law as a genuine hypothesis over every state, so the shared system transfers temperature agreement. Retained macroscopic `ThermoState`/`HeatEngine` Carnot content. The modular-theory bridge still evaluates in the zero model. |
+| `Vol02_Electromagnetism.lean` | The zero-form model is retired (eleventh pass): `ExteriorDerivative _ := 0`, `HodgeStar _ := 0`, `J := 0` and the two constructed witnesses `ExteriorDerivative_linear`/`ExteriorDerivative_sq_zero` are gone. Forms are Mathlib `ContinuousAlternatingMap`s on `EuclideanSpace ℝ (Fin 4)`, `d` is Mathlib's `extDeriv`, and `d² = 0` is `extDeriv_extDeriv` (symmetry of second derivatives) under a genuine `ContDiff ℝ ∞` hypothesis, with `d_add`, `d_smul` and `contDiff_d` derived from the `fderiv` API. Gauge invariance `d (A + dχ) = d A` and additive composition of gauge transformations are derived from `d² = 0`; the inhomogeneous law `d⋆F = ⋆J` is carried explicitly as model-law data (`SourcedField.law_dual_maxwell`, no Hodge star in Mathlib). Next: a Hodge-star development, if Mathlib ever provides exterior-calculus duals. |
+| `Vol03_Thermodynamics.lean` | The P→P `kms_transitivity`/`zeroth_law` (which hypothesized `β₁ = β₂` and concluded it) now take the KMS-temperature uniqueness law as a genuine hypothesis over every state, so the shared system transfers temperature agreement. Retained macroscopic `ThermoState`/`HeatEngine` Carnot content. The eleventh pass retired the zero-model bridge and the P→P forms: `ThermoProcess` carries a positive temperature, monotone entropy data and the Clausius balance as its content (`clausius_inequality`, `clausius_equality_iff_reversible`); `InEquilibrium T ρ σ := T ρ = T σ` with a proved `zeroth_law` transitivity; the KMS pair `kms_holds_at_every_temperature`/`kms_temperature_uniqueness_fails` states what the tracial model does and does not determine; `second_law` is `concreteRelativeEntropy_mono` (a genuine inequality, not `0 ≤ 0`); `BlackHoleThermo` owns its area/entropy data with `bh_entropy_pos`. Next: derive the Clausius balance from a microscopic dynamics; the modular model remains type-I tracial. |
 | `Vol04_QuantumMechanics.lean` | Projection/Born and Cauchy–Schwarz arguments are mathematical; the concrete StateSpace is only complex one-space. The Robertson uncertainty relation is now PROVEN in a general complex inner product space (`Robertson` section): Var(A)·Var(B) ≥ (|⟨ψ,[A,B]ψ⟩|/2)² via the self-adjoint transfer `inner_dev_eq` and the commutator link `comm_link` — the formerly missing steps (b)/(c). Genuine Schrödinger dynamics restored in the one-dimensional model: `schrodingerTrajectory` with a real `HasDerivAt` derivative solves iℏ·dψ/dt = H_{ℏω} ψ for the self-adjoint `hamiltonian`. Next: general-H dynamics (which self-adjoint H generate which unitary groups) is not derived; the legacy `time_derivative` remains zero and unused. |
 | `Vol05_GeneralRelativity.lean` | Retained minimal zero-curvature tensor model; added `SphericallySymmetricSpacetime` with positive mass $M > 0$, horizon radius $r_s = 2GM$, strictly positive exterior lapse $f(r) > 0$, and non-vanishing Kretschmann scalar invariant $K = 48 G^2 M^2 / r^6 > 0$, benchmarking the unit Schwarzschild black hole. |
 | `Vol06_QuantumFieldTheory.lean` | Upgraded `SpacetimeRegion` to 1D intervals $[x_{\min}, x_{\max}]$ with genuine spatial inclusion and disjoint spacelike separation; proved non-vacuous microcausality on realized intervals $[0, 1]$ and $[2, 3]$. Upgraded gauge groups `SU3`, `SU2`, `U1` from Unit to phase parameterizations. |
 | `Vol07_Cosmology.lean` | Retained static minimal model; introduced `FLRWUniverse` with positive scale factor, expansion rate $H > 0$, and density $\rho > 0$. Proved strict positivity of critical density $\rho_c = 3H^2/(8\pi G)$, exact First Friedmann equivalence $H^2 = (8\pi G/3)\rho \iff \rho = \rho_c$, and positive cosmological redshift under expanding scale factors. |
-| `Vol08_BlackHoleThermodynamics.lean` | Replaced Unit geometry with `BHGeometry` parameterized by positive mass, surface gravity, horizon area, angular velocity, and electric potential. Proved strict positivity of Hawking temperature and Bekenstein-Hawking entropy, exact first law equivalence, and benchmarked `standardSchwarzschild` ($T_H = 1/(8\pi), S_{BH} = 4\pi$). |
+| `Vol08_BlackHoleThermodynamics.lean` | Replaced Unit geometry with `BHGeometry` parameterized by positive mass, surface gravity, horizon area, angular velocity, and electric potential. Proved strict positivity of Hawking temperature and Bekenstein-Hawking entropy, exact first law equivalence, and benchmarked `standardSchwarzschild` ($T_H = 1/(8\pi), S_{BH} = 4\pi$). The eleventh pass moved the KMS/entropy layer onto the Vol03 modular model: `kms_exterior_vacuum` proves the exterior region KMS at `β = 2π/κ` through the model's trace equation (not a constantly-true predicate), `kms_beta_hawking` proves `(2π/κ)·T_H = 1` so the certified inverse temperature is pinned to the surface gravity, and the former constant-zero `BHEntropy`/horizon-area pair on `StateSpace` is retired (retirement comment in the file). |
 | `Vol09_HolographicPrinciple.lean` | Ryu-Takayanagi minimal surface homologous to black hole horizons with the (definitional) holographic equality $S_{CFT} = S_{BH}$ across Vol08 and Vol09. The poisoned `EPR_Entanglement := False` well (audit H2) was replaced by a two-qubit separability model in which the ER=EPR dictionary is now an EXACT EQUIVALENCE: `IsProduct ↔ det = 0` (rank-one factorization `product_of_correlation_det_zero` gives the converse), `Entangled ↔ det ≠ 0`, and `er_epr_iff` — with the Bell-state witness on both sides. No spacetime geometry is derived; both sides are model predicates. |
 | `Vol10_StandardModel.lean` | Generation count and singleton gauge carriers remain legacy parameters. The field carrier is now real, and all signed quartic minimizers are classified as ±v. Nonnegative amplitude gives uniqueness at +v. Next: a genuine complex doublet and gauge action; no full Standard Model is derived. |
 | `Vol11_CondensedMatter.lean` | Added square completion, sharp lower-bound equality, attainable branches and full minimizer characterization for positive quartic/nonpositive quadratic coefficients. Upgraded `BrillouinZone` to coordinates on $\mathbb{R}^2$ and added `ChernBand` with integer topological index $C \in \mathbb{Z}$, proving Hall conductance quantization $\sigma_{xy} = C (e^2/h)$ and benchmarked the $C = 1$ Haldane band. |
 | `Vol12_QuantumInformation.lean` | Replaced Unit by two complex amplitudes and the Hermitian overlap. A normalized (3/5,4/5) witness obstructs universal overlap copying. Upgraded `QubitSystem` from `Unit` to a parameterized structure with qubit count, non-negative entanglement, and capacity $n \ln 2$; proved capacity bound and benchmarked the 2-qubit Bell pair. |
-| `Vol13_QuantumGravity.lean` | Upgraded `SpinNetwork` to a finite node/edge configuration with LQG minimal area gap $A_{\text{min}} > 0$; upgraded `Graviton` to spin-2 states with helicities $\pm 2$ and distinct chirality witness. Retained Wheeler-DeWitt Hamiltonian balance. |
+| `Vol13_QuantumGravity.lean` | Upgraded `SpinNetwork` to a finite node/edge configuration with LQG minimal area gap $A_{\text{min}} > 0$; upgraded `Graviton` to spin-2 states with helicities $\pm 2$ and distinct chirality witness. The eleventh pass retired the zero-Hamiltonian model (`H_matter := 0`, `H_gravity := 0`, `H_total`, and `wheeler_dewitt : H_total Ψ = 0` closed by `simp`): `wheeler_dewitt_balance` is now additive-group algebra over *arbitrary* operators under the genuine constraint hypothesis `(H_m + H_g) Ψ = 0`, and `MiniSuperspace` carries non-constant matter/gravity terms whose constraint is satisfiable (`constraint_satisfiable`) but not automatic (`constraint_not_automatic`). Next: derive the constraint from a gravitational action; the toy minisuperspace is not that derivation. |
 | `Vol14_DarkSector.lean` | Retained (0,0,1) constants for legacy compatibility; added parameterized `CosmicDensityBudget` on the 2-simplex with explicit non-negativity, matter-dark energy complement, strict upper bounds, and concrete benchmark `standardLCDM` (0.05, 0.26, 0.69). |
 | `Vol15_EarlyUniverse.lean` | The legacy `inflation_acceleration` (hypothesis $\rho + 3p < 0$ unsatisfiable over the zero Vol07 model) was retired. `CosmologicalFluid` carries the genuine content: equation of state $w = p/\rho$, $\rho + 3p < 0$ whenever $w < -1/3$, strictly positive Friedmann acceleration under $G > 0$, and the de Sitter vacuum benchmark $w = -1, \rho + 3p = -2$. |
 | `Vol16_NonEquilibriumThermodynamics.lean` | Replaced zero functions with EntropyProcess and a HasDerivAt balance hypothesis. Isolation implies monotonicity, positive production implies strict growth, and initial nonnegativity propagates forward. An entropy-exporting witness defeats monotonicity without controlled flux. Next: derive balance/production assumptions from a thermodynamic system. |
@@ -604,3 +605,71 @@ that build.
 `txt_proofs/` snapshots are regenerated from `lean_proofs/`, so the plain-text
 companions no longer cite retired names; the stale case-variant
 `txt_proofs/Vol22_ERequalsEPR.txt` is removed.
+
+## Eleventh pass: the four degenerate-model stacks redesigned
+
+The tenth pass closed the *naming* debt (`axiom_*` → `law_*`, `*_axiom` →
+content names); the eleventh pass closes the *statement* debt it left open —
+the four places where a physical name sat on a definitional restatement. Each
+site was replaced by a genuine statement; none was merely renamed.
+
+1. **Vol02 electromagnetism.** `ExteriorDerivative _ := 0`,
+   `HodgeStar _ := 0`, `J := 0` and the constructed witnesses
+   (`ExteriorDerivative_linear`, `ExteriorDerivative_sq_zero`) are gone.
+   Forms are Mathlib `ContinuousAlternatingMap`s on `EuclideanSpace ℝ (Fin 4)`;
+   `d` is Mathlib's `extDeriv`; `d_squared_zero` is `extDeriv_extDeriv`
+   (symmetry of second derivatives) under a genuine `ContDiff ℝ ∞` hypothesis;
+   `contDiff_d`, `d_add`, `d_smul` are derived from the `fderiv` API
+   (`alternatizeUncurryFinCLM`); gauge invariance and gauge composition follow
+   from `d² = 0`. The inhomogeneous law `d⋆F = ⋆J` is carried explicitly as
+   model-law data (`SourcedField.law_dual_maxwell`) and documented as such,
+   because Mathlib has no Hodge star.  (Note: the form variable is named `η`
+   because `open scoped ContDiff` makes `ω` a notation for the top of `ℕ∞ω`.)
+2. **Vol13 quantum gravity.** `H_matter := 0`, `H_gravity := 0`, `H_total` and
+   the `simp`-proved constraint are retired; `wheeler_dewitt_balance` takes the
+   constraint as a hypothesis over arbitrary operators, and `MiniSuperspace`
+   exhibits a satisfiable, non-automatic instance with genuine `p²/(2a³)` and
+   `-k·a` terms.
+3. **`KMSState`.** The concrete modular model's KMS field is the trace equation
+   `ω_ρ (A * B) = ω_ρ (B * A)` — a genuine predicate, proved *for the model*
+   by `ω_ρ_trace` (Mathlib's basis-independent `LinearMap.trace_mul_comm`)
+   rather than absorbed into `True`; a non-tracial functional falsifies it.
+   The model's failure to determine a temperature is a theorem
+   (`Vol03.kms_temperature_uniqueness_fails`), and Vol08 proves both
+   `kms_exterior_vacuum` (KMS at `β = 2π/κ`) and the reciprocal temperature law
+   `kms_beta_hawking` (`(2π/κ)·T_H = 1`). Scope: this is the type-I tracial
+   case (`Δ = 1`, identity flow); it is not a faithful type-III modular
+   automorphism group, and the docstring says so.
+4. **APPA `≤`.** The nested `IntegrityLabel.low_le_all`/`high_le_high`
+   declarations that the public names merely re-exported are deleted; the
+   public `APPA.low_le_all`/`APPA.high_le_high` are *derivations* by case
+   analysis over the two-element label type, and the docstrings no longer
+   present the facts as disclosures.
+
+**Retired "Next:" items.** The Vol03 row no longer says the modular-theory
+bridge evaluates in the zero model; the Vol13 row no longer says the
+Wheeler-DeWitt balance is merely retained; the APPA/KMS "these hold by the
+model definitions" caveats are gone. What remains open is stated, not
+disguised: a Hodge-star development (not in Mathlib), a microscopic derivation
+of the Clausius balance, a derivation of the minisuperspace constraint from a
+gravitational action, and a faithful type-III modular group. The disclosed
+model choices are `StateSpace := ℂ`/`QRegion := Unit`, the placeholder
+functional calculus `op_pow A z := A` exercised by the modular-operator law,
+the model postulate `PhotonMass := 0`, and the toy minisuperspace.
+
+**Kernel and tooling status.** The redesigned declarations are in the kernel
+audit (173 selected targets, including the ten new ones
+`Vol02.d_squared_zero`, `Vol03.{kms_holds_at_every_temperature,
+kms_temperature_uniqueness_fails, zeroth_law, clausius_inequality}`,
+`Vol08.{kms_exterior_vacuum, kms_beta_hawking}`,
+`Vol13.wheeler_dewitt_balance`, `APPA.{low_le_all, high_le_high}`; the retired
+`kms_transitivity` name was replaced, not left dangling). Local:
+`audit_axioms.py --max 0` → 0; `audit_vacuity.py` with all eight zero-ratchets
+plus the alias baseline → exit 0 with every count zero; 47 Python/tooling
+tests pass; CI grep gate clean; ruff/mypy clean. The pinned `lake build ToE`
+and the transitive kernel-axiom gate run in Lean CI on the branch (see the
+Lean CI runs for `f99c792`…`9b7aa5a`); the compile errors that CI surfaced
+(`Module`/`Decidable` metavariables, a no-goals tactic, the `ω` scope clash,
+noncomputable real arithmetic in Vol13, and a form-degree mismatch in the
+sourced-Maxwell carrier) were fixed by the follow-up commits, and the corpus
+now builds past those targets.

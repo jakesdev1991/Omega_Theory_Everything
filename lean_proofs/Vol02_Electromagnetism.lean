@@ -159,15 +159,16 @@ theorem gauge_transform_comp {A : Form 1} {χ ψ : Form 0}
 -- ============================================================
 
 /-- A sourced Maxwell configuration.  Mathlib has no Hodge star on
-    differential forms, so the dual field `⋆F` and the dual current `⋆J`
-    (both 3-forms) are carried as parameters related by the explicit model law
+    differential forms, so the dual field `⋆F` (a 2-form) and the dual current
+    `⋆J` (a 3-form, as in the standard 4D bookkeeping) are carried as
+    parameters related by the explicit model law
     `law_dual_maxwell : d ⋆F = ⋆J`.  This is a *law of the model* (data), not a
     derivation — stated as such rather than disguised by `HodgeStar := 0`,
     `J := 0`. -/
 structure SourcedField where
   A : Form 1
   smooth_A : ContDiff ℝ ∞ A
-  starF : Form 3
+  starF : Form 2
   starJ : Form 3
   law_dual_maxwell : d starF = starJ
 
