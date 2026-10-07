@@ -72,7 +72,7 @@ theorem d_squared_zero {n : ℕ} (ω : Form n) (hω : ContDiff ℝ ∞ ω) :
     `ContinuousAlternatingMap.alternatizeUncurryFinCLM` (whose defining
     property is `alternatizeUncurryFinCLM_apply`), so `d ω` is `C^k` whenever
     `fderiv ω` is. -/
-theorem contDiff_d_of_contDiff_fderiv {n k : ℕ} {ω : Form n}
+theorem contDiff_d_of_contDiff_fderiv {n : ℕ} {k : ℕ∞ω} {ω : Form n}
     (hf : ContDiff ℝ k (fderiv ℝ ω)) : ContDiff ℝ k (d ω) := by
   have hcomp : ContDiff ℝ k
       (fun x => ContinuousAlternatingMap.alternatizeUncurryFinCLM ℝ Spacetime4 ℝ
@@ -88,13 +88,12 @@ theorem contDiff_d_of_contDiff_fderiv {n k : ℕ} {ω : Form n}
   exact hcomp
 
 /-- **Smoothness of the exterior derivative**: for a smooth form, `d ω` is
-    smooth.  `ContDiff.fderiv_right` supplies the smoothness of `fderiv ω`
-    (the exponent identity `∞ + 1 = ∞` holds definitionally in `WithTop ℕ∞`),
-    and `contDiff_d_of_contDiff_fderiv` composes with the linear map
-    `alternatizeUncurryFinCLM`. -/
+    smooth.  `contDiff_infty_iff_fderiv` supplies the smoothness of `fderiv ω`
+    from `ContDiff ℝ ∞ ω`, and `contDiff_d_of_contDiff_fderiv` composes with
+    the linear map `alternatizeUncurryFinCLM`. -/
 theorem contDiff_d {n : ℕ} {ω : Form n} (hω : ContDiff ℝ ∞ ω) :
     ContDiff ℝ ∞ (d ω) :=
-  contDiff_d_of_contDiff_fderiv (hω.fderiv_right (m := ∞) (by simp))
+  contDiff_d_of_contDiff_fderiv (contDiff_infty_iff_fderiv.mp hω).2
 
 /-- `d` is additive on smooth forms.  (The differentiability hypotheses of
     `extDeriv_add` are supplied in the finite form `C¹`, extracted from the
@@ -153,8 +152,7 @@ theorem gauge_transform_comp {A : Form 1} {χ ψ : Form 0}
     (hχ : ContDiff ℝ ∞ χ) (hψ : ContDiff ℝ ∞ ψ) :
     gaugeTransform (gaugeTransform A χ) ψ = gaugeTransform A (χ + ψ) := by
   have h : d (χ + ψ) = d χ + d ψ := d_add hχ hψ
-  simp only [gaugeTransform]
-  rw [h, add_assoc]
+  simp only [gaugeTransform, h, add_assoc]
 
 -- ============================================================
 -- INHOMOGENEOUS MAXWELL EQUATIONS (EXPLICIT MODEL LAW)

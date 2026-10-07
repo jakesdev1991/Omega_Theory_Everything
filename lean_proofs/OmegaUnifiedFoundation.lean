@@ -27,6 +27,11 @@ modular flow is the identity, so the KMS condition reduces to the trace
 equation — it is not a faithful type-`III` modular automorphism group.
 -/
 
+-- `StateSpace` is a plain `def` of `ℂ`, so instance search does not unfold
+-- it: classical decidability of state equality is taken explicitly here for
+-- the discrete relative entropy and its monotonicity proof.
+attribute [local instance] Classical.propDecidable
+
 namespace OmegaProtocol
 
 -- ============================================================
@@ -72,7 +77,9 @@ theorem ω_ρ_trace (A B : OmegaAlgebra) : ω_ρ (A * B) = ω_ρ (B * A) := by
       (B : Operator) * (A : Operator) := rfl
   rw [ω_ρ, ω_ρ, hAB, hBA, ContinuousLinearMap.toLinearMap_mul,
     ContinuousLinearMap.toLinearMap_mul]
-  exact LinearMap.trace_mul_comm _ _
+  exact LinearMap.trace_mul_comm (R := ℂ) (M := StateSpace)
+    ((A : Operator) : StateSpace →ₗ[ℂ] StateSpace)
+    ((B : Operator) : StateSpace →ₗ[ℂ] StateSpace)
 
 /-- Model relative entropy: the discrete metric on states — `0` on the
     diagonal, `1` off it.  It is non-constant (the former model value was the

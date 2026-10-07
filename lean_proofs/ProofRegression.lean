@@ -457,7 +457,7 @@ example (H_m H_g : Operator) (Ψ : StateSpace) (h : (H_m + H_g) Ψ = 0) :
 example (M : Vol13.MiniSuperspace) :
     ∃ a p : ℝ, 0 < a ∧
       Vol13.MiniSuperspace.matterDensity a p + M.gravityTerm a = 0 :=
-  Vol13.MiniSuperspace.constraint_satisfiable M
+  Vol13.MiniSuperspace.constraint_satisfiable (M := M)
 
 example : Vol06.spacelike_separated Vol06.regionA Vol06.regionB :=
   Vol06.regionA_B_spacelike
