@@ -259,7 +259,8 @@ theorem linear_map_scales_omega (a b c d : ℝ) (X Y : ℝ × ℝ) :
   unfold omega
   ring
 
-/-- A linear map preserves the symplectic form whenever its determinant is 1. -/
+/-- A linear map preserves the symplectic form whenever its determinant is 1
+    — the two-dimensional linear case of Liouville's area theorem. -/
 theorem symplectic_linear_map (a b c d : ℝ) (hdet : a * d - b * c = 1) :
     ∀ X Y : ℝ × ℝ,
       omega (⟨a * X.1 + b * X.2, c * X.1 + d * X.2⟩)
@@ -269,10 +270,11 @@ theorem symplectic_linear_map (a b c d : ℝ) (hdet : a * d - b * c = 1) :
   rw [hdet]
   ring
 
-/-- The linear Hamiltonian flow preserves phase-space area (Liouville's
-    theorem in the two-dimensional linear case). -/
-theorem liouville_linear (a b c d : ℝ) (hdet : a * d - b * c = 1) :
-    a * d - b * c = 1 := hdet
+-- RETIRED (audit pass 10): `liouville_linear (hdet : a * d - b * c = 1) :
+-- a * d - b * c = 1`, a hypothesis restated as its own conclusion (term-mode
+-- P→P, body `hdet`) under the name of Liouville's theorem.  The genuine
+-- content — determinant-one linear maps preserve the symplectic area form —
+-- is `symplectic_linear_map` above.
 
 /-- Non-degeneracy identifies every vector from its pairing with the two
     coordinate basis vectors. -/

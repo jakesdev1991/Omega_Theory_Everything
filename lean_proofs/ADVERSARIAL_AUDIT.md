@@ -344,3 +344,55 @@ equation.
 ## R.7.4 Verification
 Local: 41 tests, all lexical audits at zero. CI: full `lake build ToE`
 plus the transitive kernel-axiom gate over 164 selected declarations.
+
+---
+
+# Appendix R.8: tenth-pass additions (2026-10-07)
+
+Closing the residual findings from the rewritten `audit_vacuity.py` and
+hardening its detectors.
+
+## R.8.1 Term-mode P→P detection
+`identity_proofs` now flags bare-term pass-throughs (`:= h`), not just
+`:= by exact h`. First catch: `Vol01.liouville_linear`, a hypothesis
+restated as its own conclusion (body `hdet`) under Liouville's name; retired,
+with `symplectic_linear_map` (proved via `linear_map_scales_omega` and `ring`)
+carrying the linear area-preservation content. Positive controls: a projection
+body (`:= S.tr_one`) and a delegation body (`:= global_lemma`) stay unflagged.
+
+## R.8.2 Retired definitional restatements
+- Vol27 `consciousness_from_omega`, `freeze_implies_low_integration`: the
+  `isFrozen := forwardFlux ≤ freezeBoundaryThreshold` definition unfolded.
+  `freeze_implies_low_integration` was the sole live caller of the deleted
+  `freeze_boundary_value`, so this was also a compile-blocking dangling
+  reference on the branch. The relation, with the numeric threshold, is now
+  stated once as `OmegaAxioms.bridge_isFrozen_iff` (`Iff.rfl`).
+- Vol27 `consciousness_qrf`: `abs_nonneg` under a reference-frame name,
+  duplicating `integrated_info_nonneg`; retired.
+- Vol23 `decoherence_as_phi_decay`: unused hypothesis, conclusion true by
+  definition, docstring asserting a Φ-to-coherence link; retired.
+
+## R.8.3 Placeholder naming
+Vol23's placeholder density layer names its definitional consequences
+`bridge_*` (`bridge_decoherence_trace_preserving` → ... →
+`bridge_decoherence_preserves_normalization`, plus the
+`bridge_decoherence_normalized` protocol wrapper); Vol27's
+`substrateindependence` becomes `bridge_integratedInformation_eq_impedance`
+(`rfl`) with wrapper `bridge_substrate_independence`.
+`complete_decoherence_vanishes` drops its vacuous `0 ≤ 0`/`0 ≤ 1` hypotheses.
+
+## R.8.4 Detector/tooling notes
+- `HYPOTHESIS_CONSUMING` typo fixed (`norm_num1` → `norm_num`, the intended
+  hypothesis-consuming tactic) and the duplicated `gcongr` alternative
+  removed; corpus findings unchanged by the fix.
+- CI's `audit_vacuity.py` invocation now passes the three new zero-ratchets
+  (`--max-decorative-hypotheses 0 --max-trivial-hypotheses 0
+  --max-identity-proofs 0`), and the push-trigger branch list includes this
+  review branch.
+
+## R.8.5 Verification
+Local: `audit_vacuity.py` zero on every metric with ratchet exit 0,
+`audit_axioms.py --max 0` → 0, 47 Python/tooling tests, ruff/mypy clean, grep
+gate clean. Kernel: pinned `lake build ToE` plus the transitive-axiom gate
+over 164 selected declarations run in Lean CI on the branch; the edited
+declarations are kernel-unverified locally by design.

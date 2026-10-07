@@ -147,11 +147,11 @@ Unchanged limitations are deliberately recorded rather than hidden by renaming.
 | `Vol20_ChaosTheory.lean` | Retained static Lyapunov condition; introduced `ExpandingMap` discrete dynamical systems with expansion factor $\sigma > 1$, proving step-wise strict separation growth and concrete 3-step divergence on the doubling map ($\sigma = 2$). |
 | `Vol21_ArrowOfTime.lean` | Now reuses Vol16 entropy histories and actual derivatives; ordering requires rate/isolation hypotheses. Initial entropy nonnegativity is explicit. Removed the spurious time/latency identification. Next: a specified cosmological system; this remains a conditional entropy arrow, not a derivation of time orientation. |
 | `Vol22_EREqualsEPR.lean` | The legacy `Φ = 1` theorems (unsatisfiable in the zero model) were retired and replaced by network versions: `perfect_overlap_same_entity` and `persistent_perfect_overlap_same_entity` under an explicit strict-separation law, plus the retained `NetworkER_EPR` capacity-overlap bridge ($I = I_{\max}$ ⇒ vanishing throat) with the `BinaryRegion.binaryNetwork` realization. |
-| `Vol23_MeasurementProblem.lean` | Retained minimal density alias; introduced `QubitState` parameterizing 2-level density matrices with positive populations $p_0, p_1 \ge 0$, normalization $p_0 + p_1 = 1$, and positive semidefiniteness $c^2 \le p_0 p_1$. Proved state purity bound $\text{Tr}(\rho^2) \le 1$, trace preservation under dephasing channels, monotonic coherence decay $|c'| \le |c|$, complete basis projection at $\lambda = 0$, and benchmarked the pure plus state decohering to a mixed state of purity $1/2$. |
+| `Vol23_MeasurementProblem.lean` | Retained minimal density alias; introduced `QubitState` parameterizing 2-level density matrices with positive populations $p_0, p_1 \ge 0$, normalization $p_0 + p_1 = 1$, and positive semidefiniteness $c^2 \le p_0 p_1$. Proved state purity bound $\text{Tr}(\rho^2) \le 1$, trace preservation under dephasing channels, monotonic coherence decay $|c'| \le |c|$, complete basis projection at $\lambda = 0$, and benchmarked the pure plus state decohering to a mixed state of purity $1/2$. The placeholder density layer (`Trace := 1`, `OffDiagonal := 0`, `Decohere ρ := ρ`) names its definitional consequences `bridge_*`; the misleading `decoherence_as_phi_decay` is retired and `complete_decoherence_vanishes` carries no vacuous `0 ≤ 0` / `0 ≤ 1` hypotheses (tenth pass). |
 | `Vol24_NonLocality.lean` | Retained scalar Tsirelson comparison; introduced `CHSHSystem` with bounded correlation expectation values, proved the local realism bound $|S| \le 2$ via algebraic factorization, and formulated the entangled singlet state `singletBellSystem` attaining the Tsirelson bound $2\sqrt{2}$ and violating the classical limit. |
 | `Vol25_BlackHoleInformation.lean` | Corrected the marginal-sum model: joint entropy is separate; nonnegativity, Araki–Lieb difference bound and joint purity are explicit hypotheses. Derived equal marginals and endpoint iff; added positive-marginal witness. Next: derive the assumed inequality from density matrices and construct dynamics. |
 | `Vol26_NetworkTheory.lean` | Replaced the definitional identity with a finite SimpleGraph bundle, independent neighbor/edge counts, degree-sum theorem, odd-degree parity and a degree-floor bound. Empty graphs and a one-edge/two-vertex graph are witnessed. Next: path/connectivity and weighted information-bearing edges. |
-| `Vol27_Consciousness.lean` | The vacuous `asymmetryTensor ≠ 0` theorems were retired. `IntegratedSystem` (subadditive bipartite entropy partitions) carries the content: $\Phi \ge 0$, strict positivity under genuine integration, the `corticalComplex` witness ($\Phi = 0.8$), and an honestly scoped `Experiences` dictionary with `experiences_of_strict_integration`. |
+| `Vol27_Consciousness.lean` | The vacuous `asymmetryTensor ≠ 0` theorems were retired. `IntegratedSystem` (subadditive bipartite entropy partitions) carries the content: $\Phi \ge 0$, strict positivity under genuine integration, the `corticalComplex` witness ($\Phi = 0.8$), and an honestly scoped `Experiences` dictionary with `experiences_of_strict_integration`. The definitional-unfolding theorems `consciousness_qrf`, `consciousness_from_omega` and `freeze_implies_low_integration` are retired (tenth pass); `substrateindependence` is now the `bridge_integratedInformation_eq_impedance` naming-coherence witness. |
 | `Vol28_EvolutionaryAlgorithms.lean` | Real OneMax list model. Added exact maximum fitness and domination of both parents; next: population-level elitist invariants. |
 | `Vol29_EcosystemDynamics.lean` | Lotka–Volterra equilibrium is substantive algebra under nonzero parameters. Added full classification: with all rates nonzero every equilibrium is extinction or coexistence; coexistence is positive under positive rates. Next: stability analysis. |
 | `Vol30_PlanetarySystems.lean` | Replaced the zero-denominator model with positive-parameter KeplerSystem and a chosen sqrt period formula. Added period positivity, endpoint iff, strictly increasing periods and a positive-radius ratio law. Next: derive this relation from actual two-body dynamics; no ODE derivation is claimed. |
@@ -513,3 +513,81 @@ audit trail flagged:
 Local validation: 41 Python/tooling tests, `audit_axioms --max 0` → 0,
 `audit_vacuity` all-zero metrics, CI grep gate clean. The Lean build
 and the transitive kernel-axiom gate run in CI on the branch.
+
+## Tenth-pass changes: term-mode identities, placeholder naming, ratchet closed
+
+The rewritten `audit_vacuity.py` (ratcheted metrics: misleading
+trivially-stated theorems, axiom-named declarations, `Nonempty Unit` stubs,
+`Unit`-typed volume definitions, decorative hypotheses, closed-truth
+hypotheses, identity proofs, trivial-only proofs, plus the exact `*_Stmt`
+alias baseline) now reports zero on every metric, and CI blocks all of them at
+zero.
+
+**New detector.** `identity_proofs` recognises term-mode pass-throughs
+(`:= h`) in addition to `:= by exact h` / `:= by intro h; exact h`. The new
+fixture in `test_source_audits.py` covers both directions (term-mode
+`:= hdet` flagged; the projection body `:= S.tr_one` and the delegation body
+`:= global_lemma` stay exempt). The detector immediately surfaced
+`Vol01.liouville_linear`, a hypothesis restated as its own conclusion under
+the name of Liouville's theorem; it is retired in favour of the genuine
+`symplectic_linear_map` (determinant-one linear maps preserve the symplectic
+area form, proved from `linear_map_scales_omega` by `ring`).
+
+**Retired definitional restatements (Vol27).** `consciousness_from_omega` and
+`freeze_implies_low_integration` were the definition
+`isFrozen := forwardFlux ≤ freezeBoundaryThreshold` unfolded twice — the
+second through the then-deleted `freeze_boundary_value`, its only remaining
+live caller (the branch would not have compiled without this fix). The
+definitional content, now including the numeric threshold, is stated once as
+`OmegaAxioms.bridge_isFrozen_iff`:
+`isFrozen R₁ R₂ ↔ forwardFlux R₁ R₂ ≤ (0.012 : ℝ)` by `Iff.rfl`.
+`consciousness_qrf` (whose statement is `abs_nonneg` and which duplicated
+`integrated_info_nonneg`) is likewise retired.
+
+**Placeholder naming (Vol23).** The placeholder density layer
+(`Trace := 1`, `OffDiagonal := 0`, `Decohere ρ := ρ`) now carries its
+definitional consequences under the `bridge_*` convention:
+`bridge_decoherence_trace_preserving`, `bridge_decoherence_suppresses`,
+`bridge_trace_normalized`, `bridge_decoherence_normalized`,
+`bridge_decoherence_phi_nonneg`, `bridge_decoherence_preserves_normalization`,
+with the protocol wrapper renamed `bridge_decoherence_normalized`. The
+misleading `decoherence_as_phi_decay` — docstring claiming "Φ(ρ,E) → 0 means
+I(ρ:E) → 0" while the statement concluded `Trace (Decohere ρ) = 1` with an
+unused hypothesis — is retired. `complete_decoherence_vanishes` no longer
+takes vacuous `0 ≤ 0` / `0 ≤ 1` hypotheses; the `dephase` side conditions are
+discharged by `le_refl 0` / `zero_le_one`. The genuine `QubitState` layer
+(`purity_le_one`, `dephase` positivity, coherence decay, plus-state
+benchmarks) is unchanged.
+
+**Vol27 naming.** `substrateindependence` →
+`bridge_integratedInformation_eq_impedance` (both sides are
+`|asymmetryTensor|`; identity by `rfl`) with protocol wrapper
+`bridge_substrate_independence`.
+
+**Recurrence replacement sharpened.** The `schrodinger_from_discrete_limit`
+replacement is restated in successor form (`ψ t.succ = H (ψ t)`) so the
+uniqueness induction and the `Function.iterate_succ_apply'` application are
+syntactic matches rather than defeq bets on `n + 1` vs `n.succ`; the iterate
+proof rewrites with Mathlib's lemma directly and closes definitionally.
+
+**Kernel-name inventory.** No kernel-audit target was deleted or renamed
+(`kernel_audit_targets.json` unchanged, 164 declarations); the edits touch
+unlisted declarations plus the renamed `bridge_*` witnesses and the
+`Vol01`/`Vol23`/`Vol27` retirements.
+
+Local validation: `audit_vacuity.py` with all eight zero-ratchets plus the
+alias baseline (including
+`--max-decorative-hypotheses 0 --max-trivial-hypotheses 0 --max-identity-proofs 0`)
+exits 0 with every count at zero; `audit_axioms.py --max 0` → 0; 47
+Python/tooling tests pass; ruff and mypy clean; the CI grep gate is clean. The
+pinned `lake build ToE` and the transitive kernel-axiom gate run in Lean CI on
+this branch (no local Lean toolchain exists in this environment), so kernel
+acceptance of the edited declarations — `bridge_isFrozen_iff` (`Iff.rfl` at a
+new statement), `discrete_recurrence_unique`/`discrete_recurrence_iterate`
+(successor form), `complete_decoherence_vanishes`
+(`le_refl 0`/`zero_le_one`), and the `rfl`/`abs_nonneg` bridges — is pending
+that build.
+
+`txt_proofs/` snapshots are regenerated from `lean_proofs/`, so the plain-text
+companions no longer cite retired names; the stale case-variant
+`txt_proofs/Vol22_ERequalsEPR.txt` is removed.

@@ -153,6 +153,12 @@ This corpus is maintained under an explicit honesty policy, enforced in CI:
    or discover contradictory hypotheses; a passing audit is not a semantic
    non-vacuity certificate. Legacy `*_Stmt` exports are separately inventoried
    by `legacy_statement_aliases.json` (now empty); CI rejects any new alias.
+   The same gate ratchets three further defect classes at zero: decorative
+   hypotheses (unused in both statement and proof,
+   `--max-decorative-hypotheses`), hypotheses whose type is a closed arithmetic
+   truth such as `0 ≤ 0` (`--max-trivial-hypotheses`), and identity proofs
+   whose conclusion restates a hypothesis (`--max-identity-proofs`; both
+   tactic-mode `:= by exact h` and term-mode `:= h` bodies are detected).
 4. **No `Unit` stubs.** Existence proofs of the form `Nonempty X := ⟨()⟩`
    and Unit-valued type definitions (including parameterized types) inside the
    volumes are tracked by
