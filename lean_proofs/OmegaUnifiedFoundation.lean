@@ -22,9 +22,17 @@ The empty `legacy_statement_aliases.json` baseline prevents their silent return.
 A passing source audit does not validate physical interpretations or show that
 positive-information hypotheses in downstream modules are realizable.
 The concrete modular theory below is the *tracial* model: the state functional
-is the algebraic trace (`ω_ρ_trace`), the modular operator is `Δ = 1` and the
-modular flow is the identity, so the KMS condition reduces to the trace
+is the algebraic trace (`ω_ρ_trace`), and the modular operator is `Δ = 1` with
+the modular flow the identity, so the KMS condition reduces to the trace
 equation — it is not a faithful type-`III` modular automorphism group.
+
+This collapse is *forced* by the carrier, not chosen: `StateSpace` is
+one-dimensional, so `operator_eq_smul_one` makes every operator a scalar
+multiple of the identity, `OmegaAxioms.omegaAlgebra_commutative` makes the
+algebra commutative, and `OmegaAxioms.every_functional_is_tracial` shows that
+*every* functional on it is a trace — there is no non-tracial functional for a
+non-trivial `Δ` to act on.  A faithful type-`III` model would need a
+higher-dimensional (or infinite-dimensional) carrier.
 -/
 
 -- `StateSpace` is an `abbrev` for `ℂ`, so a `DecidableEq` instance for

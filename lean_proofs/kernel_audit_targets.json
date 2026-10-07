@@ -221,5 +221,8 @@
   "OmegaProtocol.processingSpeed_le_baseRate",
   "OmegaProtocol.witness_processingSpeed_lt",
   "OmegaProtocol.discrete_recurrence_unique",
-  "OmegaProtocol.discrete_recurrence_iterate"
+  "OmegaProtocol.discrete_recurrence_iterate",
+  "OmegaProtocol.every_functional_is_tracial",
+  "OmegaProtocol.omegaAlgebra_commutative",
+  "OmegaProtocol.operators_commute"
 ]

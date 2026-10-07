@@ -18,7 +18,11 @@ when the kernel had been handed the result.  This module now supplies a
 small, explicit model instead:
 
 * `StateSpace` is `ℂ`, the one-dimensional Hilbert space (the type-`I₁`
-  tracial model of the modular pillar);
+  tracial model of the modular pillar); the tracial collapse is *proved* rather
+  than assumed — `operator_eq_smul_one` makes every operator scalar,
+  `operators_commute`/`omegaAlgebra_commutative` make the algebra commutative
+  and `every_functional_is_tracial` makes every functional a trace, so the
+  identity modular operator `Δ = 1` is the only possibility on this carrier;
 * `QRegion` is a genuine finite information region — a normalized von Neumann
   entropy and a chain-overlap density, both in `(0,1]` — so the region-level
   quantities (`vonNeumannEntropy`, `mutualInformation`, the overlap density
@@ -106,12 +110,43 @@ theorem op_pow_eq (A : Operator) (z : ℂ) : A ^ z = (A 1) ^ z • (1 : Operator
     makes the model's functional calculus honest: `A v = A 1 * v` for every
     `v`. -/
 theorem operator_eq_smul_one (A : Operator) : A = A 1 • (1 : Operator) := by
-  ext v
+  -- `ext` alone would pick `ContinuousLinearMap.ext_ring` (the model's carrier is
+  -- `ℂ = R₁`, so `f = g` follows from `f 1 = g 1`); the statement here is the
+  -- pointwise one, so the extensionality lemma is applied explicitly.
+  apply ContinuousLinearMap.ext
+  intro v
   calc A v = A (v • (1 : StateSpace)) := by rw [smul_eq_mul, mul_one]
     _ = v • A 1 := ContinuousLinearMap.map_smul A v 1
     _ = (A 1 • (1 : Operator)) v := by
-        show v * A 1 = A 1 * v
-        exact mul_comm v (A 1)
+        rw [smul_apply, one_apply_eq_self, smul_eq_mul, mul_comm]
+
+/-- **The model's operator algebra is commutative**: `operator_eq_smul_one`
+    writes every operator as a scalar multiple of the identity, and scalars
+    commute.  This is the type-`I₁` collapse *proved* rather than postulated: on
+    a one-dimensional carrier there is no room for a non-trivial modular
+    automorphism group, which is exactly why the flow of
+    `concreteModularTheory` (`OmegaUnifiedFoundation.lean`) is the identity. -/
+theorem operators_commute (A B : Operator) : A * B = B * A := by
+  ext
+  rw [operator_eq_smul_one A, operator_eq_smul_one B]
+  simp only [mul_apply_eq_comp, smul_apply, one_apply_eq_self, smul_eq_mul]
+  ring
+
+/-- The same statement for the model's algebra `Ω`: its multiplication is the
+    multiplication of `Operator` (the algebra is the top `StarSubalgebra`), so
+    `Ω` is commutative as well. -/
+theorem omegaAlgebra_commutative (A B : ↥OmegaAlgebra) : A * B = B * A := by
+  apply Subtype.ext
+  exact operators_commute (A : Operator) (B : Operator)
+
+/-- **Every functional on the model's algebra is tracial.**  Immediate from
+    `omegaAlgebra_commutative`, and the precise sense in which the concrete
+    model is the type-`I₁` (tracial) case: a non-tracial functional does not
+    exist on this algebra, so the identity modular operator `Δ = 1` is forced by
+    the carrier rather than chosen. -/
+theorem every_functional_is_tracial (ω : ↥OmegaAlgebra → ℂ)
+    (A B : ↥OmegaAlgebra) : ω (A * B) = ω (B * A) := by
+  rw [omegaAlgebra_commutative A B]
 
 /-- Model calculus: the zeroth complex power is the identity operator
     (`Complex.cpow_zero` together with `1 • 1 = 1`). -/
@@ -136,7 +171,9 @@ theorem op_pow_of_one (z : ℂ) : (1 : Operator) ^ z = 1 := by
 theorem op_pow_add (A : Operator) (h : A 1 ≠ 0) (z w : ℂ) :
     A ^ (z + w) = A ^ z * A ^ w := by
   rw [op_pow_eq A (z + w), op_pow_eq A z, op_pow_eq A w, Complex.cpow_add z w h]
-  ext v
+  -- Both sides are continuous linear endomorphisms of `ℂ`, so `ext` reduces the
+  -- operator equality to the value at `1` (`ContinuousLinearMap.ext_ring`).
+  ext
   simp only [smul_apply, mul_apply_eq_comp, one_apply_eq_self, smul_eq_mul]
   ring
 
@@ -327,11 +364,10 @@ theorem bridge_overlapDensity_nonneg (R₁ R₂ : QRegion) : Φ R₁ R₂ ≥ 0 
 
 theorem bridge_overlapDensity_symm (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R₂ R₁ := by
   rw [Φ, Φ]
-  split_ifs with h h'
-  · rfl
-  · exact absurd h.symm h'
-  · exact absurd h'.symm h
-  · exact min_comm _ _
+  by_cases h : R₁ = R₂
+  · rw [if_pos h, if_pos h.symm]
+  · rw [if_neg h, if_neg (fun h' => h h'.symm)]
+    exact min_comm _ _
 
 /-- **Mutual information of a pair**: `Φ·(1-Φ)·(S₁+S₂)/2`, a genuine,
     non-constant function of the region parameters.  It vanishes exactly at
@@ -435,15 +471,30 @@ theorem chainOverlapDensity_nonneg (R₁ R₂ : QRegion) : 0 ≤ chainOverlapDen
   div_nonneg (mutualInformation_nonneg R₁ R₂) (le_of_lt (jointEntropy_pos R₁ R₂))
 
 
+/-- Unit-base-scale COD environment: the model evaluates the canonical
+    `DynamicCODScale` profile at `ℓ_P0 = 1`, so the metric's Planck factor is
+    `√(1 - Φ²)` — the same profile used everywhere else in the project.  The
+    environment is defined *before* `planckFactor` so that the bridge below can
+    unfold it (Lean requires definitions to precede their uses).
+    (A previous revision used a bespoke `√(πΦ+1)` here; see C3 in
+    ADVERSARIAL_AUDIT.md.) -/
+noncomputable def canonicalCODEnv : DynamicCODScale.CODEnvironment :=
+  ⟨1, by norm_num⟩
+
 /-- The model's Planck-scale factor at overlap density `φ`: the canonical COD
     profile `ℓ_P(φ) = ℓ_P0·√(1-φ²)` at unit baseline
-    (`planckFactor_eq_dynamicPlanckCOD`). -/
+    (`planckFactor_eq_dynamicPlanckCOD` below, a computation in the shared
+    `DynamicCODScale` profile rather than a second, independent formula). -/
 noncomputable def planckFactor (φ : ℝ) : ℝ := Real.sqrt (1 - φ * φ)
 
+/-- **The model's Planck factor *is* the shared COD profile at unit baseline**:
+    unfolding both definitions, the two sides are `√(1-φ·φ)` and
+    `canonicalCODEnv.lP0·√(1-φ²)`, and `canonicalCODEnv.lP0 = 1`, so the model
+    and the rest of the project use one and the same `ℓ_P`. -/
 theorem planckFactor_eq_dynamicPlanckCOD (φ : ℝ) :
     planckFactor φ = DynamicCODScale.dynamicPlanckCOD canonicalCODEnv φ := by
-  have h : canonicalCODEnv.lP0 = 1 := rfl
-  rw [planckFactor, DynamicCODScale.dynamicPlanckCOD, pow_two, h, one_mul]
+  rw [planckFactor, DynamicCODScale.dynamicPlanckCOD, pow_two]
+  simp [canonicalCODEnv]
 
 theorem planckFactor_nonneg (φ : ℝ) : 0 ≤ planckFactor φ := Real.sqrt_nonneg _
 
@@ -506,8 +557,10 @@ theorem pairDistance_pos_iff {φ : ℝ} (hφ : 0 < φ) :
 
 /-- Core of the triangle inequality for the model metric: monotonicity of the
     pair distance together with the ultrametric law for `Φ` bounds the outer
-    pair by the smaller intermediate one. -/
-theorem pairDistance_ultrametric {φ ψ χ : ℝ} (hφ : 0 < φ) (hψ : 0 < ψ) (hχ : 0 < χ)
+    pair by the smaller intermediate one.  The density-range hypothesis
+    `χ ≤ 1` is what the proof uses; positivity of `χ` is *not* needed, so it is
+    not assumed (the statement is the strongest one provable here). -/
+theorem pairDistance_ultrametric {φ ψ χ : ℝ} (hφ : 0 < φ) (hψ : 0 < ψ)
     (hφ1 : φ ≤ 1) (hψ1 : ψ ≤ 1) (hχ1 : χ ≤ 1) (hultra : min φ ψ ≤ χ) :
     pairDistance χ ≤ pairDistance φ + pairDistance ψ := by
   rcases le_total φ ψ with hle | hle
@@ -519,14 +572,6 @@ theorem pairDistance_ultrametric {φ ψ χ : ℝ} (hφ : 0 < φ) (hψ : 0 < ψ) 
     have hmono := pairDistance_antitone hψ hψχ hχ1
     have hnn := pairDistance_nonneg hφ hφ1
     linarith
-
-/-- Unit-base-scale COD environment: the model evaluates the canonical
-    `DynamicCODScale` profile at `ℓ_P0 = 1`, so the metric's Planck factor is
-    `√(1 - Φ²)` — the same profile used everywhere else in the project.
-    (A previous revision used a bespoke `√(πΦ+1)` here; see C3 in
-    ADVERSARIAL_AUDIT.md.) -/
-noncomputable def canonicalCODEnv : DynamicCODScale.CODEnvironment :=
-  ⟨1, by norm_num⟩
 
 /-- **The Ω-metric of a pair**: `d R₁ R₂ = -ℓ_P(Φ)·log Φ`, the COD-scaled
     correlation-log distance of the pair's chain-overlap density.  Unlike the
@@ -562,7 +607,7 @@ theorem bridge_distance_triangle_inequality (R₁ R₂ R₃ : QRegion) :
   by_cases h23 : R₂ = R₃
   · rw [← h23, bridge_qregion_self_distance_zero, add_zero]
   rw [d, d, d, omegaMetric, omegaMetric, omegaMetric]
-  exact pairDistance_ultrametric (Φ_pos _ _) (Φ_pos _ _) (Φ_pos _ _)
+  exact pairDistance_ultrametric (Φ_pos _ _) (Φ_pos _ _)
     (Φ_le_one _ _) (Φ_le_one _ _) (Φ_le_one _ _) (Φ_ultrametric _ _ _)
 
 /-- The metric vanishes exactly at complete overlap. -/
