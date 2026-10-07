@@ -144,7 +144,10 @@ theorem standardSchwarzschild_entropy :
 
 noncomputable abbrev MT : ModularTheory := Vol03.MT
 
-/-- The concrete KMS predicate is true for every state and temperature. -/
+/-- The concrete KMS predicate is true for every state and temperature: in the
+    Vol03 model `ModularTheory.KMSState` is constantly `True`, so this
+    certifies the model predicate at the stated horizon temperature.  It is
+    not a derivation of the KMS property from modular flow. -/
 theorem kms_exterior_vacuum (bh : BHGeometry) :
   MT.KMSState (ExteriorRegion bh) (2 * Real.pi / bh.surfaceGravity) := by
   exact True.intro

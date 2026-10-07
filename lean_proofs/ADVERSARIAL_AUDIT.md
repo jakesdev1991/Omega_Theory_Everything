@@ -390,7 +390,22 @@ Vol23's placeholder density layer names its definitional consequences
   --max-identity-proofs 0`), and the push-trigger branch list includes this
   review branch.
 
-## R.8.5 Verification
+## R.8.5 Additional naming fixes
+- `Vol09.bh_entropy_is_holographic` → `bridge_bh_entropy_is_holographic`
+  (body is `dsimp`: both sides are the same Bekenstein-Hawking expression; the
+  old banner claimed a "GENUINE PROOF" of the holographic dictionary). The
+  reference in `ProofRegression.lean` and the kernel-audit target name are
+  updated; the 164-target count is unchanged.
+- `Vol24.quantum_advantage_from_phi` retired: duplicate of `bell_violation`
+  under a name/docstring asserting a `Φ_quantum - Φ_local` difference that the
+  statement does not contain.
+- `OmegaProtocol.critical_density` → `bridge_critical_density` (`Vol07`
+  *defines* `CriticalDensity` as `3H²/(8πG)`, so the proof is `rfl`).
+- `APPA` `low_le_all`/`high_le_high` and `Vol08.kms_exterior_vacuum` carry
+  docstrings stating that they hold by the model definitions (`LE` instance
+  pattern match; `KMSState ≡ True`).
+
+## R.8.6 Verification
 Local: `audit_vacuity.py` zero on every metric with ratchet exit 0,
 `audit_axioms.py --max 0` → 0, 47 Python/tooling tests, ruff/mypy clean, grep
 gate clean. Kernel: pinned `lake build ToE` plus the transitive-axiom gate

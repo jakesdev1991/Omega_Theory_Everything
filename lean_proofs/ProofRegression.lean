@@ -436,7 +436,7 @@ example : Vol08.BHEntropy Vol08.standardSchwarzschild = 4 * Real.pi :=
 
 example : Vol09.EntanglementEntropy Vol08.standardSchwarzschild =
     Vol08.BHEntropy Vol08.standardSchwarzschild :=
-  Vol09.bh_entropy_is_holographic Vol08.standardSchwarzschild
+  Vol09.bridge_bh_entropy_is_holographic Vol08.standardSchwarzschild
 
 example : Vol11.ChernBand.haldaneBand.chernNumber = 1 :=
   Vol11.ChernBand.haldane_chern_number

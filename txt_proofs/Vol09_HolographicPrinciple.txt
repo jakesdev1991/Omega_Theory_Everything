@@ -78,14 +78,17 @@ theorem ryu_takayanagi (bh : BHGeometry) :
   EntanglementEntropy bh = MinimalSurfaceArea bh / (4 * NewtonG) := rfl
 
 -- ============================================================
--- THEOREM 1: BH ENTROPY IS HOLOGRAPHIC (GENUINE PROOF)
--- Proof that when the Ryu-Takayanagi minimal surface homologous 
--- to the entire boundary wraps the black hole event horizon, 
--- the CFT Entanglement Entropy equals the Bekenstein-Hawking Entropy.
+-- Consistency bridge: in this model the entanglement entropy and the
+-- Bekenstein-Hawking entropy are the *same* expression
+-- (`MinimalSurfaceArea = horizonArea`, both divided by `4G`), so the
+-- equality is definitional.  No Ryu-Takayanagi minimal-surface argument is
+-- formalized here.
 -- ============================================================
 
-/-- CROSS-VOLUME THEOREM: BHEntropy = Holographic Entanglement Entropy (Vol 08 → Vol 09) -/
-theorem bh_entropy_is_holographic (bh : BHGeometry) :
+/-- Consistency bridge: `EntanglementEntropy` and `BHEntropy` denote the same
+    Bekenstein-Hawking expression in the concrete model, so the identity is
+    definitional (`dsimp`).  NOT a derivation of the holographic dictionary. -/
+theorem bridge_bh_entropy_is_holographic (bh : BHGeometry) :
   EntanglementEntropy bh = BHEntropy bh := by
   dsimp [EntanglementEntropy, BHEntropy, MinimalSurfaceArea]
 

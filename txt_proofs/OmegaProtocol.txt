@@ -279,7 +279,10 @@ theorem cosmological_redshift (t_emit t_obs : Vol07.CosmologicalTime) :
   1 + Vol07.Redshift t_emit t_obs = Vol07.ScaleFactor t_obs / Vol07.ScaleFactor t_emit := by
   exact Vol07.cosmologicalredshift t_emit t_obs
 
-theorem critical_density (t : Vol07.CosmologicalTime) : Vol07.CriticalDensity t = 3 * Vol07.HubbleParameter t ^ 2 / (8 * Real.pi * NewtonG) := by
+/-- Consistency bridge (VOL07): `CriticalDensity` is *defined* as
+    `3 H²/(8πG)` in the flat Friedmann model, so the identity is `rfl`. -/
+theorem bridge_critical_density (t : Vol07.CosmologicalTime) :
+    Vol07.CriticalDensity t = 3 * Vol07.HubbleParameter t ^ 2 / (8 * Real.pi * NewtonG) := by
   rfl
 
 -- Vol 08: Black Hole Thermodynamics

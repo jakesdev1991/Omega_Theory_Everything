@@ -570,10 +570,23 @@ uniqueness induction and the `Function.iterate_succ_apply'` application are
 syntactic matches rather than defeq bets on `n + 1` vs `n.succ`; the iterate
 proof rewrites with Mathlib's lemma directly and closes definitionally.
 
-**Kernel-name inventory.** No kernel-audit target was deleted or renamed
-(`kernel_audit_targets.json` unchanged, 164 declarations); the edits touch
-unlisted declarations plus the renamed `bridge_*` witnesses and the
-`Vol01`/`Vol23`/`Vol27` retirements.
+**Additional naming fixes.** `Vol09.bh_entropy_is_holographic` — whose banner
+announced a "GENUINE PROOF" of the holographic dictionary while the body is
+`dsimp` on two names for the same Bekenstein-Hawking expression — is now
+`bridge_bh_entropy_is_holographic` (referenced from `ProofRegression`) with a
+banner stating the definitional content. `Vol24.quantum_advantage_from_phi` (a
+duplicate of `bell_violation` under a Φ-flavoured name) is retired.
+`OmegaProtocol.critical_density` (`rfl`, because `Vol07.CriticalDensity` is
+*defined* as `3H²/(8πG)`) is `bridge_critical_density`. `APPA`'s
+`low_le_all`/`high_le_high` and `Vol08.kms_exterior_vacuum` gain docstrings
+stating that they hold by the model definitions (`LE` instance;
+`KMSState ≡ True`).
+
+**Kernel-name inventory.** One kernel-audit target was renamed
+(`OmegaProtocol.Vol09.bridge_bh_entropy_is_holographic`); the target count is
+unchanged at 164, no target was deleted, and every other edit touches unlisted
+declarations plus the renamed `bridge_*` witnesses and the
+`Vol01`/`Vol23`/`Vol24`/`Vol27` retirements.
 
 Local validation: `audit_vacuity.py` with all eight zero-ratchets plus the
 alias baseline (including

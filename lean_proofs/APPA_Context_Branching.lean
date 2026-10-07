@@ -29,9 +29,13 @@ instance : LE IntegrityLabel where
     | .high, .high => True
     | .high, .low => False
 
+/-- The `low ≤ _` side holds for every label by the `LE` instance definition
+    (`.low, _ => True`). -/
 theorem low_le_all (label : IntegrityLabel) : IntegrityLabel.low ≤ label := by
   cases label <;> trivial
 
+/-- Reflexivity at `high` holds by the `LE` instance definition
+    (`.high, .high => True`); the gate proofs use it to move up the lattice. -/
 theorem high_le_high : IntegrityLabel.high ≤ IntegrityLabel.high := by
   exact True.intro
 
