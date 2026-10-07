@@ -671,5 +671,7 @@ and the transitive kernel-axiom gate run in Lean CI on the branch (see the
 Lean CI runs for `f99c792`…`9b7aa5a`); the compile errors that CI surfaced
 (`Module`/`Decidable` metavariables, a no-goals tactic, the `ω` scope clash,
 noncomputable real arithmetic in Vol13, and a form-degree mismatch in the
-sourced-Maxwell carrier) were fixed by the follow-up commits, and the corpus
-now builds past those targets.
+sourced-Maxwell carrier) were fixed by the follow-up commits; Lean CI is **green on `7a5fbf2`** — push run `37588987044` (job
+"Lean build (mathlib cache)", all steps success) and PR runs
+`37588993997`/`37588994016` — i.e. the pinned `lake build ToE` and the
+173-declaration transitive-axiom gate both pass on the redesign.

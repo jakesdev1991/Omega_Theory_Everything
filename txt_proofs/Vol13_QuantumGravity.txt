@@ -17,29 +17,73 @@ open OmegaProtocol
 open Vol10
 
 -- ============================================================
--- THE WHEELER-DEWITT EQUATION
+-- THE WHEELER-DEWITT BALANCE (general; no zero-Hamiltonian model)
 -- ============================================================
 
-/-- Matter and Gravity Hamiltonians as operators on the global state -/
-noncomputable def H_matter : Operator := 0
-noncomputable def H_gravity : Operator := 0
+-- RETIRED (tenth pass): `H_matter := 0`, `H_gravity := 0`, `H_total` and
+-- `wheeler_dewitt : H_total Ψ = 0` (proved by `simp`).  Those definitions made
+-- the Wheeler-DeWitt constraint an identity of zeros, so the "balance" was a
+-- restatement of `0 = -0`.  The constraint is now an explicit hypothesis over
+-- arbitrary operators, and `MiniSuperspace` below exhibits a satisfiable
+-- instance with non-constant Hamiltonian terms.
 
-/-- Total Hamiltonian -/
-noncomputable def H_total : Operator := H_matter + H_gravity
+/-- **Wheeler-DeWitt balance**: if the total constraint `H_m + H_g` annihilates
+    a state, then the matter and gravity contributions of that state are exact
+    negatives.  This is additive-group algebra over arbitrary operators: the
+    constraint is a hypothesis, not an identity of zeros. -/
+theorem wheeler_dewitt_balance (H_m H_g : Operator) (Ψ : StateSpace)
+    (h : (H_m + H_g) Ψ = 0) : H_m Ψ = - H_g Ψ :=
+  eq_neg_of_add_eq_zero_left h
 
-/-- The Wheeler-DeWitt equation is an identity in the zero-Hamiltonian model. -/
-theorem wheeler_dewitt (Ψ : StateSpace) : H_total Ψ = 0 := by
-  simp [H_total, H_matter, H_gravity]
+/-- Toy minisuperspace: a flat universe with curvature parameter `k > 0`
+    filled with a massless scalar field.  The matter density `p²/(2a³)` and the
+    curvature term `-k·a` oppose each other, so the Wheeler-DeWitt constraint
+    reads `p²/(2a³) - k a = 0`. -/
+structure MiniSuperspace where
+  k : ℝ
+  k_pos : 0 < k
 
-/-- THEOREM 1: Wheeler-DeWitt Energy Balance (GENUINE PROOF)
-    Because H_total Ψ = 0, the action of the matter Hamiltonian 
-    is exactly the negative of the gravity Hamiltonian. -/
-theorem wheeler_dewitt_balance (Ψ : StateSpace) : 
-  H_matter Ψ = - H_gravity Ψ := by
-  have h_wdw := wheeler_dewitt Ψ
-  exact eq_neg_of_add_eq_zero_left h_wdw
+namespace MiniSuperspace
 
--- ============================================================
+/-- Matter (scalar-field) density `p²/(2a³)` at scale factor `a` and momentum
+    `p`; a genuine, non-constant function of the minisuperspace data. -/
+noncomputable def matterDensity (a p : ℝ) : ℝ := p ^ 2 / (2 * a ^ 3)
+
+variable (M : MiniSuperspace)
+
+/-- Curvature (gravity) term `-k·a` at scale factor `a`. -/
+noncomputable def gravityTerm (a : ℝ) : ℝ := - M.k * a
+
+/-- The constraint is *satisfiable*: `a = 1`, `p = √(2k)` solves it. -/
+theorem constraint_satisfiable :
+    ∃ a p : ℝ, 0 < a ∧ matterDensity a p + M.gravityTerm a = 0 := by
+  refine ⟨1, Real.sqrt (2 * M.k), by norm_num, ?_⟩
+  have hsq : (Real.sqrt (2 * M.k)) ^ 2 = 2 * M.k :=
+    Real.sq_sqrt (by nlinarith [M.k_pos])
+  dsimp only [matterDensity, gravityTerm]
+  rw [hsq]
+  ring
+
+/-- The constraint is *not automatic*: at `a = 1`, `p = 0` it fails. -/
+theorem constraint_not_automatic :
+    ∃ a p : ℝ, 0 < a ∧ matterDensity a p + M.gravityTerm a ≠ 0 := by
+  refine ⟨1, 0, by norm_num, ?_⟩
+  have hk : M.k ≠ 0 := ne_of_gt M.k_pos
+  have hval : matterDensity 1 0 + M.gravityTerm 1 = - M.k := by
+    dsimp only [matterDensity, gravityTerm]
+    ring
+  rw [hval]
+  exact neg_ne_zero.mpr hk
+
+/-- The minisuperspace instance of the Wheeler-DeWitt balance: on constraint
+    solutions the matter density is exactly minus the curvature term. -/
+theorem constraint_implies_balance (a p : ℝ)
+    (h : matterDensity a p + M.gravityTerm a = 0) :
+    matterDensity a p = - M.gravityTerm a :=
+  eq_neg_of_add_eq_zero_left h
+
+end MiniSuperspace
+
 -- ============================================================
 -- SPIN NETWORKS AND QUANTUM GEOMETRY
 -- ============================================================

@@ -455,4 +455,6 @@ notation clash in Vol02, noncomputable real arithmetic in Vol13, and a
 form-degree mismatch in the sourced-Maxwell carrier).
 Local gates: `audit_axioms --max 0` → 0; `audit_vacuity` all-zero ratchets
 with the alias baseline exit 0; 47 tooling tests; grep gate clean. `lake build
-ToE` plus the kernel gate run in Lean CI on the branch.
+ToE` plus the 173-declaration kernel gate are **green in Lean CI on
+`7a5fbf2`** (push run `37588987044`, all job steps success; PR runs
+`37588993997`/`37588994016`).

@@ -546,5 +546,6 @@ declarations (ten new targets, the retired `kms_transitivity` replaced);
 `lake build ToE` and the transitive kernel-axiom gate; the compile defects CI
 surfaced (stuck `Module` metavariables, missing `Decidable`, a no-goals
 tactic, the `ω` scope clash, missing `noncomputable`, a form-degree mismatch
-in the sourced-Maxwell carrier) are fixed by the follow-up commits on this
-branch.
+in the sourced-Maxwell carrier) are fixed by the follow-up commits, and Lean
+CI is green on `7a5fbf2` (push run `37588987044`: pinned `lake build ToE` plus
+the 173-declaration transitive-axiom gate, all job steps success).

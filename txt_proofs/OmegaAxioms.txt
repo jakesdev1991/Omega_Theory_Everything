@@ -1,5 +1,6 @@
 import Mathlib.Analysis.VonNeumannAlgebra.Basic
 import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.LinearAlgebra.Trace
 import Mathlib.Topology.Instances.Complex
 import Mathlib.Data.Complex.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
@@ -16,7 +17,10 @@ when the kernel had been handed the result.  This module now supplies a
 small, explicit zero-information model instead:
 
 * `StateSpace` is `ℂ` and `QRegion` is `Unit`;
-* all informational observables are zero;
+* most informational observables are zero, but the state functional `ω_ρ` is
+  the algebraic trace (a genuine, non-constant tracial state — see
+  `ω_ρ_trace` in `OmegaUnifiedFoundation.lean`), and the model's functional
+  calculus is the explicit placeholder `A ^ z := A` (see `op_pow`);
 * the operator and entropy constructions are real definitions;
 * the metric's Planck-scale factor is the canonical COD profile
   `ℓ_P(Φ) = ℓ_P0·√(1-Φ²)` from `DynamicCODScale` (evaluated at `ℓ_P0 = 1`),
@@ -48,10 +52,24 @@ noncomputable def OmegaAlgebra : StarSubalgebra ℂ (StateSpace →L[ℂ] StateS
 
 abbrev Operator := StateSpace →L[ℂ] StateSpace
 
-/-- The minimal model has a zero functional calculus. -/
-noncomputable def op_pow (_ : Operator) (_ : ℂ) : Operator := 0
+/-- The model's scalar functional calculus `A ↦ A ^ z`.  The analytic calculus
+    is deliberately not modelled; the model records the placeholder `A ^ z := A`,
+    which agrees with the intended calculus at the identity (`1 ^ z = 1`, the
+    tracial modular operator used by the modular flow law below) and at zero
+    (`0 ^ z = 0` for `z ≠ 0`).  It is the only place the model constrains `^`;
+    see `law_modular_operator` in `OmegaUnifiedFoundation.lean`. -/
+noncomputable def op_pow (A : Operator) (_ : ℂ) : Operator := A
 @[default_instance] noncomputable instance instHPowOperator : HPow Operator ℂ Operator where
   hPow := op_pow
+
+/-- In the model calculus `A ^ z = A` (definitional unfolding of `op_pow`).
+    Stated for an arbitrary base so that the simplifier can reduce powers
+    without first normalising the base expression. -/
+theorem op_pow_eq (A : Operator) (z : ℂ) : A ^ z = A := rfl
+
+/-- In the model calculus every power of the identity operator is the
+    identity — the case exercised by the tracial modular operator `Δ = 1`. -/
+theorem op_pow_one (z : ℂ) : (1 : Operator) ^ z = 1 := op_pow_eq 1 z
 
 @[default_instance] noncomputable instance instCoeOmegaAlgebraOperator :
     Coe ↥OmegaAlgebra Operator where
@@ -61,7 +79,16 @@ noncomputable def op_pow (_ : Operator) (_ : ℂ) : Operator := 0
   mul A B := A.comp B
 
 def CyclicSeparating (_ : StateSpace) : Prop := True
-def ω_ρ (_ : ↥OmegaAlgebra) : ℂ := 0
+
+/-- The model state functional: the algebraic trace of the operator in the
+    one-dimensional representation, `A ↦ tr A`.  Non-constant (`tr 0 = 0` vs
+    `tr 1 = 1`; `op_pow_one`/`ω_ρ_trace` in `OmegaUnifiedFoundation.lean`) and a
+    trace by construction: Mathlib's basis-independent `LinearMap.trace_mul_comm`
+    gives `ω_ρ (A ∘ B) = ω_ρ (B ∘ A)`, which is exactly the KMS condition in the
+    tracial model where the modular flow is trivial.  A non-tracial functional
+    falsifies that equation, so the KMS predicate is not vacuous. -/
+noncomputable def ω_ρ (A : ↥OmegaAlgebra) : ℂ :=
+  LinearMap.trace ℂ StateSpace ((A : Operator) : StateSpace →ₗ[ℂ] StateSpace)
 
 abbrev CPTPMap := StateSpace → StateSpace
 
