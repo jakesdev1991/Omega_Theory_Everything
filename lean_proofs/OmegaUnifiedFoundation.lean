@@ -27,9 +27,10 @@ modular flow is the identity, so the KMS condition reduces to the trace
 equation — it is not a faithful type-`III` modular automorphism group.
 -/
 
--- `StateSpace` is a plain `def` of `ℂ`, so instance search does not unfold
--- it: classical decidability of state equality is taken explicitly here for
--- the discrete relative entropy and its monotonicity proof.
+-- `StateSpace` is an `abbrev` for `ℂ`, so a `DecidableEq` instance for
+-- states exists — but it is noncomputable.  Classical decidability of state
+-- equality is taken explicitly here for the discrete relative entropy and its
+-- monotonicity proof (the `if` in `concreteRelativeEntropy`):
 attribute [local instance] Classical.propDecidable
 
 namespace OmegaProtocol

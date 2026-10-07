@@ -15,7 +15,7 @@ namespace OmegaProtocol
 The original version of this file declared every symbol and every desired
 property as an `unchecked declaration`.  That made downstream statements look proved even
 when the kernel had been handed the result.  This module now supplies a
-small, explicit zero-information model instead:
+small, explicit model instead:
 
 * `StateSpace` is `ℂ`, the one-dimensional Hilbert space (the type-`I₁`
   tracial model of the modular pillar);
@@ -57,12 +57,18 @@ and the substantive counterparts live in `InformationNetwork` and the
 recorded in `PROOF_AUDIT.md` (tenth pass).
 -/
 
-/-- The concrete Hilbert space used by the minimal model. -/
-def StateSpace : Type := ℂ
+/-- The concrete Hilbert space used by the minimal model: `ℂ`, the
+    one-dimensional (`type I₁`) tracial case.
 
-noncomputable instance : NormedAddCommGroup StateSpace := inferInstanceAs (NormedAddCommGroup ℂ)
-noncomputable instance : InnerProductSpace ℂ StateSpace := inferInstanceAs (InnerProductSpace ℂ ℂ)
-instance : CompleteSpace StateSpace := inferInstanceAs (CompleteSpace ℂ)
+    It is an `abbrev` and not a plain `def` so that type-class search sees
+    through it: the model needs the numerals (`1 : StateSpace`), the complex
+    power `z ^ w` on states, and the `ℂ`-module structure on the operator
+    algebra, and a semireducible `def` is invisible to instance search
+    (`Lean.Meta.SynthInstance` only unfolds `[reducible]` definitions), which
+    made `(1 : StateSpace)` and `A 1 • (1 : Operator)` fail to elaborate.  Every
+    structure on `StateSpace` is therefore `ℂ`'s structure and no separate
+    instances are declared. -/
+abbrev StateSpace : Type := ℂ
 
 /-- The top operator *-algebra serves as the concrete algebra for the model.
     (Mathlib does not (yet) supply a `Top` instance for the bundled
@@ -83,34 +89,45 @@ abbrev Operator := StateSpace →L[ℂ] StateSpace
     does), and `law_modular_operator` in `OmegaUnifiedFoundation.lean` is now a
     computation in this calculus rather than a definitional restatement. -/
 noncomputable def op_pow (A : Operator) (z : ℂ) : Operator := (A 1) ^ z • (1 : Operator)
+
 @[default_instance] noncomputable instance instHPowOperator : HPow Operator ℂ Operator where
   hPow := op_pow
 
+/-- Defining equation of the model calculus, stated with `^` on the left so
+    that it can *rewrite*: the rewriter only attempts definitional equality on
+    subterms whose head matches the pattern (`Lean.Meta.kabstract`), and the
+    goal's power has head `HPow.hPow` whereas `op_pow`'s own equation lemma has
+    head `op_pow`.  With explicit arguments the pattern is closed, so every
+    occurrence of that instance is rewritten in one rule. -/
+theorem op_pow_eq (A : Operator) (z : ℂ) : A ^ z = (A 1) ^ z • (1 : Operator) := rfl
+
 /-- **Every operator on the one-dimensional state space is scalar
     multiplication by its value at `1`.**  This is the structural fact that
-    makes the model's functional calculus honest. -/
+    makes the model's functional calculus honest: `A v = A 1 * v` for every
+    `v`. -/
 theorem operator_eq_smul_one (A : Operator) : A = A 1 • (1 : Operator) := by
   ext v
   calc A v = A (v • (1 : StateSpace)) := by rw [smul_eq_mul, mul_one]
-    _ = v • A 1 := map_smul A v 1
+    _ = v • A 1 := ContinuousLinearMap.map_smul A v 1
     _ = (A 1 • (1 : Operator)) v := by
-        rw [smul_apply, one_apply_eq_self, smul_eq_mul, mul_comm]
+        show v * A 1 = A 1 * v
+        exact mul_comm v (A 1)
 
 /-- Model calculus: the zeroth complex power is the identity operator
     (`Complex.cpow_zero` together with `1 • 1 = 1`). -/
 theorem op_pow_zero (A : Operator) : A ^ (0 : ℂ) = 1 := by
-  rw [op_pow, Complex.cpow_zero, one_smul]
+  rw [op_pow_eq A 0, Complex.cpow_zero, one_smul]
 
 /-- Model calculus: the first complex power is the operator itself, because the
     operator is determined by its value at `1` (`operator_eq_smul_one`). -/
 theorem op_pow_one (A : Operator) : A ^ (1 : ℂ) = A := by
-  rw [op_pow, Complex.cpow_one]
+  rw [op_pow_eq A 1, Complex.cpow_one]
   exact (operator_eq_smul_one A).symm
 
 /-- Model calculus: powers of the identity operator are the identity — the case
     exercised by the tracial modular operator `Δ = 1`. -/
 theorem op_pow_of_one (z : ℂ) : (1 : Operator) ^ z = 1 := by
-  rw [op_pow, one_apply_eq_self, Complex.one_cpow, one_smul]
+  rw [op_pow_eq (1 : Operator) z, one_apply_eq_self, Complex.one_cpow, one_smul]
 
 /-- Model calculus is multiplicative on the exponent of a nonzero base: the
     complex-power law `x ^ (z + w) = x ^ z * x ^ w` for `x = A 1 ≠ 0`.  The
@@ -118,7 +135,7 @@ theorem op_pow_of_one (z : ℂ) : (1 : Operator) ^ z = 1 := by
     multiplicative in `z`. -/
 theorem op_pow_add (A : Operator) (h : A 1 ≠ 0) (z w : ℂ) :
     A ^ (z + w) = A ^ z * A ^ w := by
-  rw [op_pow, op_pow, op_pow, Complex.cpow_add z w h]
+  rw [op_pow_eq A (z + w), op_pow_eq A z, op_pow_eq A w, Complex.cpow_add z w h]
   ext v
   simp only [smul_apply, mul_apply_eq_comp, one_apply_eq_self, smul_eq_mul]
   ring
@@ -192,8 +209,9 @@ def lim_h_to_0 {T : Type*} (f : ℝ → T) : T := f 0
 noncomputable def vacuum_at {manifold : Type*} (_ : manifold) : StateSpace := 0
 
 -- `QRegion` is a structure without a `DecidableEq` instance, so the region
--- model's case split on `R₁ = R₂` (inside `Φ`) needs classical decidability,
--- exactly as `OmegaUnifiedFoundation` records for state equality:
+-- model's case split on `R₁ = R₂` (inside `Φ`) needs classical decidability
+-- (`OmegaUnifiedFoundation` records the same local instance for the discrete
+-- relative entropy on states):
 attribute [local instance] Classical.propDecidable
 
 /-- **A Q-Region** — a finite information region of the model, carrying a
@@ -312,7 +330,7 @@ theorem bridge_overlapDensity_symm (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R�
   split_ifs with h h'
   · rfl
   · exact absurd h.symm h'
-  · exact absurd h' h.symm
+  · exact absurd h'.symm h
   · exact min_comm _ _
 
 /-- **Mutual information of a pair**: `Φ·(1-Φ)·(S₁+S₂)/2`, a genuine,
@@ -388,8 +406,9 @@ theorem mutualInformation_pos_iff (R₁ R₂ : QRegion) :
     by_contra hc
     have hc' : 1 ≤ Φ R₁ R₂ := le_of_not_gt hc
     have h1 : Φ R₁ R₂ = 1 := le_antisymm (Φ_le_one _ _) hc'
-    have hcontra : (0 : ℝ) < 0 := by simpa [h1] using h
-    exact absurd hcontra (lt_irrefl 0)
+    have hzero : Φ R₁ R₂ * (1 - Φ R₁ R₂) * ((R₁.entropy + R₂.entropy) / 2) = 0 := by
+      rw [h1]; ring
+    exact absurd hzero (ne_of_gt h)
   · intro hΦ
     have hΦ0 : 0 < Φ R₁ R₂ := Φ_pos _ _
     have h2 : 0 < 1 - Φ R₁ R₂ := by linarith
@@ -423,7 +442,8 @@ noncomputable def planckFactor (φ : ℝ) : ℝ := Real.sqrt (1 - φ * φ)
 
 theorem planckFactor_eq_dynamicPlanckCOD (φ : ℝ) :
     planckFactor φ = DynamicCODScale.dynamicPlanckCOD canonicalCODEnv φ := by
-  rw [planckFactor, DynamicCODScale.dynamicPlanckCOD, canonicalCODEnv, pow_two, mul_one]
+  have h : canonicalCODEnv.lP0 = 1 := rfl
+  rw [planckFactor, DynamicCODScale.dynamicPlanckCOD, pow_two, h, one_mul]
 
 theorem planckFactor_nonneg (φ : ℝ) : 0 ≤ planckFactor φ := Real.sqrt_nonneg _
 
@@ -458,7 +478,7 @@ theorem pairDistance_antitone {φ φ' : ℝ} (hφ' : 0 < φ') (h : φ' ≤ φ) (
   rw [pairDistance_eq, pairDistance_eq]
   exact mul_le_mul hℓ hl hc (planckFactor_nonneg φ')
 
-theorem pairDistance_pos_iff {φ : ℝ} (hφ : 0 < φ) (h1 : φ ≤ 1) :
+theorem pairDistance_pos_iff {φ : ℝ} (hφ : 0 < φ) :
     0 < pairDistance φ ↔ φ < 1 := by
   rw [pairDistance_eq]
   have hℓ : 0 < planckFactor φ ↔ φ < 1 := by
@@ -491,11 +511,11 @@ theorem pairDistance_ultrametric {φ ψ χ : ℝ} (hφ : 0 < φ) (hψ : 0 < ψ) 
     (hφ1 : φ ≤ 1) (hψ1 : ψ ≤ 1) (hχ1 : χ ≤ 1) (hultra : min φ ψ ≤ χ) :
     pairDistance χ ≤ pairDistance φ + pairDistance ψ := by
   rcases le_total φ ψ with hle | hle
-  · have hφχ : φ ≤ χ := le_trans (min_le_left φ ψ) hultra
+  · have hφχ : φ ≤ χ := by rwa [min_eq_left hle] at hultra
     have hmono := pairDistance_antitone hφ hφχ hχ1
     have hnn := pairDistance_nonneg hψ hψ1
     linarith
-  · have hψχ : ψ ≤ χ := le_trans (min_le_right φ ψ) hultra
+  · have hψχ : ψ ≤ χ := by rwa [min_eq_right hle] at hultra
     have hmono := pairDistance_antitone hψ hψχ hχ1
     have hnn := pairDistance_nonneg hφ hφ1
     linarith
@@ -553,7 +573,7 @@ theorem distance_eq_zero_iff (R₁ R₂ : QRegion) :
   · intro h
     by_contra hne
     have hlt : Φ R₁ R₂ < 1 := lt_of_le_of_ne (Φ_le_one _ _) hne
-    have hpos := (pairDistance_pos_iff (Φ_pos R₁ R₂) (Φ_le_one R₁ R₂)).mpr hlt
+    have hpos := (pairDistance_pos_iff (Φ_pos R₁ R₂)).mpr hlt
     rw [h] at hpos
     exact absurd hpos (lt_irrefl 0)
   · intro hΦ
@@ -609,8 +629,7 @@ theorem witness_mutualInformation_pos : 0 < mutualInformation halfQRegion unitQR
 
 theorem witness_distance_pos : 0 < d halfQRegion unitQRegion := by
   rw [d, omegaMetric]
-  rw [pairDistance_pos_iff (Φ_pos halfQRegion unitQRegion) (Φ_le_one halfQRegion unitQRegion),
-    Φ_halfQRegion_unitQRegion]
+  rw [pairDistance_pos_iff (Φ_pos halfQRegion unitQRegion), Φ_halfQRegion_unitQRegion]
   norm_num
 
 theorem witness_codProfile_pos :
@@ -666,10 +685,12 @@ theorem bridge_metric_triangle_from_DPI (R₁ R₂ R₃ : QRegion) :
   bridge_distance_triangle_inequality R₁ R₂ R₃
 
 /-- Arithmetic core of the "time dilation as processing lag" reading: a rate
-    reduced by a novelty factor in `[0, 1]` never exceeds the base rate. This
-    is the non-degenerate statement (all three hypotheses are used). -/
+    reduced by a nonnegative novelty factor never exceeds the base rate.  For
+    `novelty ≤ 1` the reduction factor `1 - novelty` lies in `[0, 1]`; the
+    inequality itself needs only the two hypotheses below, and they are both
+    used. -/
 theorem speed_reduction_of_novelty (baseRate novelty : ℝ)
-    (h_base : 0 ≤ baseRate) (h_novelty0 : 0 ≤ novelty) (h_novelty1 : novelty ≤ 1) :
+    (h_base : 0 ≤ baseRate) (h_novelty0 : 0 ≤ novelty) :
     baseRate * (1 - novelty) ≤ baseRate := by
   calc baseRate * (1 - novelty) = baseRate - baseRate * novelty := by ring
     _ ≤ baseRate := by
@@ -717,7 +738,7 @@ noncomputable def processingSpeed (R : QRegion) (baseRate : ℝ) : ℝ :=
 theorem processingSpeed_le_baseRate (R : QRegion) (baseRate : ℝ) (h : 0 ≤ baseRate) :
     processingSpeed R baseRate ≤ baseRate :=
   speed_reduction_of_novelty baseRate (informationNovelty R) h
-    (informationNovelty_nonneg R) (informationNovelty_le_one R)
+    (informationNovelty_nonneg R)
 
 theorem witness_processingSpeed_lt (baseRate : ℝ) (h : 0 < baseRate) :
     processingSpeed unitQRegion baseRate < baseRate := by
