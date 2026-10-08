@@ -169,11 +169,14 @@ export function WalletDownloadPanel() {
           <div className="option-tag">04</div>
           <h2>Native desktop builds</h2>
           <p>
-            A Tauri wrapper around this exact GUI produces signed installers. Status per platform:
+            A Tauri wrapper around this exact GUI produces native installers. They are
+            <b>unsigned</b> prototype builds: macOS Gatekeeper and Windows SmartScreen will
+            warn on first launch, and the source is one <code>npm run build:*</code> away.
+            Status per platform:
           </p>
           <ul className="platform-list">
             {(desktop?.platforms ?? []).map((platform) => (
-              <li key={`${platform.os}-${platform.arch}`}>
+              <li key={platform.artifact ?? `${platform.os}-${platform.arch}`}>
                 <span className="platform-name">
                   {platform.os} · {platform.arch}
                 </span>
