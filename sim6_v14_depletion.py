@@ -26,7 +26,7 @@ except ImportError:
 # Constants
 # --------------------------
 Gyr_to_sec = 3.15576e16
-Mpc_in_km = 3.085677581e19 / 1e3
+Mpc_in_km = 3.085677581e19  # km per Mpc (was wrongly divided by 1e3)
 conv_1Gyr_to_km_s_Mpc = Mpc_in_km / Gyr_to_sec
 c_km_s = 299792.458
 
@@ -154,6 +154,13 @@ def compute_observables(sol, params, zmax=8.0, nz=1500):
 
     a_arr = np.maximum.accumulate(a_arr)
 
+    if t_arr.size < 2:
+        raise RuntimeError(
+            "Integration produced fewer than two accepted steps "
+            f"(success={sol.success}, message={sol.message!r}); there is nothing "
+            "to interpolate. Check the model parameters before plotting."
+        )
+
     # Standard interpolation
     t_of_a = PchipInterpolator(a_arr, t_arr, extrapolate=True)
     u_of_t = PchipInterpolator(t_arr, u_arr, extrapolate=True)
@@ -189,63 +196,52 @@ def compute_observables(sol, params, zmax=8.0, nz=1500):
 # --------------------------
 # Calibration (Simpler now)
 # --------------------------
+def H0_model_at_today(params, gamma):
+    """H0 the model predicts for a trial `gamma`, evaluated at a = 1.
+
+    The background is algebraic in `gamma`: H(a)^2 = H_matter(a)^2 +
+    (alpha * gamma * A_BH(a)^kappa)^2, so the a = 1 value needs no ODE
+    integration.  (The earlier version integrated inside the calibration scan
+    and returned the sentinel 1e5 whenever a trial expansion did not reach
+    a = 1 inside t_final.  For every small trial gamma that happened, so the
+    very first scan point looked like an upper bound and the calibration
+    returned 1e-20 with a silently wrong H0.)
+    """
+    trial = dict(params)
+    trial["gamma"] = gamma
+    A_today = A_BH_of_a(1.0, A0=trial["A0"])
+    H_info_today = trial["alpha"] * abs(gamma) * (A_today ** trial["kappa"])
+    H2 = H_matter_squared(1.0, trial) + H_info_today**2
+    return float(np.sqrt(H2) * conv_1Gyr_to_km_s_Mpc)
+
+
 def calibrate_gamma(params_template):
+    """Solve for the depletion rate that puts the model's H0 on target.
+
+    H0(gamma) is strictly increasing and equals the pure matter/radiation value
+    at gamma = 0, so a bracket always exists: the lower end is below target and
+    a large enough gamma exceeds it.  A missing bracket is a real error now, not
+    a silent fallback.
+    """
     target_H0 = H0_fid
 
-    def get_H0_model(lg):
-        p = params_template.copy()
-        p["gamma"] = 10**lg
-        try:
-            sol = integrate_cosmo(p)
-            if not sol.success:
-                return np.nan
+    def residual(lg_gamma):
+        return H0_model_at_today(params_template, 10.0**lg_gamma) - target_H0
 
-            # If simulation didn't reach a=1
-            if sol.y[1][-1] < 0.99:
-                return 1e5
-
-            # Depletion Math for H0
-            A_today = A_BH_of_a(1.0, A0=p["A0"])
-            # No exp(-u) here!
-            du_dt_today = -p["gamma"] * (A_today ** p["kappa"])
-
-            H_info = p["alpha"] * np.abs(du_dt_today)
-            H_m2 = H_matter_squared(1.0, p)
-            H_val = np.sqrt(H_m2 + H_info**2) * conv_1Gyr_to_km_s_Mpc
-            return H_val
-        except Exception:
-            return 1e5
+    lo, hi = -12.0, 6.0
+    if not residual(lo) < 0.0 < residual(hi):
+        raise RuntimeError(
+            f"Could not bracket H0 = {target_H0}: "
+            f"residual({lo}) = {residual(lo):.6g}, residual({hi}) = {residual(hi):.6g}"
+        )
 
     print(f"  > Target H0: {target_H0}")
-
-    # Scan range can be standard now
-    scan_grid = np.linspace(-5.0, 1.0, 30)
-
-    low_bound, high_bound = -20.0, 20.0
-    found_bracket = False
-
-    for lg in scan_grid:
-        val = get_H0_model(lg)
-        diff = val - target_H0
-        if diff < 0:
-            low_bound = lg
-        elif diff > 0:
-            high_bound = lg
-            found_bracket = True
-            break
-
-    if not found_bracket:
-        print("  ! Warning: Could not bracket H0. Returning high bound.")
-        return 10**high_bound
-
-    print(f"  > Bracket: [{low_bound:.2f}, {high_bound:.2f}]")
-    try:
-        root = brentq(
-            lambda x: get_H0_model(x) - target_H0, low_bound, high_bound, xtol=1e-4
-        )
-        return 10**root
-    except Exception:
-        return 10**low_bound
+    print(f"  > Bracket: [{lo:.2f}, {hi:.2f}]  (log10 gamma)")
+    root = brentq(residual, lo, hi, xtol=1e-12, rtol=1e-14)
+    gamma = 10.0**root
+    achieved = H0_model_at_today(params_template, gamma)
+    print(f"  > H0(gamma*) = {achieved:.6f} km/s/Mpc")
+    return gamma
 
 
 # --------------------------
@@ -267,6 +263,14 @@ if __name__ == "__main__":
 
     print("Running final cosmology...")
     sol = integrate_cosmo(params)
+    if not sol.success:
+        raise RuntimeError(f"Final integration failed: {sol.message!r}")
+    if float(sol.y[1][-1]) < 1.0:
+        raise RuntimeError(
+            "The calibrated run does not reach a = 1 inside t_final = "
+            f"{sol.t[-1]:.3g} Gyr (a_end = {float(sol.y[1][-1]):.6g}); the "
+            "distance-modulus and w(z) panels would silently extrapolate."
+        )
     out = compute_observables(sol, params)
 
     print("Plotting...")

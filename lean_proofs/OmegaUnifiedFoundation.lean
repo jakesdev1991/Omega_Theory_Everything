@@ -141,13 +141,17 @@ noncomputable def concreteModularTheory : ModularTheory :=
         have hsurj : Function.Surjective
             (fun A : ↥OmegaAlgebra => (A : Operator) (1 : StateSpace)) := by
           intro z
-          exact ⟨⟨z • (1 : Operator), Subalgebra.mem_top⟩, by simp [smul_eq_mul]⟩
+          exact ⟨⟨z • (1 : Operator), by simp⟩, by simp [smul_eq_mul]⟩
         rw [hsurj.range_eq, closure_univ]
         exact Set.mem_univ y
       · -- Separating: `A·1 = 0` pins `A` down by `operator_eq_smul_one`.
         intro A hA
         apply Subtype.ext
-        rw [operator_eq_smul_one (A : Operator), hA, zero_smul]
+        -- `A = A 1 • 1 = 0 • 1 = 0`, where the last step is the scalar action of
+        -- the zero scalar (a bare `rw [zero_smul]` could not elaborate the
+        -- scalar type from the goal, so the normalization is left to `simp`).
+        rw [operator_eq_smul_one (A : Operator), hA]
+        simp
     law_modular_operator := by
       -- `Δ = 1` (tracial state) and in the model calculus `1 ^ z = 1`, so both
       -- sides reduce to `1 * A * 1`, which is `A` by the operator monoid laws.

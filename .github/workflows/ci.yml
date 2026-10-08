@@ -49,13 +49,23 @@ jobs:
         run: python -m pytest -v
       
       - name: Run simulations (smoke test)
+        # No `|| true` here. The previous version ended every command with it,
+        # which is how sim6_v14_depletion.py stayed broken: it raised
+        # "array must not contain infs or NaNs" on every run and the step still
+        # reported success. Every command below must exit 0.
+        #
+        # Sim1 and Sim4 are prose manuscripts in docs/manuscripts/ (they were
+        # never executable; see docs/manuscripts/README.md), so they are not
+        # run here. Sim2 runs headless under Agg. Sim3/Sim5/Sim7 accept --help;
+        # sim6 has no argument parser and is run for real.
+        env:
+          MPLBACKEND: Agg
         run: |
-          python Sim1_Emergent_Geometry.py --help || true
-          python Sim2_Cosmology.py --help || true
-          python Sim3_Dynamic_Scale.py --help || true
-          python Sim4_Evolution.py --help || true
-          python Sim5_Emergent_Gravity.py --help || true
-          python Sim7_Radial_Metric.py --help || true
+          python Sim2_Cosmology.py
+          python Sim3_Dynamic_Scale.py --help
+          python Sim5_Emergent_Gravity.py --help
+          python sim6_v14_depletion.py
+          python Sim7_Radial_Metric.py --help
 
   rust-checks:
     name: Rust Build & Test
