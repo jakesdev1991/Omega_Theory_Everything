@@ -29,9 +29,14 @@ jobs:
           cache: 'pip'
       
       - name: Install dependencies
+        # The README's Quick Start tells a reader to run
+        # `pip install -r requirements.txt`; CI now installs the same file, so
+        # the documented path is the tested path. It carries the pinned
+        # ruff/mypy/pytest versions too, so a tool release cannot change a
+        # verdict here without a commit.
         run: |
           pip install -U pip
-          pip install ruff mypy pytest
+          pip install -r requirements.txt
       
       - name: Ruff lint
         run: ruff check .

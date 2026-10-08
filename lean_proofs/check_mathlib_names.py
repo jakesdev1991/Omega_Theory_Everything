@@ -56,7 +56,9 @@ DOTTED_DECL_RE = re.compile(
     r"([A-Z][\w']*(?:\.[A-Za-z_][\w']*)+)"
 )
 NAMESPACE_RE = re.compile(r"^\s*namespace\s+([A-Za-z_][\w'.]*)\s*$")
-NAME_USE_RE = re.compile(r"\b([A-Z][\w'\u2080-\u2089]*(?:\.[A-Za-z_][\w'\u2080-\u2089]*)+)")
+NAME_USE_RE = re.compile(
+    r"\b([A-Z][\w'\u2080-\u2089]*(?:\.[A-Za-z_][\w'\u2080-\u2089]*)+)"
+)
 BLOCK_COMMENT_RE = re.compile(r"/-.*?-/", re.DOTALL)
 # a bound variable, e.g. `(C : Compactification)` or `{A B : Operator}` or
 # `variable (ρ : StateSpace)`; field projections of these (`C.Gbulk`) are not
@@ -72,7 +74,9 @@ def strip_comments(text: str) -> str:
 def declarations(path: pathlib.Path) -> tuple[set[str], set[str]]:
     qualified: set[str] = set()
     bare: set[str] = set()
-    for line in strip_comments(path.read_text(encoding="utf-8", errors="replace")).splitlines():
+    for line in strip_comments(
+        path.read_text(encoding="utf-8", errors="replace")
+    ).splitlines():
         line = line.split("--", 1)[0]
         if m := NAMESPACE_RE.match(line):
             qualified.add(m.group(1))
@@ -102,7 +106,9 @@ def index_tree(root: pathlib.Path) -> tuple[set[str], set[str]]:
         # Namespace blocks are tracked per file so `theorem mem_top` inside
         # `namespace StarSubalgebra` is registered as `StarSubalgebra.mem_top`.
         stack: list[str] = []
-        for raw in strip_comments(path.read_text(encoding="utf-8", errors="replace")).splitlines():
+        for raw in strip_comments(
+            path.read_text(encoding="utf-8", errors="replace")
+        ).splitlines():
             line = raw.split("--", 1)[0]
             if m := NAMESPACE_RE.match(line):
                 stack.append(m.group(1))
@@ -158,7 +164,11 @@ def main() -> int:
     parser.add_argument("--lean", default="", help="path to a lean4 (core) checkout")
     parser.add_argument("--repo", default="lean_proofs")
     parser.add_argument("--baseline", default="", help="git revision to diff against")
-    parser.add_argument("--only-new", action="store_true", help="only check lines added since --baseline")
+    parser.add_argument(
+        "--only-new",
+        action="store_true",
+        help="only check lines added since --baseline",
+    )
     parser.add_argument("--verbose", action="store_true")
     args = parser.parse_args()
 
@@ -167,7 +177,9 @@ def main() -> int:
 
     known: set[str] = set()
     bare: set[str] = set()
-    for tree in [pathlib.Path(args.mathlib)] + ([pathlib.Path(args.lean)] if args.lean else []):
+    for tree in [pathlib.Path(args.mathlib)] + (
+        [pathlib.Path(args.lean)] if args.lean else []
+    ):
         qualified, names = index_tree(tree)
         known |= qualified
         bare |= names
@@ -177,7 +189,9 @@ def main() -> int:
     bare |= repo_bare
     print(f"indexed repository: {len(repo_qualified)} names")
 
-    new_lines = added_lines(home, args.baseline) if (args.only_new and args.baseline) else set()
+    new_lines = (
+        added_lines(home, args.baseline) if (args.only_new and args.baseline) else set()
+    )
 
     suspicious: dict[str, set[str]] = {}
     for path in sorted(repo.glob("*.lean")):
