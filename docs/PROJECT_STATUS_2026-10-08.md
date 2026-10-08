@@ -195,3 +195,73 @@ from being evaluable, and it is the single highest-value open item in the reposi
 clone, `npm ci`, `npm test`, `npm run build`, open `/testnet`. The on-chain half becomes
 testable only after actions 1–3 plus one Sepolia and one Devnet deployment; until then every
 rail is *correctly* refusing to pretend.
+
+---
+
+## 8. Remediation status — end of day, 2026-10-08
+
+Everything in §4 and §7 was worked in one session on the branch
+`arena/e789c885-omega-theory-everything`, now open as **PR #57** (which contains
+PRs #51 and #56 and supersedes both). Every claim below is a command result or a
+CI run, not an intention.
+
+| Defect | State | Evidence |
+|---|---|---|
+| D1 Lean frontier red build | **Fixed.** `lake build ToE` is green in CI. | Three distinct elaboration failures closed in order (`OmegaAxioms.lean:120`, `OmegaUnifiedFoundation.lean:144`/`:150` — the last was an operator-level rewrite that could never match, reduced pointwise). Lean CI run 3781848738 and the full 14-job CI run on the same commit both pass. A machine-checkable lemma-name checker (`lean_proofs/check_mathlib_names.py`, offline, against the pinned Mathlib + core sources) exists for the next round. |
+| D2 Sim1/2/4 with a `.py` extension | **Fixed.** Sim1/Sim4 are manuscripts under `docs/manuscripts/` with the damage documented in place; Sim2 is a real script with its prose as the module docstring and runs headless; the CI smoke step has no `\|\| true`; `tests/test_simulations.py` (10 tests) locks all of it in, including "every `python file.py` in the README exists". | CI job `Python Lint & Type Check` green (ruff, ruff format, mypy, 81 pytest tests, five simulation runs). |
+| D3–D5, D7 (PR #51 items) | **Fixed.** Merged into this branch; the suites the report listed as uncovered now run in CI. | `CI` run 3781848738: 14/14 jobs. |
+| D6 README count drift | **Fixed.** Lean 69 modules, LaTeX 41, companions 59 — each stated with its breakdown. | Recounted against the tree. |
+| D8 `ai-governor/` had no build path and no CI | **Fixed.** `ai-governor/build.sh` (strict build, OpenSSL check, overridable `LDLIBS`, governed+baseline smoke run requiring receipts from both arms) plus a CI job. | CI job `AI Governor Build & Smoke Run (PoUW trainer)` green; the run reports the governor's own verdict ("hurt at this scale, prototype scale") rather than a flattering number. |
+| D9 no wallet release | **Fixed — and the workflow was broken in six ways, all found and fixed while cutting the first tag.** | See below. |
+
+### D9, in full, because it is the most instructive
+
+`wallet-v0.1.0` was cut, and the workflow it triggered had never run. It failed,
+then failed again, for reasons no amount of reading had caught:
+
+1. `npx tauri build --target-dir target` — `--target-dir` is a **v1 flag**; the
+   pinned v2 CLI rejects it before compiling anything.
+2. `beforeBuildCommand` used a path one directory too deep (Tauri runs build
+   hooks with the frontend directory as cwd).
+3. Windows cannot build without a real `.ico`; the config listed only PNGs. The
+   icon generator now emits one (classic DIB entries, pixel-identical to the
+   PNGs) and the wrapper check validates its signature.
+4. The publish job had no `permissions:` block and assumed a release existed —
+   a tag push creates a tag, not a release.
+5. The artifact glob swept up nine bundler scratch files (`template.applescript`,
+   `debian-binary`, …) while the actual installers were not uploaded at all.
+6. The upload ran every asset through one `gh release upload` invocation; one
+   transient failure aborted the rest, silently dropping the `.AppImage`, `.deb`,
+   `.msi` and the checksum file.
+
+After fixing all six, the re-cut tag built **all three platforms** and published
+exactly: `Omega.Wallet_0.1.0_amd64.AppImage`, `…_amd64.deb`, `…_aarch64.dmg`,
+`…_x64_en-US.msi`, `SHA256SUMS.txt` — as a **prerelease**, marked as such in the
+release notes, with the assets' digests recorded in `desktop/releases.json`, and
+with `/api/wallet/manifest` now reporting `desktop.status: "published"` on the
+live site. The installers are unsigned (no Apple/Microsoft credentials exist for
+this project) and the download page now says so instead of promising signed
+builds.
+
+### Defects found beyond the nine
+
+- `web/.env.example` was missing eleven variables the code reads; a new test
+  (`web/src/lib/env-example.test.ts`) now fails if code and documentation drift.
+- `evm/scripts/preflight-sepolia.js` never checked that the deployer can pay for
+  the deployment — the failure mode that leaves a six-contract deployment half
+  done. It now estimates the cost from the compiled artifacts and compares it to
+  the live balance, and `npm run preflight:rehearsal` exercises the whole
+  preflight against the local network (pinned to Sepolia's chain ID) so its
+  passing path is tested in CI.
+- CI installed lint/type/test tooling unpinned, so a tool release could flip a
+  verdict without a commit; `requirements.txt` now pins them and CI installs the
+  same file the README tells readers to install.
+
+### What still cannot be verified from here
+
+Unchanged from §5: no Lean toolchain, no Rust, no deployment paths. The Lean
+build is verified only by CI; the desktop installers are verified by CI building
+them (nobody has launched one); no Sepolia or Devnet deployment exists, and
+`launch/novel_day_one_plan.md` §11 items 1, 3, 4, 5, 6 and 8 remain decisions or
+infrastructure for the maintainer — action 7's tooling is now tested, but the
+deployment itself is still deliberately not done.

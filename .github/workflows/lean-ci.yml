@@ -9,10 +9,12 @@ on:
     # snapshots ("also validate this snapshot when PR merge conflicts block PR
     # checks"). Those were merged (PRs #45, #49) and no longer exist, so main is
     # the only permanent push trigger; every other branch is covered by the
-    # pull_request trigger below, except the session branch below, which must
-    # push-validate because a broken 14-commit Lean branch cannot open PR
-    # checks that pass. Remove `arena/e789c885-...` before merging to main.
-    branches: [main, arena/e789c885-omega-theory-everything]
+    # pull_request trigger below.
+    #
+    # This list briefly also carried the arena/e789c885-* session branch, while
+    # the Lean build was red and no PR check could pass. It is green now, so the
+    # temporary entry is gone and this file is back to its intended shape.
+    branches: [main]
     paths:
       - 'lean_proofs/**'
       - '.github/workflows/lean-ci.yml'
