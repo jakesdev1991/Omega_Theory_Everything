@@ -16,6 +16,28 @@ import { buildDirectoryEvents, ECONOMY_KINDS } from "../client-daemon.mjs";
 const SECRET = "07".repeat(32);
 const OTHER = "0b".repeat(32);
 
+test("policy: the reply-ledger state file follows HOME, not one machine", () => {
+  // The default used to be the literal string "/home/jake/.local/state/..." —
+  // the developer's home directory. On any other machine the daemon would write
+  // its state to a path it does not own. It must derive the path from HOME (or
+  // the OS home directory) instead.
+  const policy = loadPolicy({
+    OMEGA_NOSTR_RELAYS: "wss://relay.example.org",
+    OMEGA_NOSTR_ROOT_SECRET: SECRET,
+    HOME: "/tmp/omega-home-check",
+  });
+  assert.equal(policy.stateFile, "/tmp/omega-home-check/.local/state/omega-nostr/bot-state.json");
+
+  // And an explicit override wins, as documented.
+  const overridden = loadPolicy({
+    OMEGA_NOSTR_RELAYS: "wss://relay.example.org",
+    OMEGA_NOSTR_ROOT_SECRET: SECRET,
+    HOME: "/tmp/omega-home-check",
+    OMEGA_NOSTR_STATE_FILE: "/var/lib/omega/state.json",
+  });
+  assert.equal(overridden.stateFile, "/var/lib/omega/state.json");
+});
+
 test("policy: fails closed on missing env", () => {
   const saved = { ...process.env };
   try {

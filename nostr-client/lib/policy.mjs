@@ -7,6 +7,9 @@
  * message that says exactly what to set.
  */
 
+import { homedir } from "node:os";
+import { join } from "node:path";
+
 import { getPublicKeyHex } from "./events.mjs";
 import { nsecToHex } from "./bech32.mjs";
 
@@ -85,8 +88,30 @@ export function loadPolicy(env = process.env) {
     rootSecretHex,
     rootPubkeyHex: getPublicKeyHex(rootSecretHex),
     lnAddress: env.OMEGA_NOSTR_LN_ADDRESS?.trim() || null,
-    stateFile:
-      env.OMEGA_NOSTR_STATE_FILE ??
-      `${process.env.HOME ?? "/home/jake"}/.local/state/omega-nostr/bot-state.json`,
+    stateFile: env.OMEGA_NOSTR_STATE_FILE ?? defaultStateFile(env),
   });
+}
+
+/**
+ * Where the reply ledger lives when OMEGA_NOSTR_STATE_FILE is not set.
+ *
+ * This used to fall back to the literal string "/home/jake", which is this
+ * project's developer's home directory: on any other machine the client would
+ * write its state into a path that either does not exist or belongs to someone
+ * else. Fail closed instead, the way the rest of this file does — ask the OS for
+ * the home directory, and if even that is unavailable, say exactly what to set.
+ *
+ * `env` is the object `loadPolicy` was handed (its contract is that it reads the
+ * environment it is given, and the test suite relies on that); `process.env` is
+ * only consulted when the caller's environment does not carry HOME.
+ */
+function defaultStateFile(env) {
+  const home = env.HOME?.trim() || process.env.HOME?.trim() || homedir();
+  if (!home) {
+    throw new Error(
+      "omega nostr client: cannot determine a home directory for the reply-ledger " +
+        "state file; set OMEGA_NOSTR_STATE_FILE (or HOME) explicitly.",
+    );
+  }
+  return join(home, ".local", "state", "omega-nostr", "bot-state.json");
 }
