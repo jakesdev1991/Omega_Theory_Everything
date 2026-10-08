@@ -62,7 +62,9 @@ function envReadsIn(source: string): string[] {
   for (const match of source.matchAll(/envKey:\s*"([A-Z][A-Z0-9_]*)"/g)) {
     names.add(match[1]);
   }
-  const listConsumedByIndexing = /\[([^\]]*?)\]\s*\.some\(\s*\(?[\w$]+\)?\s*=>\s*isNonEmptyString\(\s*process\.env\[/gs;
+  // No `s` flag: it needs an es2018 target and the app compiles below that.
+  // `[^\]]` already matches newlines, so this still spans a multi-line list.
+  const listConsumedByIndexing = /\[([^\]]*?)\]\s*\.some\(\s*\(?[\w$]+\)?\s*=>\s*isNonEmptyString\(\s*process\.env\[/g;
   for (const match of source.matchAll(listConsumedByIndexing)) {
     for (const name of match[1].matchAll(/"([A-Z][A-Z0-9_]*)"/g)) {
       names.add(name[1]);
@@ -108,8 +110,11 @@ test("every environment variable the app reads is documented in .env.example", (
 test("the collector sees all three read styles", () => {
   // A guard that silently stops matching would pass forever, so pin the shapes.
   const found = envReadsIn(
-    'process.env.ALPHA_ONE; process.env["BETA_TWO"]; { envKey: "GAMMA_THREE" };' +
-      '[ "DELTA_FOUR", "EPSILON_FIVE" ].some((key) => isNonEmptyString(process.env[key]));',
+    'process.env.ALPHA_ONE; process.env["BETA_TWO"]; { envKey: "GAMMA_THREE" };\n' +
+      'const configured = [\n' +
+      '  "DELTA_FOUR",\n' +
+      '  "EPSILON_FIVE",\n' +
+      '].some((key) => isNonEmptyString(process.env[key]));',
   );
   assert.deepEqual(found.sort(), [
     "ALPHA_ONE",
