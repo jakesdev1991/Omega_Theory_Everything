@@ -1,1 +1,23 @@
-{"roundtrip_utc":"2026-09-23T18:22:00Z","tool_count":22,"planes":["sov","use","care","amity","omega"],"roundtrip_ok":true,"ledger_ok":true,"snapshot Planes":["sov","use","care","amity","omega","event_count","next_version"],"note":"Smoke test passed. 22 MCP tools discovered; stdio tools/call roundtrip for ledger returned ok:true with all five plane snapshots and event_count 0. Package pinned to mcp>=1.7,<2 to match existing omega-mcp-suite."}
+{
+  "roundtrip_utc": "2026-10-08T18:35:27Z",
+  "tool_count": 22,
+  "planes": [
+    "sov",
+    "use",
+    "care",
+    "amity",
+    "omega"
+  ],
+  "roundtrip_ok": true,
+  "ledger_ok": true,
+  "snapshot Planes": [
+    "sov",
+    "use",
+    "care",
+    "amity",
+    "omega",
+    "event_count",
+    "next_version"
+  ],
+  "note": "Regenerated 2026-10-08 with the repaired smoke test. The previous evidence predated the mcp/ path fix and came from a build of this script that could pass without the tool call ever being answered: it wrote initialize + a wrongly-named notification + tools/call in one batch, closed stdin, and treated 'at least one response line' as success, and it always exited 0. It now performs the handshake in order, waits for the tools/call response specifically, asserts the ledger payload (ok, five plane keys), and exits non-zero on any failure \u2014 verified against three negative controls (unknown tool, a wrong tool count, and a wrong handshake notification). This run: Python 3.11.2 with mcp 1.30.0 in a sandbox venv; CI runs the same script on Python 3.12 against the hub installed from mcp/pyproject.toml, which pins mcp>=1.7,<2. 22 tools discovered; ledger roundtrip returned ok:true with five plane snapshots and event_count 0."
+}

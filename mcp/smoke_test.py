@@ -49,11 +49,50 @@ async def async_checks() -> list[str]:
     return out
 
 
-async def run_stdio_serve_then_stop() -> str:
+async def _read_until(proc, wanted_id, timeout):
+    """Read stdout lines until the JSON-RPC response with `wanted_id` arrives.
+
+    Reading until the specific id (rather than writing everything at once and
+    closing stdin) is what makes this deterministic: with the old approach the
+    server could see EOF and exit before answering the tool call, and the script's
+    "we received at least one line" criterion called that a pass. The committed
+    evidence was produced by a run that happened to win that race.
+    """
+    loop = asyncio.get_running_loop()
+    deadline = loop.time() + timeout
+
+    while True:
+        budget = deadline - loop.time()
+        if budget <= 0:
+            raise TimeoutError(f"no response with id={wanted_id} within {timeout:.0f}s")
+        line = await asyncio.wait_for(
+            asyncio.to_thread(proc.stdout.readline), timeout=budget
+        )
+        if line == "":
+            raise EOFError(f"server closed stdout before answering id={wanted_id}")
+        stripped = line.strip()
+        if not stripped:
+            continue
+        try:
+            message = json.loads(stripped)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(message, dict) and message.get("id") == wanted_id:
+            return message
+
+
+async def run_stdio_serve_then_stop() -> tuple[bool, str]:
     """Spin the stdio server for one tool-call round trip and report the result.
 
-    We run a second process so the server's event loop is real, then speak MCP over
-    stdin/stdout using the JSON-RPC payload the stdio transport expects.
+    The server runs as a second process so its event loop is real, and we speak MCP
+    over stdin/stdout the way the stdio transport expects: initialize, wait for the
+    initialize result, send `notifications/initialized`, then call the `ledger` tool
+    and assert what comes back.
+
+    Returns (ok, message). This used to return a message only and the script always
+    exited 0, so CI stayed green across a timeout, a crashed server, or a tool call
+    that was never answered — and the old criterion ("at least one line came back")
+    was satisfied by the initialize response alone.
     """
     import subprocess
 
@@ -65,8 +104,28 @@ async def run_stdio_serve_then_stop() -> str:
         cwd=HERE,
         text=True,
     )
+    # `text=True` with explicit PIPEs always yields text streams; assert it so the
+    # rest of the function can use them directly and mypy agrees.
+    assert proc.stdin is not None and proc.stdout is not None
+
+    def shutdown() -> str:
+        try:
+            if proc.stdin:
+                proc.stdin.close()
+        except OSError:
+            pass
+        if proc.poll() is None:
+            proc.terminate()
+        try:
+            proc.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+        try:
+            return proc.stderr.read() if proc.stderr else ""
+        except (OSError, ValueError):
+            return ""
+
     try:
-        # MCP stdio initialization + tool call in one batch.
         init = {
             "jsonrpc": "2.0",
             "id": 1,
@@ -77,52 +136,90 @@ async def run_stdio_serve_then_stop() -> str:
                 "clientInfo": {"name": "omega-smoke", "version": "0.1.0"},
             },
         }
-        initialized = {
-            "jsonrpc": "2.0",
-            "method": "notifications/tools/list_changed",
-        }
+        initialized = {"jsonrpc": "2.0", "method": "notifications/initialized"}
         call = {
             "jsonrpc": "2.0",
             "id": 2,
             "method": "tools/call",
-            "params": {
-                "name": "ledger",
-                "arguments": {},
-            },
+            "params": {"name": "ledger", "arguments": {}},
         }
-        payload = (
-            json.dumps(init)
-            + "\n"
-            + json.dumps(initialized)
-            + "\n"
-            + json.dumps(call)
-            + "\n"
+
+        proc.stdin.write(json.dumps(init) + "\n")
+        proc.stdin.flush()
+        init_response = await _read_until(proc, 1, timeout=15)
+        if "error" in init_response:
+            return False, f"initialize failed: {init_response['error']}"
+
+        proc.stdin.write(json.dumps(initialized) + "\n")
+        proc.stdin.write(json.dumps(call) + "\n")
+        proc.stdin.flush()
+        call_response = await _read_until(proc, 2, timeout=15)
+
+        stderr = shutdown()
+        if "error" in call_response:
+            return False, f"tools/call failed: {call_response['error']}"
+
+        content = call_response.get("result", {}).get("content") or []
+        if not content or content[0].get("type") != "text":
+            return False, f"tools/call returned no text content: {call_response!r}"
+        try:
+            ledger = json.loads(content[0]["text"])
+        except json.JSONDecodeError as exc:
+            return False, f"tools/call text is not JSON: {exc}"
+
+        expected_planes = {"sov", "use", "care", "amity", "omega"}
+        missing = expected_planes - set(ledger.get("snapshot", {}))
+        if ledger.get("ok") is not True or missing:
+            return False, (
+                f"ledger payload unexpected: ok={ledger.get('ok')!r} missing={sorted(missing)}"
+            )
+
+        server_name = init_response.get("result", {}).get("serverInfo", {}).get("name")
+        planes = ",".join(sorted(ledger["snapshot"]))
+        event_count = ledger["snapshot"].get("event_count")
+        return True, (
+            f"roundtrip_ok server={server_name} tool=ledger ok=true "
+            f"planes=[{planes}] event_count={event_count}"
         )
-        stdout, stderr = await asyncio.to_thread(
-            lambda: proc.communicate(input=payload, timeout=15)
-        )
-        if proc.returncode != 0:
-            return f"server_exit={proc.returncode} stderr={stderr!r}"
-        lines = [ln for ln in stdout.splitlines() if ln.strip()]
-        last = lines[-1] if lines else "(no output)"
-        return f"roundtrip_ok line_count={len(lines)} last={last[:300]}"
-    except subprocess.TimeoutExpired:
-        proc.kill()
-        return "timeout_killed"
+    except TimeoutError as exc:
+        stderr = shutdown()
+        return False, f"timeout: {exc} stderr={stderr!r}"
+    except EOFError as exc:
+        stderr = shutdown()
+        return False, f"{exc} stderr={stderr!r}"
     except Exception as exc:  # noqa: BLE001
-        proc.kill()
-        return f"roundtrip_error={exc!r}"
+        stderr = shutdown()
+        return False, f"roundtrip_error={exc!r} stderr={stderr!r}"
 
 
-async def main() -> None:
+async def main() -> int:
     print("=== ASYNC CHECKS ===")
-    for line in await async_checks():
+    checks = await async_checks()
+    for line in checks:
         print(line)
 
     print("\n=== ASYNC STDIO ROUNDTRIP ===")
-    result = await run_stdio_serve_then_stop()
+    roundtrip_ok, result = await run_stdio_serve_then_stop()
     print(result)
+
+    # Exit status is the verdict. The tool list and plane checks are asserted here so
+    # that a shrunken hub cannot pass on the roundtrip alone.
+    failures: list[str] = []
+    if "tool_count=22" not in checks:
+        failures.append("expected 22 tools")
+    if any(line.endswith("=False") for line in checks if line.startswith("plane.")):
+        failures.append("a state plane is missing")
+    if not any(line.startswith("ledger_ok=true") for line in checks):
+        failures.append("in-process ledger snapshot failed")
+    if not roundtrip_ok:
+        failures.append("stdio roundtrip failed")
+
+    if failures:
+        print(f"\nSMOKE TEST FAILED: {'; '.join(failures)}")
+        return 1
+    print("\nSMOKE TEST PASSED: 22 tools, five planes, ledger roundtrip over stdio")
+    return 0
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    sys.exit(asyncio.run(main()))
