@@ -74,13 +74,15 @@ export function encodePng(width, height, rgba) {
 }
 
 /**
- * Draws the Omega wallet app icon: a dark rounded tile with an amber ring and an
- * Omega glyph cut out of it. Pure per-pixel math, no dependencies.
+ * Draws the Omega wallet app icon into a raw RGBA buffer: a dark rounded tile
+ * with an amber ring and an Omega glyph cut out of it. Pure per-pixel math, no
+ * dependencies. The buffer is shared by the PNG icons and the Windows .ico
+ * (web/scripts/lib/ico.mjs), so every app icon stays pixel-identical.
  *
  * @param {number} size
- * @returns {Buffer} PNG bytes
+ * @returns {Buffer} RGBA bytes, size * size * 4
  */
-export function renderOmegaIcon(size) {
+export function drawOmegaIcon(size) {
   const pixels = Buffer.alloc(size * size * 4);
   const center = size / 2;
   const radius = size * 0.44;
@@ -148,5 +150,13 @@ export function renderOmegaIcon(size) {
     }
   }
 
-  return encodePng(size, size, pixels);
+  return pixels;
+}
+
+/**
+ * @param {number} size
+ * @returns {Buffer} PNG bytes
+ */
+export function renderOmegaIcon(size) {
+  return encodePng(size, size, drawOmegaIcon(size));
 }

@@ -5,7 +5,7 @@
   "identifier": "org.omega.wallet.prototype",
   "build": {
     "frontendDist": "../../web/public/omega-wallet",
-    "beforeBuildCommand": "npm --prefix ../../web run sync:wallet",
+    "beforeBuildCommand": "npm --prefix ../web run sync:wallet",
     "devUrl": null
   },
   "app": {
@@ -31,7 +31,8 @@
     "targets": "all",
     "icon": [
       "../../web/public/omega-wallet/icon-192.png",
-      "../../web/public/omega-wallet/icon-512.png"
+      "../../web/public/omega-wallet/icon-512.png",
+      "../../web/public/omega-wallet/icon.ico"
     ],
     "category": "Finance",
     "shortDescription": "Omega release wallet prototype",

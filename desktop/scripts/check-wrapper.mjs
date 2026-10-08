@@ -81,7 +81,18 @@ if (tauri) {
   if (existsSync(frontend)) {
     for (const icon of tauri.bundle?.icon ?? []) {
       const iconPath = resolve(desktopDir, "src-tauri", icon);
-      check(existsSync(iconPath), `bundle icon missing: ${icon} (resolved ${iconPath})`);
+      const present = existsSync(iconPath);
+      check(present, `bundle icon missing: ${icon} (resolved ${iconPath})`);
+      if (present && icon.endsWith(".ico")) {
+        // The Windows build hard-errors if no .ico is listed (tauri-build embeds
+        // it into the application resource), so a renamed PNG here would fail
+        // three platforms' worth of CI at cargo-build time instead of here.
+        const header = readFileSync(iconPath).subarray(0, 4);
+        check(
+          header[0] === 0 && header[1] === 0 && header[2] === 1 && header[3] === 0,
+          `bundle icon ${icon} is not an ICO file (bad signature ${header.toString("hex")})`,
+        );
+      }
     }
   }
 

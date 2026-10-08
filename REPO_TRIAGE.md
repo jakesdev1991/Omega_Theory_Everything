@@ -22,7 +22,7 @@ Fixed on this branch (see the commit message and `git diff` for details):
 | §4 Suites with no CI job | **Fixed** — new `amity-pilot`, `nostr-client`, `cpp-suites` (full sanitizer matrix) and `mcp-hub` jobs. `ai-governor` still has no build script at all and is **not** covered. Adding `cpp-suites` immediately surfaced a latent flake — see §18. |
 | §5 Dependabot coverage | **Fixed** — 4 → 11 ecosystems. `amity/` and `desktop/` given lockfiles so they can `npm ci`. |
 | §6 `update_discovery.sh` clobbers README | **Fixed** — deleted, README reference removed. |
-| §7 `wallet-desktop.yml` artifact path | **Fixed** — verified against Tauri source; `desktop/target`, `npm ci`. |
+| §7 `wallet-desktop.yml` artifact path | **Re-fixed 2026-10-08** — the 2026-09-27 "fix" relied on a flag the Tauri v2 CLI does not have, so that workflow would have failed before building anything. See the correction at the end of §7. |
 | §8 `mcp/` machine-specific paths | **Fixed** — `smoke_test.py` derives its path from `__file__`; docs de-hardcoded. Also found and fixed a real bug: `mcp/pyproject.toml` declared an unbounded `mcp>=1.7.0`, and MCP SDK 2.x renamed `FastMCP` → `MCPServer`, so a fresh install broke the hub at import. Now `mcp>=1.7.0,<2`. |
 | §9 Dead `lean-ci.yml` branch triggers | **Fixed** — reduced to `main`. |
 | §10 Floating action refs | **Partly fixed** — `trivy-action@master` → `@0.36.0`, `trufflehog@main` → `@v3.97.9`. The `actions/*` Node-20 majors (§11) are left to Dependabot PRs #2/#16 to avoid conflicting with them. |
@@ -185,6 +185,33 @@ bundles land at `desktop/target/...`. The upload step uses
 
 `git tag -l` is **empty**, so no `wallet-v*` tag exists and this workflow has never executed —
 the mismatch is latent, not yet observed. **[unchecked in a real run]**
+
+**Correction (2026-10-08).** The "Fixed — verified against Tauri source" claim above was wrong,
+and it was wrong in a way only a real build could expose: `--target-dir` is a Tauri **v1** flag, and
+the v2 CLI rejects it outright (`error: unexpected argument '--target-dir' found`), so the build
+failed at argument parsing on all three platforms before compiling anything. Verified two ways: the
+pinned CLI that `desktop/package-lock.json` installs (`@tauri-apps/cli` 2.12.0) refuses the flag
+locally, and `tauri-cli` `src/build.rs` has no such option. Reviewing the same file against the CLI
+source found three more hard failures, all now fixed:
+
+- `beforeBuildCommand` said `npm --prefix ../../web ...`, but Tauri runs build hooks with
+  `current_dir` set to the frontend directory it resolves from the invocation directory
+  (`helpers::run_hook`, called from `build.rs::setup` with `dirs.frontend`), i.e. `desktop/` — where
+  the correct relative path is `../web`. From `desktop/`, `../../web` resolves outside the checkout
+  and the hook dies immediately.
+- Windows cannot build without a real `.ico`: `tauri-build/src/lib.rs` searches `bundle > icon` for
+  an entry ending in `.ico`, falls back to `src-tauri/icons/icon.ico`, and hard-errors when neither
+  exists. The wrapper listed only PNGs. `web/scripts/sync-wallet.mjs` now also generates
+  `icon.ico` (classic DIB entries, 16–256 px) and the config lists it.
+- The publish job called `gh release upload` for a release nobody had created, with no
+  `permissions:` block — a tag push creates the tag, not the release, and the default token cannot
+  upload assets. It now creates a prerelease for the tag when one is missing, and writes a
+  `SHA256SUMS.txt` asset.
+
+Whether the bundles really land in `desktop/src-tauri/target/release/bundle` (the crate default, with
+no ancestor cargo workspace) is still **[unchecked in a real run]** — that requires the first
+`wallet-v*` tag. Note the artifact path in the upload step points there now, and
+`desktop/package.json`'s `build:*` scripts were changed to match.
 
 ### 8. `mcp/` is pinned to one developer's machine
 

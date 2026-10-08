@@ -55,19 +55,19 @@ jobs:
           # the Tauri CLI version that produces a published installer is pinned
           # and reproducible across the three platform runners.
           npm ci
-          npx tauri build --target-dir target ${{ matrix.args }}
+          # No --target-dir: the Tauri v2 CLI has no such flag (it existed in v1
+          # and was removed, so passing it fails argument parsing on every
+          # platform before anything is built). The crate default applies and
+          # bundles land in desktop/src-tauri/target/release/bundle.
+          npx tauri build ${{ matrix.args }}
 
       - name: Upload installer artifacts
         uses: actions/upload-artifact@v4
         with:
           name: omega-wallet-${{ matrix.platform }}
-          # `npx tauri build --target-dir target` above runs with
-          # working-directory: desktop, and Tauri resolves --target-dir as
-          # `std::env::current_dir().join(target)`
-          # (tauri-cli/src/interface/rust.rs, get_cargo_target_dir), so the
-          # bundles land in desktop/target — NOT the cargo default of
-          # desktop/src-tauri/target.
-          path: desktop/target/release/bundle/**/*
+          # `npx tauri build` runs with working-directory: desktop and writes to
+          # the crate's default cargo target dir: desktop/src-tauri/target.
+          path: desktop/src-tauri/target/release/bundle/**/*
           if-no-files-found: error
 
   publish:
@@ -75,16 +75,48 @@ jobs:
     needs: build
     if: startsWith(github.ref, 'refs/tags/wallet-v')
     runs-on: ubuntu-22.04
+    # The default token cannot create releases or upload assets; without this the
+    # first tag would build installers and then fail at the upload step.
+    permissions:
+      contents: write
     steps:
       - uses: actions/download-artifact@v4
         with:
           path: artifacts
 
+      - name: Create the release for this tag if it does not exist yet
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          # `gh release upload` needs an existing release, and a tag push creates
+          # the tag but not the release, so the first wallet-v* tag would
+          # otherwise fail here.
+          if gh release view "${GITHUB_REF_NAME}" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
+            echo "release ${GITHUB_REF_NAME} already exists"
+          else
+            gh release create "${GITHUB_REF_NAME}" \
+              --repo "${GITHUB_REPOSITORY}" \
+              --verify-tag \
+              --prerelease \
+              --title "${GITHUB_REF_NAME}" \
+              --notes "Omega wallet desktop installers, built from the tag by
+          .github/workflows/wallet-desktop.yml. Prerelease prototype: unaudited, installers
+          unsigned, and it talks only to the valueless test rails (Sepolia OMEGA, Solana
+          Devnet TWC). No real funds. Verify downloads against SHA256SUMS.txt."
+          fi
+
       - name: Attach bundles to the release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release upload "${GITHUB_REF_NAME}" artifacts/**/* --clobber --repo "${GITHUB_REPOSITORY}"
+          set -euo pipefail
+          find artifacts -type f | sort
+          find artifacts -type f -print0 | xargs -0 sha256sum > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+          find artifacts -type f -print0 \
+            | xargs -0 gh release upload "${GITHUB_REF_NAME}" --clobber --repo "${GITHUB_REPOSITORY}"
+          gh release upload "${GITHUB_REF_NAME}" SHA256SUMS.txt --clobber --repo "${GITHUB_REPOSITORY}"
 
       - name: Next step for maintainers
         run: |

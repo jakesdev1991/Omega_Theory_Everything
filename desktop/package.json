@@ -6,9 +6,9 @@
   "scripts": {
     "sync:wallet": "npm --prefix ../web run sync:wallet",
     "tauri": "tauri",
-    "build:linux": "npm run sync:wallet && tauri build --target-dir target --bundles appimage,deb",
-    "build:macos": "npm run sync:wallet && tauri build --target-dir target --bundles dmg",
-    "build:windows": "npm run sync:wallet && tauri build --target-dir target --bundles msi"
+    "build:linux": "npm run sync:wallet && tauri build --bundles appimage,deb",
+    "build:macos": "npm run sync:wallet && tauri build --bundles dmg",
+    "build:windows": "npm run sync:wallet && tauri build --bundles msi"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.1.0"
