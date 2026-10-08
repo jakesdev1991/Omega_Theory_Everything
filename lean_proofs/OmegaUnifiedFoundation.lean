@@ -141,17 +141,27 @@ noncomputable def concreteModularTheory : ModularTheory :=
         have hsurj : Function.Surjective
             (fun A : ↥OmegaAlgebra => (A : Operator) (1 : StateSpace)) := by
           intro z
-          exact ⟨⟨z • (1 : Operator), by simp⟩, by simp [smul_eq_mul]⟩
+          -- `⊤`-membership for the top `StarSubalgebra` is `StarSubalgebra.mem_top`
+          -- (checked against the pinned Mathlib: the lemma is declared in
+          -- Mathlib/Algebra/Star/Subalgebra.lean; `Subalgebra.mem_top` does not
+          -- exist for this structure, which is what failed the twelfth-pass build).
+          exact ⟨⟨z • (1 : Operator), StarSubalgebra.mem_top⟩, by simp [smul_eq_mul]⟩
         rw [hsurj.range_eq, closure_univ]
         exact Set.mem_univ y
       · -- Separating: `A·1 = 0` pins `A` down by `operator_eq_smul_one`.
         intro A hA
         apply Subtype.ext
-        -- `A = A 1 • 1 = 0 • 1 = 0`, where the last step is the scalar action of
-        -- the zero scalar (a bare `rw [zero_smul]` could not elaborate the
-        -- scalar type from the goal, so the normalization is left to `simp`).
+        -- `A = A 1 • 1 = 0 • 1`, and `0 • (1 : Operator)` is the zero operator.
+        -- The reduction is done pointwise: at the level of states the scalar
+        -- action is complex multiplication, which is where `zero_smul` has a
+        -- shape the simplifier can match (as a bare `rw [zero_smul]` on the
+        -- operator level it did not: the pattern `0 • ?m` failed to unify with
+        -- the occurrence inside the subalgebra coercion).
+        show (A : Operator) = (0 : Operator)
         rw [operator_eq_smul_one (A : Operator), hA]
-        simp
+        apply ContinuousLinearMap.ext
+        intro v
+        simp [smul_apply, one_apply_eq_self, smul_eq_mul]
     law_modular_operator := by
       -- `Δ = 1` (tracial state) and in the model calculus `1 ^ z = 1`, so both
       -- sides reduce to `1 * A * 1`, which is `A` by the operator monoid laws.
