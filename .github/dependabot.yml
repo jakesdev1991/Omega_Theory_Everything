@@ -1,15 +1,28 @@
 # Copyright (c) 2025-2026 Jacob See.
 # SPDX-License-Identifier: LicenseRef-Omega-ReadOnly
 version: 2
+
+# One entry per dependency manifest in the repository. Keep this list in sync
+# with `git ls-files | grep -E 'package\.json$|pyproject\.toml$|Cargo\.toml$'`;
+# a manifest with no entry here is a manifest whose updates nobody is told about.
 updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
-  
+
+  # Root Python tooling (requirements.txt): the simulation suite.
   - package-ecosystem: "pip"
     directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
+  # Omega MCP Hub (mcp/pyproject.toml): separate uv/venv project, requires
+  # Python >=3.12 while the root suite runs on 3.11.
+  - package-ecosystem: "pip"
+    directory: "/mcp"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
@@ -22,6 +35,45 @@ updates:
 
   - package-ecosystem: "npm"
     directory: "/solana"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: "npm"
+    directory: "/web"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: "npm"
+    directory: "/amity"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: "npm"
+    directory: "/mobile-node"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
+  - package-ecosystem: "npm"
+    directory: "/nostr-client"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
+  # Tauri wrapper for the desktop wallet installers.
+  - package-ecosystem: "npm"
+    directory: "/desktop"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
+  # Rust workspace at rust/Cargo.toml (ledger, protocol-types, simulation,
+  # work-claims).
+  - package-ecosystem: "cargo"
+    directory: "/rust"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10

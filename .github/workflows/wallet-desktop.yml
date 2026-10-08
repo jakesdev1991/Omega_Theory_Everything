@@ -51,14 +51,23 @@ jobs:
       - name: Build desktop bundle
         working-directory: desktop
         run: |
-          npm install
+          # npm ci, not npm install: desktop/package-lock.json is committed, so
+          # the Tauri CLI version that produces a published installer is pinned
+          # and reproducible across the three platform runners.
+          npm ci
           npx tauri build --target-dir target ${{ matrix.args }}
 
       - name: Upload installer artifacts
         uses: actions/upload-artifact@v4
         with:
           name: omega-wallet-${{ matrix.platform }}
-          path: desktop/src-tauri/target/release/bundle/**/*
+          # `npx tauri build --target-dir target` above runs with
+          # working-directory: desktop, and Tauri resolves --target-dir as
+          # `std::env::current_dir().join(target)`
+          # (tauri-cli/src/interface/rust.rs, get_cargo_target_dir), so the
+          # bundles land in desktop/target — NOT the cargo default of
+          # desktop/src-tauri/target.
+          path: desktop/target/release/bundle/**/*
           if-no-files-found: error
 
   publish:

@@ -149,7 +149,12 @@ test("challenge builder rejects malformed asset IDs and credentialed URLs", () =
   );
 
   assert.throws(
-    () => challenge({ universeUrl: "https://user:password@universe.example.testnet/amity" }),
+    // The literal credential-bearing URL below is a fixture: the assertion is
+    // that the builder *rejects* it. The trailing tag suppresses the TruffleHog
+    // URI detector on this one line (engine.go checks for "trufflehog:ignore"
+    // in the remainder of the line after the match) so the full-history scan
+    // does not fail on a string that is not a secret.
+    () => challenge({ universeUrl: "https://user:password@universe.example.testnet/amity" }), // trufflehog:ignore
     /Universe must not contain credentials/,
   );
 });

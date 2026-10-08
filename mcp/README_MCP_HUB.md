@@ -31,10 +31,10 @@ deployment, where the hub would become a scoped NWC / agent access layer over re
 uv run --directory mcp python -m omega_mcp
 ```
 
-Or against the venv directly:
+Or against the venv directly (substitute your own venv path):
 
 ```bash
-/home/jake/.venvs/omwga-mcp/bin/python -m omega_mcp
+"$OMEGA_MCP_VENV"/bin/python -m omega_mcp
 ```
 
 Default transport is stdio. For HTTP mode:
@@ -45,7 +45,8 @@ uv run --directory mcp python -m omega_mcp --transport http --port 8029
 
 ## MCP client config (Hermes Agent)
 
-Add to `~/.hermes/config.yaml`:
+Add to `~/.hermes/config.yaml`, replacing the `--directory` value with the
+absolute path to `mcp/` in your own checkout:
 
 ```yaml
 mcp_servers:
@@ -54,7 +55,7 @@ mcp_servers:
     args:
       - "run"
       - "--directory"
-      - "/home/jake/Omega_Theory_Everything/mcp"
+      - "/absolute/path/to/Omega_Theory_Everything/mcp"
       - "python"
       - "-m"
       - "omega_mcp"
