@@ -283,6 +283,61 @@ jobs:
       - name: Run smoke test
         run: python mcp/smoke_test.py
 
+  ai-governor:
+    name: AI Governor Build & Smoke Run (PoUW trainer)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # The governor is the Proof-of-Useful-Work trainer for the Lucifer
+      # framework. It had no build command anywhere in the repository and was in
+      # no CI job, so nothing verified that it compiles. It needs OpenSSL headers
+      # for the SHA-256 receipt digest; the runner image does not always ship
+      # libssl-dev, so install it explicitly.
+      - name: Install OpenSSL headers
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq libssl-dev
+
+      # build.sh runs a strict -Wall -Wextra -Werror build and then a 300-step
+      # governed + baseline smoke run, requiring receipts from both.
+      - name: Build and smoke-run the governor
+        run: ./build.sh
+        working-directory: ai-governor
+
+  wallet-desktop:
+    name: Wallet Desktop Wrapper Checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: |
+            web/package-lock.json
+            desktop/package-lock.json
+
+      # The Tauri installer workflow (wallet-desktop.yml) only runs on a
+      # `wallet-v*` tag or by manual dispatch, and no tag has ever been cut, so
+      # nothing has ever exercised desktop/ in CI. Install both lockfiles (they
+      # are committed but were never installed anywhere) and check the four
+      # version strings, the paths Tauri bundles, and the release manifest.
+      - name: Install the desktop wrapper's locked dependencies
+        run: npm ci
+        working-directory: desktop
+
+      - name: Install the wallet GUI's locked dependencies
+        run: npm ci
+        working-directory: web
+
+      - name: Sync the wallet GUI into the web app
+        run: npm run sync:wallet
+        working-directory: web
+
+      - name: Check wrapper consistency
+        run: node desktop/scripts/check-wrapper.mjs
+
   security-scan:
     name: Security Scan
     runs-on: ubuntu-latest
