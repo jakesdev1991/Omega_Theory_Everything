@@ -67,10 +67,10 @@ theorem unconditioned_bound_fails :
 
 /-- Structural consistency of the separate zero-information model only. -/
 theorem bridge_vol39_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 :=
-  monotonicity_lemma R
+  bridge_vonNeumannEntropy_nonneg R
 
 /-- Structural consistency of the separate zero-information model only. -/
 theorem bridge_vol39_metric_self_zero (R : QRegion) : d R R = 0 :=
-  qregion_self_distance_zero R
+  bridge_qregion_self_distance_zero R
 
 end OmegaProtocol.Vol39

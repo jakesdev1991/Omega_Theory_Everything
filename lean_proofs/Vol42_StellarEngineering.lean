@@ -71,10 +71,10 @@ theorem capture_monotone (lum f₁ f₂ : ℝ) (hl : 0 ≤ lum) (h : f₁ ≤ f�
 /-- Structural bridge: Q-region entropy is nonnegative in the model used for
     stellar thermodynamic budgets. -/
 theorem bridge_vol42_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 :=
-  monotonicity_lemma R
+  bridge_vonNeumannEntropy_nonneg R
 
 /-- Structural bridge: the energy-extraction coupling Φ is symmetric. -/
 theorem bridge_vol42_coupling_symm (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R₂ R₁ :=
-  Φ_symm R₁ R₂
+  bridge_overlapDensity_symm R₁ R₂
 
 end OmegaProtocol.Vol42

@@ -59,3 +59,9 @@ import Vol52_OmegaPointTheory
 import Vol53_UniversalCompiler
 import Vol54_TheoryOfNothing
 import InformationPhysics
+import DynamicPlanckScale
+import DynamicCODScale
+import RadialMetric
+import LogCorrelationMetric
+import ProofRegression
+import RadialDilation

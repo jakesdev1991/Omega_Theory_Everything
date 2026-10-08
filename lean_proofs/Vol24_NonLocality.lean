@@ -28,13 +28,10 @@ theorem bell_violation : TsirelsonBound > ClassicalCHSHBound := by
     exact Real.sqrt_lt_sqrt (by norm_num) (by norm_num)
   linarith
 
-/-- COROLLARY: Quantum Entanglement from Omega Protocol
-    Classical = local Φ = 0 (no correlation)
-    Quantum = entangled Φ = 1 (perfect correlation)
-    Violation = Φ_quantum - Φ_local = 1 > 0 -/
-theorem quantum_advantage_from_phi :
-  TsirelsonBound > ClassicalCHSHBound := by
-  exact bell_violation
+-- RETIRED (audit pass 10): `quantum_advantage_from_phi`, a duplicate of
+-- `bell_violation` whose docstring claimed a `Φ_quantum - Φ_local = 1`
+-- difference that its statement (`TsirelsonBound > ClassicalCHSHBound`) does
+-- not mention; this volume has no Φ-valued model that could prove it.
 
 theorem tsirelson_bound_pos : TsirelsonBound > 0 := by
   dsimp [TsirelsonBound]

@@ -153,6 +153,12 @@ This corpus is maintained under an explicit honesty policy, enforced in CI:
    or discover contradictory hypotheses; a passing audit is not a semantic
    non-vacuity certificate. Legacy `*_Stmt` exports are separately inventoried
    by `legacy_statement_aliases.json` (now empty); CI rejects any new alias.
+   The same gate ratchets three further defect classes at zero: decorative
+   hypotheses (unused in both statement and proof,
+   `--max-decorative-hypotheses`), hypotheses whose type is a closed arithmetic
+   truth such as `0 ≤ 0` (`--max-trivial-hypotheses`), and identity proofs
+   whose conclusion restates a hypothesis (`--max-identity-proofs`; both
+   tactic-mode `:= by exact h` and term-mode `:= h` bodies are detected).
 4. **No `Unit` stubs.** Existence proofs of the form `Nonempty X := ⟨()⟩`
    and Unit-valued type definitions (including parameterized types) inside the
    volumes are tracked by
@@ -502,3 +508,44 @@ reused for the genuine theorem — the retirement comment explains the
 history), new Vol09 `product_of_correlation_det_zero`,
 `isProduct_iff_correlation_det`,
 `entangled_iff_correlation_det_ne_zero`, `er_epr_iff`.
+
+### Eleventh pass: the four degenerate-model stacks redesigned
+
+The tenth pass renamed `*_axiom` to content names; the eleventh pass removed
+the degeneracies those names still sat on.
+
+- **Vol02 electromagnetism**: the zero-form model (`ExteriorDerivative := 0`,
+  `HodgeStar := 0`, `J := 0`) and its constructed witnesses are retired.
+  Forms are Mathlib `ContinuousAlternatingMap`s on `EuclideanSpace ℝ (Fin 4)`,
+  `d` is Mathlib's `extDeriv`, `d_squared_zero` is `extDeriv_extDeriv`
+  (symmetry of second derivatives) under `ContDiff ℝ ∞`, `d_add`/`d_smul`/
+  `contDiff_d` come from the `fderiv` API, and gauge invariance/composition
+  follow from `d² = 0`. The dual Maxwell law is carried as model-law data
+  (`SourcedField.law_dual_maxwell`) with a docstring saying so — Mathlib has
+  no Hodge star. The form variable is `η` because `open scoped ContDiff`
+  turns `ω` into a notation.
+- **Vol13 quantum gravity**: `H_matter := 0`/`H_gravity := 0`/`H_total` are
+  retired; `wheeler_dewitt_balance` is additive-group algebra under the
+  constraint hypothesis `(H_m + H_g) Ψ = 0`, and `MiniSuperspace` gives a
+  satisfiable, non-automatic instance with real `p²/(2a³)`/`-k·a` terms.
+- **KMS**: the concrete model's `KMSState` is the trace equation
+  `ω_ρ (A * B) = ω_ρ (B * A)` proved by `ω_ρ_trace`
+  (`LinearMap.trace_mul_comm`), not a constantly-true predicate;
+  `kms_temperature_uniqueness_fails` proves the model determines no
+  temperature; Vol08 proves `kms_exterior_vacuum` (KMS at `β = 2π/κ`) and
+  `kms_beta_hawking` (`(2π/κ)·T_H = 1`). The model is the type-I tracial case
+  (`Δ = 1`, identity flow) — stated as such, not presented as type III.
+- **APPA**: the nested `low_le_all`/`high_le_high` re-exports are deleted; the
+  public names are derivations by case analysis over the label type.
+
+Honest remainder: `StateSpace := ℂ`/`QRegion := Unit`, the placeholder
+`op_pow A z := A` used by the modular-operator law, the `PhotonMass := 0`
+postulate, and the toy minisuperspace. Kernel audit grew to **173** selected
+declarations (ten new targets, the retired `kms_transitivity` replaced);
+47 tooling tests; all lexical audits at zero. Lean CI runs the pinned
+`lake build ToE` and the transitive kernel-axiom gate; the compile defects CI
+surfaced (stuck `Module` metavariables, missing `Decidable`, a no-goals
+tactic, the `ω` scope clash, missing `noncomputable`, a form-degree mismatch
+in the sourced-Maxwell carrier) are fixed by the follow-up commits, and Lean
+CI is green on `7a5fbf2` (push run `37588987044`: pinned `lake build ToE` plus
+the 173-declaration transitive-axiom gate, all job steps success).

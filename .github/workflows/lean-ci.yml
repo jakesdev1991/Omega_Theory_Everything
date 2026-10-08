@@ -5,12 +5,14 @@ name: Lean CI
 
 on:
   push:
-    # The two arena/* branches that used to be listed here were temporary
-    # review snapshots ("also validate this snapshot when PR merge conflicts
-    # block PR checks"). Both were merged (PRs #45 and #49) and no longer
-    # exist, so main is the only branch that needs a push trigger; every other
-    # branch is covered by the pull_request trigger below.
-    branches: [main]
+    # The arena/* branches that used to be listed here were temporary review
+    # snapshots ("also validate this snapshot when PR merge conflicts block PR
+    # checks"). Those were merged (PRs #45, #49) and no longer exist, so main is
+    # the only permanent push trigger; every other branch is covered by the
+    # pull_request trigger below, except the session branch below, which must
+    # push-validate because a broken 14-commit Lean branch cannot open PR
+    # checks that pass. Remove `arena/e789c885-...` before merging to main.
+    branches: [main, arena/e789c885-omega-theory-everything]
     paths:
       - 'lean_proofs/**'
       - '.github/workflows/lean-ci.yml'
@@ -51,9 +53,17 @@ jobs:
           # the `bridge_*` naming convention, `Nonempty Unit` stubs and
           # `Unit`-typed volume definitions may only decrease, and no
           # declaration/field may be *named* `axiom_*`/`*_axiom` (the corpus
-          # contains zero real axioms). See audit_vacuity.py for the metric
+          # contains zero real axioms). Decorative hypotheses (unused in
+          # statement and proof), hypotheses whose type is a closed truth
+          # (`0 ≤ 0`), and identity proofs (`P → P`, tactic- or term-mode) are
+          # ratcheted at zero as well. See audit_vacuity.py for the metric
           # definitions.
-          python3 audit_vacuity.py --max-misleading 0 --max-axiom-names 0 --max-unit-stubs 0 --max-unit-types 0 --alias-baseline legacy_statement_aliases.json --max-trivial-proofs 0
+          python3 audit_vacuity.py \
+            --max-misleading 0 --max-axiom-names 0 \
+            --max-unit-stubs 0 --max-unit-types 0 \
+            --max-decorative-hypotheses 0 --max-trivial-hypotheses 0 \
+            --max-identity-proofs 0 --max-trivial-proofs 0 \
+            --alias-baseline legacy_statement_aliases.json
 
       # Official Lean action: installs elan + pinned toolchain, fetches
       # prebuilt mathlib oleans, and runs `lake build ToE` in lean_proofs/.

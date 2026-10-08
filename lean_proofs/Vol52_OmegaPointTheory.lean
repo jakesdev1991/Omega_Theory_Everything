@@ -65,6 +65,6 @@ theorem omega_chain_strict (chain : ℕ → Stage) (h : ∀ n, (chain n).complex
 /-- Structural bridge: the Omega Point layer is compatible with the Ω-metric
     layer of the protocol. -/
 theorem bridge_vol52_metric_self_zero (R : QRegion) : d R R = 0 :=
-  qregion_self_distance_zero R
+  bridge_qregion_self_distance_zero R
 
 end OmegaProtocol.Vol52

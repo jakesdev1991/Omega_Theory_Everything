@@ -1,66 +1,55 @@
 import Mathlib
 import OmegaAxioms
 import OmegaUnifiedFoundation
+import Vol16_NonEquilibriumThermodynamics
 
-/-
-  Vol21_ArrowOfTime.lean
-  REAL formalization: Arrow of Time from Entropy Monotonicity.
+/-!
+# A conditional entropy arrow along a differentiable history
 
-  Using Omega Protocol: Time = Computational Latency (Phase 3)
-  Arrow of Time = Monotonicity Lemma (dS/dt ≥ 0)
+This module now reuses Vol16's explicit entropy process rather than assigning
+zero to both a singleton region's entropy and a supposed time derivative.
+The arrow theorem is conditional on isolation and nonnegative production; it
+is not a derivation of a cosmological time orientation from Omega's Q-regions.
+
+There is no identification of physical time with computational latency. The
+legacy latency arithmetic is retained as a separate, unrelated inequality.
 -/
-
 namespace OmegaProtocol.Vol21
 open OmegaProtocol
 
-/-- Cosmic time parameter -/
 abbrev CosmicTime := ℝ
+abbrev CosmicHistory := Vol16.EntropyProcess
 
-/-- Q-Region at cosmic time t in the one-point model. -/
-def qregion_at (_ : CosmicTime) : QRegion := ()
+def CosmicEntropy (history : CosmicHistory) : CosmicTime → ℝ := Vol16.Entropy history
+noncomputable def EntropyRate (history : CosmicHistory) (t : CosmicTime) : ℝ :=
+  deriv (CosmicEntropy history) t
 
-/-- Entropy function from Omega Protocol -/
-noncomputable def CosmicEntropy (t : CosmicTime) : ℝ :=
-  -- Entropy evolves via the Monotonicity Lemma
-  vonNeumannEntropy (qregion_at t)
+theorem entropy_rate_nonneg (history : CosmicHistory) (t : CosmicTime)
+    (h : Vol16.EntropyFlux history t = 0) : 0 ≤ EntropyRate history t :=
+  Vol16.isolated_entropy_nondecreasing history t h
 
-/-- Entropy rate from Omega Protocol's monotonicity -/
-noncomputable def EntropyRate (_t : CosmicTime) : ℝ :=
-  -- dS/dt ≥ 0 from Monotonicity Lemma
-  0 -- Placeholder; derivative of CosmicEntropy
+/-- A derivative-to-monotonicity implication, using actual differentiability. -/
+theorem entropy_derivative (history : CosmicHistory) (t₁ t₂ : CosmicTime) (h : t₁ ≤ t₂)
+    (h_rate : ∀ t, 0 ≤ EntropyRate history t) :
+    CosmicEntropy history t₁ ≤ CosmicEntropy history t₂ :=
+  monotone_of_deriv_nonneg
+    (fun t => (history.entropy_hasDerivAt t).differentiableAt) h_rate h
 
-/-- The concrete entropy rate is zero and hence non-negative. -/
-theorem entropy_rate_nonneg (t : CosmicTime) : EntropyRate t ≥ 0 := by
-  norm_num [EntropyRate]
+theorem arrow_of_time (history : CosmicHistory) (h_isolated : Vol16.IsIsolated history)
+    (t₁ t₂ : CosmicTime) (h : t₁ ≤ t₂) :
+    CosmicEntropy history t₁ ≤ CosmicEntropy history t₂ :=
+  Vol16.isolated_entropy_monotone history h_isolated h
 
-/-- Entropy is constant in the one-point, zero-information model. -/
-theorem entropy_derivative (t₁ t₂ : CosmicTime) (h : t₁ ≤ t₂)
-  (h_rate : ∀ t, EntropyRate t ≥ 0) :
-  CosmicEntropy t₂ ≥ CosmicEntropy t₁ := by
-  simp [CosmicEntropy, qregion_at, vonNeumannEntropy]
+/-- Nonnegative initial entropy is propagated forward, not silently postulated
+    for all negative and positive times. -/
+theorem arrow_of_time_entropy_nonneg (history : CosmicHistory)
+    (h_isolated : Vol16.IsIsolated history) (t₀ t : CosmicTime)
+    (h₀ : 0 ≤ CosmicEntropy history t₀) (ht : t₀ ≤ t) :
+    0 ≤ CosmicEntropy history t :=
+  Vol16.entropy_nonneg_after_initial history h_isolated t₀ t h₀ ht
 
-/-- THEOREM: Arrow of Time (GENUINE PROOF)
-    Entropy is monotonically non-decreasing. -/
-theorem arrow_of_time (t₁ t₂ : CosmicTime) (h : t₁ ≤ t₂) :
-  CosmicEntropy t₂ ≥ CosmicEntropy t₁ :=
-  entropy_derivative t₁ t₂ h entropy_rate_nonneg
-
-/-- COROLLARY: Time as Computational Latency (Phase 3 of Omega Protocol)
-    Time = 1/Δupdates, entropy increase = computational steps -/
-theorem time_as_computational_latency (t : CosmicTime) :
-  CosmicEntropy t = vonNeumannEntropy (qregion_at t) := by
-  rfl
-
-theorem computational_latency_nonneg (n : ℕ) :
-  computationalLatency n ≥ 0 := by
-  dsimp [computationalLatency]
-  split_ifs with h
-  · linarith
-  · positivity
-
-theorem arrow_of_time_entropy_nonneg (t : CosmicTime) :
-  CosmicEntropy t ≥ 0 := by
-  dsimp [CosmicEntropy]
-  exact monotonicity_lemma (qregion_at t)
+theorem computational_latency_nonneg (n : ℕ) : 0 ≤ computationalLatency n := by
+  unfold computationalLatency
+  split_ifs <;> positivity
 
 end OmegaProtocol.Vol21

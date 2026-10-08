@@ -35,9 +35,9 @@ theorem precedes_transitive {s t u : Stage}
 def OmegaPoint : Prop :=
   ∃ (chain : ℕ → Stage), ∀ n, (chain n).complexity = n
 
-/-- Named bridge (legacy name kept): the Omega Point ideal exists in the
-    model, witnessed by the identity chain. -/
-theorem omega_point_theory_axiom : OmegaPoint :=
+/-- The Omega Point ideal exists in the model, witnessed by the identity
+    chain. -/
+theorem omega_point_exists : OmegaPoint :=
   ⟨fun n => ⟨n⟩, fun n => rfl⟩
 
 /-- No stage is terminal: every stage is strictly preceded by another. This
@@ -65,6 +65,6 @@ theorem omega_chain_strict (chain : ℕ → Stage) (h : ∀ n, (chain n).complex
 /-- Structural bridge: the Omega Point layer is compatible with the Ω-metric
     layer of the protocol. -/
 theorem bridge_vol52_metric_self_zero (R : QRegion) : d R R = 0 :=
-  qregion_self_distance_zero R
+  bridge_qregion_self_distance_zero R
 
 end OmegaProtocol.Vol52

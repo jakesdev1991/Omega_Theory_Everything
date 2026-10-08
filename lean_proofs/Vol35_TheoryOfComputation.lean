@@ -43,14 +43,14 @@ theorem cantor_diagonal : ¬ Function.Surjective (f : ℕ → ℕ → Bool) := b
     it certifies internal coherence of the formalization and is NOT a
     derivation of the physical law the legacy name `computation_from_omega` evoked. -/
 theorem bridge_vol35_metric_self_zero (R : QRegion) : d R R = 0 := by
-  exact qregion_self_distance_zero R
+  exact bridge_qregion_self_distance_zero R
 
 /-- Consistency bridge (VOL35): the von Neumann entropy is nonnegative.
     Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
     it certifies internal coherence of the formalization and is NOT a
     derivation of the physical law the legacy name `computation_entropy_nonneg` evoked. -/
 theorem bridge_vol35_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
-  exact monotonicity_lemma R
+  exact bridge_vonNeumannEntropy_nonneg R
 
 theorem cantor_diagonal_nontrivial :
     ∀ e : ℕ → (ℕ → Bool), ¬ Function.Surjective e := by

@@ -45,7 +45,7 @@ theorem lotka_volterra_equilibrium
     it certifies internal coherence of the formalization and is NOT a
     derivation of the physical law the legacy name `ecosystem_from_omega` evoked. -/
 theorem bridge_vol29_metric_self_zero (R : QRegion) : d R R = 0 := by
-  exact qregion_self_distance_zero R
+  exact bridge_qregion_self_distance_zero R
 
 theorem predator_prey_symmetry (alpha beta delta gamma x y : ℝ) :
   PreyRate alpha beta x y + PredatorRate delta gamma x y = alpha * x - gamma * y + (delta - beta) * x * y := by
@@ -56,7 +56,7 @@ theorem predator_prey_symmetry (alpha beta delta gamma x y : ℝ) :
     it certifies internal coherence of the formalization and is NOT a
     derivation of the physical law the legacy name `ecosystem_entropy_bound` evoked. -/
 theorem bridge_vol29_entropy_bounded (R : QRegion) : vonNeumannEntropy R ≤ Real.pi := by
-  exact entropy_bounded R
+  exact bridge_vonNeumannEntropy_le_pi R
 
 -- ============================================================
 -- FULL EQUILIBRIUM CLASSIFICATION

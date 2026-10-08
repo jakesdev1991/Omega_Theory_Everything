@@ -436,7 +436,7 @@ example : Vol08.BHEntropy Vol08.standardSchwarzschild = 4 * Real.pi :=
 
 example : Vol09.EntanglementEntropy Vol08.standardSchwarzschild =
     Vol08.BHEntropy Vol08.standardSchwarzschild :=
-  Vol09.bh_entropy_is_holographic Vol08.standardSchwarzschild
+  Vol09.bridge_bh_entropy_is_holographic Vol08.standardSchwarzschild
 
 example : Vol11.ChernBand.haldaneBand.chernNumber = 1 :=
   Vol11.ChernBand.haldane_chern_number
@@ -449,6 +449,15 @@ example : 0 < Vol13.SpinNetwork.areaGap 1 1 (by norm_num) (by norm_num) :=
 
 example : Vol13.Graviton.plusGraviton.helicity ≠ Vol13.Graviton.minusGraviton.helicity :=
   Vol13.Graviton.distinct_helicities
+
+example (H_m H_g : Operator) (Ψ : StateSpace) (h : (H_m + H_g) Ψ = 0) :
+    H_m Ψ = - H_g Ψ :=
+  Vol13.wheeler_dewitt_balance H_m H_g Ψ h
+
+example (M : Vol13.MiniSuperspace) :
+    ∃ a p : ℝ, 0 < a ∧
+      Vol13.MiniSuperspace.matterDensity a p + M.gravityTerm a = 0 :=
+  Vol13.MiniSuperspace.constraint_satisfiable (M := M)
 
 example : Vol06.spacelike_separated Vol06.regionA Vol06.regionB :=
   Vol06.regionA_B_spacelike
@@ -465,8 +474,33 @@ example : Vol02.FineStructureConstant > 0 :=
   Vol02.fine_structure_positive
 
 example (em : Vol02.ElectromagneticField) :
-    Vol02.ExteriorDerivative em.F = 0 :=
+    Vol02.d em.F = 0 :=
   Vol02.homogeneous_maxwell em
+
+example (em : Vol02.ElectromagneticField) :
+    Vol02.d (Vol02.d em.A) = 0 :=
+  Vol02.d_squared_zero em.A em.smooth_A
+
+example (S : Vol02.SourcedField) :
+    Vol02.d S.starF = S.starJ :=
+  Vol02.inhomogeneous_maxwell S
+
+example (ρ : StateSpace) (β : ℝ) :
+    Vol03.MT.KMSState ρ β :=
+  Vol03.kms_holds_at_every_temperature ρ β
+
+example (T : StateSpace → ℝ) (ρ₁ ρ₂ ρ₃ : StateSpace)
+    (h₁ : Vol03.InEquilibrium T ρ₁ ρ₂) (h₂ : Vol03.InEquilibrium T ρ₂ ρ₃) :
+    Vol03.InEquilibrium T ρ₁ ρ₃ :=
+  Vol03.zeroth_law T ρ₁ ρ₂ ρ₃ h₁ h₂
+
+example (P : Vol03.ThermoProcess) :
+    P.Q / P.T ≤ P.S₂ - P.S₁ :=
+  Vol03.clausius_inequality P
+
+example (bh : Vol08.BHGeometry) :
+    (2 * Real.pi / bh.surfaceGravity) * Vol08.HawkingTemperature bh = 1 :=
+  Vol08.kms_beta_hawking bh
 
 example (s1 s2 : Vol03.ThermoState) :
     s2.entropy - s1.entropy = Vol03.heatExchange s1 s2 / s1.temp :=

@@ -41,7 +41,7 @@ theorem turing_instability_ratio
     it certifies internal coherence of the formalization and is NOT a
     derivation of the physical law the legacy name `morphogenesis_from_omega` evoked. -/
 theorem bridge_vol37_metric_self_zero (R : QRegion) : d R R = 0 := by
-  exact qregion_self_distance_zero R
+  exact bridge_qregion_self_distance_zero R
 
 theorem turing_ratio_pos (h_pos : ActivatorDiffusion > 0) :
   InhibitorDiffusion / ActivatorDiffusion > 0 := by
@@ -53,7 +53,7 @@ theorem turing_ratio_pos (h_pos : ActivatorDiffusion > 0) :
     it certifies internal coherence of the formalization and is NOT a
     derivation of the physical law the legacy name `morphogenesis_entropy_nonneg` evoked. -/
 theorem bridge_vol37_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 := by
-  exact monotonicity_lemma R
+  exact bridge_vonNeumannEntropy_nonneg R
 
 -- ============================================================
 -- REACTION-DIFFUSION STABILITY (TURING)

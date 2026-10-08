@@ -5,10 +5,13 @@ import OmegaUnifiedFoundation
   REAL mathematical formalization of thermodynamics.
 
   Genuinely proven theorems:
-  1. Zeroth Law — from transitivity of KMS equilibrium
-  2. Second Law — from monotonicity of relative entropy (CPTP)
-  3. Clausius inequality — algebraic consequence of definitions
-  4. Non-negativity of relative entropy
+  1. Zeroth Law — transitivity of thermal equilibrium, stated through an
+     explicit temperature function on states (see below for why the former
+     KMS-uniqueness conditional was retired);
+  2. Second Law — monotonicity of the model relative entropy under arbitrary
+     maps;
+  3. Clausius inequality — the entropy balance of a thermodynamic process;
+  4. Non-negativity of relative entropy.
 
   The key insight: The KMS (Kubo-Martin-Schwinger) condition
   characterizes thermal equilibrium states in quantum statistical
@@ -17,6 +20,12 @@ import OmegaUnifiedFoundation
   - Temperature ↔ inverse modular parameter β
   - Entropy ↔ relative entropy S(ρ||σ)
   - Second Law ↔ monotonicity of relative entropy under CPTP maps
+
+  Model scope: the concrete `ModularTheory` used here is *tracial* — the state
+  functional is the algebraic trace and the modular flow is the identity — so
+  the KMS condition holds at every inverse temperature and does NOT determine
+  a temperature.  That degeneracy is proved, not hidden:
+  `kms_holds_at_every_temperature` and `kms_temperature_uniqueness_fails`.
 -/
 
 
@@ -27,37 +36,52 @@ open OmegaProtocol
 noncomputable abbrev MT : ModularTheory := concreteModularTheory
 
 -- ============================================================
--- THEOREM 1: ZEROTH LAW OF THERMODYNAMICS (GENUINE PROOF)
--- If systems A,B are in thermal equilibrium (same KMS state),
--- and B,C are in thermal equilibrium, then they share the
--- same inverse temperature β.
---
--- This follows from the UNIQUENESS of the KMS condition at
--- a given temperature: if ρ is KMS at β₁ and β₂, then β₁ = β₂.
+-- THEOREM 1: ZEROTH LAW AND THE TRACIAL KMS CONDITION
+-- If systems A,B are in thermal equilibrium (same temperature),
+-- and B,C are in thermal equilibrium, then A,C are as well.
 -- ============================================================
 
-/-- KMS transitivity with the uniqueness condition made explicit as a
-    hypothesis over every state. The minimal model deliberately does not
-    derive uniqueness from the KMS predicate (in the concrete model
-    `KMSState` is constantly `True`, so uniqueness fails there and the
-    hypothesis is genuinely restrictive); callers must supply it. When it
-    holds, the shared system `ρ₂` transfers the temperature agreement. -/
-theorem kms_transitivity :
-  ∀ (ρ₁ ρ₂ ρ₃ : StateSpace) (β₁ β₂ : ℝ),
-  (∀ (ρ : StateSpace) (β β' : ℝ), MT.KMSState ρ β → MT.KMSState ρ β' → β = β') →
-  (MT.KMSState ρ₁ β₁ ∧ MT.KMSState ρ₂ β₁) →
-  (MT.KMSState ρ₂ β₂ ∧ MT.KMSState ρ₃ β₂) →
-  β₁ = β₂ := by
-  intro ρ₁ ρ₂ ρ₃ β₁ β₂ h_unique h1 h2
-  exact h_unique ρ₂ β₁ β₂ h1.2 h2.1
+-- RETIRED (tenth pass): `kms_transitivity`/`zeroth_law` were conditionals on a
+-- "KMS-temperature uniqueness" hypothesis over every state.  That premise is
+-- *refuted* in the concrete model (the state functional is the algebraic
+-- trace, so every state is KMS at every inverse temperature — see
+-- `kms_holds_at_every_temperature` and `kms_temperature_uniqueness_fails`), so
+-- the conditional carried no content.  The zeroth law is now stated through an
+-- explicit temperature function, and the tracial KMS facts are stated as
+-- theorems whose proofs rest on `ω_ρ_trace` (Mathlib's `trace_mul_comm`).
 
-theorem zeroth_law :
-  ∀ (ρ₁ ρ₂ ρ₃ : StateSpace) (β₁ β₂ : ℝ),
-  (∀ (ρ : StateSpace) (β β' : ℝ), MT.KMSState ρ β → MT.KMSState ρ β' → β = β') →
-  (MT.KMSState ρ₁ β₁ ∧ MT.KMSState ρ₂ β₁) →
-  (MT.KMSState ρ₂ β₂ ∧ MT.KMSState ρ₃ β₂) →
-  β₁ = β₂ :=
-  kms_transitivity
+/-- Thermal equilibrium through a temperature function on states: two systems
+    are in equilibrium when their temperatures agree.  Carrying `T` explicitly
+    is what gives the zeroth law content here, since the model's KMS predicate
+    does not determine a temperature on its own. -/
+def InEquilibrium (T : StateSpace → ℝ) (ρ σ : StateSpace) : Prop := T ρ = T σ
+
+/-- **Zeroth law of thermodynamics**: thermal equilibrium is transitive, because
+    it is equality of temperatures. -/
+theorem zeroth_law (T : StateSpace → ℝ) (ρ₁ ρ₂ ρ₃ : StateSpace)
+    (h₁₂ : InEquilibrium T ρ₁ ρ₂) (h₂₃ : InEquilibrium T ρ₂ ρ₃) :
+    InEquilibrium T ρ₁ ρ₃ :=
+  h₁₂.trans h₂₃
+
+/-- **The tracial model is KMS at every inverse temperature**: the modular flow
+    is the identity, so the KMS equation reduces to the trace equation
+    `ω_ρ (A * B) = ω_ρ (B * A)`, which holds by `ω_ρ_trace`. -/
+theorem kms_holds_at_every_temperature (ρ : StateSpace) (β : ℝ) :
+    MT.KMSState ρ β :=
+  fun A B => ω_ρ_trace A B
+
+/-- **The KMS predicate does not determine a temperature**: the uniqueness
+    premise of the former zeroth-law conditional is refuted in the tracial
+    model, where every state is KMS at every `β`.  Downstream statements must
+    therefore carry their temperature as data (`InEquilibrium`) instead of
+    inferring it from `KMSState`. -/
+theorem kms_temperature_uniqueness_fails :
+    ¬ (∀ (ρ : StateSpace) (β β' : ℝ),
+      MT.KMSState ρ β → MT.KMSState ρ β' → β = β') := by
+  intro h
+  have h01 : (0 : ℝ) = 1 :=
+    h 0 0 1 (kms_holds_at_every_temperature 0 0) (kms_holds_at_every_temperature 0 1)
+  exact zero_ne_one h01
 
 -- ============================================================
 -- THEOREM 2: SECOND LAW OF THERMODYNAMICS (GENUINE PROOF)
@@ -86,31 +110,61 @@ theorem second_law :
 -- Proof: This is algebraic from the definitions.
 -- ============================================================
 
-def Temperature (_ : StateSpace) : ℝ := 0
-def Entropy (_ : StateSpace) : ℝ := 0
+-- RETIRED (tenth pass): `Temperature`/`Entropy`/`Heat`/`BlackHoleArea`/
+-- `BHEntropy` were the constant-zero functions on `StateSpace`, so
+-- `clausius_inequality`'s hypothesis `Temperature ρ > 0` was unsatisfiable
+-- (vacuous) and `bh_entropy_formula` was a definitional restatement.  The
+-- statements now carry the thermodynamic data explicitly.
 
-/-- Heat exchanged in a reversible process at temperature T -/
-noncomputable def Heat (ρ σ : StateSpace) : ℝ :=
-  Temperature ρ * (Entropy σ - Entropy ρ)
+/-- A thermodynamic process of a system at strictly positive temperature `T`:
+    heat `Q` is exchanged and the entropy changes from `S₁` to `S₂`.  The
+    entropy balance is a law-field — the change equals the reversible part
+    `Q / T` plus a non-negative irreversibility `σ` (entropy production).
+    Reversible processes are exactly those with `σ = 0`. -/
+structure ThermoProcess where
+  T : ℝ
+  S₁ : ℝ
+  S₂ : ℝ
+  Q : ℝ
+  irreversibility : ℝ
+  temp_pos : 0 < T
+  irr_nonneg : 0 ≤ irreversibility
+  law_entropy_balance : S₂ - S₁ = Q / T + irreversibility
 
-theorem clausius_inequality :
-  ∀ (ρ σ : StateSpace), Temperature ρ > 0 →
-  Entropy σ - Entropy ρ ≥ Heat ρ σ / Temperature ρ := by
-  intro ρ σ hT
-  dsimp [Heat]
-  rw [mul_div_cancel_left₀ _ (ne_of_gt hT)]
+/-- **Clausius inequality** `ΔS ≥ Q/T` for a process at temperature `T > 0`:
+    the entropy change is at least the exchanged heat divided by the
+    temperature, with the difference equal to the entropy production.  Both
+    hypotheses are satisfiable (`T = 1`, `σ = 0`, `ΔS = Q`), so the statement
+    is not vacuous. -/
+theorem clausius_inequality (P : ThermoProcess) :
+    P.Q / P.T ≤ P.S₂ - P.S₁ := by
+  rw [P.law_entropy_balance]
+  linarith [P.irr_nonneg]
+
+/-- The Clausius bound is attained exactly by reversible processes. -/
+theorem clausius_equality_iff_reversible (P : ThermoProcess) :
+    P.S₂ - P.S₁ = P.Q / P.T ↔ P.irreversibility = 0 := by
+  rw [P.law_entropy_balance]
+  constructor <;> intro h <;> linarith
 
 -- ============================================================
 -- BEKENSTEIN-HAWKING ENTROPY (Bridge to Vol08)
 -- ============================================================
 
-def BlackHoleArea (_ : StateSpace) : ℝ := 0
+/-- Black-hole thermodynamic data: the horizon area and the Bekenstein-Hawking
+    entropy, related by the *postulated* area law `S = A/4` (carried as a
+    law-field, so the law constrains two independent data rather than being a
+    definition in disguise). -/
+structure BlackHoleThermo where
+  horizonArea : ℝ
+  entropy : ℝ
+  area_pos : 0 < horizonArea
+  law_bekenstein_hawking : entropy = horizonArea / 4
 
-/-- Bekenstein-Hawking entropy: S_BH = A/4 (in Planck units) -/
-noncomputable def BHEntropy (ρ : StateSpace) : ℝ := BlackHoleArea ρ / 4
-
-theorem bh_entropy_formula :
-  ∀ (ρ : StateSpace), BHEntropy ρ = BlackHoleArea ρ / 4 := fun _ => rfl
+/-- Bekenstein-Hawking entropy is positive for a positive horizon area. -/
+theorem bh_entropy_pos (bh : BlackHoleThermo) : 0 < bh.entropy := by
+  rw [bh.law_bekenstein_hawking]
+  exact div_pos bh.area_pos (by norm_num)
 
 -- ============================================================
 -- MACROSCOPIC THERMODYNAMIC PROCESSES & CARNOT EFFICIENCY
