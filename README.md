@@ -93,10 +93,10 @@ Omega_Theory_Everything/
 │   ├── OmegaProtocol.lean
 │   ├── Vol01_ClassicalMechanics.lean
 │   └── ... (through Vol54)
-├── latex_docs/               # 42 LaTeX documents
+├── latex_docs/               # 41 LaTeX documents (Vol01-Vol54, as written so far)
 │   ├── Vol09_HolographicPrinciple.tex
 │   └── ... (through Vol54)
-├── txt_proofs/               # 61 plain-text companions
+├── txt_proofs/               # 59 plain-text companions (54 volumes + 5 core)
 │   ├── Vol01_ClassicalMechanics.txt
 │   └── ... (companions for the core modules and Vol01-Vol54)
 ├── Sim2_Cosmology.py
