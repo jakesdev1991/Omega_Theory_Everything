@@ -36,6 +36,16 @@ function tokenAmount(name, fallback) {
   return ethers.parseUnits(raw, 18);
 }
 
+function octetCount(hex) {
+  let nonZero = 0n;
+  for (let index = 2; index < hex.length; index += 2) {
+    if (hex.slice(index, index + 2) !== "00") {
+      nonZero += 1n;
+    }
+  }
+  return nonZero;
+}
+
 function address(name) {
   const value = required(name);
   if (!ethers.isAddress(value) || value === ethers.ZeroAddress) {
@@ -82,6 +92,66 @@ async function main() {
     throw new Error("CLAIM_THRESHOLD_TOKENS cannot exceed OMEGA_INITIAL_SUPPLY.");
   }
 
+  // Funds. The deploy script creates six contracts and then sends governance
+  // setup transactions; a deployer that runs out of ETH part way through leaves
+  // a half-deployed system and a lot of manual cleanup. Estimate the creation
+  // cost from the compiled artifacts rather than trusting a hand-written number:
+  // 32,000 gas base per CREATE, 200 gas per runtime byte deposited, the initcode
+  // calldata cost (16 gas per non-zero byte, 4 per zero byte), and EIP-3860's 2
+  // gas per 32-byte initcode word. Constructor execution is not counted, so a
+  // 1.5x safety factor plus a fixed reserve for the two setup writes covers it.
+  const deploymentPlan = [
+    "OmegaTestToken",
+    "OmegaVotingEscrow",
+    "TimelockController",
+    "OmegaLocking",
+    "OmegaGovernor",
+    "OmegaNovelGate",
+  ];
+  let creationGas = 0n;
+  for (const name of deploymentPlan) {
+    const artifact = await hre.artifacts.readArtifact(name);
+    const initcodeBytes = BigInt((artifact.bytecode.length - 2) / 2);
+    const nonZeroBytes = octetCount(artifact.bytecode);
+    creationGas +=
+      32000n +
+      200n * BigInt((artifact.deployedBytecode.length - 2) / 2) +
+      16n * nonZeroBytes +
+      4n * (initcodeBytes - nonZeroBytes) +
+      2n * ((initcodeBytes + 31n) / 32n);
+  }
+  const setupGasReserve = 200000n; // grant governor proposer + renounce timelock admin
+
+  const feeData = await ethers.provider.getFeeData();
+  const gasPrice = feeData.maxFeePerGas ?? feeData.gasPrice;
+  const balance = await ethers.provider.getBalance(deployer.address);
+  const explicitFloor = process.env.MIN_DEPLOYER_BALANCE_ETH
+    ? tokenAmount("MIN_DEPLOYER_BALANCE_ETH", "0")
+    : null;
+
+  let requiredWei = explicitFloor;
+  let fundsExplanation;
+  if (gasPrice === null || gasPrice === undefined) {
+    if (explicitFloor === null) {
+      throw new Error(
+        "Could not read a gas price from the RPC to estimate deployment cost. Set MIN_DEPLOYER_BALANCE_ETH to an explicit floor if this network's fee data is unavailable.",
+      );
+    }
+    fundsExplanation = "explicit MIN_DEPLOYER_BALANCE_ETH floor (no fee data from the RPC)";
+  } else {
+    const estimated = ((creationGas + setupGasReserve) * gasPrice * 3n) / 2n;
+    requiredWei = estimated > (explicitFloor ?? 0n) ? estimated : explicitFloor;
+    fundsExplanation = `${ethers.formatEther(estimated)} ETH estimated at ${ethers.formatUnits(gasPrice, "gwei")} gwei`;
+  }
+
+  if (balance < requiredWei) {
+    throw new Error(
+      `Deployer ${deployer.address} has ${ethers.formatEther(balance)} ETH but the deployment needs about ` +
+        `${ethers.formatEther(requiredWei)} ETH (${fundsExplanation}). Fund a Sepolia-only wallet from a testnet ` +
+        "faucet before deploying; the preflight sends no transactions.",
+    );
+  }
+
   console.log("\n$OMEGA Sepolia preflight passed");
   console.log(`  deployer              ${deployer.address}`);
   console.log(`  treasury              ${treasury}`);
@@ -91,6 +161,9 @@ async function main() {
   console.log(`  claim window          ${claimStart} → ${claimEnd}`);
   console.log(`  governance            ${votingDelay} block delay, ${votingPeriod} block period, ${quorumPercent}% quorum`);
   console.log(`  timelock delay        ${timelockDelay} seconds`);
+  console.log(
+    `  deployer balance      ${ethers.formatEther(balance)} ETH (needs ~${ethers.formatEther(requiredWei)}; ${fundsExplanation})`,
+  );
   console.log("\nNo transactions were sent.");
   console.log("Next step: run npm run deploy:sepolia only after an independent review of the parameters above.");
 }

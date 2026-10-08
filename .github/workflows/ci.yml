@@ -113,6 +113,13 @@ jobs:
         working-directory: evm
         run: npm run check
 
+      - name: Rehearse the Sepolia preflight (local network, nothing broadcast)
+        # The preflight's job is to refuse to proceed, so its passing path needs a
+        # configuration that should pass. The local network is pinned to Sepolia's
+        # chain ID, so this exercises the same checks without a key or a network.
+        working-directory: evm
+        run: npm run preflight:rehearsal
+
       - name: Check runtime dependency advisories
         working-directory: evm
         run: npm audit --omit=dev --audit-level=high
