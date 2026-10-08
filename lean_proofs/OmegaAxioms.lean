@@ -118,7 +118,13 @@ theorem operator_eq_smul_one (A : Operator) : A = A 1 • (1 : Operator) := by
   calc A v = A (v • (1 : StateSpace)) := by rw [smul_eq_mul, mul_one]
     _ = v • A 1 := ContinuousLinearMap.map_smul A v 1
     _ = (A 1 • (1 : Operator)) v := by
-        rw [smul_apply, one_apply_eq_self, smul_eq_mul, mul_comm]
+        -- `rw` rewrites only the first matching occurrence, so a single
+        -- `smul_eq_mul` converts the left `v • A 1` and leaves the right
+        -- `A 1 • v` in place (that was the twelfth-pass build failure:
+        -- residual goal `A 1 * v = A 1 • v`).  `simp` normalizes every
+        -- occurrence and then closes both sides with `mul_comm`.
+        rw [smul_apply, one_apply_eq_self]
+        simp [smul_eq_mul, mul_comm]
 
 /-- **The model's operator algebra is commutative**: `operator_eq_smul_one`
     writes every operator as a scalar multiple of the identity, and scalars
