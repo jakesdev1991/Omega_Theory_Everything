@@ -27,7 +27,7 @@ Omega_Theory_Everything/
 │   └── README_MCP_HUB.md
 ├── app/                       # existing local social prototype (offline, valueless)
 ├── lean_proofs/               # Lean 4 formalizations
-├── whitepapers/               # $OMEGA, TOKAMAK, C.A.R.E./AMITY, Omni-Bridge
+├── whitepapers/               # $OMEGA, TWC, TOKAMAK (historical draft), C.A.R.E./AMITY, Omni-Bridge
 ├── tri_token_sovereign_economy_blueprint.md
 └── ...
 ```

@@ -6,10 +6,14 @@
 //
 // `.github/workflows/wallet-desktop.yml` (the only thing that builds the native
 // installers) does not run on a normal push: it needs a `wallet-v*` tag or a
-// manual dispatch, and no tag has ever been cut, so the wrapper has never been
-// built anywhere. These checks are the cheap part of that verification that a
-// normal CI run can afford: the four version strings that must agree, the
-// paths Tauri is asked to bundle, and the release manifest the website reads.
+// manual dispatch. The first tag (wallet-v0.1.0) has since built and published
+// all three platforms, and it also showed why these checks are worth having:
+// that workflow had four latent defects — a Tauri-v1 flag, a build-hook path one
+// directory too deep, no `.ico` for the Windows resource, and bundler scratch
+// files in the artifact glob — none of which a normal CI run had ever looked at.
+// These checks are the cheap part of that verification: the four version strings
+// that must agree, the paths Tauri is asked to bundle, and the release manifest
+// the website reads.
 //
 // Run: node desktop/scripts/check-wrapper.mjs   (from the repository root)
 
