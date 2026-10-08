@@ -74,9 +74,17 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: omega-wallet-${{ matrix.platform }}
-          # `npx tauri build` runs with working-directory: desktop and writes to
-          # the crate's default cargo target dir: desktop/src-tauri/target.
-          path: desktop/src-tauri/target/release/bundle/**/*
+          # Only the installers. `npx tauri build` runs with working-directory:
+          # desktop and writes to the crate's default cargo target dir
+          # (desktop/src-tauri/target), where each bundler also leaves a scratch
+          # directory next to its output — a glob of `**/*` picked those up too,
+          # which is how the first release came to carry assets such as
+          # template.applescript and debian-binary alongside the installers.
+          path: |
+            desktop/src-tauri/target/release/bundle/appimage/*.AppImage
+            desktop/src-tauri/target/release/bundle/deb/*.deb
+            desktop/src-tauri/target/release/bundle/dmg/*.dmg
+            desktop/src-tauri/target/release/bundle/msi/*.msi
           if-no-files-found: error
 
   publish:
@@ -123,9 +131,46 @@ jobs:
           find artifacts -type f | sort
           find artifacts -type f -print0 | xargs -0 sha256sum > SHA256SUMS.txt
           cat SHA256SUMS.txt
-          find artifacts -type f -print0 \
-            | xargs -0 gh release upload "${GITHUB_REF_NAME}" --clobber --repo "${GITHUB_REPOSITORY}"
-          gh release upload "${GITHUB_REF_NAME}" SHA256SUMS.txt --clobber --repo "${GITHUB_REPOSITORY}"
+
+          # One gh invocation per asset, with retries. The first tag run passed
+          # one invocation every file: a single transient upload failure aborted
+          # the batch, and the release ended up with ten assets while the
+          # .AppImage, .deb, .msi and the checksum file were never attempted.
+          # --clobber makes each attempt idempotent, so a retry cannot duplicate.
+          failed=0
+          while IFS= read -r -d '' asset; do
+            name=$(basename "$asset")
+            uploaded=0
+            for attempt in 1 2 3; do
+              if gh release upload "${GITHUB_REF_NAME}" "$asset" --clobber --repo "${GITHUB_REPOSITORY}"; then
+                uploaded=1
+                break
+              fi
+              echo "::warning::upload of ${name} failed (attempt ${attempt}); retrying in 15s"
+              sleep 15
+            done
+            if [ "$uploaded" -ne 1 ]; then
+              echo "::error::could not upload ${name} after 3 attempts"
+              failed=1
+            fi
+          done < <(find artifacts -type f -print0)
+
+          if ! gh release upload "${GITHUB_REF_NAME}" SHA256SUMS.txt --clobber --repo "${GITHUB_REPOSITORY}"; then
+            echo "::error::could not upload SHA256SUMS.txt"
+            failed=1
+          fi
+
+          # Verify rather than assume: one installer per platform plus checksums.
+          gh release view "${GITHUB_REF_NAME}" --repo "${GITHUB_REPOSITORY}" \
+            --json assets --jq '.assets[].name' > released-assets.txt
+          cat released-assets.txt
+          for suffix in .AppImage .deb .dmg .msi SHA256SUMS.txt; do
+            if ! grep -q -- "${suffix}$" released-assets.txt; then
+              echo "::error::the release has no ${suffix} asset"
+              failed=1
+            fi
+          done
+          exit "$failed"
 
       - name: Next step for maintainers
         run: |
