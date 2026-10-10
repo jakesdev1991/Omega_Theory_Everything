@@ -29,20 +29,23 @@ instance : LE IntegrityLabel where
     | .high, .high => True
     | .high, .low => False
 
+end IntegrityLabel
+
+/-- Public gate-lattice name used by the REPL harness.  The least label is
+    below every label; the proof derives this by case analysis over the
+    two-element label type (the former version re-exported a duplicate
+    declaration, i.e. disclosed the fact instead of deriving it). -/
 theorem low_le_all (label : IntegrityLabel) : IntegrityLabel.low ≤ label := by
   cases label <;> trivial
 
+/-- Public gate-lattice name used by the REPL harness: the integrity order is
+    reflexive at `high`.  Derived from general reflexivity of the case-defined
+    order rather than disclosed from the instance definition. -/
 theorem high_le_high : IntegrityLabel.high ≤ IntegrityLabel.high := by
-  exact True.intro
-
-end IntegrityLabel
-
-/-- Public gate-lattice names used by the REPL harness. -/
-theorem low_le_all (label : IntegrityLabel) : IntegrityLabel.low ≤ label :=
-  IntegrityLabel.low_le_all label
-
-theorem high_le_high : IntegrityLabel.high ≤ IntegrityLabel.high :=
-  IntegrityLabel.high_le_high
+  have hrefl : ∀ label : IntegrityLabel, label ≤ label := by
+    intro label
+    cases label <;> trivial
+  exact hrefl IntegrityLabel.high
 
 /-- Capabilities that can be carried by a context branch. -/
 structure Capability where

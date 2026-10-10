@@ -11,11 +11,17 @@ dist, so the desktop app and the web app are byte-identical apart from the gener
 
 ## Status
 
-**Scaffold — no published binaries yet.** `desktop/releases.json` lists published artifacts; it is
-currently empty, and the website's download page (`/wallet/download`) renders that state honestly
-with the build-from-source instructions below. The first binaries come from
-[`.github/workflows/wallet-desktop.yml`](../.github/workflows/wallet-desktop.yml) on a
-`wallet-v*` tag.
+**Prototype binaries published (prerelease).** The `wallet-v0.1.0` tag built all three platforms
+through [`.github/workflows/wallet-desktop.yml`](../.github/workflows/wallet-desktop.yml): an amd64
+`.AppImage` and `.deb`, an arm64 `.dmg`, an x64 `.msi`, and a `SHA256SUMS.txt` — all attached to the
+[prerelease](https://github.com/jakesdev1991/Omega_Theory_Everything/releases/tag/wallet-v0.1.0) and
+listed, with their digests, in [`releases.json`](releases.json), which is what the website's
+`/wallet/download` page renders.
+
+They are honest prototype builds: **unsigned** (no Apple or Microsoft credentials exist for this
+project, so Gatekeeper and SmartScreen will warn on first launch), **unaudited**, and wired only to
+the valueless test rails. There is no Intel-macOS build; the arm64 `.dmg` runs under Rosetta on
+Intel Macs. The build-from-source path below is always the alternative.
 
 ## Build from source
 

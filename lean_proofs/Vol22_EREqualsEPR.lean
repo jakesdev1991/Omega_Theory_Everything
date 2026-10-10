@@ -28,30 +28,39 @@ noncomputable def ThroatArea (A B : Subsystem) : ℝ :=
   -- Area in Planck units from Ω-Metric
   d A B * maxMutualInformation
 
-/-- In the zero-information model both sides of ER=EPR are false. -/
+/-- **The ER=EPR correspondence of the non-degenerate model**: positive mutual
+    information and an open geometric throat are equivalent, because both
+    vanish exactly at complete overlap (`ΩAxioms.distance_pos_iff_mutualInformation_pos`).
+    The former zero model made this `0 > 0 ↔ 0 > 0`. -/
 theorem er_epr_correspondence (A B : Subsystem) :
   MutualInformation A B > 0 ↔ ThroatArea A B > 0 := by
-  simp [MutualInformation, mutualInformation, ThroatArea, d,
-    omegaMetric, maxMutualInformation]
+  have hThroat : ThroatArea A B = d A B := by
+    rw [ThroatArea, maxMutualInformation]; ring
+  rw [MutualInformation, hThroat]
+  exact (distance_pos_iff_mutualInformation_pos A B).symm
 
-/-- The zero-information model satisfies the area bound. -/
-theorem mutual_info_area_bound (A B : Subsystem) :
-  MutualInformation A B ≤ ThroatArea A B / (4 * NewtonG) := by
-  simp [MutualInformation, mutualInformation, ThroatArea, d,
-    omegaMetric, maxMutualInformation]
+/-- Model bound on the correlation information of a pair: the pair mutual
+    information is at most `1/4` (it is `Φ(1-Φ)·(S₁+S₂)/2` with both factors
+    bounded).  This replaces the retired `mutual_info_area_bound`
+    (`I ≤ ThroatArea/4G`), which held in the zero model as `0 ≤ 0` but is
+    *false* for the genuine model: the throat area is the metric distance
+    `d = -ℓ_P(Φ)·log Φ`, a correlation distance and not a horizon area, so the
+    Ryu–Takayanagi reading of that inequality has no content here. -/
+theorem mutual_information_le_quarter (A B : Subsystem) :
+  MutualInformation A B ≤ 1 / 4 := by
+  rw [MutualInformation]
+  exact mutualInformation_le_quarter A B
 
-/-- THEOREM: No Entanglement implies No Wormhole (GENUINE PROOF)
-    Contrapositive of ER=EPR: if mutual information is zero, 
-    there is no geometric bridge. -/
+/-- No Entanglement implies No Wormhole (contrapositive direction of ER=EPR):
+    if the mutual information vanishes, so does the throat area. -/
 theorem no_entanglement_no_bridge (A B : Subsystem)
   (h_no_ent : MutualInformation A B ≤ 0) :
   ThroatArea A B ≤ 0 := by
-  by_contra h_pos
-  push_neg at h_pos
-  have h_ent := (er_epr_correspondence A B).mpr h_pos
-  have h_mi : MutualInformation A B > 0 := by linarith
-  have h_mi_nonneg : MutualInformation A B ≥ 0 := mutualInformation_nonneg A B
-  linarith
+  have hI : mutualInformation A B = 0 :=
+    le_antisymm h_no_ent (bridge_mutualInformation_nonneg A B)
+  have hd : d A B = 0 := bridge_distance_zero_when_I_zero A B hI
+  rw [ThroatArea, hd, maxMutualInformation]
+  norm_num
 
 -- The retired legacy theorems `er_bridge_from_phi`,
 -- `perfect_overlap_same_entity` and

@@ -78,6 +78,6 @@ theorem quantum_computing_from_omega :
 /-- Structural bridge: the Ω-metric is reflexive on the Q-region model used
     for circuit-depth distances. -/
 theorem bridge_vol34_metric_self_zero (R : QRegion) : d R R = 0 :=
-  qregion_self_distance_zero R
+  bridge_qregion_self_distance_zero R
 
 end OmegaProtocol.Vol34

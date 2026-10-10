@@ -53,6 +53,6 @@ theorem ensemble_not_enumerable :
 /-- Structural bridge: the ensemble layer is compatible with the Ω-metric
     layer of the protocol. -/
 theorem bridge_vol50_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 :=
-  monotonicity_lemma R
+  bridge_vonNeumannEntropy_nonneg R
 
 end OmegaProtocol.Vol50

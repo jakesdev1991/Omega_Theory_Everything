@@ -29,35 +29,28 @@ noncomputable def IntegratedInformation (R₁ R₂ : QRegion) : ℝ :=
 -- information, and the IIT "experience" dictionary is an explicit
 -- definition on that model.
 
-/-- THEOREM: Substrate Independence - integrated info is substrate independent -/
-theorem substrateindependence (R₁ R₂ : QRegion) :
+-- RETIRED (audit pass 10): `consciousness_qrf` (its statement `I ≥ 0` is
+-- `abs_nonneg` and it duplicated `integrated_info_nonneg` under a name
+-- invoking reference frames), and `consciousness_from_omega` /
+-- `freeze_implies_low_integration`, which both restated the *definition*
+-- `isFrozen := forwardFlux ≤ freezeBoundaryThreshold` (the latter through the
+-- since-deleted `freeze_boundary_value`).  The definitional content —
+-- including the numeric threshold — is stated once in
+-- `OmegaAxioms.bridge_isFrozen_iff`.
+
+/-- Definitional consistency bridge: in this model `IntegratedInformation` and
+    `informationalImpedance` denote the same expression (`|asymmetryTensor|`),
+    so the identity is `rfl`.  A naming-coherence witness, NOT the physical
+    substrate-independence claim the legacy name `substrateindependence`
+    evoked. -/
+theorem bridge_integratedInformation_eq_impedance (R₁ R₂ : QRegion) :
   IntegratedInformation R₁ R₂ = informationalImpedance R₁ R₂ := by
   rfl
-
-/-- CROSS-VOLUME: Consciousness QRF - consciousness defines reference frame -/
-theorem consciousness_qrf (R₁ R₂ : QRegion) :
-  IntegratedInformation R₁ R₂ ≥ 0 := by
-  dsimp [IntegratedInformation]
-  exact abs_nonneg _
-
-/-- COROLLARY: Consciousness from Omega Protocol Phase 4
-    AsymmetryTensor = Forward - Reverse = RCOD
-    Freeze boundary (Φ ≤ 0.012) = Unconsciousness -/
-theorem consciousness_from_omega (R₁ R₂ : QRegion) (h : isFrozen R₁ R₂) :
-  forwardFlux R₁ R₂ ≤ freezeBoundaryThreshold := by
-  exact h
 
 theorem integrated_info_nonneg (R₁ R₂ : QRegion) :
   IntegratedInformation R₁ R₂ ≥ 0 := by
   dsimp [IntegratedInformation]
   exact abs_nonneg _
-
-theorem freeze_implies_low_integration (R₁ R₂ : QRegion) (h : isFrozen R₁ R₂) :
-  forwardFlux R₁ R₂ ≤ 0.012 := by
-  have hf : forwardFlux R₁ R₂ ≤ freezeBoundaryThreshold := h
-  have hval : freezeBoundaryThreshold = 0.012 := freeze_boundary_value
-  rw [hval] at hf
-  exact hf
 
 -- ============================================================
 -- INTEGRATED INFORMATION ARCHITECTURE & PARTITION DEFICIT

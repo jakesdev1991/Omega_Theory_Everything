@@ -1,6 +1,35 @@
 {
-  "version": null,
+  "version": "0.1.0",
   "channel": "prototype",
-  "artifacts": [],
-  "note": "Populated when .github/workflows/wallet-desktop.yml publishes a wallet-v* tag. The website's /wallet/download page reads this file through /api/wallet/manifest."
+  "artifacts": [
+    {
+      "os": "linux",
+      "arch": "x86_64",
+      "fileName": "Omega.Wallet_0.1.0_amd64.AppImage",
+      "url": "https://github.com/jakesdev1991/Omega_Theory_Everything/releases/download/wallet-v0.1.0/Omega.Wallet_0.1.0_amd64.AppImage",
+      "sha256": "d79dddcdebc850e30499b78cb9e1aae5bc8135ba6e570f581ea14c635c74574e"
+    },
+    {
+      "os": "linux",
+      "arch": "x86_64",
+      "fileName": "Omega.Wallet_0.1.0_amd64.deb",
+      "url": "https://github.com/jakesdev1991/Omega_Theory_Everything/releases/download/wallet-v0.1.0/Omega.Wallet_0.1.0_amd64.deb",
+      "sha256": "58d8c8be87531b2e3f86fdbf3b62da20a680747f1a82bd8422aa7fd8c8b25ba8"
+    },
+    {
+      "os": "macos",
+      "arch": "arm64",
+      "fileName": "Omega.Wallet_0.1.0_aarch64.dmg",
+      "url": "https://github.com/jakesdev1991/Omega_Theory_Everything/releases/download/wallet-v0.1.0/Omega.Wallet_0.1.0_aarch64.dmg",
+      "sha256": "7dfa5a0e9dcba403e33de31e279c058459e3d258555dd95a3d6e48fafde92a30"
+    },
+    {
+      "os": "windows",
+      "arch": "x86_64",
+      "fileName": "Omega.Wallet_0.1.0_x64_en-US.msi",
+      "url": "https://github.com/jakesdev1991/Omega_Theory_Everything/releases/download/wallet-v0.1.0/Omega.Wallet_0.1.0_x64_en-US.msi",
+      "sha256": "edafa9d146d8698c9f696ce2e85a2479f8e27cb851b68f9549cce392d41b1abf"
+    }
+  ],
+  "note": "Artifacts are the installers attached to the GitHub release for the wallet-v0.1.0 tag, built by .github/workflows/wallet-desktop.yml. sha256 values are the release assets' own digests. Prerelease prototype: unsigned, unaudited, and wired only to the valueless test rails (Sepolia $OMEGA, Solana Devnet TWC). macOS arm64 only for now \u2014 there is no Intel build; the Apple Silicon dmg runs under Rosetta on Intel Macs. The website's /wallet/download page reads this file through /api/wallet/manifest."
 }

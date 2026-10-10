@@ -62,17 +62,17 @@ theorem tier_jump_factor :
 /-- Structural bridge: Q-region entropy is nonnegative in the model used for
     civilizational entropy budgets. -/
 theorem bridge_vol47_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 :=
-  monotonicity_lemma R
+  bridge_vonNeumannEntropy_nonneg R
 
 /-- Structural bridge: the holographic entropy bound holds in the Q-region
     model used for civilizational horizons. -/
 theorem bridge_vol47_entropy_bounded (R : QRegion) :
     vonNeumannEntropy R ≤ Real.pi :=
-  entropy_bounded R
+  bridge_vonNeumannEntropy_le_pi R
 
 /-- Structural bridge: civilizational distances in the Q-region model are
     nonnegative. -/
 theorem bridge_vol47_metric_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 :=
-  distance_nonneg R₁ R₂
+  bridge_distance_nonneg R₁ R₂
 
 end OmegaProtocol.Vol47

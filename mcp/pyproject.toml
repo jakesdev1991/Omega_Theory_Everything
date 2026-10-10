@@ -8,7 +8,14 @@ readme = "README_MCP_HUB.md"
 license = { text = "PolyForm-Noncommercial-1.0.0" }
 requires-python = ">=3.12"
 dependencies = [
-    "mcp>=1.7.0",
+    # Upper bound is load-bearing, not cosmetic: MCP SDK 2.x renamed FastMCP to
+    # MCPServer and moved it out of mcp.server (see
+    # https://py.sdk.modelcontextprotocol.io/v2/migration/#fastmcp-renamed-to-mcpserver),
+    # so an unpinned `mcp>=1.7.0` resolves to 2.x today and
+    # `from mcp.server import FastMCP` fails at import. smoke_test_result.json
+    # has always recorded this as "pinned to mcp>=1.7,<2"; this makes the
+    # manifest match that claim.
+    "mcp>=1.7.0,<2",
     "pydantic>=2.9.0",
     "pydantic-settings>=2.0.0",
     "fastapi>=0.115.0",

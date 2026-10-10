@@ -144,9 +144,27 @@ theorem standardSchwarzschild_entropy :
 
 noncomputable abbrev MT : ModularTheory := Vol03.MT
 
-/-- The concrete KMS predicate is true for every state and temperature. -/
+/-- The exterior region is KMS at the Hawking inverse temperature `β = 2π/κ`.
+    The concrete model is tracial, so its KMS predicate is the trace equation
+    `ω_ρ (A * B) = ω_ρ (B * A)` and holds at every `β`; the statement is
+    therefore proved by `ω_ρ_trace` rather than by the predicate being
+    constantly true.  Non-degeneracy of `β` is recorded separately
+    (`kms_beta_hawking`), and the absence of temperature uniqueness in the
+    model by `OmegaProtocol.Vol03.kms_temperature_uniqueness_fails`. -/
 theorem kms_exterior_vacuum (bh : BHGeometry) :
-  MT.KMSState (ExteriorRegion bh) (2 * Real.pi / bh.surfaceGravity) := by
-  exact True.intro
+  MT.KMSState (ExteriorRegion bh) (2 * Real.pi / bh.surfaceGravity) :=
+  fun A B => ω_ρ_trace A B
+
+/-- The Hawking inverse temperature `2π/κ` is genuinely the reciprocal of the
+    Hawking temperature `T_H = κ / 2π`: their product is `1` for every black
+    hole with positive surface gravity.  This pins the physical content of the
+    temperature that `kms_exterior_vacuum` certifies. -/
+theorem kms_beta_hawking (bh : BHGeometry) :
+    (2 * Real.pi / bh.surfaceGravity) * HawkingTemperature bh = 1 := by
+  have hκ : bh.surfaceGravity ≠ 0 := ne_of_gt bh.gravity_pos
+  have hπ : (2 * Real.pi : ℝ) ≠ 0 := ne_of_gt (by positivity)
+  rw [hawkingtemperature bh, div_mul_div_comm,
+    mul_comm (2 * Real.pi) bh.surfaceGravity]
+  exact div_self (mul_ne_zero hκ hπ)
 
 end OmegaProtocol.Vol08

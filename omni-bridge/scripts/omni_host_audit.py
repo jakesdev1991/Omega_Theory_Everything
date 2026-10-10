@@ -20,7 +20,7 @@ and a checklist; a human makes the §3 STOP/go decision.
 
 Usage:
     python3 omni_host_audit.py                 # default roots
-    python3 omni_host_audit.py --roots /home/jake /opt
+    python3 omni_host_audit.py --roots /home/<user> /opt
     python3 omni_host_audit.py --out ./reports
 
 Requires only Python 3.8+ (stdlib). Some commands are more informative

@@ -102,6 +102,6 @@ theorem twoVertexEdge_counts : DegreeSum twoVertexEdge = 2 ∧ NumEdges twoVerte
 
 /-- Structural consistency of the separate legacy singleton model only. -/
 theorem bridge_vol26_metric_self_zero (R : QRegion) : d R R = 0 :=
-  qregion_self_distance_zero R
+  bridge_qregion_self_distance_zero R
 
 end OmegaProtocol.Vol26

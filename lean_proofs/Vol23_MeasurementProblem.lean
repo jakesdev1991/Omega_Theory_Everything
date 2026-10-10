@@ -28,47 +28,56 @@ noncomputable def OffDiagonal (_ρ : DensityMatrix) : ℝ :=
   -- Simplified: sum of off-diagonal elements
   0 -- Placeholder
 
-/-- Decoherence operation: Φ(ρ, E) → 0 where E is environment -/
-def environment : QRegion := ()
+/-- Decoherence operation: Φ(ρ, E) → 0 where E is environment.  The
+    environment is the model's saturated region (`unitQRegion`): unit entropy
+    and unit overlap density, so `Φ ρ environment = min (Φ of ρ) 1` — the
+    former `()` (the singleton `QRegion`) is retired with the `Unit` model. -/
+noncomputable def environment : QRegion := unitQRegion
 
 noncomputable def Decohere (ρ : DensityMatrix) : DensityMatrix :=
   -- ρ ⊗ E with partial trace over E
   ρ -- Placeholder; actual implementation requires tensor product
 
-/-- MODEL CLAIM: Decoherence preserves the trace (probability is conserved) -/
-theorem decoherence_trace_preserving (ρ : DensityMatrix) :
+/-- Consistency bridge: in the placeholder layer `Decohere` is the identity map
+    on `DensityMatrix` and `Trace` is the constant `1`, so trace preservation
+    is `rfl`.  The physical claim (CPTP maps preserve probability) is
+    *modelled*, not derived; the parameterized `QubitState.dephase` channel
+    below is the layer with actual content. -/
+theorem bridge_decoherence_trace_preserving (ρ : DensityMatrix) :
   Trace (Decohere ρ) = Trace ρ := by
-  -- Decoherence is a CPTP map, preserves trace
+  -- Placeholder `Decohere`/`Trace` make the two sides identical.
   rfl
 
-/-- Decoherence suppresses off-diagonal elements in the zero model. -/
-theorem decoherence_suppresses (ρ : DensityMatrix) :
+/-- Consistency bridge: `OffDiagonal` is the constant `0` in the placeholder
+    layer, so the suppression inequality is `|0| ≤ |0|`. -/
+theorem bridge_decoherence_suppresses (ρ : DensityMatrix) :
   |OffDiagonal (Decohere ρ)| ≤ |OffDiagonal ρ| := by
   simp [OffDiagonal]
 
-/-- Every density matrix in this model is normalized by definition. -/
-theorem trace_normalized (ρ : DensityMatrix) : Trace ρ = 1 := by
+/-- Consistency bridge: `Trace` is defined to be the constant `1`. -/
+theorem bridge_trace_normalized (ρ : DensityMatrix) : Trace ρ = 1 := by
   rfl
 
-/-- THEOREM: Decohered density matrix remains normalized (GENUINE PROOF) -/
-theorem decoherence_normalized (ρ : DensityMatrix) :
+/-- Consistency bridge: composition of the two placeholder facts above. -/
+theorem bridge_decoherence_normalized (ρ : DensityMatrix) :
   Trace (Decohere ρ) = 1 := by
-  rw [decoherence_trace_preserving]
-  exact trace_normalized ρ
+  rw [bridge_decoherence_trace_preserving]
+  exact bridge_trace_normalized ρ
 
-/-- COROLLARY: Decoherence from Omega Protocol Phase 1
-    Φ(ρ, E) → 0 means I(ρ:E) → 0, loss of coherence -/
-theorem decoherence_as_phi_decay (ρ : DensityMatrix) (h : Φ (Decohere ρ) environment = 0) :
-  Trace (Decohere ρ) = 1 := by
-  exact decoherence_normalized ρ
+-- RETIRED (audit pass 10): `decoherence_as_phi_decay`, whose docstring claimed
+-- "Φ(ρ, E) → 0 means I(ρ:E) → 0, loss of coherence" while the statement
+-- concluded `Trace (Decohere ρ) = 1`: true by definition, with the hypothesis
+-- `Φ (Decohere ρ) environment = 0` never used.  Neither the placeholder layer
+-- nor the `QubitState.dephase` layer below carries a Φ-to-coherence
+-- implication; that needs an explicit system-environment state.
 
-theorem decoherence_phi_nonneg (ρ : DensityMatrix) :
+theorem bridge_decoherence_phi_nonneg (ρ : DensityMatrix) :
   Φ (Decohere ρ) environment ≥ 0 := by
-  exact Φ_nonneg (Decohere ρ) environment
+  exact bridge_overlapDensity_nonneg (Decohere ρ) environment
 
-theorem decoherence_preserves_normalization (ρ : DensityMatrix) :
+theorem bridge_decoherence_preserves_normalization (ρ : DensityMatrix) :
   Trace (Decohere ρ) = Trace ρ := by
-  exact decoherence_trace_preserving ρ
+  exact bridge_decoherence_trace_preserving ρ
 
 -- ============================================================
 -- 2x2 DENSITY MATRICES & QUANTUM DEPHASING CHANNELS
@@ -138,11 +147,13 @@ theorem dephase_coherence_decay (lam : ℝ) (hlam0 : 0 ≤ lam) (hlam1 : lam ≤
     _ ≤ 1 * |S.c| := mul_le_mul_of_nonneg_right hlam1 (abs_nonneg S.c)
     _ = |S.c| := one_mul (|S.c|)
 
-/-- Complete environmental decoherence (measurement projection onto computational basis, lam = 0). -/
-theorem complete_decoherence_vanishes (h0 : (0 : ℝ) ≤ 0) (h1 : (0 : ℝ) ≤ 1) :
-    (S.dephase 0 h0 h1).c = 0 := by
-  dsimp [dephase]
-  ring
+/-- Complete environmental decoherence (projection onto the computational
+    basis, suppression factor `lam = 0`): the coherence `c` vanishes.  The
+    `dephase` side conditions are discharged by concrete proofs, so the
+    statement no longer carries vacuous `0 ≤ 0` / `0 ≤ 1` hypotheses. -/
+theorem complete_decoherence_vanishes :
+    (S.dephase 0 (le_refl 0) zero_le_one).c = 0 := by
+  simp [dephase]
 
 /-- Canonical maximally coherent pure state (|0⟩ + |1⟩)/√2 with p0 = 1/2, p1 = 1/2, c = 1/2. -/
 noncomputable def plusState : QubitState where

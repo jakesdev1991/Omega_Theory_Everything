@@ -7,3 +7,12 @@ pandas>=2.0.0
 networkx>=3.1
 tqdm>=4.65.0
 sympy>=1.12  # optional: exact checks in Sim7_Radial_Metric.py
+
+# Lint/type/test tooling, pinned. CI installs this file exactly as the README
+# Quick Start tells a reader to, so the versions CI runs are the versions the
+# README installs. Unpinned tooling is how a green tree goes red without a code
+# change: `ruff format --check .` started failing on a commit that only added an
+# unrelated file, because the runner pulled whatever ruff was newest that day.
+ruff==0.16.10
+mypy==2.4.0
+pytest==9.1.1

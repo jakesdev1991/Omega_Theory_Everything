@@ -9,4 +9,6 @@ plane.omega_balances=True
 ledger_ok=true planes=['amity', 'care', 'event_count', 'next_version', 'omega', 'sov', 'use']
 
 === ASYNC STDIO ROUNDTRIP ===
-roundtrip_ok line_count=2 last={"jsonrpc":"2.0","id":2,"result":{"content":[{"type":"text","text":"{\n  \"ok\": true,\n  \"snapshot\": {\n    \"sov\": {\n      \"balances\": {},\n      \"supply\": 0,\n      \"version\": 0\n    },\n    \"use\": {\n      \"receipts\": [],\n      \"version\": 0\n    },\n    \"care\": {\n      \"clai
+roundtrip_ok server=omega-hub tool=ledger ok=true planes=[amity,care,event_count,next_version,omega,sov,use] event_count=0
+
+SMOKE TEST PASSED: 22 tools, five planes, ledger roundtrip over stdio

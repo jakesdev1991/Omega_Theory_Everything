@@ -27,7 +27,7 @@ Omega_Theory_Everything/
 │   └── README_MCP_HUB.md
 ├── app/                       # existing local social prototype (offline, valueless)
 ├── lean_proofs/               # Lean 4 formalizations
-├── whitepapers/               # $OMEGA, TOKAMAK, C.A.R.E./AMITY, Omni-Bridge
+├── whitepapers/               # $OMEGA, TWC, TOKAMAK (historical draft), C.A.R.E./AMITY, Omni-Bridge
 ├── tri_token_sovereign_economy_blueprint.md
 └── ...
 ```
@@ -35,8 +35,10 @@ Omega_Theory_Everything/
 ## Development
 
 ```bash
-# Install in editable mode into the omwga-mcp venv
-uv pip install --python /home/jake/.venvs/omwga-mcp/bin/python -e mcp/
+# Install in editable mode into your hub venv (create it first, e.g.
+#   uv venv "$HOME/.venvs/omwga-mcp" --python 3.12
+# — mcp/pyproject.toml requires Python >=3.12).
+uv pip install --python "$OMEGA_MCP_VENV/bin/python" -e mcp/
 
 # Run the stdio server
 uv run --directory mcp python -m omega_mcp

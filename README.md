@@ -27,15 +27,17 @@ Complete implementation of the Omega Theory framework - a unified physics model 
 
 ## Overview
 
-This repository contains the full simulation suite for Omega Theory v4.0, implementing:
+This repository contains the Omega Theory v4.0 simulation suite. Five of the seven
+entries are executable scripts; the other two are manuscripts that were previously
+stored with a `.py` extension and described here as runnable, which they never were:
 
-- **Sim1**: Emergent Geometry from quantum entanglement
-- **Sim2**: Cosmological dynamics with dynamic scale factor
-- **Sim3**: Renormalization group flow in spacetime
-- **Sim4**: System evolution with v14 depletion mechanics
-- **Sim5**: Emergent gravity as entropic force
-- **Sim6**: v14 depletion dynamics
-- **Sim7**: Checks for the macroscopic radial metric g_rr(Φ) (companion to `Omega_Theory_v4.0_Radial_Metric.md`)
+- **Sim2**: Cosmological dynamics with dynamic scale factor — `Sim2_Cosmology.py` (executable)
+- **Sim3**: Renormalization group flow in spacetime — `Sim3_Dynamic_Scale.py` (executable)
+- **Sim5**: Emergent gravity as entropic force — `Sim5_Emergent_Gravity.py` (executable)
+- **Sim6**: v14 depletion dynamics — `sim6_v14_depletion.py` (executable; calibrates γ so the model reproduces H₀ = 73.5 km/s/Mpc, then integrates the background)
+- **Sim7**: Checks for the macroscopic radial metric g_rr(Φ) — `Sim7_Radial_Metric.py` (executable; companion to `Omega_Theory_v4.0_Radial_Metric.md`)
+- **Sim1**: Emergent Geometry from quantum entanglement — manuscript: [`docs/manuscripts/sim1_emergent_geometry.md`](docs/manuscripts/sim1_emergent_geometry.md)
+- **Sim4**: System evolution with v14 depletion mechanics — manuscript (script + run transcript + embedded HTML simulator): [`docs/manuscripts/sim4_evolution.md`](docs/manuscripts/sim4_evolution.md)
 
 ## Theory Foundation
 
@@ -83,7 +85,7 @@ Each physics proof has companion files:
 
 ```
 Omega_Theory_Everything/
-├── lean_proofs/              # 58 Lean 4 formalizations
+├── lean_proofs/              # 69 Lean 4 modules (54 physics volumes + foundations)
 │   ├── ToE.lean
 │   ├── OmegaAxioms.lean
 │   ├── OmegaUnifiedFoundation.lean
@@ -91,19 +93,19 @@ Omega_Theory_Everything/
 │   ├── OmegaProtocol.lean
 │   ├── Vol01_ClassicalMechanics.lean
 │   └── ... (through Vol54)
-├── latex_docs/               # 46 LaTeX documents (Vol09-Vol54)
+├── latex_docs/               # 41 LaTeX documents (Vol01-Vol54, as written so far)
 │   ├── Vol09_HolographicPrinciple.tex
 │   └── ... (through Vol54)
-├── txt_proofs/               # 104 plain text companions
+├── txt_proofs/               # 59 plain-text companions (54 volumes + 5 core)
 │   ├── Vol01_ClassicalMechanics.txt
-│   └── ... (through Vol54, both Lean + LaTeX)
-├── Sim1_Emergent_Geometry.py
+│   └── ... (companions for the core modules and Vol01-Vol54)
 ├── Sim2_Cosmology.py
 ├── Sim3_Dynamic_Scale.py
-├── Sim4_Evolution.py
 ├── Sim5_Emergent_Gravity.py
 ├── sim6_v14_depletion.py
 ├── Sim7_Radial_Metric.py
+├── tests/                    # Simulation and repository-hygiene regression tests
+├── docs/manuscripts/         # Sim1 and Sim4 (prose; not executable)
 ├── rcod/                     # RCOD optimizer governor (research prototype + benchmark)
 ├── cpp/                      # CBwK shadow-price pacer (Lucifer–Hermes routing governor, C++23)
 ├── omni-bridge/              # Omni-Bridge control boundary (Hermes ⇄ Lucifer), C++23 + host audit kit
@@ -114,7 +116,7 @@ Omega_Theory_Everything/
 ├── web/                      # Next.js site: current $OMEGA + TWC unlock rails + gated novel chapters
 ├── novel/                    # Novel release plan + sealed-manuscript staging
 ├── launch/                   # Day-one launch plan documents
-├── update_discovery.sh
+├── conjecture_pilot/         # Measurement-first conjecture generator + pre-registration
 ├── requirements.txt
 └── *.md
 ```
@@ -125,10 +127,14 @@ Omega_Theory_Everything/
 # Install Python dependencies
 pip install -r requirements.txt
 
-# Run simulations
-python Sim1_Emergent_Geometry.py
+# Run the executable simulations (matplotlib must be headless in CI: MPLBACKEND=Agg)
 python Sim2_Cosmology.py
-# ... etc
+python Sim3_Dynamic_Scale.py
+python Sim5_Emergent_Gravity.py
+python sim6_v14_depletion.py
+python Sim7_Radial_Metric.py
+
+# Sim1 and Sim4 are manuscripts, not scripts; read them in docs/manuscripts/
 
 # Build Lean 4 proofs (requires Lean 4 + Mathlib4)
 cd lean_proofs && lake build

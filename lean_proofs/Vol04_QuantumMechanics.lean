@@ -340,10 +340,9 @@ noncomputable def time_derivative (_ : ℝ → StateSpace) (_ : ℝ) : StateSpac
 -- one-dimensional solution here is constructed and verified.
 
 /-- The Hamiltonian of the one-dimensional model: multiplication by the
-    real energy E. Stated on the ℂ carrier of the one-dimensional state
-    space (a bundled operator construction is unnecessary here, and the
-    `StateSpace` definition is not reducible enough to reuse the ℂ
-    instances syntactically). -/
+    real energy E.  Stated directly on the `ℂ` carrier, which *is* the model's
+    state space (`StateSpace` is an `abbrev` for `ℂ`); no bundling is needed
+    for the explicit trajectory below. -/
 noncomputable def hamiltonian (E : ℝ) : ℂ → ℂ :=
   fun z => (E : ℂ) * z
 

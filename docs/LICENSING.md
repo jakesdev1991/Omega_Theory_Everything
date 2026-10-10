@@ -23,7 +23,7 @@ Nostr App Store apps and licenses sit on top of this: end users run listed apps 
 
 The MIT grant applies to these repository paths, to the extent the rights holder is authorized to license them:
 
-- `Sim1_Emergent_Geometry.py`, `Sim2_Cosmology.py`, `Sim3_Dynamic_Scale.py`, `Sim4_Evolution.py`, `Sim5_Emergent_Gravity.py`, `Sim7_Radial_Metric.py`, and `sim6_v14_depletion.py`;
+- `Sim2_Cosmology.py`, `Sim3_Dynamic_Scale.py`, `Sim5_Emergent_Gravity.py`, `Sim7_Radial_Metric.py`, and `sim6_v14_depletion.py` (Sim1 and Sim4 are manuscripts at `docs/manuscripts/sim1_emergent_geometry.md` and `docs/manuscripts/sim4_evolution.md`);
 - `Omega_Theory_Laymans_Guide.md`, `Omega_Theory_v4.0_Technical.md`, and `Omega_Theory_v4.0_Radial_Metric.md`;
 - all files in `lean_proofs/`, `latex_docs/`, `txt_proofs/`, and `rcod/`.
 

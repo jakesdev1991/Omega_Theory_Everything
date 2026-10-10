@@ -13,8 +13,10 @@ Planes:
 State is in-memory for the prototype. Every mutation emits an append-only event
 so the ledger is replayable. No real keys, no real chain, no real value.
 
-Run:
-  uv run --directory /tmp/omwga python -m mcp.omega_mcp
+Run (from the repository root):
+  uv run --directory mcp python -m omega_mcp
+or, with the package installed in the active environment:
+  python -m omega_mcp
 """
 
 from __future__ import annotations

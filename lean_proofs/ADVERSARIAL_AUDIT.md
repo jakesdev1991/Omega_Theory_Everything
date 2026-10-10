@@ -219,7 +219,10 @@ Kernel verification (`lake build ToE`) runs in CI; see PR #44.
 - `audit_vacuity.py`: new `trivial_proofs` metric — no proof may consist of
   exactly `trivial` (same line or a following line); the three instances
   (OmegaUnifiedFoundation, Vol08 `kms_exterior_vacuum`, APPA `high_le_high`)
-  were rewritten as `exact True.intro`.
+  were rewritten as `exact True.intro`. *Superseded by §R.11: the eleventh
+  pass replaced the `True`-valued predicates themselves with genuine
+  statements, so these proofs are now real derivations rather than
+  `True.intro`.*
 - `lean-ci.yml`: grep extended with `opaque`, `unsafe`, `partial def`
   (fixture-tested: 4/4 caught alongside `sorry`); vacuity invocation gains
   `--max-trivial-proofs 0`. (The pre-existing `sorry`/`admit` word-boundary
@@ -344,3 +347,114 @@ equation.
 ## R.7.4 Verification
 Local: 41 tests, all lexical audits at zero. CI: full `lake build ToE`
 plus the transitive kernel-axiom gate over 164 selected declarations.
+
+---
+
+# Appendix R.8: tenth-pass additions (2026-10-07)
+
+Closing the residual findings from the rewritten `audit_vacuity.py` and
+hardening its detectors.
+
+## R.8.1 Term-mode P→P detection
+`identity_proofs` now flags bare-term pass-throughs (`:= h`), not just
+`:= by exact h`. First catch: `Vol01.liouville_linear`, a hypothesis
+restated as its own conclusion (body `hdet`) under Liouville's name; retired,
+with `symplectic_linear_map` (proved via `linear_map_scales_omega` and `ring`)
+carrying the linear area-preservation content. Positive controls: a projection
+body (`:= S.tr_one`) and a delegation body (`:= global_lemma`) stay unflagged.
+
+## R.8.2 Retired definitional restatements
+- Vol27 `consciousness_from_omega`, `freeze_implies_low_integration`: the
+  `isFrozen := forwardFlux ≤ freezeBoundaryThreshold` definition unfolded.
+  `freeze_implies_low_integration` was the sole live caller of the deleted
+  `freeze_boundary_value`, so this was also a compile-blocking dangling
+  reference on the branch. The relation, with the numeric threshold, is now
+  stated once as `OmegaAxioms.bridge_isFrozen_iff` (`Iff.rfl`).
+- Vol27 `consciousness_qrf`: `abs_nonneg` under a reference-frame name,
+  duplicating `integrated_info_nonneg`; retired.
+- Vol23 `decoherence_as_phi_decay`: unused hypothesis, conclusion true by
+  definition, docstring asserting a Φ-to-coherence link; retired.
+
+## R.8.3 Placeholder naming
+Vol23's placeholder density layer names its definitional consequences
+`bridge_*` (`bridge_decoherence_trace_preserving` → ... →
+`bridge_decoherence_preserves_normalization`, plus the
+`bridge_decoherence_normalized` protocol wrapper); Vol27's
+`substrateindependence` becomes `bridge_integratedInformation_eq_impedance`
+(`rfl`) with wrapper `bridge_substrate_independence`.
+`complete_decoherence_vanishes` drops its vacuous `0 ≤ 0`/`0 ≤ 1` hypotheses.
+
+## R.8.4 Detector/tooling notes
+- `HYPOTHESIS_CONSUMING` typo fixed (`norm_num1` → `norm_num`, the intended
+  hypothesis-consuming tactic) and the duplicated `gcongr` alternative
+  removed; corpus findings unchanged by the fix.
+- CI's `audit_vacuity.py` invocation now passes the three new zero-ratchets
+  (`--max-decorative-hypotheses 0 --max-trivial-hypotheses 0
+  --max-identity-proofs 0`), and the push-trigger branch list includes this
+  review branch.
+
+## R.8.5 Additional naming fixes
+- `Vol09.bh_entropy_is_holographic` → `bridge_bh_entropy_is_holographic`
+  (body is `dsimp`: both sides are the same Bekenstein-Hawking expression; the
+  old banner claimed a "GENUINE PROOF" of the holographic dictionary). The
+  reference in `ProofRegression.lean` and the kernel-audit target name are
+  updated; the 164-target count is unchanged.
+- `Vol24.quantum_advantage_from_phi` retired: duplicate of `bell_violation`
+  under a name/docstring asserting a `Φ_quantum - Φ_local` difference that the
+  statement does not contain.
+- `OmegaProtocol.critical_density` → `bridge_critical_density` (`Vol07`
+  *defines* `CriticalDensity` as `3H²/(8πG)`, so the proof is `rfl`).
+- `APPA` `low_le_all`/`high_le_high` and `Vol08.kms_exterior_vacuum` carry
+  docstrings stating that they hold by the model definitions (`LE` instance
+  pattern match; `KMSState ≡ True`). *Superseded by §R.11: the nested APPA
+  declarations were deleted so the public names derive the facts, and the
+  model's `KMSState` is the trace equation, proved by `ω_ρ_trace`.*
+
+## R.8.6 Verification
+Local: `audit_vacuity.py` zero on every metric with ratchet exit 0,
+`audit_axioms.py --max 0` → 0, 47 Python/tooling tests, ruff/mypy clean, grep
+gate clean. Kernel: pinned `lake build ToE` plus the transitive-axiom gate
+over 164 selected declarations run in Lean CI on the branch; the edited
+declarations are kernel-unverified locally by design.
+
+## R.11 Eleventh pass: the four degenerate-model stacks redesigned
+
+Adversarial finding (carried since R.8): four statements attached a physical
+name to a definitional restatement — Vol02's zero exterior derivative/Hodge
+star, Vol13's `H_matter = H_gravity = 0`, the concrete `KMSState ≡ True`, and
+the disclosed rather than derived APPA `≤` relation. Renaming or documenting
+them was explicitly rejected as a fix; each stack was redesigned.
+
+- **Vol02**: real Mathlib exterior calculus (`extDeriv` on
+  `ContinuousAlternatingMap`s); `d² = 0` from `extDeriv_extDeriv` under
+  `ContDiff ℝ ∞`; additivity/smoothness from the `fderiv` API; gauge
+  invariance derived; the dual (inhomogeneous) Maxwell law is *model data*
+  (`SourcedField.law_dual_maxwell`) with a docstring saying so, because
+  Mathlib has no Hodge star. Retirement comments record the deleted zero
+  definitions and the two constructed witnesses.
+- **Vol13**: the constraint is a hypothesis over arbitrary operators
+  (`wheeler_dewitt_balance`), and `MiniSuperspace` witnesses a satisfiable,
+  non-automatic instance with non-constant terms
+  (`constraint_satisfiable`/`constraint_not_automatic`).
+- **KMS**: the model predicate is `ω_ρ (A * B) = ω_ρ (B * A)`, proved by
+  `ω_ρ_trace` (`LinearMap.trace_mul_comm`); non-tracial functionals falsify
+  it; `kms_temperature_uniqueness_fails` proves the model determines no
+  temperature; Vol08's exterior vacuum is KMS at `β = 2π/κ` and
+  `kms_beta_hawking` pins `(2π/κ)·T_H = 1`.
+- **APPA**: nested re-export declarations deleted; public
+  `low_le_all`/`high_le_high` are case-analysis derivations.
+
+Disclosed remainder (not disguised): type-I tracial model (`Δ = 1`, identity
+flow, not type III); `StateSpace := ℂ`, `QRegion := Unit`; `op_pow A z := A`;
+`PhotonMass := 0` postulate; toy minisuperspace. Kernel-audit targets grew to
+173 selected declarations (the retired `kms_transitivity` name was replaced by
+live targets). CI surfaced and the follow-up commits fixed five compile-level
+defects (stuck `Module` metavariables in the trace application, `Decidable` on
+the discrete relative entropy, a no-goals tactic, the `ContDiff`-scope `ω`
+notation clash in Vol02, noncomputable real arithmetic in Vol13, and a
+form-degree mismatch in the sourced-Maxwell carrier).
+Local gates: `audit_axioms --max 0` → 0; `audit_vacuity` all-zero ratchets
+with the alias baseline exit 0; 47 tooling tests; grep gate clean. `lake build
+ToE` plus the 173-declaration kernel gate are **green in Lean CI on
+`7a5fbf2`** (push run `37588987044`, all job steps success; PR runs
+`37588993997`/`37588994016`).

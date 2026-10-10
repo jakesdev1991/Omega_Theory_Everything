@@ -15,6 +15,8 @@
  *   sw.js                 offline app-shell service worker
  *   install.js            install prompt + service worker registration
  *   icon*.png / icon.svg  app icons
+ *   icon.ico             Windows icon for the Tauri desktop wrapper
+ *                          (tauri-build hard-errors without one)
  *   BUILDINFO.json        version, source hashes, and build time
  */
 
@@ -23,7 +25,8 @@ import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { renderOmegaIcon } from "./lib/png.mjs";
+import { encodeIco } from "./lib/ico.mjs";
+import { drawOmegaIcon, renderOmegaIcon } from "./lib/png.mjs";
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const webRoot = resolve(scriptDir, "..");
@@ -53,6 +56,10 @@ async function readSource(relativePath) {
 // All URLs are relative on purpose: the same generated app must work both at
 // its website mount (/omega-wallet/) and inside the offline download bundle
 // served from any local port or directory.
+// Sizes Windows actually asks for: the small list-view sizes, the desktop
+// shortcut and taskbar sizes, and the 256px jumbo icon in Explorer.
+const ICO_SIZES = [16, 24, 32, 48, 64, 128, 256];
+
 const MANIFEST = {
   name: `${config.name} (${config.channel})`,
   short_name: config.name,
@@ -246,6 +253,7 @@ async function main() {
     { path: "icon.svg", data: Buffer.from(ICON_SVG, "utf8") },
     { path: "icon-192.png", data: renderOmegaIcon(192) },
     { path: "icon-512.png", data: renderOmegaIcon(512) },
+    { path: "icon.ico", data: encodeIco(ICO_SIZES, drawOmegaIcon) },
   ];
 
   for (const entry of generated) {

@@ -1,7 +1,20 @@
 # Copyright (c) 2025-2026 Jacob See.
 # SPDX-License-Identifier: MIT
 
-Simulation 1: Emergent Distances and 1D Embedding
+# Simulation 1: Emergent Distances and 1D Embedding
+
+> **Status: manuscript, not an executable simulation.** This file spent its
+> life as `Sim1_Emergent_Geometry.py` at the repository root, where the
+> Quick Start instructions told readers to run it. It never parsed. The v4.0
+> paste of this document passed the text through a Markdown round-trip, which
+> consumed underscores and double asterisks, so the appendix listing below is
+> damaged beyond mechanical repair: `build_mutual_info` appears as
+> `buildmutualinfo`, `D**2` as `D  2`, and the final expression is truncated
+> mid-line. The prose is intact and is the actual content of this document.
+>
+> To restore a runnable Sim1, drop the original script in as
+> `Sim1_Emergent_Geometry.py`; the damaged listing here should not be pasted
+> back into a `.py` file.
 
 Abstract
 We present a toy simulation demonstrating how information‑theoretic correlations can generate emergent spatial structure. Starting from a mutual‑information kernel on a one‑dimensional chain, we construct effective distances via logarithmic mapping, embed the system using classical multidimensional scaling (MDS), and quantify the fidelity of the emergent geometry. This simulation establishes the baseline case for a hierarchy of models supporting a unification framework in which geometry arises from correlation structure.
@@ -26,9 +39,9 @@ where \(\xi\) is the correlation length in units of lattice steps. This captures
 - The kernel is symmetrized and normalized so that \(K_{ii} = 1\).  
 - Effective distances are defined by
 \[
-r{ij} = -\lambdaP \ln K_{ij},
+r{ij} = -\lambda_P \ln K_{ij},
 \]
-where \(\lambdaP\) is calibrated so that the end‑to‑end distance \(r{0,N-1}\) matches a chosen target.
+where \(\lambda_P\) is calibrated so that the end‑to‑end distance \(r_{0,N-1}\) matches a chosen target.
 
 2.3 Embedding and Alignment
 - Classical MDS is applied to the distance matrix, yielding a one‑dimensional embedding.  
@@ -71,9 +84,9 @@ Simulation 1 establishes the principle that geometry is emergent from informat
 
 Appendix A: Cleaned Code (Python)
 
-`python
+```python
 
-sim1.py
+# sim1.py — recovered listing (DAMAGED, see the note at the top of this file)
 
 Simulation 1: Emergent Distances and 1D Embedding
 
@@ -185,3 +198,4 @@ def main():
     xaligned, scale, shift, corr = procrustes1d(xembed, xtrue)
     relrms = np.sqrt(np.mean((xaligned - xtrue)  2)) / np.std(xtrue)
     Dembed = pairwisedist(x_aligned
+```

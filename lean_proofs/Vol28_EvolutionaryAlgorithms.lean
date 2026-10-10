@@ -83,11 +83,11 @@ theorem selection_self (a : Genome) : selectBest a a = a := by
 /-- Structural bridge: Ω-metric reflexivity in the Q-region model used for
     population distances. -/
 theorem bridge_vol28_metric_self_zero (R : QRegion) : d R R = 0 :=
-  qregion_self_distance_zero R
+  bridge_qregion_self_distance_zero R
 
 /-- Structural bridge: population entropy is nonnegative in the Q-region
     model. -/
 theorem bridge_vol28_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 :=
-  monotonicity_lemma R
+  bridge_vonNeumannEntropy_nonneg R
 
 end OmegaProtocol.Vol28

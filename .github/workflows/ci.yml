@@ -9,6 +9,11 @@ on:
     branches: [main]
   schedule:
     - cron: '0 2 * * 0'
+  # TruffleHog derives its commit range from the event: push = before..after,
+  # pull_request = base..head, but schedule AND workflow_dispatch = full history.
+  # So this is the only way to re-run the full-history secret scan on demand
+  # instead of waiting for the Sunday cron.
+  workflow_dispatch:
 
 jobs:
   python-checks:
@@ -24,9 +29,14 @@ jobs:
           cache: 'pip'
       
       - name: Install dependencies
+        # The README's Quick Start tells a reader to run
+        # `pip install -r requirements.txt`; CI now installs the same file, so
+        # the documented path is the tested path. It carries the pinned
+        # ruff/mypy/pytest versions too, so a tool release cannot change a
+        # verdict here without a commit.
         run: |
           pip install -U pip
-          pip install ruff mypy pytest
+          pip install -r requirements.txt
       
       - name: Ruff lint
         run: ruff check .
@@ -37,14 +47,30 @@ jobs:
       - name: MyPy type check
         run: mypy . --ignore-missing-imports
       
+      - name: Python tests
+        # conjecture_pilot (24) + lean_proofs source/build/kernel audits (41).
+        # pytest.ini keeps mcp/ out of collection: it needs the MCP SDK on its
+        # own uv/venv boundary (see the comment in that file).
+        run: python -m pytest -v
+      
       - name: Run simulations (smoke test)
+        # No `|| true` here. The previous version ended every command with it,
+        # which is how sim6_v14_depletion.py stayed broken: it raised
+        # "array must not contain infs or NaNs" on every run and the step still
+        # reported success. Every command below must exit 0.
+        #
+        # Sim1 and Sim4 are prose manuscripts in docs/manuscripts/ (they were
+        # never executable; see docs/manuscripts/README.md), so they are not
+        # run here. Sim2 runs headless under Agg. Sim3/Sim5/Sim7 accept --help;
+        # sim6 has no argument parser and is run for real.
+        env:
+          MPLBACKEND: Agg
         run: |
-          python Sim1_Emergent_Geometry.py --help || true
-          python Sim2_Cosmology.py --help || true
-          python Sim3_Dynamic_Scale.py --help || true
-          python Sim4_Evolution.py --help || true
-          python Sim5_Emergent_Gravity.py --help || true
-          python Sim7_Radial_Metric.py --help || true
+          python Sim2_Cosmology.py
+          python Sim3_Dynamic_Scale.py --help
+          python Sim5_Emergent_Gravity.py --help
+          python sim6_v14_depletion.py
+          python Sim7_Radial_Metric.py --help
 
   rust-checks:
     name: Rust Build & Test
@@ -86,6 +112,13 @@ jobs:
       - name: Compile and run contract tests
         working-directory: evm
         run: npm run check
+
+      - name: Rehearse the Sepolia preflight (local network, nothing broadcast)
+        # The preflight's job is to refuse to proceed, so its passing path needs a
+        # configuration that should pass. The local network is pinned to Sepolia's
+        # chain ID, so this exercises the same checks without a key or a network.
+        working-directory: evm
+        run: npm run preflight:rehearsal
 
       - name: Check runtime dependency advisories
         working-directory: evm
@@ -170,6 +203,153 @@ jobs:
         working-directory: mobile-node
         run: npm test
 
+  amity-pilot:
+    name: AMITY Testnet Scaffold Checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: amity/package-lock.json
+
+      - name: Install locked dependencies
+        working-directory: amity
+        run: npm ci
+
+      - name: Run config, manifest, proof, policy, and holder-verification tests
+        working-directory: amity
+        run: npm test
+
+  nostr-client:
+    name: Nostr Client Checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: nostr-client/package-lock.json
+
+      - name: Install locked dependencies
+        working-directory: nostr-client
+        run: npm ci
+
+      # test/live.test.mjs needs a reachable relay and skips itself without one,
+      # so this runs the unit and integration suites offline.
+      - name: Run unit and integration tests
+        working-directory: nostr-client
+        run: npm test
+
+  cpp-suites:
+    name: C++ Acceptance Suites (CBwK pacer + Omni-Bridge)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # ubuntu-latest ships GCC with C++23 support, which both suites require.
+      - name: Compiler version
+        run: g++ --version
+
+      # Both scripts run their full config matrix: a strict
+      # -Wall -Wextra -Werror build, then ThreadSanitizer, then
+      # AddressSanitizer + UBSan (cpp/ adds a forced pre-C++23 fallback build).
+      # They complete in well under a minute, so there is no reason to run the
+      # weaker --quick path in CI.
+      - name: CBwK shadow-price pacer suite
+        working-directory: cpp
+        run: ./build.sh
+
+      - name: Omni-Bridge control-boundary acceptance suite
+        working-directory: omni-bridge/cpp
+        run: ./build.sh
+
+  mcp-hub:
+    name: Omega MCP Hub Smoke Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          # mcp/pyproject.toml declares requires-python = ">=3.12"; the root
+          # python-checks job stays on 3.11 and deliberately does not collect
+          # mcp/ (see pytest.ini).
+          python-version: '3.12'
+
+      - name: Install the hub and its dependencies
+        run: |
+          python -m pip install -U pip
+          python -m pip install -e ./mcp
+
+      # smoke_test.py imports the server, lists all 22 tools, checks the five
+      # plane state attributes, and does a real stdio JSON-RPC round trip
+      # against `python -m omega_mcp`.
+      - name: Run smoke test
+        run: python mcp/smoke_test.py
+
+  ai-governor:
+    name: AI Governor Build & Smoke Run (PoUW trainer)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # The governor is the Proof-of-Useful-Work trainer for the Lucifer
+      # framework. It had no build command anywhere in the repository and was in
+      # no CI job, so nothing verified that it compiles. It needs OpenSSL headers
+      # for the SHA-256 receipt digest; the runner image does not always ship
+      # libssl-dev, so install it explicitly.
+      - name: Install OpenSSL headers
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq libssl-dev
+
+      # build.sh runs a strict -Wall -Wextra -Werror build and then a 300-step
+      # governed + baseline smoke run, requiring receipts from both.
+      - name: Build and smoke-run the governor
+        run: ./build.sh
+        working-directory: ai-governor
+
+  wallet-desktop:
+    name: Wallet Desktop Wrapper Checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: |
+            web/package-lock.json
+            desktop/package-lock.json
+
+      # The Tauri installer workflow (wallet-desktop.yml) only runs on a
+      # `wallet-v*` tag or by manual dispatch, and no tag has ever been cut, so
+      # nothing has ever exercised desktop/ in CI. Install both lockfiles (they
+      # are committed but were never installed anywhere) and check the four
+      # version strings, the paths Tauri bundles, and the release manifest.
+      - name: Install the desktop wrapper's locked dependencies
+        run: npm ci
+        working-directory: desktop
+
+      - name: Install the wallet GUI's locked dependencies
+        run: npm ci
+        working-directory: web
+
+      - name: Sync the wallet GUI into the web app
+        run: npm run sync:wallet
+        working-directory: web
+
+      - name: Check wrapper consistency
+        run: node desktop/scripts/check-wrapper.mjs
+
   security-scan:
     name: Security Scan
     runs-on: ubuntu-latest
@@ -186,7 +366,9 @@ jobs:
           fetch-depth: 0
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        # Pinned to a tag, not @master: a floating ref on a security job is a
+        # supply-chain risk (any upstream push lands here unreviewed).
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: 'fs'
           scan-ref: '.'
@@ -207,12 +389,23 @@ jobs:
       - name: Check for secrets
         # Run regardless of whether the SARIF upload succeeded.
         if: ${{ !cancelled() }}
-        uses: trufflesecurity/trufflehog@main
+        # Pinned to a tag, not @main — see the note on trivy-action above.
+        uses: trufflesecurity/trufflehog@v3.97.9
         with:
           # No explicit base/head: the action derives the range from the event
-          # (push: before..after, pull_request: base..head, schedule: full history).
+          # (push: before..after, pull_request: base..head, schedule and
+          # workflow_dispatch: full history).
           # Hard-coding base=main/head=HEAD fails on pushes to main (BASE == HEAD).
           path: .
+          # -x/--exclude-paths: file of newline-separated regexes. Generated
+          # lockfiles are excluded because they are machine-written and are the
+          # single largest source of false positives here (the Box detector
+          # fires on the package names `hardhat-toolbox`, `boxen` and
+          # `cli-boxes` inside evm/package-lock.json, which contains no
+          # credentials — only npm sha512 integrity hashes). Dependabot
+          # regenerates these files, and Trivy already scans them for
+          # vulnerable dependencies. Every hand-written file stays scanned.
+          extra_args: --exclude-paths=.github/trufflehog-exclude-paths.txt
 
   docs:
     name: Documentation Check

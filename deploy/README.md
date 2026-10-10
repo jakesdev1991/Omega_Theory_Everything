@@ -12,9 +12,18 @@ Three user services make up the backplane:
 
 ## Bootstrap order (one-time)
 
-Everything below assumes the repo at `/home/jake/Omega_Theory_Everything`
-(branch `nostr/backend`) and the relay build at
-`/home/jake/omega_nostr_build/chorus/target/release/chorus`.
+The unit files in this directory carry **absolute paths from the machine they
+were first deployed on** (`/home/jake/...`) — systemd wants absolute paths, and
+the alternative, `%h`, behaves differently enough between user and system units
+that a wrong guess would break the deployment silently. Rewrite them for
+whoever is installing instead; this is also a no-op on that first machine:
+
+```bash
+sed "s|/home/jake|$HOME|g" deploy/omega-*.service > /tmp/omega-units/   # then inspect
+```
+
+The examples below use `~` and assume the repo at `$HOME/Omega_Theory_Everything`
+and the relay build at `$HOME/omega_nostr_build/chorus/target/release/chorus`.
 
 1. **Keys (GATED — requires Jake's explicit approval).**
    ```bash
@@ -46,7 +55,15 @@ Everything below assumes the repo at `/home/jake/Omega_Theory_Everything`
 
 4. **Install + enable the units:**
    ```bash
-   cp deploy/omega-*.service ~/.config/systemd/user/
+   mkdir -p ~/.config/systemd/user
+   # Rewrite the absolute paths baked into the units for this machine; on the
+   # machine they were written for, the substitution changes nothing. The grep
+   # that follows fails loudly if any path was missed.
+   for unit in deploy/omega-*.service; do
+     sed "s|/home/jake|$HOME|g" "$unit" > ~/.config/systemd/user/"$(basename "$unit")"
+   done
+   grep -l '/home/jake' ~/.config/systemd/user/omega-*.service 2>/dev/null \
+     && echo 'STILL MACHINE-SPECIFIC — fix before enabling' || echo 'unit paths rewritten'
    systemctl --user daemon-reload
    systemctl --user enable --now omega-nostr-relay
    systemctl --user enable --now omega-nostr-client

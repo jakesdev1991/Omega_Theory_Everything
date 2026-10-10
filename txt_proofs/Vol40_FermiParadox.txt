@@ -33,10 +33,9 @@ structure GreatFilter where
   index : ℕ
   lethal : Bool
 
-/-- Named bridge (legacy name kept for `OmegaProtocol.lean`): the Great
-    Filter type is inhabited — witnessed by a lethal stage-0 filter, the
-    strongest possible silence condition. -/
-theorem fermi_paradox_axiom : Nonempty GreatFilter :=
+/-- The Great Filter type is inhabited — witnessed by a lethal stage-0
+    filter, the strongest possible silence condition. -/
+theorem great_filter_witness : Nonempty GreatFilter :=
   ⟨⟨0, true⟩⟩
 
 /-- One failed filter silences the whole chain. -/
@@ -77,12 +76,12 @@ theorem drake_monotone_longevity (R fp ne fl fi fc L₁ L₂ : ℕ) (h : L₁ �
 
 /-- Structural bridge: interstellar distances in the model are nonnegative. -/
 theorem bridge_vol40_metric_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 :=
-  distance_nonneg R₁ R₂
+  bridge_distance_nonneg R₁ R₂
 
 /-- Structural bridge: the holographic entropy bound holds in the Q-region
     model used for civilization horizons. -/
 theorem bridge_vol40_entropy_bounded (R : QRegion) :
     vonNeumannEntropy R ≤ Real.pi :=
-  entropy_bounded R
+  bridge_vonNeumannEntropy_le_pi R
 
 end OmegaProtocol.Vol40

@@ -1,6 +1,10 @@
 # Copyright (c) 2025-2026 Jacob See.
 # SPDX-License-Identifier: MIT
 
+# Omega Evolution Sim v2.3.0 — LTEE-inspired E. coli
+
+## Header as written
+
 Omega Evolution Sim v2.3.0 - LTEE-Inspired E. coli
 
 Compatible with Omega Protocol v2.3.0
@@ -13,7 +17,10 @@ Simulates 12 pops over 75k gens: Wright-Fisher + mutation/selection.
 - COD: redundancy in pop clusters (low = efficient evolution; tracked pre/post Cit+ for sharper story).
 - UniversalOptimizer tunes mutation rate for optimal paths.
 - JAX for GPU-parallel pops; scaling bench included.
-"""
+
+## The v2.3.0 script and run transcript
+
+```python
 
 import subprocess
 import numpy as np
@@ -174,7 +181,11 @@ Final Fitness: 1.4523, Entropy: 4.23 bits, COD: 0.08
 [Trajectory shows epistatic synergies amplifying Cit+; ledger JSONL for repro]
 
 
+```
 
+## The embedded HTML simulator
+
+```html
 HTML SIMULATOR 
 <!DOCTYPE html>
 <html lang="en">
@@ -897,3 +908,4 @@ HTML SIMULATOR
     </script>
 </body>
 </html>
+```

@@ -71,6 +71,6 @@ theorem pure_joint_need_not_have_zero_marginals :
     by norm_num [RadiationEntropy, positiveMarginalWitness]⟩
 
 theorem bridge_vol25_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 :=
-  monotonicity_lemma R
+  bridge_vonNeumannEntropy_nonneg R
 
 end OmegaProtocol.Vol25

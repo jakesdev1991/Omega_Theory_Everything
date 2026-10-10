@@ -70,10 +70,10 @@ theorem simulates_strict_step (l : Layer) :
 
 /-- Structural bridge: layer coupling in the Q-region model is symmetric. -/
 theorem bridge_vol46_coupling_symm (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R₂ R₁ :=
-  Φ_symm R₁ R₂
+  bridge_overlapDensity_symm R₁ R₂
 
 /-- Structural bridge: the Ω-metric is reflexive on the Q-region model. -/
 theorem bridge_vol46_metric_self_zero (R : QRegion) : d R R = 0 :=
-  qregion_self_distance_zero R
+  bridge_qregion_self_distance_zero R
 
 end OmegaProtocol.Vol46

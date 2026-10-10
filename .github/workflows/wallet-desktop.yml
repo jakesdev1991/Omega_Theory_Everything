@@ -40,7 +40,16 @@ jobs:
         if: startsWith(matrix.platform, 'ubuntu')
         run: |
           sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+          # Tauri v2's documented Debian/Ubuntu prerequisites. The tray dev
+          # package was renamed (libappindicator3-dev is the transitional name
+          # for libayatana-appindicator3-dev) and which one is installable
+          # depends on the runner's Ubuntu release, so accept either rather
+          # than fail one matrix leg on a package name.
+          sudo apt-get install -y \
+            build-essential libssl-dev libxdo-dev \
+            libwebkit2gtk-4.1-dev librsvg2-dev patchelf
+          sudo apt-get install -y libayatana-appindicator3-dev \
+            || sudo apt-get install -y libappindicator3-dev
 
       - name: Sync wallet GUI into web/public
         working-directory: web
@@ -51,14 +60,31 @@ jobs:
       - name: Build desktop bundle
         working-directory: desktop
         run: |
-          npm install
-          npx tauri build --target-dir target ${{ matrix.args }}
+          # npm ci, not npm install: desktop/package-lock.json is committed, so
+          # the Tauri CLI version that produces a published installer is pinned
+          # and reproducible across the three platform runners.
+          npm ci
+          # No --target-dir: the Tauri v2 CLI has no such flag (it existed in v1
+          # and was removed, so passing it fails argument parsing on every
+          # platform before anything is built). The crate default applies and
+          # bundles land in desktop/src-tauri/target/release/bundle.
+          npx tauri build ${{ matrix.args }}
 
       - name: Upload installer artifacts
         uses: actions/upload-artifact@v4
         with:
           name: omega-wallet-${{ matrix.platform }}
-          path: desktop/src-tauri/target/release/bundle/**/*
+          # Only the installers. `npx tauri build` runs with working-directory:
+          # desktop and writes to the crate's default cargo target dir
+          # (desktop/src-tauri/target), where each bundler also leaves a scratch
+          # directory next to its output — a glob of `**/*` picked those up too,
+          # which is how the first release came to carry assets such as
+          # template.applescript and debian-binary alongside the installers.
+          path: |
+            desktop/src-tauri/target/release/bundle/appimage/*.AppImage
+            desktop/src-tauri/target/release/bundle/deb/*.deb
+            desktop/src-tauri/target/release/bundle/dmg/*.dmg
+            desktop/src-tauri/target/release/bundle/msi/*.msi
           if-no-files-found: error
 
   publish:
@@ -66,16 +92,85 @@ jobs:
     needs: build
     if: startsWith(github.ref, 'refs/tags/wallet-v')
     runs-on: ubuntu-22.04
+    # The default token cannot create releases or upload assets; without this the
+    # first tag would build installers and then fail at the upload step.
+    permissions:
+      contents: write
     steps:
       - uses: actions/download-artifact@v4
         with:
           path: artifacts
 
+      - name: Create the release for this tag if it does not exist yet
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          # `gh release upload` needs an existing release, and a tag push creates
+          # the tag but not the release, so the first wallet-v* tag would
+          # otherwise fail here.
+          if gh release view "${GITHUB_REF_NAME}" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
+            echo "release ${GITHUB_REF_NAME} already exists"
+          else
+            gh release create "${GITHUB_REF_NAME}" \
+              --repo "${GITHUB_REPOSITORY}" \
+              --verify-tag \
+              --prerelease \
+              --title "${GITHUB_REF_NAME}" \
+              --notes "Omega wallet desktop installers, built from the tag by
+          .github/workflows/wallet-desktop.yml. Prerelease prototype: unaudited, installers
+          unsigned, and it talks only to the valueless test rails (Sepolia OMEGA, Solana
+          Devnet TWC). No real funds. Verify downloads against SHA256SUMS.txt."
+          fi
+
       - name: Attach bundles to the release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release upload "${GITHUB_REF_NAME}" artifacts/**/* --clobber --repo "${GITHUB_REPOSITORY}"
+          set -euo pipefail
+          find artifacts -type f | sort
+          find artifacts -type f -print0 | xargs -0 sha256sum > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+
+          # One gh invocation per asset, with retries. The first tag run passed
+          # one invocation every file: a single transient upload failure aborted
+          # the batch, and the release ended up with ten assets while the
+          # .AppImage, .deb, .msi and the checksum file were never attempted.
+          # --clobber makes each attempt idempotent, so a retry cannot duplicate.
+          failed=0
+          while IFS= read -r -d '' asset; do
+            name=$(basename "$asset")
+            uploaded=0
+            for attempt in 1 2 3; do
+              if gh release upload "${GITHUB_REF_NAME}" "$asset" --clobber --repo "${GITHUB_REPOSITORY}"; then
+                uploaded=1
+                break
+              fi
+              echo "::warning::upload of ${name} failed (attempt ${attempt}); retrying in 15s"
+              sleep 15
+            done
+            if [ "$uploaded" -ne 1 ]; then
+              echo "::error::could not upload ${name} after 3 attempts"
+              failed=1
+            fi
+          done < <(find artifacts -type f -print0)
+
+          if ! gh release upload "${GITHUB_REF_NAME}" SHA256SUMS.txt --clobber --repo "${GITHUB_REPOSITORY}"; then
+            echo "::error::could not upload SHA256SUMS.txt"
+            failed=1
+          fi
+
+          # Verify rather than assume: one installer per platform plus checksums.
+          gh release view "${GITHUB_REF_NAME}" --repo "${GITHUB_REPOSITORY}" \
+            --json assets --jq '.assets[].name' > released-assets.txt
+          cat released-assets.txt
+          for suffix in .AppImage .deb .dmg .msi SHA256SUMS.txt; do
+            if ! grep -q -- "${suffix}$" released-assets.txt; then
+              echo "::error::the release has no ${suffix} asset"
+              failed=1
+            fi
+          done
+          exit "$failed"
 
       - name: Next step for maintainers
         run: |

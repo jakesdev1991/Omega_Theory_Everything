@@ -10,7 +10,7 @@
 - The baseline root `LICENSE` stated MIT License and `Copyright (c) 2025-2026 Jacob See`. A copy of that text is kept as `LICENSES/MIT-legacy.txt`.
 - The baseline commit includes scientific materials and product materials (`app/`, `rust/`, `whitepapers/`, and the Tri-Token blueprint) under that root MIT notice. This record does not determine whether every historical contributor had authority to license every file.
 - No signed contributor license agreement or assignment is recorded among the files in this checkout.
-- Direct dependency declarations include Python packages in `requirements.txt`, Lean/Mathlib tooling in `lean_proofs/`, and Rust workspace crates. Observed external references also include Google Fonts in `app/styles.css`, Tailwind CSS and Chart.js CDN links in `Sim4_Evolution.py`, and GitHub Actions in `.github/workflows/ci.yml`; the `Sim4` file also imports an `omega` package not present in this checkout. This is not a complete software bill of materials or third-party content audit.
+- Direct dependency declarations include Python packages in `requirements.txt`, Lean/Mathlib tooling in `lean_proofs/`, and Rust workspace crates. Observed external references also include Google Fonts in `app/styles.css`, Tailwind CSS and Chart.js CDN links in `Sim4_Evolution.py`, and GitHub Actions in `.github/workflows/ci.yml`; the `Sim4` manuscript (now `docs/manuscripts/sim4_evolution.md`) also imports an `omega` package not present in this checkout, and its embedded HTML simulator loads Tailwind CSS and Chart.js from CDNs. This is not a complete software bill of materials or third-party content audit.
 
 ## Current file-scope map
 

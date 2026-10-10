@@ -88,11 +88,11 @@ theorem orbital_period_sq_nonneg (sys : KeplerSystem) (a : ℝ) :
 
 /-- Structural consistency of the separate legacy Q-region model only. -/
 theorem bridge_vol30_metric_self_zero (R : QRegion) : d R R = 0 :=
-  qregion_self_distance_zero R
+  bridge_qregion_self_distance_zero R
 
 /-- Structural consistency of the separate legacy Q-region model only. -/
 theorem bridge_vol30_metric_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 :=
-  distance_nonneg R₁ R₂
+  bridge_distance_nonneg R₁ R₂
 
 /-- Kepler's relation, verified for the period formula: with standard
     gravitational parameter `μ > 0` and semi-major axis `a > 0`,

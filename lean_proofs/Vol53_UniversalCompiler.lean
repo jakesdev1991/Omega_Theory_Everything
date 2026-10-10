@@ -76,7 +76,7 @@ theorem depth_compose_ge (f g : Prog) :
 /-- Structural bridge: the compiler layer is compatible with the Ω-metric
     layer of the protocol. -/
 theorem bridge_vol53_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 :=
-  monotonicity_lemma R
+  bridge_vonNeumannEntropy_nonneg R
 
 /-- Expressiveness audit: without an input constructor every program in this
     grammar computes a constant function. Composition does not fix that. -/

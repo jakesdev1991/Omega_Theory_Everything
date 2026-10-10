@@ -21,8 +21,25 @@ The historical volume/cross-volume statement aliases have been retired.
 The empty `legacy_statement_aliases.json` baseline prevents their silent return.
 A passing source audit does not validate physical interpretations or show that
 positive-information hypotheses in downstream modules are realizable.
-The concrete modular flow below is zero, not a faithful modular automorphism group.
+The concrete modular theory below is the *tracial* model: the state functional
+is the algebraic trace (`ω_ρ_trace`), and the modular operator is `Δ = 1` with
+the modular flow the identity, so the KMS condition reduces to the trace
+equation — it is not a faithful type-`III` modular automorphism group.
+
+This collapse is *forced* by the carrier, not chosen: `StateSpace` is
+one-dimensional, so `operator_eq_smul_one` makes every operator a scalar
+multiple of the identity, `OmegaAxioms.omegaAlgebra_commutative` makes the
+algebra commutative, and `OmegaAxioms.every_functional_is_tracial` shows that
+*every* functional on it is a trace — there is no non-tracial functional for a
+non-trivial `Δ` to act on.  A faithful type-`III` model would need a
+higher-dimensional (or infinite-dimensional) carrier.
 -/
+
+-- `StateSpace` is an `abbrev` for `ℂ`, so a `DecidableEq` instance for
+-- states exists — but it is noncomputable.  Classical decidability of state
+-- equality is taken explicitly here for the discrete relative entropy and its
+-- monotonicity proof (the `if` in `concreteRelativeEntropy`):
+attribute [local instance] Classical.propDecidable
 
 namespace OmegaProtocol
 
@@ -46,37 +63,126 @@ structure ModularTheory where
   law_relative_entropy_monotonicity : ∀ (ρ σ : StateSpace) (Φ : CPTPMap), RelativeEntropy (Φ ρ) (Φ σ) ≤ RelativeEntropy ρ σ
   law_qfim_hessian : ∀ (ρ : StateSpace) (X Y : StateSpace → ℝ) (X_op Y_op : Operator), QFIM ρ X_op Y_op = Hessian (RelativeEntropy ρ) X Y
 
-/-- A checked zero-information instance used by the legacy volume bridges.
-    It is a value with proofs of every field, not a kernel assumption. -/
+-- ---- The model is tracial: KMS is the trace equation ---------------------
+--
+-- The concrete scalar model below cannot carry a *non-trivial* modular flow:
+-- its modular operator is a complex number, so `Δ^{it}` is scalar, the flow
+-- acts trivially on the top algebra `ℂ[StateSpace →L[ℂ] StateSpace]`, and the
+-- KMS equation `ω (A · α_{iβ}(B)) = ω (B · A)` reduces to the trace equation
+-- `ω (A ∘ B) = ω (B ∘ A)`.  The model therefore *is* the tracial (type `I`)
+-- case: `Δ = 1`, the flow is the identity, and the KMS predicate is the trace
+-- equation — which is genuinely *satisfied* (`ω_ρ_trace` below, from Mathlib's
+-- basis-independent `LinearMap.trace_mul_comm`) rather than absorbed into
+-- `True`.  A non-tracial functional falsifies the predicate, so it is not
+-- vacuous.
+
+/-- **The model state functional is a trace**: for all elements of the algebra,
+    `ω_ρ (A ∘ B) = ω_ρ (B ∘ A)`.  This is Mathlib's basis-independent
+    `LinearMap.trace_mul_comm`. -/
+theorem ω_ρ_trace (A B : OmegaAlgebra) : ω_ρ (A * B) = ω_ρ (B * A) := by
+  have hAB : ((A * B : OmegaAlgebra) : Operator) =
+      (A : Operator) * (B : Operator) := rfl
+  have hBA : ((B * A : OmegaAlgebra) : Operator) =
+      (B : Operator) * (A : Operator) := rfl
+  rw [ω_ρ, ω_ρ, hAB, hBA, ContinuousLinearMap.toLinearMap_mul,
+    ContinuousLinearMap.toLinearMap_mul]
+  exact LinearMap.trace_mul_comm (R := ℂ) (M := StateSpace)
+    ((A : Operator) : StateSpace →ₗ[ℂ] StateSpace)
+    ((B : Operator) : StateSpace →ₗ[ℂ] StateSpace)
+
+/-- Model relative entropy: the discrete metric on states — `0` on the
+    diagonal, `1` off it.  It is non-constant (the former model value was the
+    constant functional `0`) and genuinely monotone under arbitrary maps, so
+    the model's second law is a proved inequality rather than `0 ≤ 0`. -/
+noncomputable def concreteRelativeEntropy (ρ σ : StateSpace) : ℝ :=
+  if ρ = σ then 0 else 1
+
+/-- The model relative entropy is monotone under *every* map `StateSpace → StateSpace`,
+    in particular under the model's `CPTPMap`s: `RE (Φ ρ) (Φ σ) ≤ RE ρ σ`. -/
+theorem concreteRelativeEntropy_mono (ρ σ : StateSpace) (Φ : CPTPMap) :
+    concreteRelativeEntropy (Φ ρ) (Φ σ) ≤ concreteRelativeEntropy ρ σ := by
+  by_cases h : ρ = σ
+  · subst h
+    simp [concreteRelativeEntropy]
+  · by_cases h' : Φ ρ = Φ σ
+    · simp only [concreteRelativeEntropy, if_pos h', if_neg h]
+      exact zero_le_one
+    · simp only [concreteRelativeEntropy, if_neg h', if_neg h]
+      exact le_rfl
+
+/-- A checked concrete instance used by the legacy volume bridges: the algebra
+    is the top `StarSubalgebra`, the state functional is the algebraic trace
+    (a tracial state, `Δ = 1`), the relative entropy is the (non-constant)
+    discrete metric `concreteRelativeEntropy`, and the modular flow
+    `α_t(A) = Δ^{it} A Δ^{-it}` is the identity on the algebra.  It is a value
+    with proofs of every field, not a kernel assumption: the `Ω`-state is
+    cyclic and separating (`law_omega_cyclic_separating` is proved from
+    surjectivity of `A ↦ A 1` and from `operator_eq_smul_one`, while
+    `not_cyclicSeparating_zero` shows the predicate is not trivially true), and
+    `law_modular_operator` is a computation in the model's genuine functional
+    calculus `A ^ z = (A 1) ^ z • 1` (`op_pow_of_one`), not the former
+    placeholder `A ^ z = A`. -/
 noncomputable def concreteModularTheory : ModularTheory :=
-  { ModularOperator := fun _ => 0
-    ModularConjugation := fun _ => 0
-    OmegaState := 0
-    ModularFlow := fun _ _ => 0
+  { ModularOperator := fun _ => 1
+    ModularConjugation := fun _ => 1
+    OmegaState := (1 : ℂ)
+    ModularFlow := fun _ A => A
     ModularHamiltonian := fun _ => 0
-    KMSState := fun _ _ => True
-    RelativeEntropy := fun _ _ => 0
+    KMSState := fun ρ β => ∀ A B : OmegaAlgebra, ω_ρ (A * B) = ω_ρ (B * A)
+    RelativeEntropy := concreteRelativeEntropy
     law_modular_flow_group := by
       intro t s
       funext A
       rfl
     law_omega_cyclic_separating := by
-      exact True.intro
+      constructor
+      · -- Cyclicity: `A ↦ A·1` is surjective, since every `z` is `(z • 1) 1`.
+        intro y
+        have hsurj : Function.Surjective
+            (fun A : ↥OmegaAlgebra => (A : Operator) (1 : StateSpace)) := by
+          intro z
+          -- `⊤`-membership for the top `StarSubalgebra` is `StarSubalgebra.mem_top`
+          -- (checked against the pinned Mathlib: the lemma is declared in
+          -- Mathlib/Algebra/Star/Subalgebra.lean; `Subalgebra.mem_top` does not
+          -- exist for this structure, which is what failed the twelfth-pass build).
+          exact ⟨⟨z • (1 : Operator), StarSubalgebra.mem_top⟩, by simp [smul_eq_mul]⟩
+        rw [hsurj.range_eq, closure_univ]
+        exact Set.mem_univ y
+      · -- Separating: `A·1 = 0` pins `A` down by `operator_eq_smul_one`.
+        intro A hA
+        apply Subtype.ext
+        -- `A = A 1 • 1 = 0 • 1`, and `0 • (1 : Operator)` is the zero operator.
+        -- The reduction is done pointwise: at the level of states the scalar
+        -- action is complex multiplication, which is where `zero_smul` has a
+        -- shape the simplifier can match (as a bare `rw [zero_smul]` on the
+        -- operator level it did not: the pattern `0 • ?m` failed to unify with
+        -- the occurrence inside the subalgebra coercion).
+        show (A : Operator) = (0 : Operator)
+        rw [operator_eq_smul_one (A : Operator), hA]
+        apply ContinuousLinearMap.ext
+        intro v
+        simp [smul_apply, one_apply_eq_self, smul_eq_mul]
     law_modular_operator := by
+      -- `Δ = 1` (tracial state) and in the model calculus `1 ^ z = 1`, so both
+      -- sides reduce to `1 * A * 1`, which is `A` by the operator monoid laws.
       intro A t
-      -- Both sides reduce definitionally: the flow is constantly zero and the
-      -- zero functional calculus makes the RHS a product with a zero factor.
-      change (0 : Operator) = ((0 : Operator).comp (A : Operator)).comp 0
-      exact (ContinuousLinearMap.comp_zero _).symm
+      simp only [op_pow_of_one, one_mul, mul_one]
     law_kms_characterization := by
+      -- The KMS predicate *is* the trace equation, and with the identity flow
+      -- `α_{iβ}(B) = B` the characterising equation is the same equation.
       intro ρ β
-      simp [ω_ρ]
-    law_relative_entropy_monotonicity := by
-      intro ρ σ Φ
-      exact le_rfl
+      constructor <;> intro h A B <;> simpa using h A B
+    law_relative_entropy_monotonicity := fun ρ σ Φ => concreteRelativeEntropy_mono ρ σ Φ
     law_qfim_hessian := by
       intro ρ X Y X_op Y_op
       rfl }
+
+/-- **The concrete instance is KMS at every temperature**: the trace equation
+    holds at every state and inverse temperature, so the KMS predicate is
+    satisfied rather than true by definition. -/
+theorem concrete_kms_holds (ρ : StateSpace) (β : ℝ) :
+    concreteModularTheory.KMSState ρ β :=
+  fun A B => ω_ρ_trace A B
 
 -- Pillar 2: Quantum Fisher Information Metric = Spacetime Geometry
 structure QFIMGeometry where

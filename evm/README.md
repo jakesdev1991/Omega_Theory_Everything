@@ -102,6 +102,23 @@ The test suite covers:
    npm run deploy:sepolia
    ```
 
+   The preflight checks the chain ID, every address and parameter, and whether
+   the deployer can pay for the run. That last check estimates the six contract
+   creations from the compiled artifacts (32,000 gas base per creation, 200 gas
+   per runtime byte, initcode calldata cost, EIP-3860 word cost), adds a reserve
+   for the governance setup writes, applies a 1.5x safety factor, and compares
+   the result against the deployer's live balance. Running out of ETH half way
+   through a six-contract deployment is the failure mode it exists to prevent.
+   To see the whole thing pass without a funded wallet or a key, rehearse it
+   against the local network, which is pinned to Sepolia's chain ID:
+
+   ```bash
+   npm run preflight:rehearsal
+   ```
+
+   The rehearsal substitutes placeholder values, signs nothing, and broadcasts
+   nothing; it exists so the preflight's passing path is exercised too.
+
 5. The script writes a public-address-and-parameter manifest to `evm/deployments/sepolia.json`. It is intentionally ignored so a local deployment cannot silently become a canonical release. Archive the manifest, transaction hashes, compiler settings, source commit, and verified explorer links in the pilot record.
 6. With `ETHERSCAN_API_KEY` set, submit all six contracts from that manifest for source verification:
 
