@@ -390,7 +390,7 @@ jobs:
         # Run regardless of whether the SARIF upload succeeded.
         if: ${{ !cancelled() }}
         # Pinned to a tag, not @main — see the note on trivy-action above.
-        uses: trufflesecurity/trufflehog@v3.97.9
+        uses: trufflesecurity/trufflehog@v3.99.0
         with:
           # No explicit base/head: the action derives the range from the event
           # (push: before..after, pull_request: base..head, schedule and
