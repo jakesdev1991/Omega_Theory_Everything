@@ -17,7 +17,7 @@
     "test:economy": "tsx --test src/lib/domain/scenarios.test.ts"
   },
   "dependencies": {
-    "@noble/hashes": "^1.4.0",
+    "@noble/hashes": "^2.4.0",
     "@typescript-eslint/eslint-plugin": "^8.70.1",
     "@typescript-eslint/parser": "^8.70.1",
     "bs58": "^6.0.0",
