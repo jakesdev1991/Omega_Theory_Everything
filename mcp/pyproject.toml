@@ -15,7 +15,7 @@ dependencies = [
     # `from mcp.server import FastMCP` fails at import. smoke_test_result.json
     # has always recorded this as "pinned to mcp>=1.7,<2"; this makes the
     # manifest match that claim.
-    "mcp>=1.7.0,<2",
+    "mcp>=1.7.0,<3",
     "pydantic>=2.9.0",
     "pydantic-settings>=2.0.0",
     "fastapi>=0.115.0",
