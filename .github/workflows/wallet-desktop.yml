@@ -71,7 +71,7 @@ jobs:
           npx tauri build ${{ matrix.args }}
 
       - name: Upload installer artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: omega-wallet-${{ matrix.platform }}
           # Only the installers. `npx tauri build` runs with working-directory:
