@@ -263,4 +263,187 @@ theorem idealCarnotEngine_attains_carnot (TC TH : ℝ) (hC : 0 < TC) (hH : 0 < T
 
 end HeatEngine
 
+-- ============================================================
+-- NON-TRACIAL TWO-LEVEL MATRIX MODULAR / KMS ALGEBRA
+-- ============================================================
+--
+-- On the 1D `StateSpace := ℂ` carrier above, every operator is scalar so the
+-- algebra is commutative (`OmegaAxioms.omegaAlgebra_commutative`), the modular
+-- operator is `Δ = 1`, and the KMS equation holds at every inverse temperature
+-- (`kms_holds_at_every_temperature`, `kms_temperature_uniqueness_fails`).
+--
+-- Here we formalize the concrete 2×2 matrix observable algebra `Obs2` and a
+-- two-level Gibbs state at positive energy gap `ΔE > 0` and inverse
+-- temperature `β`:
+-- 1. The observable algebra is genuinely non-commutative (`Obs2.mul_noncommutative`).
+-- 2. For `β ≠ 0` and `ΔE > 0`, the Gibbs state is strictly **non-tracial**
+--    (`gibbsState_not_tracial`).
+-- 3. The imaginary-time modular scaling action satisfies the one-parameter
+--    group law (`modularScale_add`).
+-- 4. The Gibbs state satisfies the KMS condition at candidate inverse
+--    temperature `γ` **if and only if** `γ = β` (`twoLevel_kms_iff_eq`),
+--    resolving the 1D temperature-uniqueness degeneracy and yielding the
+--    KMS-derived Zeroth Law (`twoLevel_kms_zeroth_law`).
+
+/-- 2×2 real matrix observable for the two-level modular/KMS system. -/
+@[ext]
+structure Obs2 where
+  a00 : ℝ
+  a01 : ℝ
+  a10 : ℝ
+  a11 : ℝ
+
+namespace Obs2
+
+def mul (A B : Obs2) : Obs2 :=
+  ⟨A.a00 * B.a00 + A.a01 * B.a10,
+   A.a00 * B.a01 + A.a01 * B.a11,
+   A.a10 * B.a00 + A.a11 * B.a10,
+   A.a10 * B.a01 + A.a11 * B.a11⟩
+
+def one : Obs2 := ⟨1, 0, 0, 1⟩
+
+def E01 : Obs2 := ⟨0, 1, 0, 0⟩
+
+def E10 : Obs2 := ⟨0, 0, 1, 0⟩
+
+/-- The 2×2 observable algebra is non-commutative (`E01 * E10 ≠ E10 * E01`). -/
+theorem mul_noncommutative : mul E01 E10 ≠ mul E10 E01 := by
+  intro h
+  have h00 : (mul E01 E10).a00 = (mul E10 E01).a00 := congrArg Obs2.a00 h
+  norm_num [mul, E01, E10] at h00
+
+end Obs2
+
+/-- Unnormalized two-level Gibbs weight `A₀₀ + exp(-β ΔE) A₁₁`. -/
+noncomputable def gibbsWeight (ΔE β : ℝ) (A : Obs2) : ℝ :=
+  A.a00 + Real.exp (-β * ΔE) * A.a11
+
+/-- Two-level partition function `Z(β) = 1 + exp(-β ΔE)`. -/
+noncomputable def gibbsPartition (ΔE β : ℝ) : ℝ :=
+  1 + Real.exp (-β * ΔE)
+
+theorem gibbsPartition_pos (ΔE β : ℝ) : 0 < gibbsPartition ΔE β := by
+  unfold gibbsPartition
+  linarith [Real.exp_pos (-β * ΔE)]
+
+/-- Normalized two-level Gibbs state `ω_β(A) = Tr(ρ_β A)`. -/
+noncomputable def gibbsState (ΔE β : ℝ) (A : Obs2) : ℝ :=
+  gibbsWeight ΔE β A / gibbsPartition ΔE β
+
+theorem gibbsState_one (ΔE β : ℝ) : gibbsState ΔE β Obs2.one = 1 := by
+  unfold gibbsState gibbsWeight gibbsPartition Obs2.one
+  have hZ : 1 + Real.exp (-β * ΔE) ≠ 0 := ne_of_gt (gibbsPartition_pos ΔE β)
+  field_simp
+  ring
+
+/-- **Non-traciality of the two-level Gibbs state**: for any positive energy
+    gap `ΔE > 0` and nonzero inverse temperature `β ≠ 0`,
+    `ω_β(E₀₁ E₁₀) ≠ ω_β(E₁₀ E₀₁)`. -/
+theorem gibbsState_not_tracial (ΔE β : ℝ) (hΔE : 0 < ΔE) (hβ : β ≠ 0) :
+    gibbsState ΔE β (Obs2.mul Obs2.E01 Obs2.E10) ≠
+      gibbsState ΔE β (Obs2.mul Obs2.E10 Obs2.E01) := by
+  intro h
+  have hZ : gibbsPartition ΔE β ≠ 0 := ne_of_gt (gibbsPartition_pos ΔE β)
+  have hmul :
+      gibbsState ΔE β (Obs2.mul Obs2.E01 Obs2.E10) * gibbsPartition ΔE β =
+        gibbsState ΔE β (Obs2.mul Obs2.E10 Obs2.E01) * gibbsPartition ΔE β :=
+    congrArg (fun x => x * gibbsPartition ΔE β) h
+  unfold gibbsState at hmul
+  rw [div_mul_cancel₀ _ hZ, div_mul_cancel₀ _ hZ] at hmul
+  unfold gibbsWeight Obs2.mul Obs2.E01 Obs2.E10 at hmul
+  have hexp : Real.exp 0 = Real.exp (-β * ΔE) := by
+    rw [Real.exp_zero]
+    linarith
+  have hprod : 0 = -β * ΔE := Real.exp_injective hexp
+  rcases mul_eq_zero.mp hprod.symm with hneg | hgap
+  · exact hβ (neg_eq_zero.mp hneg)
+  · exact (ne_of_gt hΔE) hgap
+
+/-- Imaginary-time modular automorphism `σ_{-iγ}(B) = ρ_γ B ρ_γ⁻¹` on `Obs2`. -/
+noncomputable def modularScale (ΔE γ : ℝ) (B : Obs2) : Obs2 :=
+  ⟨B.a00,
+   Real.exp (γ * ΔE) * B.a01,
+   Real.exp (-γ * ΔE) * B.a10,
+   B.a11⟩
+
+/-- One-parameter group law for the modular scaling action:
+    `σ_{-iγ₁}(σ_{-iγ₂}(B)) = σ_{-i(γ₁ + γ₂)}(B)`. -/
+theorem modularScale_add (ΔE γ₁ γ₂ : ℝ) (B : Obs2) :
+    modularScale ΔE γ₁ (modularScale ΔE γ₂ B) =
+      modularScale ΔE (γ₁ + γ₂) B := by
+  ext
+  · rfl
+  · dsimp [modularScale]
+    rw [← mul_assoc, ← Real.exp_add]
+    ring_nf
+  · dsimp [modularScale]
+    rw [← mul_assoc, ← Real.exp_add]
+    ring_nf
+  · rfl
+
+/-- KMS condition for the two-level Gibbs state `ω_β` with respect to the
+    modular scaling action at candidate inverse temperature `γ`:
+    `∀ A B, ω_β(A · σ_{-iγ}(B)) = ω_β(B · A)`. -/
+def IsTwoLevelKMS (ΔE β γ : ℝ) : Prop :=
+  ∀ A B : Obs2,
+    gibbsState ΔE β (Obs2.mul A (modularScale ΔE γ B)) =
+      gibbsState ΔE β (Obs2.mul B A)
+
+/-- **The two-level Gibbs state satisfies the KMS condition at `γ = β`**. -/
+theorem twoLevel_kms_holds (ΔE β : ℝ) : IsTwoLevelKMS ΔE β β := by
+  intro A B
+  unfold gibbsState gibbsWeight Obs2.mul modularScale
+  have hexp : Real.exp (-β * ΔE) * Real.exp (β * ΔE) = 1 := by
+    rw [← Real.exp_add]
+    have hsum : -β * ΔE + β * ΔE = 0 := by ring
+    rw [hsum, Real.exp_zero]
+  congr 1
+  calc A.a00 * B.a00 + A.a01 * (Real.exp (-β * ΔE) * B.a10) +
+        Real.exp (-β * ΔE) * (A.a10 * (Real.exp (β * ΔE) * B.a01) + A.a11 * B.a11)
+      = A.a00 * B.a00 + A.a01 * (Real.exp (-β * ΔE) * B.a10) +
+        (Real.exp (-β * ΔE) * Real.exp (β * ΔE)) * (A.a10 * B.a01) +
+        Real.exp (-β * ΔE) * (A.a11 * B.a11) := by ring
+    _ = A.a00 * B.a00 + A.a01 * (Real.exp (-β * ΔE) * B.a10) +
+        1 * (A.a10 * B.a01) +
+        Real.exp (-β * ΔE) * (A.a11 * B.a11) := by rw [hexp]
+    _ = B.a00 * A.a00 + B.a01 * A.a10 +
+        Real.exp (-β * ΔE) * (B.a10 * A.a01 + B.a11 * A.a11) := by ring
+
+/-- **KMS temperature uniqueness in the non-tracial two-level model**:
+    for a positive energy gap `ΔE > 0`, the Gibbs state `ω_β` satisfies the
+    KMS condition at candidate inverse temperature `γ` **if and only if**
+    `γ = β`. -/
+theorem twoLevel_kms_iff_eq (ΔE β γ : ℝ) (hΔE : 0 < ΔE) :
+    IsTwoLevelKMS ΔE β γ ↔ γ = β := by
+  constructor
+  · intro hkms
+    have hE := hkms Obs2.E01 Obs2.E10
+    have hZ : gibbsPartition ΔE β ≠ 0 := ne_of_gt (gibbsPartition_pos ΔE β)
+    have hmul :
+        gibbsState ΔE β (Obs2.mul Obs2.E01 (modularScale ΔE γ Obs2.E10)) *
+          gibbsPartition ΔE β =
+        gibbsState ΔE β (Obs2.mul Obs2.E10 Obs2.E01) * gibbsPartition ΔE β :=
+      congrArg (fun x => x * gibbsPartition ΔE β) hE
+    unfold gibbsState at hmul
+    rw [div_mul_cancel₀ _ hZ, div_mul_cancel₀ _ hZ] at hmul
+    unfold gibbsWeight Obs2.mul modularScale Obs2.E01 Obs2.E10 at hmul
+    have hexp : Real.exp (-γ * ΔE) = Real.exp (-β * ΔE) := by linarith
+    have hlin : -γ * ΔE = -β * ΔE := Real.exp_injective hexp
+    have hneg : -γ = -β := mul_right_cancel₀ (ne_of_gt hΔE) hlin
+    linarith
+  · rintro rfl
+    exact twoLevel_kms_holds ΔE β
+
+/-- **KMS-derived Zeroth Law in the non-tracial two-level model**: if two
+    thermal reservoirs at inverse temperatures `β₁, β₂` are both KMS with
+    respect to a shared two-level probe state `ω_β₀` (`ΔE > 0`), then
+    `β₁ = β₂`. -/
+theorem twoLevel_kms_zeroth_law (ΔE β₀ β₁ β₂ : ℝ) (hΔE : 0 < ΔE)
+    (h₁ : IsTwoLevelKMS ΔE β₀ β₁) (h₂ : IsTwoLevelKMS ΔE β₀ β₂) :
+    β₁ = β₂ := by
+  have e₁ : β₁ = β₀ := (twoLevel_kms_iff_eq ΔE β₀ β₁ hΔE).mp h₁
+  have e₂ : β₂ = β₀ := (twoLevel_kms_iff_eq ΔE β₀ β₂ hΔE).mp h₂
+  exact e₁.trans e₂.symm
+
 end OmegaProtocol.Vol03

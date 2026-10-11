@@ -77,4 +77,45 @@ theorem bridge_vol42_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 :=
 theorem bridge_vol42_coupling_symm (R₁ R₂ : QRegion) : Φ R₁ R₂ = Φ R₂ R₁ :=
   bridge_overlapDensity_symm R₁ R₂
 
+-- ============================================================
+-- CLOSED-FORM SHELL AREA & STELLAR ENERGY CONSERVATION
+-- ============================================================
+
+/-- Closed-form geometric sum for the doubling shell recurrence:
+    `shellArea n base + base = 2^n * base`. -/
+theorem shellArea_closed_form (n base : ℕ) :
+    shellArea n base + base = 2 ^ n * base := by
+  induction n with
+  | zero =>
+    simp [shellArea]
+  | succ n ih =>
+    calc shellArea (n + 1) base + base
+        = 2 * (shellArea n base + base) := by dsimp [shellArea]; ring
+      _ = 2 * (2 ^ n * base) := by rw [ih]
+      _ = 2 ^ (n + 1) * base := by ring
+
+/-- Uncaptured stellar luminosity escaping the Dyson swarm. -/
+noncomputable def residualLuminosity (luminosity fraction : ℝ) : ℝ :=
+  luminosity * (1 - fraction)
+
+/-- Captured luminosity is nonnegative for nonnegative stellar luminosity and
+    collection fraction `0 ≤ frac`. -/
+theorem capture_nonneg (lum frac : ℝ) (hl : 0 ≤ lum) (hf0 : 0 ≤ frac) :
+    0 ≤ capturedLuminosity lum frac := by
+  unfold capturedLuminosity
+  exact mul_nonneg hl hf0
+
+/-- Residual luminosity is nonnegative when `frac ≤ 1`. -/
+theorem residual_nonneg (lum frac : ℝ) (hl : 0 ≤ lum) (hf1 : frac ≤ 1) :
+    0 ≤ residualLuminosity lum frac := by
+  unfold residualLuminosity
+  exact mul_nonneg hl (sub_nonneg.mpr hf1)
+
+/-- **Stellar flux conservation**: captured plus residual luminosity equals
+    the total stellar luminosity. -/
+theorem luminosity_conservation (lum frac : ℝ) :
+    capturedLuminosity lum frac + residualLuminosity lum frac = lum := by
+  unfold capturedLuminosity residualLuminosity
+  ring
+
 end OmegaProtocol.Vol42

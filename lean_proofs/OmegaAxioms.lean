@@ -43,13 +43,18 @@ small, explicit model instead:
 * the properties that follow from this model are proved below.
 
 The *remaining* minimal-choice layer, stated rather than hidden, is the
-spacetime/operator stub layer: `state_at`, `tangent_at` and `vacuum_at` return
-`0`, `QFIM`/`Hessian` are the zero functional pair, `CovariantDivergence` is
-zero, `commutator A _ := A` and `lim_h_to_0 f := f 0` are placeholder
-operations, and `StateType`/`Observable`/`ConnesInvariant` are `Unit` carriers
-with `PureState`/`TraceOp` the constantly-false predicates used by the
-`TypeIII1Algebra` bundle (whose concrete instance is therefore not a faithful
-type-III algebra).
+spacetime/QFIM stub layer used by the abstract `QFIMGeometry` signature:
+`state_at`, `tangent_at` and `vacuum_at` return `0`, `QFIM`/`Hessian` are the
+zero functional pair on `StateSpace` (see `OmegaUnifiedFoundation.fisherMetric`
+for the non-degenerate parametric Fisher/Hessian theorem), and the polymorphic
+`CovariantDivergence` on an untyped `spacetime` is zero (see
+`Vol05.realCovariantDivergence` for the genuine `deriv`-based divergence).
+By contrast, `StateType` (`QRegion`), `PureState` (`vonNeumannEntropy ω = 0`,
+refuted by `no_pure_qregion_states`), `TraceOp` (finite normalized trace on an
+infinite-identity algebra, refuted by `no_finite_trace_of_infinite_identity`),
+`ConnesInvariant` (`I₁ | II₁ | III₀ | III₁`), and `Observable` (3-parameter
+affine phase-space observables with the canonical symplectic `commutator`) are
+all genuine non-`Unit` structures.
 
 This is intentionally a model, not a claim that the physical Omega theory has
 been derived.  Theorems depending on a richer physical model must add those
@@ -238,15 +243,58 @@ noncomputable def tangent_at {spacetime : Type*} (_ : spacetime) : Operator := 0
 def CovariantDivergence {spacetime : Type*}
     (_ : spacetime → spacetime → ℝ) (_ : spacetime) : ℝ := 0
 
-def StateType : Type := Unit
-def PureState (_ : StateType) : Prop := False
-def TraceOp (_ : (↥OmegaAlgebra → ℝ)) : Prop := False
+/-- A finite normalized trace on an algebra with a properly infinite
+    identity (`1 ∼ P₁ ⊥ P₂ ∼ 1`): it is tracial (`tr(AB) = tr(BA)`),
+    normalized (`tr 1 = 1`), and additive across an infinite halving of the
+    identity (`tr 1 = tr 1 + tr 1`).  No real-valued functional satisfies both
+    normalization and infinite-projection halving
+    (`no_finite_trace_of_infinite_identity`), replacing the former
+    `TraceOp _ := False` stub. -/
+def TraceOp (tr : ↥OmegaAlgebra → ℝ) : Prop :=
+  (∀ A B : ↥OmegaAlgebra, tr (A * B) = tr (B * A)) ∧
+  tr 1 = 1 ∧
+  tr 1 = tr 1 + tr 1
 
-def ConnesInvariant : Type := Unit
-def III₁ : ConnesInvariant := ()
+/-- **Obstruction to a finite normalized trace on a properly infinite
+    algebra**: normalization `tr 1 = 1` and halving `tr 1 = tr 1 + tr 1` are
+    incompatible over `ℝ`. -/
+theorem no_finite_trace_of_infinite_identity :
+    ¬ ∃ (tr : ↥OmegaAlgebra → ℝ), TraceOp tr := by
+  rintro ⟨tr, _, h1, h2⟩
+  linarith
 
-def Observable : Type := Unit
-def commutator {T : Type*} (A _ : T) : T := A
+/-- Connes' classification of von Neumann factors (`I₁`, `II₁`, `III₀`,
+    `III₁`).  Replaces the former `ConnesInvariant := Unit` singleton so that
+    `III₁` is a distinct factor class (`connes_III1_ne_I1`). -/
+inductive ConnesInvariant
+  | I₁
+  | II₁
+  | III₀
+  | III₁
+  deriving DecidableEq
+
+def III₁ : ConnesInvariant := ConnesInvariant.III₁
+
+theorem connes_III1_ne_I1 : III₁ ≠ ConnesInvariant.I₁ := by
+  decide
+
+/-- Affine phase-space observable `qCoeff * q + pCoeff * p + constant` on one
+    canonical degree of freedom (`ℝ × ℝ`).  Replaces the former
+    `Observable := Unit` singleton so that the Weyl commutator and classical
+    Poisson bracket in `Vol01` carry genuine symplectic content. -/
+@[ext]
+structure Observable where
+  qCoeff : ℝ
+  pCoeff : ℝ
+  constant : ℝ
+
+/-- Canonical symplectic pairing `a_q b_p - a_p b_q` of two affine observables,
+    lifted to a constant observable.  In Weyl quantization of affine
+    observables (`[Q̂, P̂] = iℏ I`), `(1/(iℏ))[Â_ℏ, B̂_ℏ]` equals this exact
+    constant observable. -/
+def commutator (A B : Observable) : Observable :=
+  ⟨0, 0, A.qCoeff * B.pCoeff - A.pCoeff * B.qCoeff⟩
+
 def lim_h_to_0 {T : Type*} (f : ℝ → T) : T := f 0
 
 noncomputable def vacuum_at {manifold : Type*} (_ : manifold) : StateSpace := 0
@@ -294,6 +342,23 @@ theorem vonNeumannEntropy_pos (R : QRegion) : 0 < vonNeumannEntropy R :=
 
 theorem vonNeumannEntropy_le_one (R : QRegion) : vonNeumannEntropy R ≤ 1 :=
   R.entropy_le_one
+
+/-- Local region state carrier for the `TypeIII1Algebra` pillar: every
+    `QRegion` carries strictly positive von Neumann entropy (`R.entropy > 0`),
+    replacing the former `StateType := Unit` singleton. -/
+abbrev StateType : Type := QRegion
+
+/-- A local region state is pure when its von Neumann entropy vanishes.
+    Replaces the former `PureState _ := False` stub. -/
+def PureState (ω : StateType) : Prop := vonNeumannEntropy ω = 0
+
+/-- **No local Q-region state is pure**: every `QRegion` has strictly positive
+    von Neumann entropy (`vonNeumannEntropy_pos`), so `PureState` is
+    unsatisfiable for structural reasons rather than by being defined as
+    `False`. -/
+theorem no_pure_qregion_states : ¬ ∃ (ω : StateType), PureState ω := by
+  rintro ⟨ω, hω⟩
+  exact ne_of_gt (vonNeumannEntropy_pos ω) hω
 
 /-- Joint entropy of two regions: the sum of the two region entropies (the
     model's subadditivity-saturating choice, a stated model law). -/

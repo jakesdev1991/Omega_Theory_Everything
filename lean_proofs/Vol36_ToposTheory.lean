@@ -12,14 +12,14 @@ import OmegaUnifiedFoundation
   * The categorical content is a concrete skeletal category of finite
     sets: objects are natural numbers (standing for `Fin n`), maps are
     all functions. The category laws, terminal object, binary products,
-    equalizers, exponentials, and characteristic maps for decidable
-    subsets are genuinely proven below.
-  * This is NOT a full elementary topos: pullback-based subobject
-    classification is not formalized. The classifier section proves the
-    characteristic-map universal property for subsets only.
+    equalizers, exponentials, characteristic maps for decidable subsets,
+    and pullback-based subobject classification (`skel_subobject_classifier`
+    and `skel_subobject_pullback_universal`) are genuinely proven below.
   * Omega-Protocol mapping: subobjects = Q-regions (0D), morphisms = Φ
     (1D), categorical distance = Ω-metric (2D).
 -/
+
+attribute [local instance] Classical.propDecidable
 
 namespace OmegaProtocol.Vol36
 open OmegaProtocol
@@ -373,5 +373,64 @@ theorem skelChar_unique {n : SkelObj} (S : Fin n → Prop) [DecidablePred S]
         exact Fin.ext hval
       | _ + 2 => omega
     rw [z1, z2]
+
+-- ------------------------------------------------------------
+-- Pullback-based subobject classification
+-- ------------------------------------------------------------
+
+/-- Set-theoretic image of a morphism `m : SkelHom s n`. -/
+def inImage {s n : SkelObj} (m : SkelHom s n) (x : Fin n) : Prop :=
+  ∃ i : Fin s, m i = x
+
+/-- A characteristic morphism `χ : SkelHom n skelOmega` makes the subobject
+    square for `m : SkelHom s n` a pullback along `skelTrue` iff `χ` sends
+    every point of `m`'s image to `true` (`⟨1, _⟩`) and every point sent to
+    `true` by `χ` lies in `m`'s image. -/
+def IsSubobjectPullback {s n : SkelObj} (m : SkelHom s n)
+    (χ : SkelHom n skelOmega) : Prop :=
+  (∀ i : Fin s, χ (m i) = (⟨1, by decide⟩ : Fin 2)) ∧
+  (∀ x : Fin n, χ x = (⟨1, by decide⟩ : Fin 2) → inImage m x)
+
+theorem isSubobjectPullback_iff_mem {s n : SkelObj} (m : SkelHom s n)
+    (χ : SkelHom n skelOmega) :
+    IsSubobjectPullback m χ ↔
+      ∀ x : Fin n, (χ x = (⟨1, by decide⟩ : Fin 2) ↔ inImage m x) := by
+  constructor
+  · intro h x
+    constructor
+    · exact h.2 x
+    · rintro ⟨i, rfl⟩
+      exact h.1 i
+  · intro h
+    refine ⟨fun i => (h (m i)).mpr ⟨i, rfl⟩, fun x hx => (h x).mp hx⟩
+
+/-- **Pullback-based subobject classifier**: for any morphism `m : SkelHom s n`,
+    there is a unique characteristic morphism `χ : SkelHom n skelOmega` making
+    the subobject square a pullback. -/
+theorem skel_subobject_classifier {s n : SkelObj} (m : SkelHom s n) :
+    ∃! χ : SkelHom n skelOmega, IsSubobjectPullback m χ := by
+  refine ⟨skelChar (inImage m), ?_, fun χ hχ => ?_⟩
+  · rw [isSubobjectPullback_iff_mem]
+    exact skelChar_mem (inImage m)
+  · apply skelChar_unique (inImage m) χ
+    exact (isSubobjectPullback_iff_mem m χ).mp hχ
+
+/-- **Universal factorization through the subobject pullback**: if
+    `m : SkelHom s n` is a monomorphism (`Function.Injective m`) and
+    `h : SkelHom z n` is sent identically to `true` by the classifier
+    `skelChar (inImage m)`, then `h` factors uniquely through `m`. -/
+theorem skel_subobject_pullback_universal {z s n : SkelObj}
+    (m : SkelHom s n) (hm : Function.Injective m) (h : SkelHom z n)
+    (hh : ∀ x : Fin z, skelChar (inImage m) (h x) = (⟨1, by decide⟩ : Fin 2)) :
+    ∃! u : SkelHom z s, skelComp u m = h := by
+  have hex : ∀ x : Fin z, ∃ i : Fin s, m i = h x :=
+    fun x => (skelChar_mem (inImage m) (h x)).mp (hh x)
+  refine ⟨fun x => Classical.choose (hex x), ?_, fun u hu => ?_⟩
+  · funext x
+    exact Classical.choose_spec (hex x)
+  · funext x
+    apply hm
+    have hux : m (u x) = h x := congrFun hu x
+    rw [hux, ← Classical.choose_spec (hex x)]
 
 end OmegaProtocol.Vol36

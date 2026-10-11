@@ -80,7 +80,8 @@ class SourceAuditTests(unittest.TestCase):
             "def Form (_degree : ℕ) : Type := Unit\n"
             "abbrev Indexed\n  {n : ℕ}\n  (x : Fin n) : Type := Unit\n"
         )
-        self.assertEqual(len(audit(self.root)[2]), 2)
+        self.source("def StateType : Type := Unit\n", "OmegaAxioms.lean")
+        self.assertEqual(len(audit(self.root)[2]), 3)
 
     def test_comment_and_string_unit_types_are_not_counted(self):
         self.source(

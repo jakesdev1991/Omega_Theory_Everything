@@ -79,4 +79,41 @@ theorem bridge_vol41_coupling_nonneg (R₁ R₂ : QRegion) : Φ R₁ R₂ ≥ 0 
 theorem bridge_vol41_metric_self_zero (R : QRegion) : d R R = 0 :=
   bridge_qregion_self_distance_zero R
 
+-- ============================================================
+-- MULTI-STEP SUBSTRATE MIGRATION PATHS
+-- ============================================================
+
+/-- Total transition cost of migrating from `s` along a sequence of
+    intermediate substrates. -/
+def pathCost : Substrate → List Substrate → ℕ
+  | _, [] => 0
+  | s, t :: rest => transitionCost s t + pathCost t rest
+
+/-- Final destination reached by a migration path starting at `s`. -/
+def pathEnd : Substrate → List Substrate → Substrate
+  | s, [] => s
+  | _, t :: rest => pathEnd t rest
+
+/-- **Path triangle inequality**: any multi-step migration path from `s` to
+    `pathEnd s p` costs at least the direct transition cost
+    `transitionCost s (pathEnd s p)`. -/
+theorem pathCost_ge_direct (s : Substrate) (p : List Substrate) :
+    transitionCost s (pathEnd s p) ≤ pathCost s p := by
+  induction p generalizing s with
+  | nil =>
+    dsimp [pathEnd, pathCost]
+    rw [cost_self_zero]
+  | cons t rest ih =>
+    dsimp [pathEnd, pathCost]
+    have htri := cost_triangle s t (pathEnd t rest)
+    have hrest := ih t
+    omega
+
+/-- The two-step migration `carbon → hybrid → silicon` attains the direct
+    metric bound `2`. -/
+theorem hybrid_path_optimal :
+    pathCost .carbon [.hybrid, .silicon] =
+      transitionCost .carbon .silicon := by
+  decide
+
 end OmegaProtocol.Vol41

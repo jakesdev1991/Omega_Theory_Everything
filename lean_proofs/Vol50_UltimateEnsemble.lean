@@ -55,4 +55,16 @@ theorem ensemble_not_enumerable :
 theorem bridge_vol50_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 :=
   bridge_vonNeumannEntropy_nonneg R
 
+/-- **Set-theoretic diagonal obstruction**: no countable family of subsets
+    `e : ℕ → Set ℕ` contains every subset of `ℕ`, witnessed explicitly by the
+    anti-diagonal `{n : ℕ | n ∉ e n}`. -/
+theorem no_surjective_subset_indexing (e : ℕ → Set ℕ) :
+    ∃ S : Set ℕ, ∀ k : ℕ, e k ≠ S := by
+  refine ⟨{n : ℕ | n ∉ e n}, fun k hk => ?_⟩
+  have hmem : k ∈ e k ↔ k ∈ {n : ℕ | n ∉ e n} := by rw [hk]
+  change k ∈ e k ↔ k ∉ e k at hmem
+  by_cases h : k ∈ e k
+  · exact (hmem.mp h) h
+  · exact h (hmem.mpr h)
+
 end OmegaProtocol.Vol50

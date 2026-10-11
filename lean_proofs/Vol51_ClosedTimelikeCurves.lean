@@ -55,4 +55,46 @@ theorem only_fixed_is_consistent (h : History) (hc : IsConsistent h) :
   · exact History.noConfusion hc
   · exact History.noConfusion hc
 
+-- ============================================================
+-- GENERAL FINITE-HORIZON RELAXATION CONVERGENCE ON `ℕ`
+-- ============================================================
+
+/-- General discrete relaxation step on `ℕ`: `0` is the self-consistent fixed
+    point and any transient level `n + 1` steps down to `n`. -/
+def relaxStep : ℕ → ℕ
+  | 0 => 0
+  | n + 1 => n
+
+/-- `k`-step iteration of `relaxStep`. -/
+def relaxIter : ℕ → ℕ → ℕ
+  | 0, x => x
+  | k + 1, x => relaxStep (relaxIter k x)
+
+/-- Unique fixed-point classification over `ℕ`: `relaxStep x = x ↔ x = 0`. -/
+theorem relaxStep_fixed_iff (x : ℕ) : relaxStep x = x ↔ x = 0 := by
+  cases x with
+  | zero => exact ⟨fun _ => rfl, fun _ => rfl⟩
+  | succ n =>
+    dsimp [relaxStep]
+    omega
+
+theorem relaxIter_comm (k x : ℕ) :
+    relaxStep (relaxIter k x) = relaxIter k (relaxStep x) := by
+  induction k generalizing x with
+  | zero => rfl
+  | succ k ih =>
+    dsimp [relaxIter]
+    rw [ih]
+
+/-- **General finite-horizon convergence**: any initial state `n : ℕ` relaxes
+    to the unique self-consistent fixed point `0` in `n` steps. -/
+theorem relaxIter_converges (n : ℕ) : relaxIter n n = 0 := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    dsimp [relaxIter]
+    rw [relaxIter_comm]
+    dsimp [relaxStep]
+    exact ih
+
 end OmegaProtocol.Vol51

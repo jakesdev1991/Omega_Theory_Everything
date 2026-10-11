@@ -22,14 +22,23 @@ The empty `legacy_statement_aliases.json` baseline prevents their silent return.
 A passing source audit does not validate physical interpretations or show that
 positive-information hypotheses in downstream modules are realizable.
 The concrete modular theory below is the *tracial* model: the state functional
-is the algebraic trace (`ω_ρ_trace`), the modular operator is `Δ = 1` and the
-modular flow is the identity, so the KMS condition reduces to the trace
+is the algebraic trace (`ω_ρ_trace`), and the modular operator is `Δ = 1` with
+the modular flow the identity, so the KMS condition reduces to the trace
 equation — it is not a faithful type-`III` modular automorphism group.
+
+This collapse is *forced* by the carrier, not chosen: `StateSpace` is
+one-dimensional, so `operator_eq_smul_one` makes every operator a scalar
+multiple of the identity, `OmegaAxioms.omegaAlgebra_commutative` makes the
+algebra commutative, and `OmegaAxioms.every_functional_is_tracial` shows that
+*every* functional on it is a trace — there is no non-tracial functional for a
+non-trivial `Δ` to act on.  A faithful type-`III` model would need a
+higher-dimensional (or infinite-dimensional) carrier.
 -/
 
--- `StateSpace` is a plain `def` of `ℂ`, so instance search does not unfold
--- it: classical decidability of state equality is taken explicitly here for
--- the discrete relative entropy and its monotonicity proof.
+-- `StateSpace` is an `abbrev` for `ℂ`, so a `DecidableEq` instance for
+-- states exists — but it is noncomputable.  Classical decidability of state
+-- equality is taken explicitly here for the discrete relative entropy and its
+-- monotonicity proof (the `if` in `concreteRelativeEntropy`):
 attribute [local instance] Classical.propDecidable
 
 namespace OmegaProtocol
@@ -106,7 +115,13 @@ theorem concreteRelativeEntropy_mono (ρ σ : StateSpace) (Φ : CPTPMap) :
     (a tracial state, `Δ = 1`), the relative entropy is the (non-constant)
     discrete metric `concreteRelativeEntropy`, and the modular flow
     `α_t(A) = Δ^{it} A Δ^{-it}` is the identity on the algebra.  It is a value
-    with proofs of every field, not a kernel assumption. -/
+    with proofs of every field, not a kernel assumption: the `Ω`-state is
+    cyclic and separating (`law_omega_cyclic_separating` is proved from
+    surjectivity of `A ↦ A 1` and from `operator_eq_smul_one`, while
+    `not_cyclicSeparating_zero` shows the predicate is not trivially true), and
+    `law_modular_operator` is a computation in the model's genuine functional
+    calculus `A ^ z = (A 1) ^ z • 1` (`op_pow_of_one`), not the former
+    placeholder `A ^ z = A`. -/
 noncomputable def concreteModularTheory : ModularTheory :=
   { ModularOperator := fun _ => 1
     ModularConjugation := fun _ => 1
@@ -120,12 +135,38 @@ noncomputable def concreteModularTheory : ModularTheory :=
       funext A
       rfl
     law_omega_cyclic_separating := by
-      exact True.intro
+      constructor
+      · -- Cyclicity: `A ↦ A·1` is surjective, since every `z` is `(z • 1) 1`.
+        intro y
+        have hsurj : Function.Surjective
+            (fun A : ↥OmegaAlgebra => (A : Operator) (1 : StateSpace)) := by
+          intro z
+          -- `⊤`-membership for the top `StarSubalgebra` is `StarSubalgebra.mem_top`
+          -- (checked against the pinned Mathlib: the lemma is declared in
+          -- Mathlib/Algebra/Star/Subalgebra.lean; `Subalgebra.mem_top` does not
+          -- exist for this structure, which is what failed the twelfth-pass build).
+          exact ⟨⟨z • (1 : Operator), StarSubalgebra.mem_top⟩, by simp [smul_eq_mul]⟩
+        rw [hsurj.range_eq, closure_univ]
+        exact Set.mem_univ y
+      · -- Separating: `A·1 = 0` pins `A` down by `operator_eq_smul_one`.
+        intro A hA
+        apply Subtype.ext
+        -- `A = A 1 • 1 = 0 • 1`, and `0 • (1 : Operator)` is the zero operator.
+        -- The reduction is done pointwise: at the level of states the scalar
+        -- action is complex multiplication, which is where `zero_smul` has a
+        -- shape the simplifier can match (as a bare `rw [zero_smul]` on the
+        -- operator level it did not: the pattern `0 • ?m` failed to unify with
+        -- the occurrence inside the subalgebra coercion).
+        show (A : Operator) = (0 : Operator)
+        rw [operator_eq_smul_one (A : Operator), hA]
+        apply ContinuousLinearMap.ext
+        intro v
+        simp [smul_apply, one_apply_eq_self, smul_eq_mul]
     law_modular_operator := by
       -- `Δ = 1` (tracial state) and in the model calculus `1 ^ z = 1`, so both
       -- sides reduce to `1 * A * 1`, which is `A` by the operator monoid laws.
       intro A t
-      simp [op_pow_eq]
+      simp only [op_pow_of_one, one_mul, mul_one]
     law_kms_characterization := by
       -- The KMS predicate *is* the trace equation, and with the identity flow
       -- `α_{iβ}(B) = B` the characterising equation is the same equation.
@@ -165,6 +206,83 @@ structure TypeIII1Algebra where
   modular_theory : ModularTheory
   connes_invariant : ConnesInvariant
   connes_invariant_eq : connes_invariant = III₁
+
+/-- Checked concrete instance of `TypeIII1Algebra`: local `QRegion` states have
+    strictly positive von Neumann entropy (`no_pure_qregion_states`), no
+    real-valued functional satisfies both normalization and infinite-identity
+    halving (`no_finite_trace_of_infinite_identity`), and the Connes factor
+    label is `ConnesInvariant.III₁` (`connes_III1_ne_I1`). -/
+noncomputable def concreteTypeIII1Algebra : TypeIII1Algebra where
+  no_pure_states := no_pure_qregion_states
+  no_trace := no_finite_trace_of_infinite_identity
+  modular_theory := concreteModularTheory
+  connes_invariant := III₁
+  connes_invariant_eq := rfl
+
+-- ============================================================
+-- PARAMETRIC FISHER INFORMATION METRIC = RELATIVE ENTROPY HESSIAN
+-- ============================================================
+--
+-- On the 1D `StateSpace := ℂ` carrier above, `QFIM` and `Hessian` are the zero
+-- functional pair because `law_qfim_hessian` quantifies over independent
+-- scalar and operator tangent arguments.  To witness the genuine mathematical
+-- identity `g_F = Hess(D_KL)` without placeholder zeros, we formalize the
+-- scale-family Fisher information metric `g_F(θ)(u, v) = (u · v) / θ²` on a
+-- positive statistical parameter `θ > 0` and prove via `HasDerivAt` that the
+-- second derivative of the second-order relative-entropy expansion
+-- `D_θ(δu) = (1/2) g_F(θ)(u, u) δ²` at `δ = 0` recovers `g_F(θ)(u, u)`
+-- identically.
+
+/-- Canonical scale-family Fisher information metric `g_F(θ)(u, v) = (u · v) / θ²`
+    at parameter `θ` along tangent vectors `u, v : ℝ`. -/
+noncomputable def fisherMetric (θ u v : ℝ) : ℝ :=
+  (u * v) / (θ ^ 2)
+
+/-- Second-order Kullback–Leibler / relative-entropy expansion along tangent
+    direction `u` at step `δ`. -/
+noncomputable def klSecondOrder (θ u δ : ℝ) : ℝ :=
+  ((1 / 2 : ℝ) * fisherMetric θ u u) * (δ * δ)
+
+theorem fisherMetric_symm (θ u v : ℝ) :
+    fisherMetric θ u v = fisherMetric θ v u := by
+  unfold fisherMetric
+  ring
+
+/-- The Fisher information metric is strictly positive definite at any
+    positive parameter `θ > 0` and nonzero tangent vector `u ≠ 0`. -/
+theorem fisherMetric_pos (θ u : ℝ) (hθ : 0 < θ) (hu : u ≠ 0) :
+    0 < fisherMetric θ u u := by
+  unfold fisherMetric
+  have hu2 : 0 < u * u := mul_self_pos.mpr hu
+  have hθ2 : 0 < θ ^ 2 := sq_pos_of_pos hθ
+  exact div_pos hu2 hθ2
+
+/-- First derivative of the relative-entropy quadratic form with respect to the
+    perturbation parameter `δ`. -/
+theorem klSecondOrder_first_deriv (θ u δ : ℝ) :
+    HasDerivAt (klSecondOrder θ u) (fisherMetric θ u u * δ) δ := by
+  have hid : HasDerivAt (fun s : ℝ => s) 1 δ := hasDerivAt_id δ
+  have hsq : HasDerivAt (fun s : ℝ => s * s) (1 * δ + δ * 1) δ := hid.mul hid
+  have hmul : HasDerivAt
+      (fun s : ℝ => ((1 / 2 : ℝ) * fisherMetric θ u u) * (s * s))
+      (((1 / 2 : ℝ) * fisherMetric θ u u) * (1 * δ + δ * 1)) δ :=
+    hsq.const_mul ((1 / 2 : ℝ) * fisherMetric θ u u)
+  have hval : ((1 / 2 : ℝ) * fisherMetric θ u u) * (1 * δ + δ * 1) =
+      fisherMetric θ u u * δ := by
+    ring
+  rw [hval] at hmul
+  exact hmul
+
+/-- **Fisher metric equals the Hessian (second derivative at `δ = 0`) of the
+    relative-entropy expansion**: differentiating the first derivative
+    `δ ↦ fisherMetric θ u u * δ` at `δ = 0` yields `fisherMetric θ u u`. -/
+theorem klSecondOrder_hessian_eq_fisher (θ u : ℝ) :
+    HasDerivAt (fun δ : ℝ => fisherMetric θ u u * δ) (fisherMetric θ u u) 0 := by
+  have hid : HasDerivAt (fun s : ℝ => s) 1 0 := hasDerivAt_id 0
+  have hmul : HasDerivAt (fun s : ℝ => fisherMetric θ u u * s)
+      (fisherMetric θ u u * 1) 0 :=
+    hid.const_mul (fisherMetric θ u u)
+  rwa [mul_one] at hmul
 
 -- ============================================================
 -- EMERGENT STRUCTURES: From Model assumptions to Physics

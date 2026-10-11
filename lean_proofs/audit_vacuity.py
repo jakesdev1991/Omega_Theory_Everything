@@ -29,9 +29,10 @@ tracking eight *honesty* metrics plus a per-export legacy-alias baseline:
    assert nothing beyond the inhabitation of `Unit`.
 
 4. unit_types
-   `def X : Type := Unit` inside the volume files (Vol*.lean). These are the
-   tell-tale of an un-formalized volume. Model primitives in
-   `OmegaAxioms.lean` are deliberate and are exempt.
+   `def X : Type := Unit` anywhere in the Lean corpus (both volumes and
+   foundation/core files). Every former `Unit` carrier in `OmegaAxioms.lean`
+   and `Vol01`–`Vol54` has been replaced by a concrete structure or inductive
+   type, so the entire repository is ratcheted at zero.
 
 5. trivial_proofs
    Proof scripts that consist of exactly `trivial` prove nothing and are
@@ -370,9 +371,8 @@ def audit(root: Path) -> tuple[list[str], list[str], list[str]]:
         for n, line in enumerate(text.splitlines(), 1):
             if UNIT_STUB.search(line):
                 stubs.append(f"{path.relative_to(root)}:{n}: {line.strip()[:90]}")
-        if path.name.startswith("Vol"):
-            for m in UNIT_TYPE.finditer(text):
-                unit_types.append(f"{path.relative_to(root)}: {m.group(0).strip()}")
+        for m in UNIT_TYPE.finditer(text):
+            unit_types.append(f"{path.relative_to(root)}: {m.group(0).strip()}")
     return misleading, stubs, unit_types
 
 

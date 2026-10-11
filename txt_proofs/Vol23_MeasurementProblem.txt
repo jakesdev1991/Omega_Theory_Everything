@@ -28,8 +28,11 @@ noncomputable def OffDiagonal (_ρ : DensityMatrix) : ℝ :=
   -- Simplified: sum of off-diagonal elements
   0 -- Placeholder
 
-/-- Decoherence operation: Φ(ρ, E) → 0 where E is environment -/
-def environment : QRegion := ()
+/-- Decoherence operation: Φ(ρ, E) → 0 where E is environment.  The
+    environment is the model's saturated region (`unitQRegion`): unit entropy
+    and unit overlap density, so `Φ ρ environment = min (Φ of ρ) 1` — the
+    former `()` (the singleton `QRegion`) is retired with the `Unit` model. -/
+noncomputable def environment : QRegion := unitQRegion
 
 noncomputable def Decohere (ρ : DensityMatrix) : DensityMatrix :=
   -- ρ ⊗ E with partial trace over E
