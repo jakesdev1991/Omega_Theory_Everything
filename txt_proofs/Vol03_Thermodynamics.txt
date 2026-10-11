@@ -2,9 +2,9 @@ import Mathlib
 import OmegaUnifiedFoundation
 /-
   Vol03_Thermodynamics.lean
-  REAL mathematical formalization of thermodynamics.
+  Machine-checked model of thermodynamics.
 
-  Genuinely proven theorems:
+  Machine-checked theorems:
   1. Zeroth Law — transitivity of thermal equilibrium, stated through an
      explicit temperature function on states (see below for why the former
      KMS-uniqueness conditional was retired);
@@ -84,7 +84,7 @@ theorem kms_temperature_uniqueness_fails :
   exact zero_ne_one h01
 
 -- ============================================================
--- THEOREM 2: SECOND LAW OF THERMODYNAMICS (GENUINE PROOF)
+-- THEOREM 2: SECOND LAW OF THERMODYNAMICS (machine-checked)
 -- Relative entropy decreases under CPTP maps:
 --   S(Φ(ρ) || Φ(σ)) ≤ S(ρ || σ)
 --
@@ -102,7 +102,7 @@ theorem second_law :
   MT.law_relative_entropy_monotonicity
 
 -- ============================================================
--- THEOREM 3: CLAUSIUS INEQUALITY (GENUINE PROOF)
+-- THEOREM 3: CLAUSIUS INEQUALITY (machine-checked)
 -- For a process at temperature T > 0:
 --   ΔS ≥ Q/T
 -- where Q is the heat exchanged and ΔS is the entropy change.

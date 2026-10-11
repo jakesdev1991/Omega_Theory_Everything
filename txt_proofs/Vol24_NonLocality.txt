@@ -4,7 +4,7 @@ import OmegaUnifiedFoundation
 
 /-
   Vol24_NonLocality.lean
-  REAL formalization: Bell/CHSH Inequality Violation.
+  Machine-checked model: Bell/CHSH Inequality Violation.
 
   Using Omega Protocol:
   - Classical CHSH bound = 2 (from local hidden variables, Φ_local = 0)
@@ -19,7 +19,7 @@ def ClassicalCHSHBound : ℝ := 2
 
 noncomputable def TsirelsonBound : ℝ := 2 * Real.sqrt 2
 
-/-- THEOREM: Tsirelson Bound exceeds Classical CHSH Bound (GENUINE PROOF) -/
+/-- THEOREM: Tsirelson Bound exceeds Classical CHSH Bound (machine-checked) -/
 theorem bell_violation : TsirelsonBound > ClassicalCHSHBound := by
   dsimp [TsirelsonBound, ClassicalCHSHBound]
   -- Need to show 2 * √2 > 2, i.e., √2 > 1

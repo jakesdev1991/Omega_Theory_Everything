@@ -14,7 +14,7 @@ import OmegaUnifiedFoundation
     all functions. The category laws, terminal object, binary products,
     equalizers, exponentials, characteristic maps for decidable subsets,
     and pullback-based subobject classification (`skel_subobject_classifier`
-    and `skel_subobject_pullback_universal`) are genuinely proven below.
+    and `skel_subobject_pullback_universal`) are machine-checked below.
   * Omega-Protocol mapping: subobjects = Q-regions (0D), morphisms = Φ
     (1D), categorical distance = Ω-metric (2D).
 -/
@@ -24,7 +24,7 @@ attribute [local instance] Classical.propDecidable
 namespace OmegaProtocol.Vol36
 open OmegaProtocol
 
-/-- THEOREM: Law of Excluded Middle in a Boolean Algebra (GENUINE PROOF) -/
+/-- THEOREM: Law of Excluded Middle in a Boolean Algebra (machine-checked) -/
 theorem boolean_excluded_middle (a : Prop) [Decidable a] : a ∨ ¬a :=
   em a
 

@@ -68,15 +68,29 @@ Schwarzschild metric coefficient is fitted.
 ## 3. Numerical result
 
 With the default \(x_{\max}=250\), the first bracketed s-wave zero is
+\(\eta/M^2\simeq0.725609167\), with \(A_{\rm estimated}\simeq-1.2\times10^{-11}\).
+That value is **not converged in \(x_{\max}\)**: the inferred threshold is about
+\(0.72558965\) at \(x_{\max}=100\) and \(0.72561262\) at \(x_{\max}=1000\).
+
+An independent method fixes the converged value. With \(y=1/x\), the same
+equation becomes the Sturm–Liouville problem
 
 \[
-\boxed{\eta/M^2\simeq0.725609167},
-\qquad A_{\rm estimated}\simeq-1.2\times10^{-11}.
+-\big((1-y)\phi'\big)'=\mu\,y^2\phi,\qquad \phi(0)=0,\qquad \mu=3\lambda,
 \]
 
-The inferred threshold varies from about \(0.72558965\) at \(x_{\max}=100\)
-to \(0.72561262\) at \(x_{\max}=1000\), consistent with convergence of this
-shooting estimate. Reproduce with:
+with the horizon (\(y=1\)) regular automatically. Rayleigh–Ritz with a
+polynomial basis gives an upper bound that converges quickly:
+\(\lambda_1=0.725612851\) for a six-term basis and \(0.725612849\) for an
+eight-term basis. The reduction from the covariant equation to the \(x\)-form
+is verified symbolically, and the Gauss–Bonnet invariant
+\(\mathcal G=48M^2/r^6\) is verified from the Riemann tensor, in
+[`research/verify_derivations.py`](../../research/verify_derivations.py).
+
+**Headline value:** \(\eta/M^2\simeq0.725613\), with uncertainty about \(10^{-6}\)
+across the two methods. The value \(0.725609\) printed by the default script run
+is the \(x_{\max}=250\) truncation and should not be cited as the threshold.
+Reproduce with:
 
 ```bash
 python research/gauss_bonnet_scalarization.py

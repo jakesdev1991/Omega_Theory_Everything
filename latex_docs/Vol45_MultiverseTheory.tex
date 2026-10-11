@@ -1,11 +1,10 @@
 \documentclass[11pt, a4paper]{article}
-
 \usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
 
-\title{Theory of Everything - Volume 45 \\ \Large Multiverse Theory \& Branching}
+\title{Omega Theory --- Volume 45\\\Large Multiverse and Branching: A Model-Scoped Summary}
 \author{Omega Protocol}
 \date{\today}
 
@@ -13,16 +12,28 @@
 
 \maketitle
 
+\begin{quote}
+\textbf{Status.} Formal counterpart: \texttt{lean\_proofs/Vol45\_MultiverseTheory.lean}. The file is a toy model: a full binary tree in which every branch has two successors. It establishes: (i) sibling branches are distinct; (ii) branching strictly increases depth; (iii) the branch weight $2^{\text{depth}}$ doubles at each generation. These are facts about the tree, not about physical branches. The file does not establish the physical reality of Everett branches, decoherence-based branch separation, or any form of quantum immortality. Those claims in earlier text are withdrawn. Physical interpretation: open.
+\end{quote}
+
 \section*{Layman's Summary}
-Is there a parallel universe where you wore a blue shirt instead of a red one today? Volume 45 addresses the Many-Worlds interpretation. We prove that the universe does not make choices; it does everything. Every possible outcome physically happens in separate, mathematically orthogonal branches of reality.
+The many-worlds interpretation of quantum mechanics holds that the wavefunction never collapses and that all outcomes persist in branches. It is one interpretation among several, and it is not settled by experiment. This volume records a counting model of binary branching. It is not evidence for or against the interpretation.
 
-\section{Everett Branches (Axiom 48)}
-We establish the axiom that the universe's fundamental algebra never "collapses" a probability into a single outcome. Instead, it deterministically splits. Every time a quantum event has two possibilities, reality splits into two completely real, parallel branches that exist side-by-side in the universal Hilbert space.
+\section{Binary Branching (Formal Result within the Model)}
+In the full binary tree, sibling branches are distinct, depth increases at each branching, and the weight $2^{\text{depth}}$ doubles at each generation. These are combinatorial facts about the tree.
 
-\section{Many Worlds Decoherence (Theorem)}
-If there are parallel universes, why can't we see them or visit them? We prove that branches become mutually inaccessible the moment their relative entropy crosses the decoherence threshold. The math physically seals the universes apart. You can never interact with the "you" in the other universe because doing so would violate the laws of information flow.
+\section{Everett Branches (Interpretation, Not Formalized)}
+The earlier claim that the universe's algebra deterministically splits every quantum event into real parallel branches is an interpretive claim. It is not formalized, and it is withdrawn as a claim of this work.
 
-\section{Quantum Suicide \& Immortality (Theorem)}
-A bizarre thought experiment suggests that because your consciousness can only experience universes where you are alive, from your perspective, you will survive any lethal quantum event. We prove that subjective continuity is mathematically guaranteed along branches where the observer's informational state is preserved, suggesting a form of subjective immortality.
+\section{Decoherence Sealing of Branches (No Formal Counterpart)}
+The earlier claim that branches become mutually inaccessible at a decoherence threshold has no formal counterpart. The file does not model decoherence between branches. It is withdrawn.
+
+\section{Quantum Immortality (No Formal Counterpart)}
+The earlier claim that subjective continuity is guaranteed across branches has no formal counterpart. It is withdrawn. It is a philosophical proposal, not a result of this volume.
+
+\section{Scope and Open Items}
+\begin{itemize}
+  \item Not established here: the physical reality of other branches; the measure problem; decoherence-based separation; quantum immortality.
+\end{itemize}
 
 \end{document}

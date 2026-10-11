@@ -1,11 +1,10 @@
 \documentclass[11pt, a4paper]{article}
-
 \usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
 
-\title{Theory of Everything - Volume 12 \\ \Large Quantum Information Theory}
+\title{Omega Theory --- Volume 12\\\Large Quantum Information Constraints: A Model-Scoped Summary}
 \author{Omega Protocol}
 \date{\today}
 
@@ -13,16 +12,28 @@
 
 \maketitle
 
+\begin{quote}
+\textbf{Status.} Formal counterpart: \texttt{lean\_proofs/Vol12\_QuantumInformation.lean}. The file is a model with two complex amplitudes per state. It establishes: (i) a no-cloning obstruction in algebraic form. A normalized, nonorthogonal pair shows that the copying condition cannot hold for all normalized states. The copying condition is a hypothesis of the model. The file does not model a tensor-product unitary, so this is not the standard unitary no-cloning theorem. (ii) A capacity bound, and an entropy bound for Bell pairs below that capacity. Conservation of entropy is a model assumption, not a derivation. Physical interpretation: open.
+\end{quote}
+
 \section*{Layman's Summary}
-The universe is fundamentally a giant computer, processing information rather than just moving matter around. Volume 12 explores the strict rules governing how this information is handled. It proves that information can never truly be destroyed, it cannot be perfectly copied, and it can be instantly teleported across the cosmos using entanglement.
+Quantum information has rules that restrict copying and transmitting states. This volume states a small two-amplitude model of those restrictions. The model captures one algebraic form of the no-cloning obstruction and a capacity bound. It is not a derivation of quantum mechanics from the Omega framework.
 
-\section{Conservation of Information (Axiom 15)}
-Energy cannot be created or destroyed, and the same is true for quantum information. We establish as a core axiom that the total "von Neumann entropy"—a measure of the total quantum information in the universe—remains perfectly constant over time. The universe never forgets.
+\section{No-Cloning Obstruction (Formal Result within the Model)}
+The formal file shows that a normalized nonorthogonal pair of states witnesses the failure of the algebraic copying condition for all normalized states. The copying condition is supplied as a hypothesis. This does not derive the no-cloning theorem from modular flow or from unitarity of a physical process.
 
-\section{The No-Cloning Theorem (Theorem)}
-Unlike a digital file on your computer, you cannot make a perfect, independent copy of an unknown quantum state. This theorem proves that this restriction is a direct, unavoidable consequence of the universe's linear and unitary "modular flow." If you could copy quantum information, you would break the geometric fabric of space itself.
+\section{Capacity and Bell-Pair Entropy (Formal Result within the Model)}
+The formal file records a capacity bound, and shows that the entropy of a Bell pair in the model lies below that capacity. These are finite statements about the model's definitions.
 
-\section{Quantum Teleportation (Theorem)}
-While you can't copy quantum information, you can teleport it. This theorem proves that non-local state transfer—moving the exact state of a particle from point A to point B instantly—is handled by the underlying "Entanglement Router." Space is just a projection, and entanglement provides the secret backdoor to move information without traveling through the space in between.
+\section{Conservation of Entropy (Model Assumption)}
+The conservation of entropy is stated as a model assumption. It is not derived in this volume. The earlier phrasing ``the universe never forgets'' is withdrawn as a physical claim.
+
+\section{Entanglement Routing and Teleportation (No Formal Counterpart)}
+Earlier descriptions of entanglement routing and teleportation as consequences of the framework have no formal counterpart here. They are withdrawn as claims of this work.
+
+\section{Scope and Open Items}
+\begin{itemize}
+  \item Not established here: no-cloning in the standard tensor-product setting; derivation of the copying condition; teleportation protocols; a physical interpretation of the capacity.
+\end{itemize}
 
 \end{document}

@@ -1,11 +1,10 @@
 \documentclass[11pt, a4paper]{article}
-
 \usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
 
-\title{Theory of Everything - Volume 21 \\ \Large The Arrow of Time}
+\title{Omega Theory --- Volume 21\\\Large The Arrow of Time: A Model-Scoped Summary}
 \author{Omega Protocol}
 \date{\today}
 
@@ -13,16 +12,25 @@
 
 \maketitle
 
+\begin{quote}
+\textbf{Status.} Formal counterpart: \texttt{lean\_proofs/Vol21\_ArrowOfTime.lean}. The file is a model built on Volume 16's entropy process. It establishes: under the stated isolation and nonnegative-production assumptions, the entropy rate along a differentiable history is nonnegative. It does not derive a cosmological time orientation from Q-regions, and it does not identify physical time with computational latency. The Past Hypothesis, and the claim that time is not fundamental, have no formal counterpart. Physical interpretation: open.
+\end{quote}
+
 \section*{Layman's Summary}
-Why can you turn an egg into an omelet, but you can't turn an omelet back into an egg? Why does time only flow forward? Volume 21 proves that time is not a fundamental dimension like space; rather, the "flow" of time is just our macroscopic experience of quantum information settling into more stable configurations.
+Why does time run forward? Entropy tends to increase in isolated systems, and that gives a direction to time in thermodynamics. This volume records a conditional version of that statement inside a model. It does not explain why the early universe had low entropy, and it does not show that time is emergent.
 
-\section{The Thermodynamic Arrow (Axiom 24)}
-At the microscopic level, the equations of quantum mechanics don't care whether time runs forward or backward. We establish that the macroscopic, one-way "flow" of time is identical to the gradient of relative entropy dissipation. "Time" is just the sensation of information scrambling. If information isn't changing, time doesn't exist.
+\section{Entropy Arrow (Formal Result under Stated Assumptions)}
+Under isolation and nonnegative production, the formal file shows that the entropy rate along a differentiable history is nonnegative. This is conditional on those assumptions, which are model assumptions and are not derived from the framework.
 
-\section{Time Asymmetry (Theorem)}
-How does a symmetric microscopic world create a one-way macroscopic world? We prove that macroscopic irreversibility naturally emerges from the symmetric microscopic "modular flow." Because macroscopic systems can only track coarse-grained, fuzzy information, the underlying exact symmetries are hidden, creating the illusion of a one-way street.
+\section{Time Asymmetry (Model Assumption)}
+The earlier claim that macroscopic irreversibility emerges from symmetric microscopic modular flow is not formalized here. The time asymmetry in this volume is an input, through the isolation and production assumptions.
 
-\section{The Past Hypothesis (Theorem)}
-For entropy to always increase, it must have started very low. The "Past Hypothesis" is the assumption that the universe began in a highly ordered state. We prove that this is not an arbitrary guess; a low-entropy initial state is a necessary topological boundary condition of the underlying mathematical algebra. The universe had to start ordered.
+\section{The Past Hypothesis (No Formal Counterpart)}
+The earlier claim that a low-entropy initial state is a necessary topological boundary condition of the framework has no formal counterpart. The Past Hypothesis is an open item and is not proved here.
+
+\section{Scope and Open Items}
+\begin{itemize}
+  \item Not established here: the cosmological origin of the arrow of time; the Past Hypothesis; the claim that time is emergent; any identification of time with computational latency.
+\end{itemize}
 
 \end{document}

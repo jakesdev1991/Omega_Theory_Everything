@@ -62,7 +62,7 @@ chain,
 K_{AC}=K_{AB}K_{BC},
 \]
 
-and a continuous chain length is additive,
+and the chain length is additive and continuous (or monotone) in the link kernel,
 
 \[
 d_{AC}=d_{AB}+d_{BC},
@@ -73,6 +73,9 @@ then the positive logarithmic solution is
 \[
 \boxed{d_{ij}=-\ell_P\ln K_{ij}},\qquad \ell_P>0.
 \]
+
+The continuity-or-monotonicity hypothesis is required: without it, the additive
+Cauchy-type equation admits non-logarithmic solutions.
 
 This is a conditional functional-equation result. It does not by itself prove
 that \(d\) is a metric on a spatial manifold, that \(K\) is a physical
@@ -223,6 +226,10 @@ python -m pytest tests/test_quantum_ising_chain.py -q
 python research/gauss_bonnet_scalarization.py
 python -m pytest tests/test_gauss_bonnet_scalarization.py -q
 python Sim7_Radial_Metric.py --no-plots
+python research/verify_derivations.py
+python -m pytest tests/test_verify_derivations.py -q
+python research/verify_covariant.py
+python research/verify_tfim.py
 ```
 
 The Lean source and CI audit are documented in

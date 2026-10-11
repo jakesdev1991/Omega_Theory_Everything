@@ -17,7 +17,7 @@ independent developments: thermodynamic primitives live in
 density `ρ`. This module uses exactly one fact about the upstream model,
 `InformationPhysics.informationMass_pos`, and never unfolds the Landauer formula.
 
-Genuinely proven theorems:
+Machine-checked theorems:
 1. **Positivity** — `ℓ_P(ρ)` is a strictly positive length at every density.
 2. **Vacuum baseline** — for `ρ ≤ 0` the scale is exactly the baseline `ℓ_P0`.
 3. **Planck-scale contraction** — every positive density gives `ℓ_P(ρ) < ℓ_P0`.

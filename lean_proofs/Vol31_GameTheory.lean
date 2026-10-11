@@ -27,13 +27,13 @@ def Payoff1 : Strategy → Strategy → ℤ
 def Payoff2 (s1 s2 : Strategy) : ℤ :=
   Payoff1 s2 s1
 
-/-- THEOREM: Defect is a dominant strategy for Player 1 (GENUINE PROOF)
+/-- THEOREM: Defect is a dominant strategy for Player 1 (machine-checked)
     Regardless of what Player 2 does, Player 1 gets more from Defect. -/
 theorem defect_dominates_p1 (s2 : Strategy) :
   Payoff1 Strategy.Defect s2 ≥ Payoff1 Strategy.Cooperate s2 := by
   cases s2 <;> simp [Payoff1]
 
-/-- THEOREM: Mutual Defection is a Nash Equilibrium (GENUINE PROOF) -/
+/-- THEOREM: Mutual Defection is a Nash Equilibrium (machine-checked) -/
 theorem nash_equilibrium_defect :
   (Payoff1 Strategy.Defect Strategy.Defect ≥ Payoff1 Strategy.Cooperate Strategy.Defect) ∧
   (Payoff2 Strategy.Defect Strategy.Defect ≥ Payoff2 Strategy.Defect Strategy.Cooperate) := by

@@ -1,11 +1,10 @@
 \documentclass[11pt, a4paper]{article}
-
 \usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
 
-\title{Theory of Everything - Volume 17 \\ \Large Fluid Dynamics \& Turbulence}
+\title{Omega Theory --- Volume 17\\\Large Fluid Dynamics: A Model-Scoped Summary}
 \author{Omega Protocol}
 \date{\today}
 
@@ -13,16 +12,28 @@
 
 \maketitle
 
+\begin{quote}
+\textbf{Status.} Formal counterpart: \texttt{lean\_proofs/Vol17\_FluidDynamics.lean}. The file is a model. It establishes, for a scalar density history and a scalar divergence history: (i) the continuity equation $\rho' = -\rho\,\mathrm{div}\,v$ along a trajectory, with the derivative supplied as an explicit \texttt{HasDerivAt} assumption; (ii) that global incompressibility implies equal densities at any two times; (iii) that an expanding flow has decreasing density. No velocity field is constructed, no Navier--Stokes solution is constructed, and no hydrodynamic limit is derived. The viscosity bound and turbulence claims from earlier text have no formal counterpart. Physical interpretation: open.
+\end{quote}
+
 \section*{Layman's Summary}
-How does water flow? How does air move around a jet wing? Volume 17 connects the everyday movement of fluids to the deepest quantum rules of the universe. We prove that the chaotic swirling of water and the mathematical equations used by engineers are actually just large-scale, "zoomed-out" versions of the universe's foundational informational flow.
+Fluid dynamics describes how liquids and gases flow. Its basic conservation law states that density changes when a fluid compresses or expands. This volume records that conservation law for a scalar model. It does not solve the Navier--Stokes equations and does not connect them to the framework.
 
-\section{The Hydrodynamic Limit (Axiom 20)}
-The Navier-Stokes equations have been used for centuries to design everything from submarines to weather forecasts. We show that these equations aren't just useful approximations. If you take the incredibly complex, microscopic quantum informational flow of the universe and "zoom out" (the long-wavelength limit), the Navier-Stokes equations perfectly and naturally emerge.
+\section{Continuity Along a Trajectory (Formal Result within the Model)}
+For a positive density history with a divergence history, the continuity equation $\rho' = -\rho\,\mathrm{div}\,v$ is the stated model relation. Its derivative is Mathlib's derivative, linked to the trajectory by an explicit assumption. This is the scalar form of mass conservation.
 
-\section{Viscosity Bound (Theorem)}
-Why is honey thicker than water? Fluid viscosity is a measure of how much a liquid resists flowing. Our theory proves that there is a fundamental limit to how "runny" a fluid can be. The ratio of a fluid's thickness to its informational content (entropy) can never drop below a specific number (1/4$\pi$). This connects the physics of a dripping faucet directly to the physics of black holes.
+\section{Incompressible Flow (Formal Result within the Model)}
+If the divergence vanishes at all times, the density is constant in time. For a positive density, a zero density rate is equivalent to zero divergence. This is elementary calculus on the stated scalar model.
 
-\section{Turbulence Onset (Theorem)}
-Turbulence—like the bumpy air during a flight or the frothing white water of a river—is famously one of the hardest problems in physics. We prove that turbulence happens when the smooth "modular flow lines" of quantum information break apart in a fractal pattern. The chaos of a whirlpool is the macroscopic shadow of quantum informational breaking.
+\section{Hydrodynamic Limit and Navier--Stokes (Model Assumption Only)}
+The earlier claim that the Navier--Stokes equations emerge from the microscopic informational flow is withdrawn. The formal file contains no such limit. Navier--Stokes is not solved or derived here.
+
+\section{Viscosity Bound and Turbulence (No Formal Counterpart)}
+The earlier claims of a universal lower bound on the ratio of viscosity to entropy density, and that turbulence arises from fractal breaking of modular flow lines, have no formal counterpart. They are withdrawn as claims of this work and are listed as open items.
+
+\section{Scope and Open Items}
+\begin{itemize}
+  \item Not established here: velocity fields; Navier--Stokes solutions; the hydrodynamic limit; the viscosity bound; turbulence.
+\end{itemize}
 
 \end{document}

@@ -1,11 +1,10 @@
 \documentclass[11pt, a4paper]{article}
-
 \usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
 
-\title{Theory of Everything - Volume 13 \\ \Large Quantum Gravity \& Discrete Spacetime}
+\title{Omega Theory --- Volume 13\\\Large Quantum Gravity Constraints: A Model-Scoped Summary}
 \author{Omega Protocol}
 \date{\today}
 
@@ -13,16 +12,34 @@
 
 \maketitle
 
+\begin{quote}
+\textbf{Status.} Formal counterpart: \texttt{lean\_proofs/Vol13\_QuantumGravity.lean}. The file is a model. It establishes: (i) a general balance statement for a Wheeler--DeWitt-type constraint, under stated operator assumptions: if the total constraint annihilates the state, the expected matter and gravity energies have opposite signs. A mini-superspace model is shown to satisfy the constraint, and the constraint is shown not to hold automatically. (ii) Positivity of an area gap for a spin-network model with positive parameters. (iii) Two graviton helicity states are distinct. The ``graviton--Standard Model coupling'' is only the statement that the self-distance of a region vanishes; it is not a physical coupling. The file does not establish the equivalence of this model with Loop Quantum Gravity, nor any resolution of singularities. Physical interpretation: open.
+\end{quote}
+
 \section*{Layman's Summary}
-For a century, physicists have struggled to combine Einstein's smooth, continuous gravity with the jumpy, pixelated world of quantum mechanics. Volume 13 finally bridges this gap. It proves that space and time are not smooth; if you zoom in close enough, the universe is made of tiny, discrete "pixels" of geometry.
+Quantum gravity aims to combine quantum mechanics and general relativity. This volume records formal constraints and models that appear in quantum gravity approaches. It does not contain a complete quantum theory of gravity, and it does not resolve singularities.
 
-\section{Discrete Spacetime Spectra (Axiom 16)}
-We take it as an axiom that volume and area are not continuous. Just as a digital image is made of finite pixels, the mathematical operators derived from the universe's fundamental informational structure show that you can only have specific, discrete amounts of space. You cannot have half a pixel of volume.
+\section{Wheeler--DeWitt Balance (Formal Result under Stated Assumptions)}
+For a Wheeler--DeWitt-type constraint $H_m + H_g$ annihilating a state, the formal file shows that the expected matter and gravity energies have opposite signs. The result depends on the stated operator assumptions. It is not a derivation of the constraint from a microscopic theory.
 
-\section{Spin Foam Equivalence (Theorem)}
-A popular theory for quantum gravity involves "Spin Networks"—graphs that represent the quantum connections of space—evolving over time into "Spin Foams." We prove that these spin foams are mathematically identical to the transition amplitudes of our "modular flow." This means Loop Quantum Gravity is actually just a different way of describing our informational framework.
+\section{Mini-Superspace Model (Formal Result within the Model)}
+In the mini-superspace model the file shows that the constraint can be satisfied, and that satisfaction is not automatic. This is a finite model, not a general solution of quantum gravity.
 
-\section{Resolution of Singularities (Theorem)}
-In standard physics, the center of a black hole or the moment of the Big Bang involves a "singularity"—a point where gravity becomes infinitely strong and math breaks down. We prove that true infinities do not exist. The informational stiffness of the universe acts like a shock absorber, capping how extreme gravity can get and smoothly resolving what would otherwise be a singularity.
+\section{Area Gap (Formal Result within the Model)}
+For a spin-network model with positive parameters, the file shows that the smallest nonzero area is positive. This is a statement about the model's area spectrum. It is not a measured prediction.
+
+\section{Graviton Helicity (Formal Result within the Model)}
+Two graviton helicity states are shown to be distinct in the model. This is a finite distinctness statement.
+
+\section{Graviton--Standard Model Coupling (Trivial in the Model)}
+The formal statement that a graviton couples to the Standard Model gauge group holds because the self-distance of a region is zero. This is not a coupling in the physical sense, and it should not be cited as evidence of one. The earlier claim is withdrawn.
+
+\section{Singularity Resolution (No Formal Counterpart)}
+The earlier claim that the framework resolves singularities has no formal counterpart in this volume. It is withdrawn as a claim of this work and is listed as an open item.
+
+\section{Scope and Open Items}
+\begin{itemize}
+  \item Not established here: the equivalence of the constraint with Loop Quantum Gravity; spin-foam amplitudes; singularity resolution; graviton dynamics or couplings to matter.
+\end{itemize}
 
 \end{document}

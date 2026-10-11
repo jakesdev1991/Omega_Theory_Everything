@@ -1,11 +1,10 @@
 \documentclass[11pt, a4paper]{article}
-
 \usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
 
-\title{Theory of Everything - Volume 23 \\ \Large The Measurement Problem}
+\title{Omega Theory --- Volume 23\\\Large Decoherence and the Measurement Problem: A Model-Scoped Summary}
 \author{Omega Protocol}
 \date{\today}
 
@@ -13,16 +12,31 @@
 
 \maketitle
 
+\begin{quote}
+\textbf{Status.} Formal counterpart: \texttt{lean\_proofs/Vol23\_MeasurementProblem.lean}. The file is a model of a single qubit under dephasing. It establishes: (i) the dephasing channel is trace preserving; (ii) the dephasing channel decays off-diagonal coherence; (iii) complete decoherence removes off-diagonal terms; (iv) purity is at most one, and strictly decreases for the decohered state $|+\rangle$. The file does not establish objective collapse, a quantum Fisher information bound on decoherence, or any role for observers. The measurement-collapse claims in earlier text are withdrawn. Physical interpretation: open.
+\end{quote}
+
 \section*{Layman's Summary}
-Schrödinger's cat is both alive and dead until you open the box. Why does looking at something force it to pick a state? This is the "Measurement Problem." Volume 23 proves that human consciousness has nothing to do with it. Measurement is a real, physical process driven by the sheer weight of information.
+Decoherence explains why quantum superpositions appear classical when a system interacts with its environment. It does not, by itself, solve the measurement problem of which outcome occurs. This volume records a single-qubit dephasing model, and the basic facts about it. It is not a resolution of the measurement problem.
 
-\section{Objective Collapse (Axiom 26)}
-We establish that the "collapse of the wavefunction"—the moment a fuzzy quantum possibility becomes a hard classical reality—is an objective physical event. It doesn't need a conscious observer. It is driven by the accumulation of "informational mass." When a quantum system gets tangled up with too much of the environment, it physically breaks.
+\section{Dephasing Model (Formal Result within the Model)}
+The formal file defines a dephasing channel on a single qubit. It shows that the channel preserves trace, and that off-diagonal coherence decays under it. With complete decoherence, the off-diagonal terms vanish. These are standard facts about this channel.
 
-\section{Decoherence Limit (Theorem)}
-Exactly how big can a quantum object get before it becomes classical? We prove that the transition from quantum superposition (being in two places at once) to classical probability (being in one place or the other) occurs exactly at the Quantum Fisher Information Metric (QFIM) bound. The geometry of space itself forces the collapse.
+\section{Purity Loss (Formal Result within the Model)}
+Purity is at most one, and the file shows that the decohered state $|+\rangle$ has strictly lower purity after dephasing. This is an elementary property of the model.
 
-\section{The Observer (Theorem)}
-If human consciousness isn't required, what is an "observer"? We prove that an observer is simply any physical subsystem—a camera, a rock, a retina—that is massive enough and complex enough to record an irreversible change in entropy. Measurement is just thermodynamic exhaust.
+\section{Objective Collapse (Model Assumption, Not Formalized)}
+The earlier claim that wavefunction collapse is an objective physical process driven by accumulated informational mass has no formal counterpart. It is withdrawn as a claim of this work and is listed as an open item.
+
+\section{Decoherence Limit and QFIM (No Formal Counterpart)}
+The earlier claim that the transition to classical behavior occurs exactly at a Quantum Fisher Information bound has no formal counterpart. It is withdrawn.
+
+\section{The Observer (No Formal Counterpart)}
+The earlier claim that any sufficiently massive and complex physical subsystem constitutes an observer has no formal counterpart. Measurement is not modeled in this volume.
+
+\section{Scope and Open Items}
+\begin{itemize}
+  \item Not established here: the solution of the measurement problem; objective collapse; the decoherence rate for physical systems; any role for observers.
+\end{itemize}
 
 \end{document}

@@ -158,9 +158,15 @@ by the chain model. With \(a=1\), \(\lambda_v=1/2\), and the already-proposed
 | 0.1 | 0.5917005 | 0.7570609 | 0.5674098 | 1.4641 |
 | 0.3 | 0.7323062 | 0.4494810 | 0.1838502 | 2.8561 |
 | 0.5 | 0.8380308 | 0.2549249 | 0.0487400 | 5.0625 |
-| 0.618 | 0.8887238 | 0.1701929 | 0.0179017 | 6.8541 |
+| 0.618034 (= Φ\*) | 0.8887238 | 0.1701929 | 0.0179017 | 6.8541 |
 | 0.9 | 0.9798990 | 0.0292951 | 0.0001631 | 13.0321 |
 | 0.99 | 0.9986444 | 0.0019571 | 0.0000001 | 15.6824 |
+
+The row marked \(\Phi^*=(\sqrt5-1)/2\approx0.618034\) is evaluated at that exact
+golden value. Evaluating at the rounded label \(0.618\) instead gives
+\(\lambda=0.8887103\), \(\kappa/\kappa_0=0.1702148\); the difference is in the
+fifth significant figure and does not change any conclusion. The table values
+are checked by `research/verify_derivations.py` (`check_markov_kappa_table`).
 
 The comparison column is the radial spatial coefficient
 \(h_{rr}=(1+\Phi)^4\) in the isotropic Schwarzschild dictionary

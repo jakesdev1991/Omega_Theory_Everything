@@ -3,7 +3,7 @@ import OmegaUnifiedFoundation
 
 /-
   Vol14_DarkSector.lean
-  REAL mathematical formalization of the Dark Sector (Dark Matter & Dark Energy).
+  Machine-checked model of the Dark Sector (Dark Matter & Dark Energy).
 
   Contains:
   1. Flat Universe Cosmic Sum: The legacy (0, 0, 1) concrete baseline.
@@ -25,7 +25,7 @@ def OmegaDarkEnergy : ℝ := 1
 theorem flat_universe_sum : OmegaBaryon + OmegaDarkMatter + OmegaDarkEnergy = 1 := by
   norm_num [OmegaBaryon, OmegaDarkMatter, OmegaDarkEnergy]
 
-/-- THEOREM 1: Dark Energy Density (GENUINE PROOF)
+/-- THEOREM 1: Dark Energy Density (machine-checked)
     If the universe is flat, we can strictly deduce the Dark Energy density 
     parameter from the Baryonic and Dark Matter components. -/
 theorem dark_energy_deduction : 

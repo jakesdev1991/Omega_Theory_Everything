@@ -1,11 +1,10 @@
 \documentclass[11pt, a4paper]{article}
-
 \usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
 
-\title{Theory of Everything - Volume 22 \\ \Large Gravity as Entanglement (ER = EPR)}
+\title{Omega Theory --- Volume 22\\\Large ER = EPR as a Model Correspondence: A Model-Scoped Summary}
 \author{Omega Protocol}
 \date{\today}
 
@@ -13,16 +12,25 @@
 
 \maketitle
 
+\begin{quote}
+\textbf{Status.} Formal counterpart: \texttt{lean\_proofs/Vol22\_EREqualsEPR.lean}. The file is a model. Subsystems are Q-regions. Mutual information, throat area, and the ``ER bridge'' (a region with mutual information approximately one) are defined within the model. The file establishes correspondence statements within those definitions: positive mutual information holds if and only if the throat area is positive; mutual information is at most $1/4$; no entanglement implies no bridge; perfect overlap identifies the two subsystems; and identical binary subsystems have zero throat. The ER = EPR conjecture itself is not proved. The traversable-wormhole and teleportation claims in earlier text have no formal counterpart and are withdrawn. Physical interpretation: open.
+\end{quote}
+
 \section*{Layman's Summary}
-Einstein-Podolsky-Rosen (EPR) describes "spooky action at a distance"—quantum entanglement. Einstein-Rosen (ER) describes wormholes—bridges through spacetime. In Volume 22, we prove that these are the exact same thing. Entanglement is just a tiny, microscopic wormhole. Gravity and quantum connections are identical.
+ER = EPR is a conjecture that quantum entanglement and wormhole-like spacetime connections are two descriptions of the same structure. This volume records a model in which these notions are defined through mutual information. It does not prove the conjecture for physical spacetimes.
 
-\section{ER = EPR (Axiom 25)}
-We establish the identity between quantum entanglement and spacetime geometry. Two particles that share a quantum state (EPR) are literally connected by a geometric bridge (ER) in the underlying informational substrate. This axiom permanently unifies quantum mechanics and general relativity at the most fundamental level.
+\section{ER = EPR (Conjecture, Model Correspondence Only)}
+The conjecture is stated in the formal file as a correspondence inside the model. It is not established for physical spacetimes or for general quantum states. The earlier claim that this identity is an axiom that unifies quantum mechanics and general relativity is withdrawn.
 
-\section{Entanglement Geometry (Theorem)}
-If two things are entangled, they are physically close in the "bulk" geometry of the universe, no matter how far apart they appear to be in our 3D space. We prove that the "distance" between any two points in the universe is simply a measure of how much information they do *not* share. Maximum entanglement equals zero distance.
+\section{Entanglement and Geometry in the Model (Formal Result within the Model)}
+Within the model, the distance between two regions is defined through how much information they fail to share. The formal file shows, for example, that perfect overlap implies zero distance, and that the absence of entanglement implies the absence of an ER bridge. These are consequences of the definitions in the file. They are not a derivation of spacetime geometry from quantum information.
 
-\section{Wormhole Traversability (Theorem)}
-Can you travel through a wormhole? Standard physics says no; they collapse too quickly. We prove that traversable wormholes are mathematically possible, but only if you inject "negative informational pressure." Astonishingly, this mathematical requirement is exactly identical to the protocol required for quantum teleportation.
+\section{Wormhole Traversability and Teleportation (No Formal Counterpart)}
+The earlier claim that traversable wormholes require negative informational pressure, and that this requirement coincides with the quantum teleportation protocol, has no formal counterpart. It is withdrawn as a claim of this work and is listed as an open item.
+
+\section{Scope and Open Items}
+\begin{itemize}
+  \item Not established here: ER = EPR for physical spacetimes; traversable wormholes; the relation of the model's distance to metric distance in general relativity.
+\end{itemize}
 
 \end{document}

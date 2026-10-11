@@ -1,11 +1,10 @@
 \documentclass[11pt, a4paper]{article}
-
 \usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
 
-\title{Theory of Everything - Volume 16 \\ \Large Non-Equilibrium Thermodynamics}
+\title{Omega Theory --- Volume 16\\\Large Non-Equilibrium Thermodynamics: A Model-Scoped Summary}
 \author{Omega Protocol}
 \date{\today}
 
@@ -13,16 +12,25 @@
 
 \maketitle
 
+\begin{quote}
+\textbf{Status.} Formal counterpart: \texttt{lean\_proofs/Vol16\_NonEquilibriumThermodynamics.lean}. The file is a model. Entropy, flux, and production are real-valued functions of time. The balance law is an explicit derivative hypothesis, which is a model assumption. The file establishes: (i) an isolated system's entropy is nondecreasing, and strictly increasing when production is strictly positive; (ii) nonnegative production alone does not imply that an open system's entropy grows, since an open system can export entropy. The Crooks and Jarzynski fluctuation theorems are not formalized here. The earlier claims about them are withdrawn. Physical interpretation: open.
+\end{quote}
+
 \section*{Layman's Summary}
-Standard thermodynamics describes a cup of coffee resting on a table. Volume 16 describes the coffee *while it's spilling*. We prove that even in chaotic, fast-moving situations far from balance, there are strict, hidden rules dictating exactly how information and energy can flow. 
+Non-equilibrium thermodynamics studies systems that are driven or changing, such as a dividing cell or an engine. This volume states the basic entropy-balance relations for such a system under explicit assumptions. It does not derive them from microscopic dynamics.
 
-\section{Fluctuation Theorems (Axiom 19)}
-If you watch a video of a glass shattering, you instantly know the video is playing forward, not backward. This is because entropy—disorder—always increases. We establish that the exact mathematical ratio comparing the forward process to the impossible backward process is completely controlled by the underlying "modular flow." The arrow of time is a mathematical necessity of the universe's informational structure.
+\section{Entropy Balance (Model Assumption and Formal Result)}
+The balance law relating entropy, flux, and production is taken as a model assumption. Under isolation at every time, the formal file shows that entropy is nondecreasing. With strictly positive production, the entropy is strictly increasing. Nonnegative production by itself is not enough for an open system, and the file contains an explicit example of an exporting process whose entropy decreases.
 
-\section{Crooks Fluctuation Theorem (Theorem)}
-Even when things are messy and out of equilibrium—like a cell dividing or an engine misfiring—they still obey a hidden symmetry. We prove the Crooks theorem, showing that the amount of work required to push a system forward has an exact, mirror-image mathematical relationship to the work required to push it backward.
+\section{Arrow of Time in This Model}
+Entropy monotonicity in this model follows from isolation and the sign of production. It does not follow from the framework's modular flow. The formal file does not derive an arrow of time from the underlying dynamics. See Volume 21.
 
-\section{Jarzynski Equality (Theorem)}
-Imagine trying to guess the shape of a calm lake by studying the violent splashing of a storm. The Jarzynski Equality, which we prove here, shows you can actually do this. It proves that you can perfectly calculate the stable, resting energy differences between two states just by measuring the wild fluctuations of a system being violently pushed between them.
+\section{Crooks and Jarzynski Theorems (No Formal Counterpart)}
+The earlier claims that the Crooks fluctuation theorem and the Jarzynski equality are proved in this framework have no formal counterpart. They are withdrawn as claims of this work and are listed as open items.
+
+\section{Scope and Open Items}
+\begin{itemize}
+  \item Not established here: microscopic derivation of the balance law; fluctuation theorems; work and free-energy relations for specific processes.
+\end{itemize}
 
 \end{document}

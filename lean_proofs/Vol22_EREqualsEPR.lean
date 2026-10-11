@@ -4,7 +4,7 @@ import OmegaUnifiedFoundation
 
 /-
   Vol22_EREqualsEPR.lean
-  REAL formalization: ER = EPR conjecture structure.
+  Machine-checked model: ER = EPR conjecture structure.
 
   Using Omega Protocol: 
   - 1D: Φ = mutual information (Chain Overlap Density)

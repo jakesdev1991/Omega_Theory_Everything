@@ -1,11 +1,10 @@
 \documentclass[11pt, a4paper]{article}
-
 \usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
 
-\title{Theory of Everything - Volume 30 \\ \Large Planetary Systems \& Gaia Theory}
+\title{Omega Theory --- Volume 30\\\Large Planetary Systems: A Model-Scoped Summary}
 \author{Omega Protocol}
 \date{\today}
 
@@ -13,16 +12,31 @@
 
 \maketitle
 
+\begin{quote}
+\textbf{Status.} Formal counterpart: \texttt{lean\_proofs/Vol30\_PlanetarySystems.lean}. The file is a model. It establishes, for a chosen Newtonian two-body period formula with positive gravitational constant and central mass: (i) Kepler's third law in the form that the squared period is proportional to the cube of the radius; (ii) the orbital period is positive for positive radius; (iii) monotonicity of the period in radius on the positive domain. The file does not derive the period law from an ODE, and it has no formal counterpart for Gaia homeostasis, climate feedback, or geochemical cycling. The planetary-biosphere claims in earlier text are withdrawn. Physical interpretation: open.
+\end{quote}
+
 \section*{Layman's Summary}
-Is the Earth itself alive? The "Gaia Hypothesis" suggests that the entire planet acts like a single living organism. Volume 30 takes this from poetry to hard mathematics. We prove that a planet with life inevitably evolves into a self-regulating cybernetic system, controlling its own temperature and chemistry to survive.
+Kepler's third law relates a planet's orbital period to its distance from the star. This volume records that relation for a chosen Newtonian formula. The Gaia hypothesis, which proposes that the biosphere regulates planetary conditions, is a separate idea. This volume does not formalize it.
 
-\section{Gaia Homeostasis (Axiom 33)}
-We establish that a biosphere is not just a passenger on a rock; it is the pilot. A mature planetary ecosystem acts as a singular, self-regulating cybernetic system. It actively maintains "homeostasis" (stable, comfortable conditions) in the face of massive external threats, such as asteroid impacts or a slowly brightening sun.
+\section{Kepler's Third Law (Formal Result within the Model)}
+For the chosen two-body formula, the squared period is proportional to the cube of the radius, with a positive constant determined by the gravitational constant and the central mass. The file proves this from the chosen formula. It does not derive the formula from a dynamical equation.
 
-\section{Climate Feedback Loops (Theorem)}
-How does a planet adjust its own thermostat? We prove that global temperature is dynamically regulated by biological nodes. Whether it's microscopic algae creating clouds to reflect sunlight, or vast forests pulling carbon out of the air, the biological network actively manipulates the planet's atmospheric albedo (reflectivity) to prevent extreme heating or freezing.
+\section{Orbital Period (Formal Result within the Model)}
+The orbital period is positive for positive radius and zero exactly when the formula gives zero, and it is strictly increasing in radius on the positive domain. These are properties of the chosen formula.
 
-\section{Geochemical Cycling (Theorem)}
-The atoms in your body have been recycled millions of times through dinosaurs, oceans, and rocks. We prove that the movement of essential elements (like Carbon, Nitrogen, and Phosphorus) must form perfectly closed topological loops. Driven by the constant energy of the sun, the biosphere pumps these elements endlessly through the network to prevent starvation.
+\section{Gaia Homeostasis (No Formal Counterpart)}
+The earlier claim that a biosphere actively maintains planetary homeostasis has no formal counterpart. It is withdrawn as a claim of this work and is listed as an open item.
+
+\section{Climate Feedback Loops (No Formal Counterpart)}
+The earlier claim that biological processes regulate global temperature through albedo has no formal counterpart. It is withdrawn.
+
+\section{Geochemical Cycling (No Formal Counterpart)}
+The earlier claim that essential elements must cycle through closed topological loops has no formal counterpart. It is withdrawn.
+
+\section{Scope and Open Items}
+\begin{itemize}
+  \item Not established here: derivation of the period law from dynamics; planetary biology; the Gaia hypothesis; climate regulation; biogeochemical cycles.
+\end{itemize}
 
 \end{document}

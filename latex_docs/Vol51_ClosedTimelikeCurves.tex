@@ -1,11 +1,10 @@
 \documentclass[11pt, a4paper]{article}
-
 \usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
 
-\title{Theory of Everything - Volume 51 \\ \Large Closed Timelike Curves (Time Travel)}
+\title{Omega Theory --- Volume 51\\\Large Closed Timelike Curves and Self-Consistency: A Model-Scoped Summary}
 \author{Omega Protocol}
 \date{\today}
 
@@ -13,16 +12,28 @@
 
 \maketitle
 
+\begin{quote}
+\textbf{Status.} Formal counterpart: \texttt{lean\_proofs/Vol51\_ClosedTimelikeCurves.lean}. The file is a toy model: histories form a three-state chain, with one fixed point and two transient loop states, and a time-loop operator that settles them. It establishes: (i) Novikov self-consistency for the model, in which the operator acts idempotently on consistent histories; (ii) that the operator settles all histories to the fixed point in finitely many steps; and (iii) that only the fixed point is consistent. The file does not model spacetime geometry, does not establish that closed timelike curves are physically possible, and does not establish that paradoxes are suppressed in general. The claims in earlier text are withdrawn. Physical interpretation: open.
+\end{quote}
+
 \section*{Layman's Summary}
-Is time travel into the past possible? Volume 51 proves that the universe does not strictly forbid it. The geometry of spacetime can mathematically twist back on itself. However, we also prove that if you do travel back in time, the universe mathematically forces you to act in a way that prevents paradoxes.
+Closed timelike curves are solutions of general relativity in which worldlines loop back in time. Whether they are physically realized is unknown. Novikov's self-consistency principle is a proposed rule for them. This volume records a finite toy model of self-consistency. It does not show that time travel is possible.
 
-\section{Topological Causality (Axiom 54)}
-We establish that "Chronology Protection"—the idea that time must always go forward—is not an absolute, unbreakable law of physics. Instead, it is a high-probability thermodynamic limit. Because entropy usually increases, time usually flows forward. But under extreme conditions, the flow can be reversed.
+\section{Toy Time-Loop Operator (Formal Result within the Model)}
+In the three-state chain, the time-loop operator acts idempotently on consistent histories, settles every history to the fixed point, and the fixed point is the only consistent history. These are finite facts about the model.
 
-\section{Closed Timelike Curves (Theorem)}
-Under conditions of extreme "negative informational pressure" (such as near the core of a spinning black hole or a traversable wormhole), the network graph of the universe can form loops. We prove that these "Closed Timelike Curves" allow an observer or a piece of information to traverse a path that ends up in its own absolute past.
+\section{Novikov Self-Consistency (Formal Result within the Model)}
+The file proves self-consistency for the toy operator. It does not prove the physical Novikov principle, which concerns solutions of the Einstein equations.
 
-\section{Novikov Consistency (Theorem)}
-What happens if you go back and kill your own grandfather? The Novikov Self-Consistency Principle answers this, and we prove it rigorously. The universe mathematically prohibits self-inconsistent topological loops. The probability amplitudes of a paradox sum perfectly to zero. If you travel back, the laws of physics will force you to become the cause of the past, rather than changing it.
+\section{Chronology Protection (Not Formalized)}
+The earlier claim that chronology protection is a thermodynamic limit, and that time usually flows forward because entropy increases, is not formalized here. It is withdrawn as a claim of this work.
+
+\section{Closed Timelike Curves in Spacetime (No Formal Counterpart)}
+The earlier claim that negative informational pressure near spinning black holes or traversable wormholes produces closed timelike curves has no formal counterpart. It is withdrawn and is listed as an open item.
+
+\section{Scope and Open Items}
+\begin{itemize}
+  \item Not established here: physical closed timelike curves; time travel; chronology protection; any physical resolution of paradoxes.
+\end{itemize}
 
 \end{document}

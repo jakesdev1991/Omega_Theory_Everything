@@ -8,7 +8,7 @@ import OmegaUnifiedFoundation
 
   Model scope (stated honestly):
   * Cantor's diagonal argument (no surjection `ℕ → (ℕ → Bool)`) is a
-    genuine proof, kept under its legacy name for `OmegaProtocol.lean`.
+    machine-checked proof, kept under its legacy name for `OmegaProtocol.lean`.
   * `Machine` is an explicit toy computability semantics: a total step
     function over ℕ configurations. Bounded halting is decidable and a
     halting diagonal theorem holds: no enumeration of machines captures
@@ -23,7 +23,7 @@ open OmegaProtocol
 
 open scoped Classical
 
-/-- THEOREM: Cantor's Diagonal Argument (GENUINE PROOF)
+/-- THEOREM: Cantor's Diagonal Argument (machine-checked)
     There is no surjection from ℕ to (ℕ → Bool). -/
 theorem cantor_diagonal : ¬ Function.Surjective (f : ℕ → ℕ → Bool) := by
   intro h_surj

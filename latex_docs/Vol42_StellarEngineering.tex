@@ -1,11 +1,10 @@
 \documentclass[11pt, a4paper]{article}
-
 \usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
 
-\title{Theory of Everything - Volume 42 \\ \Large Stellar Engineering \& Kardashev Scales}
+\title{Omega Theory --- Volume 42\\\Large Stellar Engineering: A Model-Scoped Summary}
 \author{Omega Protocol}
 \date{\today}
 
@@ -13,16 +12,31 @@
 
 \maketitle
 
+\begin{quote}
+\textbf{Status.} Formal counterpart: \texttt{lean\_proofs/Vol42\_StellarEngineering.lean}. The file is an idealized model. A Dyson swarm is a stack of shells, with shell $k$ contributing $2^k$ area units. The cumulative area recurrence is proved, and it is monotone and strictly growing. Captured luminosity is luminosity times a fraction, and it is bounded by the luminosity when the fraction is at most one. The file does not establish that Kardashev thresholds are physical quanta, that Dyson swarms are optimal, or that star lifting is feasible. Physical interpretation: open.
+\end{quote}
+
 \section*{Layman's Summary}
-How do you measure the power of an alien civilization? The Kardashev Scale categorizes them by energy use. Volume 42 proves that these scales aren't just science fiction categories; they are strict mathematical thresholds defined by the quantum limits of energy extraction.
+A Dyson swarm is a hypothetical structure of objects around a star that would capture part of its light for energy. The Kardashev scale classifies civilizations by energy use. This volume records bookkeeping for an idealized swarm model. It does not show that such structures are buildable or that the Kardashev categories are natural thresholds.
 
-\section{Kardashev Ascension (Axiom 45)}
-We establish that as an informational network expands, its energy footprint naturally hits specific geometric limits: the planet, the star, and the galaxy. A Type I civilization controls a planet. Type II controls a star. Type III controls a galaxy. These are fundamental quanta of cosmic expansion.
+\section{Kardashev Scale (Definition, Not a Physical Result)}
+The Kardashev categories are conventions for energy use. The file does not show that they are physical quanta or thresholds set by quantum limits. The earlier claim is withdrawn.
 
-\section{Dyson Swarm Dynamics (Theorem)}
-To capture a star's energy, you don't build a solid metal sphere around it (which would be unstable). We prove that the mathematically optimal solution is a "Dyson Swarm"—millions of independent, unlinked orbital nodes buzzing around the star like bees. This maximizes energy capture while perfectly balancing gravity and light pressure.
+\section{Idealized Dyson Swarm (Formal Result within the Model)}
+In the stacked-shell model, the cumulative area follows the stated recurrence, is monotone, and grows strictly. These are finite algebraic facts about the model's area bookkeeping.
 
-\section{Star Lifting (Theorem)}
-Stars naturally waste energy and burn out too fast. We prove that an advanced network can perform "Star Lifting"—using massive magnetic fields to physically pull excess gas off a star. This lowers the star's mass, slowing down its fusion rate, and extending its lifespan from billions to trillions of years.
+\section{Energy Capture (Formal Result within the Model)}
+Captured luminosity is bounded by the total luminosity whenever the capture fraction is at most one. This is an inequality over the reals.
+
+\section{Swarm Optimality and Stability (No Formal Counterpart)}
+The earlier claim that independent orbital nodes are the mathematically optimal solution, balancing gravity and light pressure, has no formal counterpart. It is withdrawn as a claim of this work.
+
+\section{Star Lifting (No Formal Counterpart)}
+The earlier claim that magnetic extraction of stellar gas can extend a star's lifetime has no formal counterpart. It is withdrawn and is listed as an open item.
+
+\section{Scope and Open Items}
+\begin{itemize}
+  \item Not established here: feasibility of any stellar-engineering project; optimality of swarm designs; star lifting; the physical meaning of the Kardashev categories.
+\end{itemize}
 
 \end{document}

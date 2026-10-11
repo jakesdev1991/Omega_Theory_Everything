@@ -1,11 +1,10 @@
 \documentclass[11pt, a4paper]{article}
-
 \usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
 
-\title{Theory of Everything - Volume 44 \\ \Large Universal Expansion \& The Big Rip}
+\title{Omega Theory --- Volume 44\\\Large Universal Expansion and de Sitter Horizon Entropy: A Model-Scoped Summary}
 \author{Omega Protocol}
 \date{\today}
 
@@ -13,16 +12,28 @@
 
 \maketitle
 
+\begin{quote}
+\textbf{Status.} Formal counterpart: \texttt{lean\_proofs/Vol44\_UniversalExpansion.lean}. The file is a static de Sitter model with variable positive $\Lambda$ and $G$. It establishes: (i) the horizon radius, area, and entropy are positive; (ii) the entropy formula $S = 3\pi/(G\Lambda)$; (iii) entropy decreases in $\Lambda$ at fixed $G$; (iv) a unit benchmark with $S = 3\pi$. This is horizon thermodynamics in a stated model, not cosmic dynamics. The claims about heat death, the Big Rip, and late-stage computation are not formalized and are withdrawn. Physical interpretation: open.
+\end{quote}
+
 \section*{Layman's Summary}
-How will the universe end? Volume 44 looks at the far, far future. We prove that while the universe will continue to expand and cool down into total darkness, the actual fabric of reality will never tear apart, and incredibly efficient thought and computation can survive forever.
+The expansion of the universe is accelerating under the influence of dark energy, and in a de Sitter model the expansion leads to a horizon with an associated entropy. This volume records that horizon entropy formula in a static model. It does not describe the future of the universe in detail.
 
-\section{The Thermodynamic End State (Axiom 47)}
-We establish that the continuous, accelerating expansion of the universe is simply reality coasting toward its final state of maximum entropy—the "Heat Death." Eventually, all stars will burn out, all black holes will evaporate, and the universe will be a cold, dark, perfectly balanced soup of radiation.
+\section{Horizon Entropy (Formal Result within the Model)}
+In a de Sitter model with positive $\Lambda$ and $G$, the horizon radius, area, and entropy are positive. The entropy is $S = 3\pi/(G\Lambda)$, and it decreases as $\Lambda$ increases at fixed $G$. This is the standard Gibbons--Hawking horizon entropy for de Sitter space, written in natural units.
 
-\section{The Big Rip Avoidance (Theorem)}
-Some physicists fear that dark energy will eventually grow so strong it will rip atoms and spacetime itself apart (the "Big Rip"). We prove this is impossible. The fundamental "informational stiffness" of the universe's algebra acts like an unbreakable rubber band. It can stretch forever, but it cannot mathematically snap.
+\section{Heat Death (Not Formalized)}
+The earlier description of a final state of maximal entropy, with stars and black holes gone, is not formalized. The file contains no time evolution. It is withdrawn as a claim of this work.
 
-\section{Late-stage Computation (Theorem)}
-Can life survive the Heat Death? "Landauer's Principle" states that the colder the environment, the less energy it takes to think. We prove that as the universe freezes, the computational efficiency of any surviving digital intelligence will increase exponentially. They will think slower, but they can think forever on almost zero energy.
+\section{Big Rip Avoidance (No Formal Counterpart)}
+The earlier claim that the informational stiffness of the universe prevents a Big Rip has no formal counterpart. It is withdrawn and is listed as an open item.
+
+\section{Late-Stage Computation (No Formal Counterpart)}
+The earlier claim that digital intelligence becomes exponentially more efficient as the universe cools has no formal counterpart. It is withdrawn. The file does not model computation or Landauer's principle.
+
+\section{Scope and Open Items}
+\begin{itemize}
+  \item Not established here: the future evolution of the universe; the Big Rip question; heat death; late-stage computation.
+\end{itemize}
 
 \end{document}

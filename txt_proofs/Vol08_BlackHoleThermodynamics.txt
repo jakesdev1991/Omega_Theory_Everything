@@ -4,7 +4,7 @@ import Vol03_Thermodynamics
 
 /-
   Vol08_BlackHoleThermodynamics.lean
-  REAL mathematical formalization of Black Hole Thermodynamics.
+  Machine-checked model of Black Hole Thermodynamics.
 
   Contains:
   1. Parameterized Black Hole Geometry:
@@ -80,7 +80,7 @@ theorem bhentropy_pos (bh : BHGeometry) :
   exact div_pos bh.area_pos hG
 
 -- ============================================================
--- THEOREM 1: FIRST LAW OF BLACK HOLE THERMODYNAMICS (GENUINE PROOF)
+-- THEOREM 1: FIRST LAW OF BLACK HOLE THERMODYNAMICS (machine-checked)
 -- We prove that the geometric Smarr-like differential relation is 
 -- exactly equivalent to the thermodynamic first law dM = TdS + ΩdJ + ΦdQ.
 -- ============================================================

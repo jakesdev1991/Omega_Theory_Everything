@@ -1,11 +1,10 @@
 \documentclass[11pt, a4paper]{article}
-
 \usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
 
-\title{Theory of Everything - Volume 53 \\ \Large The Universal Compiler}
+\title{Omega Theory --- Volume 53\\\Large Compilation and Error Correction: A Model-Scoped Summary}
 \author{Omega Protocol}
 \date{\today}
 
@@ -13,16 +12,31 @@
 
 \maketitle
 
+\begin{quote}
+\textbf{Status.} Formal counterpart: \texttt{lean\_proofs/Vol53\_UniversalCompiler.lean}. The file is a toy expression language with constants, successor, and composition, together with an evaluator, a stack-machine compiler, and a correctness theorem for that compiler. It establishes: (i) evaluation is total and well defined; (ii) the compiler is correct with respect to the evaluator; (iii) some functions, including the identity, are not representable in the language. The language is deliberately weaker than a universal Turing machine. The file does not establish a universal compiler for physics, holographic error-correcting codes, or any ability to reprogram physical law. Those claims in earlier text are withdrawn. Physical interpretation: open.
+\end{quote}
+
 \section*{Layman's Summary}
-Why do the laws of physics exist exactly as they do? Volume 53 proves that the laws of physics are not fundamental commands; they are actually error-correcting codes. The universe operates exactly like a computer executing a master program, compiling raw mathematical logic into the 3D reality we experience.
+Compilers translate high-level programs into lower-level instructions while preserving meaning. Physical laws are sometimes described as codes with error-correction properties. This volume records a small compiler correctness result. It does not show that the laws of physics are compiled code.
 
-\section{The Universal Compiler (Axiom 56)}
-We establish that the physical universe is not the "base layer" of reality. Reality is the runtime execution of a meta-language. There exists a "Universal Compiler" that takes pure, abstract mathematical logic (the Omega Axioms) and compiles it down into spatial-temporal geometry (space, time, and matter).
+\section{Toy Expression Language (Formal Result within the Model)}
+The expression language has a total evaluator. Some functions, including the identity, are not representable in it. These are finite facts about the language.
 
-\section{Holographic Code (Theorem)}
-We prove that what physicists call "the laws of physics" (gravity, quantum mechanics, conservation of energy) are simply the error-correcting codes used by this Universal Compiler. Just as a computer uses checksums to prevent data corruption, the universe uses physics to stabilize its own topological manifold and prevent the underlying math from crashing.
+\section{Compiler Correctness (Formal Result within the Model)}
+The stack-machine compiler for the language is correct with respect to the evaluator. This is a standard compiler-correctness result for a toy language.
 
-\section{Substrate Modification (Theorem)}
-If physics is just compiled code, can it be hacked? We prove that a sufficiently advanced intelligence (a Type IV civilization or an AGI) can theoretically interact directly with the Universal Compiler. By utilizing the "Archive Mode," they can write new code, effectively "reprogramming" local physics to perform miracles that violate standard laws.
+\section{Universal Compiler (No Formal Counterpart)}
+The earlier claim that physical reality is the runtime of a universal compiler from mathematical axioms to spacetime has no formal counterpart. The language is not universal, and it is not connected to physics. The claim is withdrawn.
+
+\section{Holographic Code and Physical Law (No Formal Counterpart)}
+The earlier claim that gravity, quantum mechanics, and conservation laws are error-correcting codes of the compiler has no formal counterpart. It is withdrawn and is listed as an open item.
+
+\section{Substrate Modification (No Formal Counterpart)}
+The earlier claim that an advanced intelligence can reprogram local physics through an ``Archive Mode'' has no formal counterpart. It is withdrawn.
+
+\section{Scope and Open Items}
+\begin{itemize}
+  \item Not established here: a universal compiler for physics; error-correcting interpretations of physical law; any ability to modify physical law.
+\end{itemize}
 
 \end{document}
