@@ -410,7 +410,8 @@ theorem isSubobjectPullback_iff_mem {s n : SkelObj} (m : SkelHom s n)
 theorem skel_subobject_classifier {s n : SkelObj} (m : SkelHom s n) :
     ∃! χ : SkelHom n skelOmega, IsSubobjectPullback m χ := by
   refine ⟨skelChar (inImage m), ?_, fun χ hχ => ?_⟩
-  · rw [isSubobjectPullback_iff_mem]
+  · dsimp
+    rw [isSubobjectPullback_iff_mem]
     exact skelChar_mem (inImage m)
   · apply skelChar_unique (inImage m) χ
     exact (isSubobjectPullback_iff_mem m χ).mp hχ
@@ -431,6 +432,6 @@ theorem skel_subobject_pullback_universal {z s n : SkelObj}
   · funext x
     apply hm
     have hux : m (u x) = h x := congrFun hu x
-    rw [hux, ← Classical.choose_spec (hex x)]
+    exact hux.trans (Classical.choose_spec (hex x)).symm
 
 end OmegaProtocol.Vol36

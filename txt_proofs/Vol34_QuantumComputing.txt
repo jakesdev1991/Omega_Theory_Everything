@@ -178,9 +178,9 @@ theorem hadamard_conjugates_X_to_Z :
   · dsimp [matMul, matH, matX, matZ]; ring
   · dsimp [matMul, matH, matX, matZ]; ring
   · dsimp [matMul, matH, matX, matZ]
-    calc (invSqrt2 * 1 + -invSqrt2 * 0) * invSqrt2 +
-          (invSqrt2 * 0 + -invSqrt2 * 1) * -invSqrt2
-        = -2 * (invSqrt2 * invSqrt2) := by ring
+    calc (invSqrt2 * 0 + -invSqrt2 * 1) * invSqrt2 +
+          (invSqrt2 * 1 + -invSqrt2 * 0) * -invSqrt2
+        = -(2 * (invSqrt2 * invSqrt2)) := by ring
       _ = -1 := by rw [invSqrt2_sq]; norm_num
 
 /-- Pauli-X and Pauli-Z do not commute (`X Z ≠ Z X`). -/

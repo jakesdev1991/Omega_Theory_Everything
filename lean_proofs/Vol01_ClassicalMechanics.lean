@@ -176,7 +176,6 @@ theorem weyl_commutator_quotient_eq_poisson (A B : Observable) (ℏ : ℝ) (hℏ
   · simp [scaleObservable, weylCommutator, poisson_bracket]
   · dsimp [scaleObservable, weylCommutator, poisson_bracket]
     field_simp
-    ring
 
 /-- The normalized commutator `commutator A B` coincides with the classical
     Poisson bracket `{A, B}` on affine observables. -/

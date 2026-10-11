@@ -114,7 +114,9 @@ theorem branchMeasure_root : branchMeasure .root = 1 := by
     child branches sum to the parent branch measure. -/
 theorem branchMeasure_split (b : Branch) :
     branchMeasure (.left b) + branchMeasure (.right b) = branchMeasure b := by
-  unfold branchMeasure depth
+  change (1 / 2 : ℝ) ^ (1 + depth b) + (1 / 2 : ℝ) ^ (1 + depth b) =
+    (1 / 2 : ℝ) ^ depth b
+  rw [pow_add, pow_one]
   ring
 
 end OmegaProtocol.Vol45

@@ -117,7 +117,8 @@ def hostOps (w k : ℕ) (l : Layer) : ℕ :=
 
 theorem hostOps_step (w k : ℕ) (l : Layer) :
     hostOps w k (.sim l) = k * hostOps w k l := by
-  unfold hostOps level
+  change w * k ^ (1 + level l) = k * (w * k ^ level l)
+  rw [pow_add, pow_one]
   ring
 
 theorem hostOps_pos (w k : ℕ) (l : Layer) (hw : 0 < w) (hk : 0 < k) :
@@ -138,6 +139,8 @@ theorem hostOps_strict_growth (w k : ℕ) (l : Layer)
     hostOps w k l < hostOps w k (.sim l) := by
   rw [hostOps_step]
   have hpos : 0 < hostOps w k l := hostOps_pos w k l hw (by omega)
-  nlinarith
+  calc hostOps w k l = 1 * hostOps w k l := (one_mul _).symm
+    _ < 2 * hostOps w k l := by omega
+    _ ≤ k * hostOps w k l := Nat.mul_le_mul_right (hostOps w k l) hk
 
 end OmegaProtocol.Vol46

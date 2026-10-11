@@ -335,7 +335,6 @@ theorem gibbsState_one (ΔE β : ℝ) : gibbsState ΔE β Obs2.one = 1 := by
   unfold gibbsState gibbsWeight gibbsPartition Obs2.one
   have hZ : 1 + Real.exp (-β * ΔE) ≠ 0 := ne_of_gt (gibbsPartition_pos ΔE β)
   field_simp
-  ring
 
 /-- **Non-traciality of the two-level Gibbs state**: for any positive energy
     gap `ΔE > 0` and nonzero inverse temperature `β ≠ 0`,
@@ -433,7 +432,7 @@ theorem twoLevel_kms_iff_eq (ΔE β γ : ℝ) (hΔE : 0 < ΔE) :
     have hneg : -γ = -β := mul_right_cancel₀ (ne_of_gt hΔE) hlin
     linarith
   · rintro rfl
-    exact twoLevel_kms_holds ΔE β
+    exact twoLevel_kms_holds ΔE γ
 
 /-- **KMS-derived Zeroth Law in the non-tracial two-level model**: if two
     thermal reservoirs at inverse temperatures `β₁, β₂` are both KMS with
