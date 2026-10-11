@@ -1,53 +1,52 @@
 # Copyright (c) 2025-2026 Jacob See.
 # SPDX-License-Identifier: MIT
 """
-Simulation 3: Dynamic Planck Length and Disformal Causality Band
+Simulation 3: Chosen Scale Profile and Disformal Causality Band
 ================================================================
 
 Abstract
 --------
-We investigate the interplay between a dynamically varying Planck length,
-conformal rescaling, and disformal causality bounds. The Planck-length profile
-is the Chain-Overlap-Density (COD) form formally verified in
-``lean_proofs/DynamicCODScale.lean``:
+This script evaluates a chosen scale profile, conformal factor, disformal
+coupling, and scalar-field ODE. The profile is
 
     l_P(Phi) = l_P0 * sqrt(1 - Phi^2),      0 <= Phi <= 1.
 
-Static relations are derived across the physical COD range, including a
-beta-sweep of the disformal causality band. An optional dynamical evolution is
-implemented via a scalar-field equation of motion with disformal-inspired
-Hubble scaling, allowing causality checks and a preliminary estimate of
-ringdown frequency shifts.
+Lean checks algebraic properties of that function under its model assumptions;
+it does not establish that the function is a physical Planck length. The
+static bounds and optional ODE outputs follow from the additional choices
+listed below. The ringdown quantity is a heuristic proxy, not a waveform
+calculation or an observational prediction. None of these choices is derived
+from a Q-region state or tested against independent physical data.
 
 History: an earlier version of this simulation used the heuristic profile
 ``l_P(phi) = exp((1 - phi)/2)`` over ``phi in [0, 5]``. It was replaced by the
 COD profile so that the simulation matches the Lean-proven module. The
 differences are stated explicitly in Section 3.
 
-Convention: ``Phi = 0`` is the vacuum and ``Phi -> 1`` the bound-state/horizon
-end, matching ``lean_proofs/DynamicCODScale.lean`` and Section 2.2 of the v4.0
-technical note. The consensus potential of Section 3.1 is oriented the same way
-(minimum at ``Phi = 0``); an earlier revision used ``V = m^2 (1 - Phi)^2 / 2``,
-whose minimum at ``Phi = 1`` followed the opposite reading of Section 1.2 and
-therefore made the horizon end the attractor.
+Model convention: ``Phi = 0`` is named the vacuum end and ``Phi -> 1`` the
+high-overlap end. This is a variable convention shared with the current Lean
+model, not an empirical identification of physical vacuum or a black-hole
+horizon. The chosen potential has its minimum at ``Phi = 0``; an earlier
+revision used a different orientation. Formal verification of either function
+does not decide which convention nature uses.
 
 1. Introduction
 ---------------
-Simulations 1 and 2 established that geometry can emerge from correlations and
-that expansion can be modelled as a chain-break process. Simulation 3 probes
-the ultraviolet and causal domain: how does a dynamic Planck length interact
-with conformal and disformal factors, and what bounds ensure Lorentzian
-causality?
+Earlier toy scripts explored a logarithmic embedding of a prescribed kernel and
+an assumed exponential-depletion ODE; they did not establish physical emergent
+geometry or cosmology. This script asks a narrower mathematical question:
+what causality bound follows from the selected conformal and disformal factors,
+and how does an optional scalar ODE behave for chosen parameters?
 
 2. Methods
 ----------
 2.1 Static relations (l_P0 = 1 throughout)
 
-- Dynamic Planck length (Lean: ``DynamicCODScale.dynamicPlanckCOD``):
+- Chosen scale profile (Lean: ``DynamicCODScale.dynamicPlanckCOD``):
       l_P(Phi) = sqrt(1 - Phi^2).
-  Vacuum baseline l_P(0) = 1 (``dynamicPlanckCOD_zero``); maximal overlap
-  l_P(1) = 0 (``dynamicPlanckCOD_one``); strictly decreasing on [0, 1]
-  (``dynamicPlanckCOD_strictAntiOn``).
+  The formal lemmas check the model's endpoint and monotonicity properties on
+  [0, 1]; calling this function ``l_P`` does not establish it as a physical
+  Planck length.
 - Conformal factor:  C(Phi) = exp(-2 Phi).
 - Disformal coupling: D(Phi) = beta * l_P(Phi)^2 = beta * (1 - Phi^2).
 - Disformal causality bound. For the disformal metric
@@ -63,18 +62,16 @@ causality?
 2.3 Optional dynamics
 - Scalar-field equation of motion
       Phiddot + 3 H(Phi) Phidot + V'(Phi) = 0,   H(Phi) = H0 exp(Phi),
-  with consensus potential V(Phi) = m^2 Phi^2 / 2, whose minimum at Phi = 0
-  is the vacuum of the COD convention used throughout (Section 2.2 and
-  DynamicCODScale.lean: l_P(0) = l_P0). This is the orientation stated in
-  Section 3.1 of the v4.0 technical note. An earlier revision used
+  with the chosen potential V(Phi) = m^2 Phi^2 / 2, whose minimum at Phi = 0
+  is the model's reference vacuum (DynamicCODScale.lean: l_P(0) = l_P0). An earlier revision used
   V = m^2 (1 - Phi)^2 / 2 (minimum at 1); under the present convention that
   would put the attractor at the horizon end, where l_P vanishes, and would
   leave V'(0) = -m^2 != 0 so that the vacuum is not a static solution.
 - Initial conditions lie inside the causality band; integration stops if Phi
   reaches 1, where l_P vanishes.
-- Diagnostics: causality ratio |Phidot| / bound, emergent scale factor
-  a(t) = exp(int H dt), ringdown-shift proxy 100 * |Phidot| / (a l_P), and
-  whether Phi stays inside the physical COD range [0, 1].
+- Diagnostics: causality ratio |Phidot| / bound, model scale factor
+  a(t) = exp(int H dt), heuristic ringdown proxy 100 * |Phidot| / (a l_P), and
+  whether Phi stays inside the chosen model domain [0, 1].
 
 3. Results
 ----------
@@ -100,9 +97,9 @@ regenerated; the values quoted are for the default parameters.
   The initial kick (|Phidot| = 0.5 * bound(0) = 0.5) lifts Phi off the vacuum
   to a peak of 0.153 within t ~ 1; the restoring force V' = m^2 Phi then
   relaxes it back toward the consensus minimum at 0 with rate m^2 / (3 H)
-  ~ 0.0033, so Phi is still 0.138 at t = 40. Phi stays inside [0, 1] and the
-  horizon is not reached, which is the expected behaviour now that the
-  attractor is the vacuum rather than the horizon end. The causality ratio
+  ~ 0.0033, so Phi is still 0.138 at t = 40. Phi stays inside the chosen
+  interval [0, 1] and its upper endpoint is not reached, as expected from this
+  potential choice. The causality ratio
   starts at 0.5 by construction and only decreases, so |Phidot| < bound holds
   throughout. The ringdown proxy peaks at 50 % at t = 0 (it is
   100 * 0.5 * bound(0) / (a l_P) with a = l_P = 1 there) and decays with
@@ -128,9 +125,9 @@ change the late-time approach but not the vacuum value.
 
 5. Conclusion
 -------------
-- Sim 1: emergent distances from correlations.
-- Sim 2: cosmological expansion from chain-break processes.
-- Sim 3: ultraviolet cutoff and causal band from the COD-driven Planck length.
+- Sim 1: historical MDS exercise on a prescribed exponential kernel; not a physical distance derivation.
+- Sim 2: assumed depletion ODE; not a Friedmann-equation derivation.
+- Sim 3: algebraic causality bound and optional ODE behavior under chosen profiles; not a physical ultraviolet cutoff or ringdown prediction.
 
 Usage
 -----
@@ -154,10 +151,10 @@ GOLDEN_CONJUGATE = (math.sqrt(5.0) - 1.0) / 2.0  # tightest point of the band
 # Static relations
 # ---------------------------------------------------------------------------
 def lP(phi: np.ndarray | float, lP0: float = 1.0) -> np.ndarray | float:
-    """COD-driven Planck length l_P(Phi) = l_P0 sqrt(1 - Phi^2).
+    """Chosen scale profile l_P(Phi) = l_P0 sqrt(1 - Phi^2).
 
     Mirrors ``DynamicCODScale.dynamicPlanckCOD``. Like Mathlib's ``Real.sqrt``
-    the function is total: it returns 0 outside the physical range |Phi| >= 1.
+    the function is total: it returns 0 for |Phi| >= 1; the model uses [0, 1].
     """
     return lP0 * np.sqrt(np.clip(1.0 - np.square(phi), 0.0, None))
 
@@ -241,7 +238,7 @@ def run_static(betas: Sequence[float], make_plots: bool, outdir: str) -> None:
     plt.plot(phi, lP_vals, "g-o", label=r"$\ell_P(\Phi)=\sqrt{1-\Phi^2}$")
     plt.xlabel(r"$\Phi$")
     plt.ylabel(r"$\ell_P$")
-    plt.title("Dynamic Planck Length (COD profile)")
+    plt.title("Chosen Scale Profile (COD form)")
     plt.legend()
     plt.grid(True)
     plt.savefig(f"{outdir}/fig4_1a.pdf")
@@ -347,7 +344,7 @@ def run_dynamic(
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Simulation 3: COD-driven dynamic Planck length and disformal causality band."
+        description="Simulation 3: chosen scale profile and disformal causality band."
     )
     parser.add_argument(
         "--beta",

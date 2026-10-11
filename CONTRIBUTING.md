@@ -6,9 +6,13 @@ This repository has separate licensing regimes. Check the root [`LICENSE`](LICEN
 
 Contributions to MIT-covered scientific paths must be your original work or material you are authorized to contribute under MIT. By intentionally submitting a contribution for inclusion in those paths, you agree that it is submitted under the MIT License. Keep third-party sources, licenses, and attribution information with the proposed change. Do not submit confidential information, personal data, credentials, or material whose provenance is unclear.
 
+## Public novel text (CC BY 4.0)
+
+The current manuscript at `web/public/book/full-book.md` is licensed under CC BY 4.0 as described in [`web/public/book/LICENSE.md`](web/public/book/LICENSE.md). That grant applies to existing text only and does not automatically accept contributions or grant rights in third-party material. Do not submit edits or new writing for inclusion in the manuscript unless the rights holder has first agreed in writing on authorship, attribution, licensing, and any third-party material. A pull request or issue is not that agreement.
+
 ## Product materials (PolyForm Noncommercial 1.0.0)
 
-Product paths (`web/`, `mobile-node/`, `app/`, `desktop/`, `omni-bridge/`, `cpp/`, `mcp/`, `launch/`, `novel/`, `docs/store/`; see [`LICENSE`](LICENSE) for the authoritative list) are free to use and modify noncommercially, but contributions to them need coordination. Do **not** submit pull requests, patches, designs, or other contributions for product paths unless you first have a separate written agreement with the rights holder covering ownership, licensing, and compensation for your contribution. A pull request, issue, or direct message is not a substitute for that agreement. No contributor agreement is currently in force in this repository.
+Product paths (`web/` except the CC BY manuscript and notice and the separately all-rights-reserved store legal texts, `mobile-node/`, `app/`, `desktop/`, `omni-bridge/`, `cpp/`, `mcp/`, `launch/`, `novel/` release/staging tools, and `docs/store/`; see [`LICENSE`](LICENSE) for the authoritative list) are free to use and modify noncommercially, but contributions to them need coordination. Do **not** submit pull requests, patches, designs, or other contributions for product paths unless you first have a separate written agreement with the rights holder covering ownership, licensing, and compensation for your contribution. A pull request, issue, or direct message is not a substitute for that agreement. No contributor agreement is currently in force in this repository.
 
 ## Crypto and C.A.R.E. materials (read-only)
 

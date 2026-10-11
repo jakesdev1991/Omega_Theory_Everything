@@ -1,6 +1,14 @@
 # Copyright (c) 2025-2026 Jacob See.
 # SPDX-License-Identifier: MIT
 
+"""Toy field/particle animation; not a simulation of general relativity.
+
+The field profile, mass proxy, gradient force, inertia constant, and high-Phi
+region are hand-selected. The displayed coordinate is a cumulative sum of the
+chosen local scale profile, not a derived spacetime metric. The red region is a
+visual marker, not an event horizon. No physical prediction is made.
+"""
+
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.animation import FuncAnimation
@@ -16,7 +24,7 @@ plt.rcParams["axes.facecolor"] = "#0a0a0a"
 plt.rcParams["figure.facecolor"] = "#0a0a0a"
 
 # ==========================================
-# 1. OMEGA PROTOCOL: THE UNIVERSE CONFIG
+# 1. TOY MODEL CONFIGURATION
 # ==========================================
 
 # Simulation Resolution
@@ -24,12 +32,8 @@ N_REGIONS = 200
 DT = 0.1
 TOTAL_FRAMES = 300
 
-# Omega Theory Constants
-# Convention (matches lean_proofs/DynamicCODScale.lean, Sim3 and Section 2.2
-# of the technical note): Phi = 0 is the vacuum, matter is Phi > 0, and the
-# horizon is the Phi -> 1 end. The local rendering scale is the Lean-proven
-# COD profile l_P(Phi) = l_P0 sqrt(1 - Phi^2), imported from Sim3 rather than
-# re-implemented here so this simulation cannot drift from the proven module.
+# Toy parameters. The Phi convention and l_P(Phi) profile are model choices;
+# Lean verifies mathematical properties of the function, not its physical meaning.
 PHI_VACUUM = 0.0
 L_PLANCK_BASE = 1.0
 KAPPA = 5.0
@@ -39,7 +43,7 @@ G = 0.05
 phi = np.full(N_REGIONS, PHI_VACUUM)
 
 # ==========================================
-# 2. CREATE MATTER AND BLACK HOLE
+# 2. PLACE TOY PARTICLES AND A HIGH-PHI REGION
 # ==========================================
 particle_width = 12
 phi_particle_val = 0.4
@@ -48,7 +52,7 @@ phi_particle_val = 0.4
 positions = [float(N_REGIONS // 4), float(3 * N_REGIONS // 4)]
 velocities = [0.0, 0.0]
 
-# Black Hole: near the horizon end of the COD range, where l_P -> 0
+# Toy high-Phi region; it is not a black-hole solution or event horizon.
 bh_pos = N_REGIONS - 20
 bh_width = 5
 phi_bh_val = 0.9
@@ -61,14 +65,11 @@ bh_end = bh_pos + bh_width
 
 
 def get_emergent_geometry(phi_field):
-    """Local rendering scale of each region, accumulated into a coordinate.
+    """Accumulate the chosen local scale profile into a toy coordinate.
 
-    Uses the COD profile l_P(Phi) = l_P0 sqrt(1 - Phi^2) of
-    ``Sim3_Dynamic_Scale.py`` / ``DynamicCODScale.lean``: the scale is the
-    relaxed baseline in the vacuum (Phi = 0) and contracts toward the horizon
-    end (Phi -> 1). This is the *microscopic* operational scale; it is not the
-    macroscopic g_rr, which is a separate open item
-    (``Omega_Theory_v4.0_Radial_Metric.md``).
+    This construction is a visualization rule, not a derivation of a spatial
+    metric or a proper distance. The physical interpretation of the profile
+    remains open (see ``Omega_Theory_v4.0_Radial_Metric.md``).
     """
     local_l_p = L_PLANCK_BASE * cod_lP(np.asarray(phi_field, dtype=float))
     physical_x = np.cumsum(local_l_p)
@@ -77,12 +78,7 @@ def get_emergent_geometry(phi_field):
 
 
 def get_mass_total(phi_field):
-    """Informational mass proxy: the overlap itself, max(0, Phi).
-
-    Under this convention matter *is* shared correlation (Phi > 0) and the
-    vacuum is its absence (Phi = 0); the horizon end Phi -> 1 is maximal
-    overlap, not zero overlap.
-    """
+    """Toy mass proxy defined as the sum of max(0, Phi), not physical mass."""
     mass_density = np.maximum(0.0, np.asarray(phi_field, dtype=float))
     return float(np.sum(mass_density))
 
@@ -97,7 +93,10 @@ def is_shredded(start, end):
 
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 9), sharex=False)
 fig.suptitle(
-    "Ω PROTOCOL v3.6: EMERGENT GRAVITY", color="#00ffff", fontsize=18, fontweight="bold"
+    "OMEGA TOY FIELD-FORCE MODEL — NOT GENERAL RELATIVITY",
+    color="#00ffff",
+    fontsize=18,
+    fontweight="bold",
 )
 
 vel_history: list[float] = []
@@ -125,7 +124,7 @@ def update(frame):
         if end >= N_REGIONS:
             end = N_REGIONS - 1
 
-        # Check Horizon Crossing
+        # Check crossing of the hand-placed high-Phi marker
         if is_shredded(start, end):
             shred_events.append(frame)
             current_shred = True
@@ -161,7 +160,7 @@ def update(frame):
             pos = positions[i]
             grad_at_pos = np.interp(pos, np.arange(N_REGIONS), grad_phi)
 
-            # Gravity (Gradient) + Inertia (Kappa)
+            # Chosen gradient-force and inertia rules; not derived gravity.
             a_grav = -G * grad_at_pos
             a_ext = applied_force / (current_mass_per_particle + KAPPA)
 
@@ -183,15 +182,15 @@ def update(frame):
     )
 
     ax1.set_ylabel("Information Density (phi)")
-    ax1.set_xlabel("Emergent Distance (Spacetime)")
+    ax1.set_xlabel("Toy coordinate from chosen scale profile")
 
     # Draw Field
     ax1.plot(physical_x, phi, color="#00ff00", lw=2, label="Φ Field")
     ax1.fill_between(
-        physical_x, phi, 0.0, color="cyan", alpha=0.2, label="Mass (Overlap)"
+        physical_x, phi, 0.0, color="cyan", alpha=0.2, label="Toy mass proxy (Phi)"
     )
 
-    # Draw Grid Points (Visualizing Expansion)
+    # Draw sampled sites in the toy coordinate
     ax1.scatter(
         physical_x[::5],
         np.ones_like(physical_x[::5]) * 0.5,
@@ -207,7 +206,7 @@ def update(frame):
             physical_x[int(bh_end)],
             color="red",
             alpha=0.3,
-            label="Event Horizon",
+            label="High-Phi marker (not a horizon)",
         )
 
     # Draw Particles (Yellow Orbs)

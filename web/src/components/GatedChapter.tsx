@@ -29,7 +29,7 @@ function readStagedProof(): {
   }
 }
 
-export function GatedChapter({ slug, number }: { slug: string; number: number }) {
+export function GatedChapter({ slug }: { slug: string }) {
   const [state, setState] = useState<State>({ status: "checking" });
   const [html, setHtml] = useState<string | null>(null);
 
@@ -73,7 +73,7 @@ export function GatedChapter({ slug, number }: { slug: string; number: number })
       .catch((error) =>
         setState({
           status: "error",
-          error: error instanceof Error ? error.message : "Unable to contact the unlock verifier.",
+          error: error instanceof Error ? error.message : "Unable to contact the optional reader-proof verifier.",
         }),
       );
   }, [slug]);
@@ -81,7 +81,7 @@ export function GatedChapter({ slug, number }: { slug: string; number: number })
   if (state.status === "checking") {
     return (
       <div className="gate-panel">
-        Verifying $OMEGA / TWC wallet proof and on-chain eligibility…
+        Checking the optional $OMEGA / TWC reader-proof demonstration…
       </div>
     );
   }
@@ -101,7 +101,7 @@ export function GatedChapter({ slug, number }: { slug: string; number: number })
             fontFamily: "ui-monospace, monospace",
           }}
         >
-          UNLOCKED · {state.currency} · {state.network} · signer {state.address} · {state.unlocked}/16 chapters
+          OPTIONAL READER PROOF VERIFIED · {state.currency} · {state.network} · signer {state.address} · {state.unlocked}/16 chapters
         </div>
         <div
           style={{
@@ -120,15 +120,15 @@ export function GatedChapter({ slug, number }: { slug: string; number: number })
     return (
       <div className="gate-panel" style={{ borderColor: "var(--color-care)" }}>
         <div style={{ fontWeight: 600, marginBottom: "8px", color: "var(--color-care)" }}>
-          Verified signer, proof did not unlock this chapter
+          This optional proof did not open the chapter reader
         </div>
         <p style={{ margin: "0 0 12px", fontSize: "14px" }}>
           {state.error} Your address ({state.address}) has {state.unlocked} of 16
-          chapters open for this proof. Refresh your signed $OMEGA or TWC proof and
-          try again.
+          chapters available through this optional reader proof. This does not
+          affect the public CC BY 4.0 manuscript, which needs no token or wallet.
         </p>
-        <Link href="/novel" className="link-soft" style={{ color: "var(--color-accent)", fontSize: "14px" }}>
-          Back to chapter list
+        <Link href="/book/full-book.md" className="link-soft" style={{ color: "var(--color-accent)", fontSize: "14px" }}>
+          Read or download the complete public manuscript
         </Link>
       </div>
     );
@@ -138,13 +138,14 @@ export function GatedChapter({ slug, number }: { slug: string; number: number })
     return (
       <div className="gate-panel" style={{ borderColor: "var(--color-care)" }}>
         <div style={{ fontWeight: 600, marginBottom: "8px", color: "var(--color-care)" }}>
-          Verification could not complete
+          Optional reader-proof verification could not complete
         </div>
         <p style={{ margin: "0 0 12px", fontSize: "14px" }}>
-          {state.error}
+          {state.error} This affects only the optional proof-reader route; the complete
+          CC BY 4.0 manuscript remains publicly available without proof.
         </p>
-        <Link href="/novel" className="link-soft" style={{ color: "var(--color-accent)", fontSize: "14px" }}>
-          Back to chapter list
+        <Link href="/book/full-book.md" className="link-soft" style={{ color: "var(--color-accent)", fontSize: "14px" }}>
+          Read or download the complete public manuscript
         </Link>
       </div>
     );
@@ -153,17 +154,15 @@ export function GatedChapter({ slug, number }: { slug: string; number: number })
   return (
     <div className="gate-panel">
       <div style={{ fontWeight: 600, marginBottom: "8px", color: "var(--color-foreground)" }}>
-        This chapter is locked
+        Optional proof-reader route
       </div>
       <p style={{ margin: "0 0 12px", fontSize: "14px", color: "var(--color-muted-strong)" }}>
-        Chapter {number} of <em>Crucible: The Satoshi Protocol</em> is released to
-        verified $OMEGA and TWC participants. Open the wallet, sign a release-day
-        unlock statement for one of the two wired currencies, and return here — the
-        chapter prose is served only after your signature verifies and the server
-        independently confirms the configured on-chain rail.
+        This chapter-view route can demonstrate signed $OMEGA or TWC proofs and on-chain
+        verification. It is optional: the complete text is public under CC BY 4.0 and
+        reading or reusing it does not require a token or wallet.
       </p>
-      <Link href="/novel" className="link-soft" style={{ color: "var(--color-accent)", fontSize: "14px" }}>
-        Back to chapter list
+      <Link href="/book/full-book.md" className="link-soft" style={{ color: "var(--color-accent)", fontSize: "14px" }}>
+        Read or download the complete public manuscript
       </Link>
     </div>
   );

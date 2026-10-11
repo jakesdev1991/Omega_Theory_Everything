@@ -271,7 +271,7 @@ export function MultiTokenWorkbench() {
                   <li><strong>Status:</strong> Testnet Scaffold / Offline Fixture Mode</li>
                   <li><strong>Dock Rate:</strong> 500 bps (5%)</li>
                   <li><strong>Max Combined Dock:</strong> 3500 bps (35%)</li>
-                  <li><strong>Asset Gate:</strong> Separate from live EVM/Solana unlock until mainnet safety audit</li>
+                  <li><strong>Asset Gate:</strong> Separate from the optional reader-proof demo; value-bearing use still needs an independent mainnet safety audit</li>
                 </ul>
               </div>
             </div>

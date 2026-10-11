@@ -28,8 +28,8 @@ export const MAX_METADATA_URI_BYTES = 200;
 export const MANIFEST_VERSION = 1;
 export const FULL_NOVEL_UNLOCK_CHAPTERS = 16;
 export const HOLDER_PROOF_NETWORK = DEVNET_CLUSTER;
-export const HOLDER_PROOF_PREAMBLE = "OMEGA TWC DEVNET PILOT - RELEASE-DAY NOVEL UNLOCK";
-export const HOLDER_PROOF_PURPOSE = "Verify current tTWC pilot holdings for release-day novel unlock.";
+export const HOLDER_PROOF_PREAMBLE = "OMEGA TWC DEVNET PILOT - OPTIONAL READER PROOF";
+export const HOLDER_PROOF_PURPOSE = "Optional proof-of-holdings demonstration; public CC BY 4.0 manuscript does not require proof.";
 export const HOLDER_PROOF_MAX_MESSAGE_BYTES = 1232;
 
 export const DEPLOYMENT_CONFIRMATION_VALUE = "DEVNET_TWC_PILOT";

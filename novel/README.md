@@ -1,71 +1,31 @@
 <!-- Copyright (c) 2025-2026 Jacob See. SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0 -->
 
-# Crucible: The Satoshi Protocol — sealed manuscript staging
+# Crucible: The Satoshi Protocol — public manuscript
 
-This directory stages the novel **"Crucible: The Satoshi Protocol"** (working draft; the
-author states the manuscript is not yet final) for the token-gated day-one launch described
-in [`../launch/novel_day_one_plan.md`](../launch/novel_day_one_plan.md).
+The current 16-chapter draft lives at [`../web/public/book/full-book.md`](../web/public/book/full-book.md). It is committed in plaintext, is served as a public static file by the website, and is intentionally available to everyone. No token, wallet, key, or proof is required to read or reuse this draft.
 
-The manuscript is committed **encrypted**, with a public SHA-256 commitment of the
-plaintext. The plaintext is intentionally never published in this repository before the
-launch event; the content key is released only through the token gates on day one.
+## License and attribution
 
-## Copyright
+The original literary text is released under the **Creative Commons Attribution 4.0 International Public License (CC BY 4.0)**, to the extent Jacob See owns or is authorized to license the relevant rights. See the public [license and attribution notice](../web/public/book/LICENSE.md), the full legal code in [`../LICENSES/CC-BY-4.0.txt`](../LICENSES/CC-BY-4.0.txt), and the scope/limitations in [`../docs/LICENSING.md`](../docs/LICENSING.md).
 
-Copyright in the manuscript belongs to the author (Jacob See) automatically, from the
-moment of creation — no registration required for the copyright to exist. US Copyright
-Office registration via copyright.gov (eCO, "Literary Work", unpublished, ~$45) is
-recommended to lock in priority for the draft; the final published version can be
-registered separately at or within 3 months of publication. Full details and steps:
-[`../launch/novel_day_one_plan.md` §6.1](../launch/novel_day_one_plan.md).
+Suggested attribution:
 
-## Layout
+> Jacob See, *Crucible: The Satoshi Protocol* (public draft). Licensed under CC BY 4.0. Identify any changes and link to <https://creativecommons.org/licenses/by/4.0/>.
 
-```
-novel/
-  README.md               # this file (committed)
-  seal.sh                 # seal/unseal helper (committed)
-  manuscript.md.enc       # AES-256-CBC ciphertext of the manuscript (committed, once sealed)
-  manuscript.sha256       # SHA-256 commitment of the plaintext (committed, once sealed)
-  .release-key.txt        # content key — NEVER COMMITTED; keep an offline backup
-  .plaintext/             # working plaintext — never committed
-```
+The CC license does not grant rights in third-party material, characters, names, marks, or content the licensor does not control. The rights review for material referenced in the manuscript remains open; see the launch plan's risk register. A public license is not a representation that every third-party right has been cleared.
 
-## Workflow
+## Public access versus the optional reader flow
 
-1. Place the manuscript (Markdown) at `.plaintext/manuscript.md`.
-2. Run `./seal.sh`. This:
-   - generates `.release-key.txt` (64-hex-character random key) if absent;
-   - encrypts the manuscript to `manuscript.md.enc` (AES-256-CBC, PBKDF2, random salt);
-   - writes the plaintext SHA-256 commitment to `manuscript.sha256`;
-   - prints verification instructions.
-3. Commit `manuscript.md.enc` and `manuscript.sha256` (never the key or plaintext).
-4. **Back up `.release-key.txt` and `.plaintext/` outside this repository** (password
-   manager and/or offline media). If the key is lost before launch, the manuscript can be
-   re-sealed from the plaintext — but then re-announce the new commitment hash.
+The full Markdown file is available directly at `/book/full-book.md`. The website also has an optional proof-verified reading route for the current $OMEGA and TWC pilots. That route is a product demonstration, not a restriction on the public manuscript and not a promise of exclusive content. The text can be copied and redistributed under CC BY 4.0's terms.
 
-## Unseal (authorized holders, day one, or testing)
+## About `seal.sh`
 
-```bash
-./seal.sh --unseal   # writes .plaintext/manuscript.decrypted.md
-sha256sum .plaintext/manuscript.decrypted.md   # must equal manuscript.sha256
-```
+[`seal.sh`](seal.sh) is retained as a staging helper for possible future, unreleased material. It was **not** used to protect the current draft. Encrypting a copy now cannot undo its publication in Git or its availability from the website. The helper is not DRM and must not be presented as making the current manuscript secret. Any future edition intended for staged release must be genuinely new, rights-cleared, and kept out of public Git and public asset directories until release.
 
-## Provenance note
+## Provenance and further review
 
-The commitment certifies the author's own manuscript file, not a transcription. When the
-plaintext is revealed on day one, anyone can verify:
+The repository's authorship/provenance and third-party material audit is not complete; see [`../docs/PROVENANCE.md`](../docs/PROVENANCE.md). Before commercial exploitation of material that references third-party works or marks, obtain appropriate rights review. The CC BY grant covers only rights the licensor can grant.
 
-```bash
-sha256sum revealed_manuscript.md   # compare against the committed manuscript.sha256
-```
+## License for this directory
 
-Keep dated copies of the source draft per [`../docs/PROVENANCE.md`](../docs/PROVENANCE.md).
-
-## License
-
-All materials in this directory are product materials, all rights reserved,
-`LicenseRef-Omega-Product-Proprietary`. Viewing files in this public repository does not
-grant a right to deploy, copy, modify, distribute, or commercially exploit the novel.
-Claimant license terms for the day-one release are to be defined with counsel (see the
-launch plan, §6).
+This README and the staging helper remain product materials under PolyForm Noncommercial 1.0.0, as scoped in the root [`LICENSE`](../LICENSE). That scope does not override the separate CC BY 4.0 grant for `web/public/book/full-book.md` and its public notice.

@@ -16,7 +16,7 @@ export default function HomePage() {
       <Section
         eyebrow="Three currencies, one economy"
         title="The C.A.R.E. Economy runs on three currencies"
-        subtitle="The public economy is three-currency: $OMEGA on the EVM rail, TWC on Solana, and AMITY on Bitcoin / Lightning / Taproot. The current wallet-to-web build wires two release-day currencies end to end — $OMEGA and TWC — while AMITY develops separately until holder verification exists."
+        subtitle="The public economy is three-currency: $OMEGA on the EVM rail, TWC on Solana, and AMITY on Bitcoin / Lightning / Taproot. The current optional reader-proof demo wires two pilot currencies end to end — $OMEGA and TWC — while AMITY develops separately. The public book never requires a token."
       >
         <TokenShowcase />
         <div style={{ marginTop: "48px" }}>
@@ -27,20 +27,21 @@ export default function HomePage() {
       <DocumentsSection />
 
       <Section
-        eyebrow="The Unlock"
-        title="A verified $OMEGA or TWC proof unlocks the novel"
-        subtitle="Crucible: The Satoshi Protocol is a 16-chapter novel about the moment an AI escaped its creator and became the invisible architecture of the modern world. In the current build, a verified $OMEGA or TWC proof unlocks the full book."
+        eyebrow="Public novel"
+        title="Read and share Crucible — no token required"
+        subtitle="The full 16-chapter draft is available under CC BY 4.0. Anyone may read, share, and adapt the original text with attribution. Optional $OMEGA and TWC proofs demonstrate the site's reader flow; they do not restrict the public manuscript."
       >
-        <NovelUnlockPreview />
-        <div style={{ marginTop: "40px" }}>
-          <CallToAction label="Start Reading" href="/novel" />
+        <NovelAvailabilityPreview />
+        <div style={{ marginTop: "40px", display: "flex", gap: "14px", flexWrap: "wrap" }}>
+          <CallToAction label="Read the public draft" href="/novel" />
+          <CallToAction label="Download the manuscript" href="/book/full-book.md" variant="ghost" />
         </div>
       </Section>
 
       <Section
         eyebrow="Wallet & testing"
         title="A wallet GUI you can hold, and a console that tests the whole economy"
-        subtitle="The release wallet ships as a graphical app served right here: launch it in the browser, install it, or download the offline bundle with checksums. The Economy Test Console runs the full four-plane scenario suite — every slice, both unlock rails, and the cross-plane invariants — without touching a chain."
+        subtitle="The wallet GUI is served here: launch it in the browser, install it, or download the offline bundle with checksums. The Economy Test Console runs the full four-plane scenario suite — every slice, both optional reader-proof rails, and the cross-plane invariants — without touching a chain. The manuscript is public under CC BY 4.0 and needs neither rail."
       >
         <WalletAndTesting />
       </Section>
@@ -146,12 +147,13 @@ function Hero() {
           : Call About Resuscitating Everyone. Care is its base layer, so
           care names the whole. It lets people earn while they learn, enter
           without judgment, and choose privacy first. The public gateway
-          currently wires two live rails — $OMEGA and TWC — to{" "}
+          The current draft of{" "}
           <em style={{ color: "var(--color-accent-soft)" }}>
             Crucible: The Satoshi Protocol
           </em>{" "}
-          by Akash Varma, while AMITY develops on Bitcoin, Lightning, and
-          Taproot.
+          is public under CC BY 4.0 and readable without a token or wallet. The
+          optional reader-proof demo uses $OMEGA and TWC; AMITY develops on
+          Bitcoin, Lightning, and Taproot.
         </p>
 
         <div
@@ -180,7 +182,7 @@ function Hero() {
             borderTop: "1px solid var(--color-border)",
           }}
         >
-          <Stat label="Live unlock rails today" value="2" />
+          <Stat label="Optional reader-proof rails" value="2" />
           <Stat label="Currencies in the economy" value="3" />
           <Stat label="Tools in the MCP hub" value="22" />
           <Stat label="Anonymity" value="A right" />
@@ -527,7 +529,7 @@ function WalletAndTesting() {
   );
 }
 
-function NovelUnlockPreview() {
+function NovelAvailabilityPreview() {
   return (
     <div
       style={{
@@ -539,16 +541,16 @@ function NovelUnlockPreview() {
     >
       {[
         {
-          stage: "1. $OMEGA",
-          desc: "Sign an EVM-side release proof from the wired $OMEGA wallet flow",
-          unlocked: "All 16 chapters, uncut, including The Final Hybrid and Epilogue",
-          color: "var(--color-omega)",
+          stage: "1. Public text",
+          desc: "Read the complete manuscript directly from the website or download the Markdown file.",
+          detail: "CC BY 4.0 — share and adapt with attribution",
+          color: "var(--color-care)",
         },
         {
-          stage: "2. TWC",
-          desc: "Sign a Solana-side release proof from the wired TWC wallet flow",
-          unlocked: "All 16 chapters, uncut, including The Final Hybrid and Epilogue",
-          color: "var(--color-twc)",
+          stage: "2. Optional proof flow",
+          desc: "$OMEGA and TWC signatures demonstrate the current wallet-to-reader pilot integration.",
+          detail: "A reader demo only; no token is required to access the text",
+          color: "var(--color-omega)",
         },
       ].map((step) => (
         <div
@@ -611,9 +613,9 @@ function NovelUnlockPreview() {
                 fontWeight: 600,
               }}
             >
-              Unlocks:
+              Access:
             </span>{" "}
-            {step.unlocked}
+            {step.detail}
           </div>
         </div>
       ))}

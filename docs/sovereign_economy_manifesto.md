@@ -202,7 +202,7 @@ Receiving a token does not make a person more valuable than someone without one.
 
 ## The book and release-day participation
 
-The novel **_Crucible: The Satoshi Protocol_** is part of the cultural record of this project. The proposed future release program would provide a copy to people who hold an approved mainnet representation of one or more of the ecosystem tokens, subject to eligibility rules, anti-sybil controls, privacy safeguards, and applicable law.
+The novel **_Crucible: The Satoshi Protocol_** is part of the cultural record of this project. Its current draft is publicly available under CC BY 4.0, with attribution and the license terms; no token or mainnet holding is required to read, share, or adapt the existing text. Any future token-holder experience must be separate from the public manuscript and remain subject to eligibility rules, privacy safeguards, rights clearance, and applicable law.
 
 Testnet representations are explicitly excluded from ordinary holder benefits: holding `tOMEGA`, `tTWC`, or another testnet asset alone does not qualify a person for the book or a mainnet allocation.
 

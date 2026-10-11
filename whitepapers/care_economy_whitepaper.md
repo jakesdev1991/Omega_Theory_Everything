@@ -4,6 +4,8 @@
 
 **Version:** 1.0 — first extensive edition
 **Status:** Research and systems-design specification. The C.A.R.E. Economy is a hypothesis about how an economy can be organized around care. Nothing in this document is a validated scientific result, an offer of securities, a promise of token value, a clinical protocol, or a benefits-determination system. All current implementations are local, valueless, testnet-only prototypes.
+
+> **Public-manuscript update (2026-10-10):** The current draft of *Crucible: The Satoshi Protocol* at `web/public/book/full-book.md` is public under CC BY 4.0. Older references below to token-gating or sealing this text describe a superseded access design. $OMEGA/TWC proof routes are optional reader demonstrations, not conditions for reading, sharing, or adapting the licensed text. Third-party-rights review remains separate and unresolved.
 **Scope:** This whitepaper covers the **entire economy** — every plane, every rail, every surface — not only the CARE proof layer. The companion documents listed in §31 cover individual subsystems in more depth.
 **Authorship:** Jacob See, with the Omega research program.
 
@@ -13,7 +15,7 @@
 
 The C.A.R.E. Economy is the name of this entire economy: the sovereign, three-currency, privacy-first economy built in the Omega_Theory_Everything repository. It takes its name from the conviction that care — verifiable, consent-respecting, human-governed care — is the base layer of any economy worth building, and that an economy which starts from judgment extracts value, while an economy that starts from dignity creates it.
 
-The economy runs on **five planes** (SOV accounting, USE contribution, CARE stewardship, AMITY exchange, OMEGA governance), settles across **three public rails** ($OMEGA on EVM, TWC on Solana, AMITY on Bitcoin / Lightning / Taproot), and is operated day-to-day through the **Omega MCP Hub**, a wallet-first GUI, a web gateway with a token-gated novel, an Economy Test Console, and a Nostr application backplane.
+The economy runs on **five planes** (SOV accounting, USE contribution, CARE stewardship, AMITY exchange, OMEGA governance), settles across **three public rails** ($OMEGA on EVM, TWC on Solana, AMITY on Bitcoin / Lightning / Taproot), and is operated day-to-day through the **Omega MCP Hub**, a wallet-first GUI, a web gateway with a public CC BY 4.0 novel and optional reader-proof flow, an Economy Test Console, and a Nostr application backplane.
 
 Every mechanism in this document is stated as a design proposal with its failure modes attached. Where a mechanism exists in code today, we say so. Where it is simulated, we say so. Where it does not exist yet, we say so loudest of all.
 
@@ -146,7 +148,7 @@ The three-currency public frame — $OMEGA, TWC, AMITY — is how the economy me
    Sepolia pilot        Devnet pilot        Lightning + Taproot
    governance rail      release rail        assets workstream
         │                    │                        │
-        └──── token-gated novel ──── holder verification ─┘
+        └──── public CC BY 4.0 novel ─── optional proof-reader demo ─┘
 ```
 
 The hub is currently a **deterministic in-memory simulation**: it holds no real keys, touches no real chain, and represents no real value. That is deliberate. Every mechanism is rehearsed in simulation before any rail carries anything.
@@ -175,7 +177,7 @@ The invariant is local. It does not imply that balances have external monetary v
 
 **TWC — Solana rail.** The Token of the World Citizen. The Solana leg is a **Devnet-only, valueless `tTWC` pilot** in `solana/`: a standard fixed-supply SPL mint with null mint/freeze authorities and immutable Metaplex fungible metadata, plus an offline transaction-plan verifier.
 
-**AMITY — Bitcoin rail.** A **testnet-only operator scaffold** in `amity/` for a future Taproot Assets workstream: strict config parsing, canonical holder-challenge formatting, non-broadcasting preflight, and local status-manifest snapshots. AMITY is the third release-day currency by design, but it is not yet wired into the live unlock flow — holder verification must exist first.
+**AMITY — Bitcoin rail.** A **testnet-only operator scaffold** in `amity/` for a future Taproot Assets workstream: strict config parsing, canonical holder-challenge formatting, non-broadcasting preflight, and local status-manifest snapshots. AMITY is the third public economy rail by design, but it is not yet wired into the optional reader-proof demo; this does not affect public manuscript access.
 
 All three rails share one release discipline: **valueless pilots first, independent audit always, explicit human approval before anything value-bearing.**
 
@@ -195,7 +197,7 @@ Identity supports multiple credentials and selective disclosure. No single ident
 
 **The wallet GUI** (`app/`, served at `/wallet`) performs real client-side wallet flows: BIP-39 mnemonic creation and import, MetaMask and Phantom bridges, and an encrypted local Ethereum keystore. Keys never leave the device. It is installable as a PWA, downloadable as a checksummed offline bundle, and packaged as native desktop builds from the Tauri wrapper in `desktop/`.
 
-**The web gateway** (`web/`) is the public face: the vision and manifesto (new), the whitepaper library (new), the token-gated novel, the Economy Test Console at `/testnet` (slice A–G scenario suite, valueless faucet, audited action runner, audit exports), the Nostr App Store at `/store`, and operator visibility endpoints.
+**The web gateway** (`web/`) is the public face: the vision and manifesto (new), the whitepaper library (new), the public CC BY 4.0 novel and optional proof-verified reader flow, the Economy Test Console at `/testnet` (slice A–G scenario suite, valueless faucet, audited action runner, audit exports), the Nostr App Store at `/store`, and operator visibility endpoints.
 
 **The Nostr backplane** connects the App Store directory (kinds 31990/30017) to the sovereign mobile node in `mobile-node/` — a Termux/Droid@Debian NIP-90 daemon — whose verified job results can settle into the TWC ledger.
 
@@ -377,7 +379,7 @@ Nothing in that day required Maya to become legible, and everything in it honore
 
 ### 20. The culture layer: the novel, storytelling, and peer support
 
-**Crucible: The Satoshi Protocol** by Akash Varma — the 16-chapter novel gated by the release rails — is the economy's cultural keystone: the story of the moment an AI escaped its creator and became the invisible architecture of the modern world. In the current build a verified $OMEGA or TWC proof unlocks the full text; the manuscript, sealed-staging tooling (`novel/seal.sh`), and the open release decision around it are documented in the launch plan.
+**Crucible: The Satoshi Protocol** — the public 16-chapter draft — is the economy's cultural keystone: the story of the moment an AI escaped its creator and became the invisible architecture of the modern world. The draft is available at `web/public/book/full-book.md` under CC BY 4.0; no token or proof is needed to read or reuse it with attribution. The optional $OMEGA/TWC reader-proof demo does not control the public text. Third-party references and the final displayed byline remain under review; see the launch plan and `web/public/book/LICENSE.md`.
 
 **Storytelling and peer-support spaces** are part of the design, separated by consent posture:
 
@@ -460,8 +462,8 @@ The non-claims are part of the specification:
 | Component | Where | Status |
 |---|---|---|
 | Wallet GUI (BIP-39, local keystore, MetaMask/Phantom) | `app/` → `/wallet` | **Working**; keys never leave device |
-| Wallet → web unlock, server-side signature verification ($OMEGA + TWC) | `web/` | **Wired** for two currencies; on-chain checks activate with pilot manifests |
-| Token-gated novel (16 chapters) | `web/public/book/` | **Committed in plaintext**; sealing decision open before launch |
+| Optional wallet → reader-proof demo, server-side signature verification ($OMEGA + TWC) | `web/` | **Wired** for two currencies; on-chain checks activate with pilot manifests; never required for manuscript access |
+| Public novel draft (16 chapters; CC BY 4.0) | `web/public/book/` | **Public in plaintext** with license notice; no content key or sealing gate |
 | Omega MCP Hub (22 tools, 5 planes, event ledger) | `mcp/` | **Working simulation**; no chain, no keys, no value |
 | Economy Test Console (slices A–G, faucet, audit export) | `web/` → `/testnet` | **Working**, offline and valueless |
 | Nostr App Store + NIP-90 mobile node | `web/` → `/store`, `mobile-node/` | **Prototype**; settlement path designed, not value-bearing |
@@ -565,7 +567,7 @@ The C.A.R.E. Economy is an open research program. The science is MIT; the produc
 | **80/20 rule** | Stewardship progression weighted 80% care integrity, 20% economic stewardship. |
 | **Sanctuary Gate** | A proposed governance-parameter fee at the AMITY boundary; simulated, disclosed, change-controlled. |
 | **Omega MCP Hub** | The sovereign operating hub: 22 tools over five planes, event-sourced ledger. |
-| **Crucible: The Satoshi Protocol** | The 16-chapter novel by Akash Varma; the release-day cultural keystone. |
+| **Crucible: The Satoshi Protocol** | The public 16-chapter draft, licensed under CC BY 4.0; a cultural work in the economy's story. |
 
 ---
 

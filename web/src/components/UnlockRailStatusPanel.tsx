@@ -211,10 +211,10 @@ export function UnlockRailStatusPanel() {
         }}
       >
         <div style={{ fontWeight: 600, marginBottom: "8px", color: payload.ready ? "var(--color-unlock)" : "var(--color-care)" }}>
-          {payload.ready ? "Both wired rails are locally configured" : "Local unlock activation is still blocked"}
+          {payload.ready ? "Both optional reader-proof rails are locally configured" : "Optional proof-reader setup is still incomplete"}
         </div>
         <p style={{ margin: 0, fontSize: "14px", lineHeight: 1.6, color: "var(--color-muted-strong)" }}>
-          The web reader requires both a valid wallet proof and an independent on-chain check. This panel shows whether the current sandbox has enough local pilot metadata to perform those checks.
+          The optional proof-reader demo checks a wallet signature and independent on-chain state. This panel shows whether the current sandbox has enough pilot metadata for that demo. The public manuscript remains available without either check.
         </p>
       </div>
 

@@ -6,9 +6,10 @@ import { verifyUnlockProofOnChain } from "@/lib/unlock-server";
 /**
  * POST /api/unlock
  * Body: { message, signature }
- * Verifies either an EVM $OMEGA proof or a Solana TWC proof, then independently
- * checks the configured on-chain rail before returning the unlocked chapter
- * count. The signer address is always derived from the signature itself.
+ * Verifies an optional EVM $OMEGA or Solana TWC reader proof, then independently
+ * checks the configured on-chain rail before returning chapter-demo status.
+ * The public manuscript is served separately. The signer address is always
+ * derived from the signature itself.
  */
 export async function POST(req: NextRequest) {
   let body: { message?: string; signature?: string };

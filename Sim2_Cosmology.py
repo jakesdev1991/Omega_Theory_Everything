@@ -1,90 +1,27 @@
 # Copyright (c) 2025-2026 Jacob See.
 # SPDX-License-Identifier: MIT
 
-r"""Simulation 2: Chain‑Break Cosmology
+r"""Simulation 2: phenomenological information-depletion ODE
 
-Abstract
-We present a toy cosmological model in which expansion is driven by an effective “chain‑break” process. The baseline history is defined by a linearly growing break rate, yielding exact analytic expressions for the scale factor, Hubble‑like rate, and effective equation of state. We confirm stability through discrete cross‑checks and explore an alternative history with a calibrated peak in the break rate. Diagnostics of acceleration and correlations with mock black‑hole area growth are reported. This simulation extends the emergent‑geometry framework by showing how cosmological dynamics can arise from informational break processes.
+Status: a toy differential equation, not a covariant cosmological model.
 
----
+The executable code assumes
 
-1. Introduction
-In the broader theory, geometry and dynamics emerge from correlation structures. Simulation 1 established that spatial distances can be reconstructed from mutual information. Simulation 2 advances this by showing how cosmological expansion can be modeled as the cumulative effect of “chain‑break” events — informational ruptures that drive growth of effective separation.
+    dI/dt = -gamma * I,        I = 1/a,        a = r/r0.
 
-The model is deliberately minimal: a one‑dimensional chain with a break rate proportional to time. Despite its simplicity, it reproduces key cosmological features: accelerated expansion, phantom‑like effective equations of state, and alternative histories with tunable peaks.
+These definitions imply dr/dt = gamma*r and hence a(t)=exp(gamma*t). The
+script numerically integrates that ODE, estimates H=(da/dt)/a, and computes
+a kinematic effective-w proxy. It does not derive the depletion law, the
+inverse relation I=1/a, or a Friedmann equation from Q-regions or general
+relativity. It has no black-hole-area input and makes no comparison with
+observational data. The constant gamma is selected as a toy parameter; it is
+not fitted to or predicted from an independent dataset.
 
----
+Because the ODE is exponential by construction, the limiting analytic result
+is constant H=gamma and w_eff=-1 under the displayed proxy definition. Small
+numerical excursions in the plotted w_eff arise from finite differences.
 
-2. Methods
-
-2.1 Baseline Chain‑Break Rate
-- Define \(\gamma{BH}(t) = \gamma{BH}^{\text{base}} \, t\), with slope \(\gamma_{BH}^{\text{base}} = 0.08\).
-- Integrate to obtain the cumulative break measure and effective separation \(r(t)\).
-- Define the informational scale factor \(a{\text{info}} = r(t)/r0\).
-- Define the Hubble‑like rate \(H{\text{info}} = \gamma{BH}/r\).
-
-2.2 Effective Equation of State
-- Analytic form:
-  \[
-  w{\text{eff}} = -\tfrac{2}{3} - \tfrac{2}{3}\,\frac{r}{b t^2}, \quad b = \gamma{BH}^{\text{base}}.
-  \]
-- Cross‑checked by discrete derivative of \(\ln H\) with respect to \(\ln a\).
-
-2.3 Alternative History
-- Define \(\gamma_{BH}^{\text{alt}}(t) = k \,(t/\tau)\, e^{-t/\tau}\), with \(\tau=5\).
-- Calibrate \(k\) so that the peak value is \(\approx 0.25\).
-- Compute corresponding \(H_{\text{info}}^{\text{alt}}\).
-
-2.4 Diagnostics
-- Analytic acceleration \(\ddot a/a = \dot H + H^2\).
-- Phantom window identified where \(w_{\text{eff}}<-1\).
-- Correlation test between \(w_{\text{eff}}\) and a mock black‑hole area growth proxy.
-
----
-
-3. Results
-
-- Scale factor: \(a_{\text{info}}(t)\) grows super‑exponentially, reaching ~6.8 by \(t=10\).
-- Expansion rate: \(H_{\text{info}}(t)\) rises to ~0.24 and then slowly declines.
-- Equation of state: Analytic \(w_{\text{eff}}\) shows a clear phantom window (\(w<-1\)) between \(t=2\) and \(t=5\), confirmed by discrete cross‑check.
-- Alternative history: The calibrated \(\gamma{BH}^{\text{alt}}\) peaks at ~0.25, with a corresponding peak in \(H{\text{info}}^{\text{alt}}\).
-- Acceleration: Positive \(\ddot a/a\) is maintained through early times, consistent with accelerated expansion.
-- Correlation teaser: A modest correlation is observed between \(w_{\text{eff}}\) and mock black‑hole area growth, suggesting deeper links to horizon thermodynamics.
-
----
-
-4. Discussion
-This simulation demonstrates that informational break processes can mimic cosmological expansion. The baseline model yields a phantom‑like effective equation of state without fine‑tuning, while the alternative history shows how peak‑shaped break rates can reproduce different expansion profiles.
-
-The phantom window is particularly notable: it suggests that effective violations of the null energy condition can arise naturally in this framework, not as pathologies but as emergent features of information dynamics. The correlation with black‑hole area growth hints at a unifying thermodynamic underpinning.
-
----
-
-5. Conclusion
-Simulation 2 extends the emergent‑geometry program into cosmology. By treating chain‑break processes as the driver of expansion, we recover scale‑factor growth, Hubble‑like dynamics, and effective equations of state that parallel standard cosmological phenomenology. This sets the stage for Simulation 3, where dynamical transitions and feedback between geometry and information will be explored.
-
----
-
-
-The executable model follows this docstring: the v3 depletion model, which
-replaced the v1 "linear break rate" described above. `python
-Sim2_Cosmology.py` runs it (set MPLBACKEND=Agg for a headless run).
-
----
-
-sim2_v3_depletion.py
-Simulation 2: Micro-Foundation of Expansion (The Depletion Model)
-
-Abstract:
-This simulation proves that if information is "depleted" like a finite resource
-(radioactive decay), it naturally generates De Sitter-like exponential expansion.
-This replaces the arbitrary 'linear break rate' of v1 with a physically
-motivated 'intrinsic decay' rate.
-
-Core Identity:
-dI/dt = -gamma * I  (Depletion)
-Since I ~ 1/r (Information is inverse to separation):
-dr/dt = gamma * r   (Exponential Expansion)
+Run with `MPLBACKEND=Agg python Sim2_Cosmology.py` for a headless execution.
 """
 
 import matplotlib.pyplot as plt
@@ -109,8 +46,8 @@ r0 = 1.0  # Initial separation (arbitrary units)
 # ---------------------------
 def system(t, y):
     r = y[0]
-    # The Depletion Law derived from dI/dt = -gamma * I
-    # Leads to dr/dt = gamma * r
+    # Assumed depletion ODE dI/dt = -gamma * I.
+    # Under the model choice I = 1/a and a = r/r0, this implies dr/dt = gamma*r.
     dr_dt = gamma_decay * r
     return [dr_dt]
 

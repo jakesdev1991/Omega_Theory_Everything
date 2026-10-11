@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     template: "%s | The C.A.R.E. Economy",
   },
   description:
-    "The C.A.R.E. Economy: Call About Resuscitating Everyone. A sovereign, three-currency economy built on care. Read the manifesto and the extensive whitepaper, run the wallet, and test the whole economy. Currently wires $OMEGA (EVM) and TWC (Solana) release proofs to the token-gated novel Crucible: The Satoshi Protocol.",
+    "The C.A.R.E. Economy: Call About Resuscitating Everyone. A sovereign, three-currency economy built on care. Read the manifesto and whitepaper, run the wallet, and test the economy. The public draft of Crucible: The Satoshi Protocol is licensed under CC BY 4.0; $OMEGA and TWC proofs power an optional reader flow, not a content gate.",
   icons: {
     icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
   },
@@ -43,7 +43,7 @@ function Footer() {
         <p className="text-xs">
           Crucible: The Satoshi Protocol —{" "}
           <span className="font-mono text-foreground/60">
-            Akash Varma&apos;s novel
+            Public draft · CC BY 4.0
           </span>
         </p>
       </div>

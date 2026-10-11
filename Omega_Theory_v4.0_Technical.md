@@ -1,135 +1,232 @@
-<!-- Copyright (c) 2025-2026 Jacob See. Licensed under MIT. -->
+<!-- Copyright (c) 2025-2026 Jacob See. Licensed under MIT; see LICENSE. -->
 
-The Omega Protocol: Unified Theory of Everything (v4.0)
-From Discrete Information to Continuous Geometry
-By: Jacob See
-Abstract
-The Omega Protocol posits that reality is fundamentally a network of informational correlations between minimal observers called Q-regions. Spacetime, gravity, and matter are emergent properties of a single scalar field: the Chain Overlap Density ($\Phi$)1.
-We rigorously derive the laws of physics from three informational axioms:
-Distance is Correlation Deficit: The metric is strictly logarithmic2.
-Gravity is Informational Gradient: The stress-energy tensor is derived from a scalar-informational Lagrangian $\mathcal{L}_\Phi$33.
-Expansion is Information Loss: Cosmic acceleration is the inevitable result of Black Hole information shredding, governed by a Monotonicity Lemma that forces the universe toward a stable De Sitter attractor ($w_{\rm eff} \to -1$)444444444.
+# Omega Theory v4.0: exploratory information-geometric technical note
 
-1. Fundamental Ontology: The Discrete Substrate
-1.1 Q-Regions: The Atoms of Consciousness
-The universe is not composed of particles or points in space. It is composed of Q-regions5.
-Definition: A Q-region $i$ is a bounded quantum system with a Hilbert space $\mathcal{H}_i$ and a state $\rho_i$. It is a "minimal observer" capable of retaining and communicating information6.
-The Only Observable: Between any two regions $i$ and $j$, the only fundamental physical observable is the Mutual Information $I_{ij}$7:
-$$I_{ij} = S(\rho_i) + S(\rho_j) - S(\rho_{ij})$$
-1.2 Chain Overlap Density ($\Phi$)
-To transition from a discrete graph to a continuous field theory, we define the Chain Overlap Density field, $\Phi(x)$. This is the "master variable" of the theory8888.
-Definition: $\Phi(x) \in [0,1]$ represents the local density of shared correlations (redundancy) in the network.
-$\Phi = 0$ (Vacuum): No shared state. The network carries no redundancy, so there is nothing to render: the operational scale sits at its relaxed baseline $\ell_{P0}$ (§2.2) and spacetime is asymptotically flat9.
-$0 < \Phi < 1$ (Matter): Partial overlap. A "knot" of correlated information. The asymmetry between this knot and the surrounding vacuum is what we perceive as mass10101010.
-$\Phi \to 1$ (Horizon): Total overlap. The states have merged, the information that distinguished them reaches zero, and the network is severed11.
+**Author:** Jacob See
+**Status (2026-10-11):** exploratory research program; not a completed or
+empirically validated Theory of Everything.
 
-*Note on the orientation.* Earlier drafts read $\Phi$ the other way round ($\Phi\approx1$ vacuum, $\Phi\to0$ horizon). The orientation above is the one used by the kernel-checked profile of §2.2 (`lean_proofs/DynamicCODScale.lean`) and by `Sim3_Dynamic_Scale.py`. A metric needs a single reading, because $g_{rr}\to1$ must hold at the vacuum end and $g_{rr}\to\infty$ at a horizon.
+## Scope and claim level
 
-2. Emergent Geometry: The Logarithmic Metric
-How does a number ($I_{ij}$) become a physical distance ($d_{ij}$)?
-2.1 The Uniqueness Theorem
-We require a mapping $f(K) \to d$ where $K$ is the normalized correlation ($I_{ij}/I_{\max}$).
-We impose two axioms12:
-Markov Factorization: Correlations multiply along a chain ($K_{AC} = K_{AB}K_{BC}$).
-Additivity: Distance adds along a chain ($d_{AC} = d_{AB} + d_{BC}$).
-The only mathematical function that satisfies $f(xy) = f(x) + f(y)$ is the logarithm. Thus, the metric is uniquely determined13131313:
-$$\boxed{d_{ij} = -\ell_P(\Phi) \ln\left( \frac{I_{ij}}{I_{\max}} \right)}$$
-This proves that Distance is Correlation Deficit14141414. Space is simply the bookkeeping cost of information loss.
-2.2 Dynamic Planck Length
-The scaling factor $\ell_P(\Phi)$ is not constant. It is the Informational Stiffness of the vacuum15.
-$$\ell_P(\Phi) = \ell_{P0} \, \sqrt{1 - \Phi^2}, \qquad 0 \le \Phi \le 1$$
-This is the canonical form: it is the profile formally verified in `lean_proofs/DynamicCODScale.lean` and used by `Sim3_Dynamic_Scale.py`. At $\Phi = 0$ (unshared vacuum) the scale is the relaxed baseline $\ell_{P0}$; as $\Phi \to 1$ (maximal state overlap, e.g. a bound-mass core or horizon) the operational distance between the overlapping states collapses to zero, strictly monotonically in between. This local variation in scale is curvature16161616.
+This note records a proposed route from correlations between subsystems to
+spatial geometry, plus a candidate scalar-field model. It does **not** establish
+that spacetime, gravity, matter, or cosmic acceleration emerge from quantum
+information. The map from Q-region data to the field \(\Phi\), the macroscopic
+metric, the field equations, and a novel data-supported prediction are open.
 
-*Note on an earlier form.* Previous drafts used $\ell_P(\Phi) = \ell_{P0}\exp\!\big((1-\Phi)/\phi_c\big)$, under which the "grid" *stretches* in low-$\Phi$ regions. The two forms point in opposite directions. The $\sqrt{1-\Phi^2}$ form describes the microscopic *operational* rendering scale between correlated states; how this relates to a macroscopic coordinate description of matter regions (where the earlier stretching intuition came from) is not yet derived here and is left as an explicit open item. Neither form is derived from the Omega axioms; both are model choices. Exploratory working notes on this open item, covering what the axioms fix, what they leave open, and what the macroscopic metric must look like to reproduce Schwarzschild, are in [`Omega_Theory_v4.0_Radial_Metric.md`](Omega_Theory_v4.0_Radial_Metric.md) (checked by `Sim7_Radial_Metric.py`); they do not change the claims of this section.
+The document distinguishes:
 
-3. Field Dynamics: The Lagrangian Formalism
-To make the theory compatible with standard physics, we promote $\Phi$ to a dynamical field governed by an action principle. This section explicitly bridges Omega concepts with field theory17.
-3.1 The Scalar-Informational Lagrangian
-We posit that the universe evolves to minimize computational cost. The action $S_\Phi$ is18181818:
-$$S_\Phi = \int d^4x \sqrt{-g} \left[ \underbrace{\frac{1}{2} Z(\Phi) g^{\mu\nu} \nabla_\mu \Phi \nabla_\nu \Phi}_{\text{Kinetic: Cost of Gradients}} - \underbrace{V(\Phi)}_{\text{Potential: Cost of State}} \right]$$
-$Z(\Phi)$: The Stiffness Function. It determines how hard it is to create a gradient in $\Phi$.
-$V(\Phi)$: The Consensus Potential. It has a minimum at $\Phi=0$ (Vacuum), forcing the universe to relax toward the unshared baseline19.
-3.2 Deriving Stress-Energy ($T_{\mu\nu}$)
-Varying the action with respect to the metric $g_{\mu\nu}$ yields the Stress-Energy Tensor exactly20202020:
-$$\boxed{T_{\mu\nu}^\Phi = Z(\Phi)\nabla_\mu\Phi \nabla_\nu\Phi - g_{\mu\nu}\mathcal{L}_\Phi}$$
-Crucial Insight: Mass is not "stuff." Mass is the energy density stored in the gradients of the $\Phi$ field. Where $\nabla \Phi$ is large (high informational asymmetry), $T_{\mu\nu}$ is large, creating gravity21212121.
-3.3 Stability and Causality
-To ensure the theory is physical (no tachyons or ghosts), we derive the effective speed of sound for information waves22:
-$$c_{\rm eff}^2 = \frac{Z(\Phi)}{\chi(\Phi)} > 0$$
-This condition ensures that informational updates propagate causally, creating a rigorous "light cone" structure23.
+- **Definition/model choice:** stipulated mathematical objects or functions.
+- **Conditional result:** follows only after the displayed assumptions.
+- **Identified dictionary:** a variable is assigned a form that reproduces a
+  known solution; this is not a derivation of that solution from Q-regions.
+- **Open:** the required physical construction or evidence is absent.
 
-4. Black Holes & The Monotonicity Lemma
-4.1 The Shredding Mechanism
-Black holes are not just heavy; they are Information Shredders. The Event Horizon acts as a one-way membrane that deletes mutual information from the exterior universe24242424.
-4.2 The Monotonicity Lemma
-We introduce a formal lemma: Information Monotonicity25252525.
-Since the area of a Black Hole horizon $A_{BH}$ is non-decreasing ($dA/dt \ge 0$), the rate of information loss in the universe must strictly increase (or stay constant):
-$$\frac{d I_{\rm global}}{dt} \le -c \cdot A_{BH}(t)$$
-This proves that the universe is progressively losing its internal connectivity26262626.
+The current concrete tests are in
+[`docs/research/QREGION_MARKOV_MODEL.md`](docs/research/QREGION_MARKOV_MODEL.md),
+[`docs/research/ENTANGLED_TFIM_BENCHMARK.md`](docs/research/ENTANGLED_TFIM_BENCHMARK.md),
+[`docs/research/COVARIANT_COMPLETION_AND_TEST_GATE.md`](docs/research/COVARIANT_COMPLETION_AND_TEST_GATE.md),
+and [`docs/research/GAUSS_BONNET_SCALARIZATION.md`](docs/research/GAUSS_BONNET_SCALARIZATION.md).
 
-5. Cosmology: The Origin of Dark Energy
-5.1 The Depletion Law
-We model global information $I(t)$ as a finite resource subject to shredding. This leads to the Depletion Law27272727:
-$$\frac{dI}{dt} = -\gamma A_{BH}^\kappa(t) I(t)$$
-This is an exponential decay process. It prevents a "Big Rip" because as $I \to 0$, the rate of loss slows down28.
-5.2 The Informational Friedmann Equation
-Since distance is the inverse of information ($r \propto -\ln I$), we can derive the expansion rate $H(t)$ directly from the Depletion Law29292929:
-$$\boxed{H(t) = \alpha \gamma A_{BH}^\kappa(t)}$$
-This is the "Smoking Gun": The expansion rate of the universe is strictly proportional to the total Black Hole horizon area.
-Black Holes Grow $\to$ $H(t)$ Increases (or stays positive) $\to$ Cosmic Acceleration.
-No Cosmological Constant ($\Lambda$) is required30303030.
-5.3 The Effective Equation of State ($w_{\rm eff}$)
-By solving the Depletion Law, we predict the evolution of Dark Energy31313131:
-$$w_{\rm eff}(z) = -1 - \frac{\alpha}{3} \left[ \frac{\ddot{I} I}{\dot{I}^2} - 1 \right]$$
-$z \approx 2$ (Phantom Phase): During the peak of Quasar activity, Black Holes grew super-exponentially ($A_{BH} \uparrow\uparrow$). This caused rapid shredding, driving $w_{\rm eff} < -1$ (Phantom Energy)32.
-$z \approx 0$ (Attractor Phase): Today, Black Hole growth has stabilized. The system settles into the exponential Depletion solution ($I \propto e^{-\lambda t}$). In this state, the term in brackets vanishes, and $w_{\rm eff} \to -1$ exactly33333333.
+## 1. Q-regions, mutual information, and \(\Phi\)
 
-Here is the updated Section 6, explicitly integrating the mathematical formalism of "Active Shredding" and using your LTEE E. coli Simulation results as the rigorous biological verification of the theory.
+A Q-region may be represented by a subsystem with Hilbert space \(\mathcal H_i\)
+and state \(\rho_i\). For two regions, their quantum mutual information is
 
-6. Life: The Master of the Shredder (Active Information Processing)
-While the universe passively shreds information via Black Holes (driving expansion), Life is the phenomenon of active shredding. We define a living system not by its chemistry, but by its informational operator status: it is a region that locally inverts the Depletion Law.
-6.1 The Active Shredding Operator ($\hat{O}_L$)
-We previously defined the universal background process (passive shredding) as a decay function:
-$$\left( \frac{dI}{dt} \right)_{\rm univ} \le 0$$
-Life introduces a local operator $\hat{O}_L$ that creates a bounded region $\Omega_L$ where the sign is inverted. The metabolic process is formally the creation of a Local Orphan Deficit.
-A living system ingests highly correlated matter (low entropy state $\rho_{\rm food}$), "shreds" the correlations (metabolism), and releases the mass-energy as thermal noise ($\rho_{\rm waste}$).
-Input: High Correlation ($\Phi_{\rm in} \approx 1$)
-Output: Low Correlation ($\Phi_{\rm out} \approx 0$)
-The Capture: Unlike a black hole, which loses the resulting energy to the vacuum, the living system captures the energy liberated by this shredding to drive internal state updates.
-6.2 The Metabolic Inequality
-For a living system to persist, it must satisfy the Omega Metabolic Inequality:
-$$\frac{dI_{\rm internal}}{dt} > \left| \frac{dI_{\rm env}}{dt} \right|_{\rm shred}$$
-This states that the rate at which the system builds internal correlations (DNA repair, protein folding, neural patterns) must exceed the rate at which it shreds external correlations to fuel the process. Life is the only known mechanism that uses the universe's expansion engine (information destruction) to power local contraction (information assembly).
-6.3 Verification: The E. coli LTEE Simulation
-To test if informational evolution follows these rules, we analyzed the Omega Evolution Sim v2.3.0, a computational replication of the Long-Term Evolution Experiment (LTEE) using Wright-Fisher dynamics1.
-The simulation tracks Chain Overlap Density (COD)—the measure of informational redundancy—across 75,000 generations of digital E. coli populations2.
-6.3.1 The Innovation Horizon (Cit+)
-The simulation reproduces the spontaneous emergence of Citrate utilization (Cit+), a complex trait requiring epistatic mutations, at approximately generation 31,5003333. This represents a jump in biological complexity ($I_{\rm internal} \uparrow$).
-6.3.2 Redundancy Pruning (The $\Phi$ Drop)
-Crucially, the simulation reveals a counter-intuitive geometric adaptation. Immediately following the emergence of the Cit+ innovation, the population's internal informational overlap (COD) drops significantly:
-Pre-Cit+ COD Average: 0.100 4
-Post-Cit+ COD Average: 0.050 5
-Mathematically, this confirms that advanced life does not simply maximize correlation; it optimizes it.
-$$\Phi_{\rm post} < \Phi_{\rm pre}$$
-The post-innovation population "prunes" redundant correlations6. By lowering its $\Phi$ (reducing rigid overlap), the system reduces its "informational inertia" ($\kappa$), making it more computationally efficient and adaptable to future gradients.
-6.4 Conclusion: Life as an Informational Attractor
-The simulation data confirms that evolution is a trajectory toward Informational Efficiency.
-Shredding: The organism actively destroys external correlations (metabolism).
-Construction: It uses the energy to build complex traits (Cit+ emergence).
-Pruning: It minimizes internal redundancy (COD drop) to maximize adaptability.
-Life is not a passenger in the quantum world; it is a system that has learned to weaponize the "shredding" mechanic of the universe to maximize its own internal state complexity.
+\[
+I(i:j)=S(\rho_i)+S(\rho_j)-S(\rho_{ij}),
+\qquad S(\rho)=-\operatorname{Tr}(\rho\ln\rho).
+\]
 
-7. Computational Verification
-The mathematics above are supported by three distinct simulation classes mentioned in the documentation:
-Sim 1 (Geometry): Confirmed that Logarithmic Metrics applied to correlation kernels recover linear geometry with high fidelity .
-Sim 2 (Cosmology): Confirmed that "Depletion Law" dynamics naturally generate De Sitter expansion and a stable $w=-1$ attractor .
-Sim 5 (Dynamics): Confirmed that Inertia defined as Latency ($\kappa$) automatically conserves momentum without hard-coding Newton's laws .
+This definition is standard, but the proposed scalar field \(\Phi(x)\) is not
+yet an operationally specified functional of the full set of \(I(i:j)\). The
+convention \(0\leq\Phi\leq1\), with \(\Phi=0\) called the vacuum and
+\(\Phi\to1\) the high-overlap end, is a model convention in the current
+simulation/Lean corpus. In particular, “no shared state” at \(\Phi=0\) is not
+established for a physical quantum vacuum.
 
-8. Conclusion
-The Omega Protocol v4.1 provides a complete, unbroken chain of logic:
-Ontology: Reality is a network of Q-regions.
-Metric: Distance is the logarithmic measure of Chain Overlap Density ($\Phi$).
-Dynamics: Gravity is the gradient of $\Phi$ governed by the Lagrangian $\mathcal{L}_\Phi$.
-Cosmology: Dark Energy is the macroscopic result of Information Monotonicity (Shredding) at Black Hole horizons.
-We have moved from a philosophy of information to a field theory of information.
+The explicit diagonal Markov-chain benchmark uses qubit subsystems and
+calculates \(I(i:j)\) exactly, but its states are classical mixtures with no
+bipartite entanglement. The separate transverse-field Ising-chain benchmark
+uses ground states with positive two-spin negativity, so it tests the proposed
+mutual-information map in a genuinely entangled family. Both define \(\Phi\)
+explicitly for their own state families; neither supplies a universal
+operational definition or a physical-vacuum baseline.
 
+## 2. Conditional logarithmic chain distance
+
+Let \(0<K_{ij}\leq1\) be a dimensionless **correlation kernel**. If, along a specified
+chain,
+
+\[
+K_{AC}=K_{AB}K_{BC},
+\]
+
+and a continuous chain length is additive,
+
+\[
+d_{AC}=d_{AB}+d_{BC},
+\]
+
+then the positive logarithmic solution is
+
+\[
+\boxed{d_{ij}=-\ell_P\ln K_{ij}},\qquad \ell_P>0.
+\]
+
+This is a conditional functional-equation result. It does not by itself prove
+that \(d\) is a metric on a spatial manifold, that \(K\) is a physical
+correlation observable, or that the construction supplies time and causal
+structure.
+
+An earlier version identified \(K\) with \(I(i:j)/I_{\max}\). In the explicit
+Markov-chain benchmark, mutual information does not multiply along the chain:
+\(I_{i,k}/I_{\max}\ne(I_{i,j}/I_{\max})(I_{j,k}/I_{\max})\). Moreover, zero
+mutual information makes \(-\ln K\) infinite. The logarithmic kernel and the
+mutual-information statistic must therefore be distinguished; any relation
+between them has to be derived from a specified Q-region state family.
+
+The radial notes derive a two-factor spatial expression under additional
+locality and regularity assumptions,
+
+\[
+h_{ij}=\ell_P(\Phi)^2\gamma_{ij},\qquad
+h_{rr}=\ell_P(\Phi)^2\kappa^2,
+\]
+
+where \(\gamma\) is the metric of the correlation-decay coordinate. That result
+does not determine \(\gamma\) or \(\kappa(\Phi)\). The diagonal Markov toy
+model supplies one explicit \(\kappa(\Phi)\); the entangled Ising benchmark
+instead fits a finite-range \(\kappa_{\rm eff}\) to a two-point correlator.
+Both selected diagnostics show a decay-rate trend opposite to the
+Schwarzschild-required trend. Neither establishes a continuum metric or a
+universal no-go.
+
+## 3. Chosen operational-scale profile
+
+The profile used by the current Lean model is
+
+\[
+\ell_P(\Phi)=\ell_{P0}\sqrt{1-\Phi^2},\qquad 0\leq\Phi\leq1.
+\]
+
+The Lean development checks algebraic properties of this chosen function,
+such as its endpoint values and monotonicity on the stated interval. Those
+proofs do not derive the profile from mutual information or show that it is a
+physical Planck length. Under uniform correlation decay it contracts the
+spatial radial factor; the radial notes show that it cannot alone reproduce
+Schwarzschild. An additional, independently derived correlation metric would
+be needed.
+
+## 4. Candidate covariant scalar-matter model
+
+For signature \((-+++ )\), a canonical candidate action is
+
+\[
+S=\int d^4x\sqrt{-g}\left[
+\frac{R}{16\pi G}-\frac12Z(\Phi)(\nabla\Phi)^2-V(\Phi)\right]
++S_m[g,\psi].
+\]
+
+Here the spacetime metric is varied independently and \(\Phi\) is a matter
+scalar minimally coupled to it. Variation yields
+
+\[
+G_{\mu\nu}=8\pi G\left(T^{(m)}_{\mu\nu}+T^{(\Phi)}_{\mu\nu}\right),
+\]
+
+\[
+T^{(\Phi)}_{\mu\nu}=Z\nabla_\mu\Phi\nabla_\nu\Phi
+-g_{\mu\nu}\left[\tfrac12 Z(\nabla\Phi)^2+V\right],
+\]
+
+\[
+Z\Box\Phi+\tfrac12Z'(\nabla\Phi)^2-V'=0.
+\]
+
+For \(Z(0)>0\), \(V(0)=V'(0)=0\), the constant solution \(\Phi=0\) has
+zero scalar stress-energy and the metric equation reduces exactly to Einstein's
+equation. This is a **conditional GR limit of the selected action**, not a
+derivation of that action from information. The scalar-as-matter interpretation
+also differs from the radial Schwarzschild dictionary, where \(\Phi\) is a
+coordinate-dependent label of the metric. Under regularity and convex-potential
+conditions, the minimally coupled scalar has no nonconstant static black-hole
+hair; the two interpretations cannot be identified without additional theory.
+
+A separate, unselected curvature-coupled gravitational-scalar alternative is
+also documented there; it has an exact GR branch but does not yet derive a
+Q-region source or a stable black-hole profile. The two interpretations remain
+distinct rather than being combined by notation.
+
+The full variation, conservation laws, linear stability conditions, static
+no-hair argument, FLRW equations, and limits of these candidate branches are
+recorded in
+[`docs/research/COVARIANT_COMPLETION_AND_TEST_GATE.md`](docs/research/COVARIANT_COMPLETION_AND_TEST_GATE.md).
+
+## 5. Black-hole information loss and cosmology: underived ansatz
+
+The depletion equation
+
+\[
+\dot I=-\gamma A_{BH}^{\kappa} I
+\]
+
+is a phenomenological assumption in the simulation suite. The classical
+non-decrease of horizon area does not by itself prove that a global mutual
+information measure decreases at a specified rate. The further relation
+\(H\propto A_{BH}^{\kappa}\) requires a separate definition connecting
+\(I\) to the scale factor and a covariant account of stress-energy and
+conservation; it does not follow from the depletion equation alone.
+
+Accordingly, descriptions such as “information shredding proves expansion,”
+“smoking gun,” or “no cosmological constant is required” are not established
+results. `sim6_v14_depletion.py` calibrates \(\gamma\) to a selected value of
+\(H_0\); reproducing that calibration target is not an independent prediction
+or validation. A distinct prediction and a pre-registered evaluation against
+independent data are not yet available.
+
+## 6. Other proposed applications
+
+Biological “active shredding,” life-as-information-processing, and similar
+extensions are speculative analogies in this program. A computational
+population model, including one inspired by the LTEE, cannot on its own verify
+a physical theory of life or establish that a measured overlap change is a
+cause of adaptation. These ideas are not evidence for the gravitational or
+cosmological claims.
+
+Agent software, token pilots, and the proposed economy are likewise separate
+engineering projects; their implementation status is not evidence for the
+physics.
+
+## 7. Current epistemic ledger
+
+| Claim or component | Current status |
+|---|---|
+| Q-region mutual information | Well-defined for a specified quantum state; the physical Q-region family is unspecified |
+| \(\Phi\) as a functional of Q-region data | Open in general; two model-specific toy definitions are tested in separate benchmarks |
+| Logarithmic distance | Conditional on positive multiplicative kernel and regular additive length; the kernel is not generally pairwise mutual information |
+| \(\ell_P=\ell_{P0}\sqrt{1-\Phi^2}\) | Chosen profile with formally checked mathematical properties; physical derivation open |
+| Macroscopic spatial metric | Open; the explicit Markov and entangled-chain diagnostics both show a decay-rate trend opposite to the Schwarzschild-required trend; neither is a continuum metric derivation |
+| Scalar stress-energy and field equation | Derived from the stated candidate action; the action is not derived from Q-region axioms |
+| GR limit | Recovered on the constant-scalar branch of the stated actions, under their separate assumptions |
+| Curvature-coupled gravitational scalar | Provisional next-test branch with a linear static Schwarzschild zero mode; nonlinear hair, stability, constraints, and Q-region origin open; fundamental ontology unsettled |
+| Black-hole depletion and \(H(A_{BH})\) | Phenomenological ansatz, not a covariant derivation or independent observation |
+| Theory of Everything claim | Not supported by the current results |
+
+## 8. Reproduction and audit trail
+
+```bash
+python research/qregion_markov.py
+python -m pytest tests/test_qregion_markov.py -q
+python research/quantum_ising_chain.py
+python -m pytest tests/test_quantum_ising_chain.py -q
+python research/gauss_bonnet_scalarization.py
+python -m pytest tests/test_gauss_bonnet_scalarization.py -q
+python Sim7_Radial_Metric.py --no-plots
+```
+
+The Lean source and CI audit are documented in
+[`lean_proofs/README.md`](lean_proofs/README.md) and
+[`lean_proofs/PROOF_AUDIT.md`](lean_proofs/PROOF_AUDIT.md). A successful kernel
+check establishes the formal theorem under its assumptions; it does not
+establish that the assumptions describe nature.

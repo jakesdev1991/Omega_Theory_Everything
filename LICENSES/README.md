@@ -3,6 +3,7 @@
 # LICENSES
 
 - [`MIT.txt`](MIT.txt) is the full MIT License text for the scientific materials identified in the root [`LICENSE`](../LICENSE).
+- [`CC-BY-4.0.txt`](CC-BY-4.0.txt) is the full Creative Commons Attribution 4.0 International legal code applied to the public novel text identified in the root [`LICENSE`](../LICENSE).
 - [`PolyForm-Noncommercial-1.0.0.txt`](PolyForm-Noncommercial-1.0.0.txt) is the full PolyForm Noncommercial License 1.0.0 text for the product materials identified in the root [`LICENSE`](../LICENSE).
 - [`LicenseRef-Omega-ReadOnly.txt`](LicenseRef-Omega-ReadOnly.txt) is the read-only notice for the crypto and C.A.R.E. materials and for project-administration files.
 - [`Omega-Product-Proprietary.txt`](Omega-Product-Proprietary.txt) is the all-rights-reserved notice for the App Store legal texts and for apps distributed through the Nostr App Store.

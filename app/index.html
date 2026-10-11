@@ -43,10 +43,10 @@
           <div class="orbit-card"><div class="orbit orbit-1"></div><div class="orbit orbit-2"></div><div class="orbit-core">Ω<span>mega</span></div><div class="orbit-label label-a">CARE <b>protected</b></div><div class="orbit-label label-b">USE <b>earned</b></div><div class="orbit-label label-c">TRUST <b>human</b></div></div>
         </section>
 
-        <section class="section-head"><div><p class="eyebrow">YOUR ECONOMY</p><h2>Two currencies are wired into the wallet today.</h2></div><button class="link-btn" data-view="wallet">Open full wallet →</button></section>
+        <section class="section-head"><div><p class="eyebrow">YOUR ECONOMY</p><h2>Two pilot currencies power the optional proof demo.</h2></div><button class="link-btn" data-view="wallet">Open full wallet →</button></section>
         <section class="token-grid" id="token-grid">
-          <article class="token-card omega"><div class="token-top"><span class="token-icon">Ω</span><span class="token-status">EVM</span></div><h3>$OMEGA</h3><div class="token-value" id="omega-value">— <small>Sepolia</small></div><p>EVM-side macro-governance proof rail for release-day novel unlocks.</p><div class="token-bar"><span style="width:68%"></span></div></article>
-          <article class="token-card amity"><div class="token-top"><span class="token-icon">◎</span><span class="token-status">Solana</span></div><h3>TWC</h3><div class="token-value" id="twc-value">— <small>Devnet</small></div><p>Token of the World Citizen proof rail for the Solana unlock path. AMITY stays separate on Bitcoin/Lightning/Taproot.</p><div class="token-bar"><span style="width:54%"></span></div></article>
+          <article class="token-card omega"><div class="token-top"><span class="token-icon">Ω</span><span class="token-status">EVM</span></div><h3>$OMEGA</h3><div class="token-value" id="omega-value">— <small>Sepolia</small></div><p>EVM-side macro-governance proof rail for the optional novel-reader demo; the manuscript is public.</p><div class="token-bar"><span style="width:68%"></span></div></article>
+          <article class="token-card amity"><div class="token-top"><span class="token-icon">◎</span><span class="token-status">Solana</span></div><h3>TWC</h3><div class="token-value" id="twc-value">— <small>Devnet</small></div><p>Token of the World Citizen proof rail for the optional reader demo. AMITY stays separate on Bitcoin/Lightning/Taproot.</p><div class="token-bar"><span style="width:54%"></span></div></article>
         </section>
 
         <div class="content-grid"><section><div class="section-head compact"><div><p class="eyebrow">FROM THE COMMUNITY</p><h2>Useful work in motion</h2></div><button class="link-btn">View feed →</button></div><div class="feed">
@@ -83,7 +83,7 @@
             </div>
             <div class="form-card">
               <h3>Connect browser wallets</h3>
-              <p class="fine-print">Two proof rails are currently wired in: $OMEGA on the EVM rail and TWC on Solana. Use MetaMask for $OMEGA proofs and Phantom for TWC proofs. AMITY remains separate on Bitcoin/Lightning/Taproot. No transactions are ever sent.</p>
+              <p class="fine-print">Two optional reader-proof demo rails are wired in: $OMEGA on EVM and TWC on Solana. Use MetaMask for $OMEGA proofs and Phantom for TWC proofs. AMITY remains separate on Bitcoin/Lightning/Taproot. The public manuscript requires no token or wallet. No transactions are ever sent.</p>
               <button class="primary full" id="btn-connect-mm">🦊 Connect MetaMask ($OMEGA)</button>
               <p class="fine-print" id="mm-status"></p>
               <button class="secondary full" id="btn-connect-phantom" style="margin-top:12px;">◎ Connect Phantom (TWC)</button>
@@ -117,12 +117,12 @@
             <div class="wallet-row"><span class="big-token amy-bg">◎</span><div><strong>TWC</strong><small>Solana / Devnet proof rail</small><small id="solana-address">No Phantom wallet connected yet</small></div><b id="bal-twc">—</b><span class="row-note" id="twc-status">Phantom not connected</span></div>
           </div>
 
-          <!-- Release-day unlock signing -->
+          <!-- Optional reader-proof signing -->
           <div class="unlock-card">
             <div class="unlock-head">
               <span class="feature-icon">✦</span>
               <div>
-                <h3>Release-day novel unlock</h3>
+                <h3>Optional reader-proof demo</h3>
                 <p>Sign a statement with one of the two currently wired currencies — <em>$OMEGA</em> on the EVM rail or <em>TWC</em> on Solana. The signature is verified server-side against your wallet address.</p>
               </div>
             </div>
@@ -130,7 +130,7 @@
               <option value="OMEGA">$OMEGA — EVM / Sepolia proof rail</option>
               <option value="TWC">TWC — Solana / Devnet proof rail</option>
             </select></label>
-            <button class="primary full" id="btn-sign-unlock">Sign full-unlock statement →</button>
+            <button class="primary full" id="btn-sign-unlock">Sign optional reader proof →</button>
             <div class="proof-result hidden" id="proof-result">
               <p class="fine-print">Signed. Save this proof locally or copy it for the website:</p>
               <textarea id="proof-json" readonly rows="6"></textarea>

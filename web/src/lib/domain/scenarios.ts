@@ -182,13 +182,13 @@ function adapterFor(workClass: WorkClass) {
 
 function rawUnlockMessage(currency: "OMEGA" | "TWC", address: string, network: string) {
   return [
-    "OMEGA RELEASE-DAY NOVEL UNLOCK",
+    "OMEGA OPTIONAL NOVEL READER PROOF",
     `Currency: ${currency}`,
     `Address: ${address}`,
     `Network: ${network}`,
     `Origin: ${FIXED_ORIGIN}`,
     `Timestamp: ${FIXED_TIMESTAMP}`,
-    "Unlock: full novel",
+    "Reader demo: full chapter view",
   ].join("\n");
 }
 
@@ -600,14 +600,14 @@ export const SCENARIOS: ScenarioDefinition[] = [
   },
   {
     id: "rails-omega-signature",
-    title: "Rail — $OMEGA unlock proof signature round-trip",
+    title: "Rail — $OMEGA optional reader-proof signature round-trip",
     plane: "RAILS",
     slice: "R1",
     description:
-      "A secp256k1 signature over the canonical unlock message verifies against the embedded EVM address. Tampering fails closed before any chain call.",
+      "An EVM signature over the canonical optional reader-proof message verifies against the embedded address. Tampering fails closed before any chain call; this proof demo is not required to read the public manuscript.",
     steps: [
       {
-        title: "A valid signature verifies and unlocks the full novel",
+        title: "A valid signature verifies for the optional chapter-reader demo",
         plane: "RAILS",
         run: ({ equal }) => {
           const wallet = Wallet.createRandom();
@@ -659,14 +659,14 @@ export const SCENARIOS: ScenarioDefinition[] = [
   },
   {
     id: "rails-twc-signature",
-    title: "Rail — TWC unlock proof signature round-trip",
+    title: "Rail — TWC optional reader-proof signature round-trip",
     plane: "RAILS",
     slice: "R2",
     description:
-      "An ed25519 signature over the canonical unlock message verifies against the embedded Solana address. Tampering fails closed before any chain call.",
+      "An ed25519 signature over the canonical optional reader-proof message verifies against the embedded Solana address. Tampering fails closed before any chain call; this proof demo is not required to read the public manuscript.",
     steps: [
       {
-        title: "A valid ed25519 signature verifies and unlocks the full novel",
+        title: "A valid ed25519 signature verifies for the optional chapter-reader demo",
         plane: "RAILS",
         run: ({ equal }) => {
           const keyPair = nacl.sign.keyPair();

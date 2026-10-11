@@ -7,7 +7,7 @@
  * - Stores an encrypted (scrypt) V3 keystore in localStorage, password-locked.
  * - Connects MetaMask (EIP-1193) for the $OMEGA EVM rail.
  * - Connects Phantom for the TWC Solana rail.
- * - Signs release-day unlock statements to produce auditable proofs.
+ * - Signs optional novel-reader proof statements for the public reader demo.
  * - Fetches REAL on-chain ETH balance from public RPCs with failover.
  *
  * Current chain mapping:
@@ -392,18 +392,18 @@ async function fetchEthBalance(address) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Unlock proofs (signed statements of participation)                  */
+/* Optional novel-reader proofs (signed statements of participation)  */
 /* ------------------------------------------------------------------ */
 
 function buildUnlockMessage(currency, address, network, origin) {
   return [
-    "OMEGA RELEASE-DAY NOVEL UNLOCK",
+    "OMEGA OPTIONAL NOVEL READER PROOF",
     `Currency: ${currency}`,
     `Address: ${address}`,
     `Network: ${network}`,
     `Origin: ${origin}`,
     `Timestamp: ${new Date().toISOString()}`,
-    "Unlock: full novel",
+    "Reader demo: full chapter view",
   ].join("\n");
 }
 

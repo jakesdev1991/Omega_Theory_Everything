@@ -14,59 +14,53 @@ Every formula is checked numerically, and where noted symbolically (SymPy), by [
 
 ## 0. Summary
 
-1. **Convention: settled.** The repository used to carry two opposite readings of $\Phi$ (§1); they are now reconciled on the reading of the kernel-checked profile (`DynamicCODScale.lean`), $\Phi=0$ being the vacuum and $\Phi\to1$ the bound-state/horizon end. A metric needs exactly one reading, because $g_{rr}\to1$ must hold at the vacuum end and $g_{rr}\to\infty$ at a horizon. The consensus potential is now $V=\tfrac12m^2\Phi^2$, so the vacuum is a static solution ($V(0)=V'(0)=0$) and the horizon end is not an attractor. Under the *other* reading ($\Phi=1$ vacuum, as in earlier drafts of §1.2), $\ell_P(\text{vacuum})=\ell_P(1)=0$, which no metric can use.
-2. **$g_{\mu\nu}=\delta S_{\rm ent}/\delta\rho$ is not a well-formed tensor equation** (§2). The Omega axioms already contain a well-defined route: the §2.1 logarithmic metric.
-3. **[Derived] Two-factor law** (§3). Markov factorization, additivity and locality give $ds=\ell_P(\Phi)\,d\sigma$ with $d\sigma=-d\ln K$. Hence $h_{ij}=\ell_P(\Phi)^2\gamma_{ij}$, and along a radial chain $g_{rr}=\ell_P(\Phi)^2\kappa^2$. Microscopic contraction and macroscopic dilation are compatible. The open item reduces to one unknown: the correlation-decay metric $\gamma$ (radial rate $\kappa$).
+1. **Notation: fixed; physical meaning: open.** The repository now uses $\Phi=0$ for the vacuum end and $\Phi\to1$ for the high-overlap end. This resolves an internal sign convention, not the physical definition of $\Phi$. The profile in `DynamicCODScale.lean` and the choice $V=\tfrac12m^2\Phi^2$ are model choices. A macroscopic metric must be asymptotically flat at the vacuum; a horizon condition is coordinate-dependent and should be stated for a specified metric component and chart. The opposite convention in earlier drafts is not physically excluded by the Lean check.
+2. **$g_{\mu\nu}=\delta S_{\rm ent}/\delta\rho$ is not a well-formed tensor equation** (§2). This shorthand has been removed from the README. The logarithmic chain-length result below is conditional on a positive multiplicative correlation kernel; the classical Markov benchmark shows why that kernel cannot simply be identified with pairwise mutual information, while the entangled-chain benchmark tests a separate finite-correlation-rate proxy.
+3. **[Conditional] Two-factor chain law** (§3). Markov factorization, additive length, locality, and regularity give $ds=\ell_P(\Phi)\,d\sigma$ with $d\sigma=-d\ln K$ along a chain. If a smooth positive-definite continuum metric for $d\sigma$ exists, then $h_{ij}=\ell_P(\Phi)^2\gamma_{ij}$ and along a radial chain $h_{rr}=\ell_P(\Phi)^2\kappa^2$. The continuum metric and its derivation from Q-region data are additional open assumptions; the two-factor identity alone does not establish a spatial geometry.
 4. **[Derived] Obstruction** (§4). Suppose $\ell_P(\Phi)$ were the only $\Phi$-dependence of the spatial metric, with a harmonic profile $\Phi=A/\rho$. Then $g_{RR}=(1-\Phi^2)^2\le1$ (contraction), the ADM mass is zero, the Misner–Sharp mass is negative, and the "horizon" has zero area. The canonical profile cannot by itself produce gravitational attraction.
 5. **[Identified] Schwarzschild written in $\Phi$** (§5). With $\Phi:=\psi-1$ (the isotropic conformal factor minus one), the exact vacuum solution is
    $$ds^2=-\Big(\frac{1-\Phi}{1+\Phi}\Big)^2dt^2+(1+\Phi)^4\big(d\rho^2+\rho^2d\Omega^2\big),\qquad \Phi=\frac{M}{2\rho}.$$
    In areal gauge, $g_{RR}(\Phi)=\big(\frac{1+\Phi}{1-\Phi}\big)^2$. $\Phi$ is harmonic, $\Phi\in[0,1]$ is exactly one exterior, and $\Phi=1$ is the horizon. By the two-factor law this requires $\kappa/\kappa_0=(1+\Phi)^2/\sqrt{1-\Phi^2}$.
 6. **$g_{rr}\propto1/\Phi$** (§6) is exactly Schwarzschild in the *other* convention ($\Phi=-g_{tt}$, vacuum at 1). In the Lean convention it diverges at the vacuum. It cannot coexist with $\ell_P=\ell_{P0}\sqrt{1-\Phi^2}$ for the same $\Phi$.
-7. **[Open]** Derive $\gamma$ from a microscopic Q-region model, and decide whether $\Phi$ is geometry or matter (no-hair caveat, §7).
+7. **[Open]** Two explicit Q-region diagnostics are now available: the diagonal-qubit Markov-chain benchmark derives one $\Phi(I_{ij})$ and $\kappa(\Phi)$ in [`docs/research/QREGION_MARKOV_MODEL.md`](docs/research/QREGION_MARKOV_MODEL.md), while the genuinely entangled finite Ising-chain sweep fits a finite-range correlation-decay rate in [`docs/research/ENTANGLED_TFIM_BENCHMARK.md`](docs/research/ENTANGLED_TFIM_BENCHMARK.md). Both selected models show a decay-rate trend opposite to the Schwarzschild-required trend; the entangled-chain sign persists across $N=8,10,12,14$ at a common fit window. These are model-level consistency results, not a universal no-go. A covariant metric derivation and the ontology choice remain open; a separate curvature-coupled gravitational-scalar candidate is tested only at linear zero-mode level in [`docs/research/GAUSS_BONNET_SCALARIZATION.md`](docs/research/GAUSS_BONNET_SCALARIZATION.md).
 
-## 1. Two conventions for $\Phi$ are in the repository
+## 1. Working convention and its limits
 
-| Location | Vacuum | Bound matter / horizon |
+| Location | Working vacuum convention | High-overlap end |
 |---|---|---|
-| Technical note §1.2 | $\Phi=0$ ("no shared state") | $0<\Phi<1$ matter; $\Phi\to1$ horizon ("states merged") |
-| Technical note §3.1 | $V=\tfrac12m^2\Phi^2$, minimum at $\Phi=0$ | — |
-| `Sim5_Emergent_Gravity.py` | `PHI_VACUUM = 0.0` | matter 0.4, black hole 0.9 |
-| Technical note §2.2, `DynamicCODScale.lean`, Sim3's $\ell_P$ | $\Phi=0$ ("unshared vacuum") | $\Phi\to1$ ("bound-mass core or horizon") |
+| This note and current technical note | $\Phi=0$; its operational physical meaning is open | $\Phi\to1$ by convention |
+| `DynamicCODScale.lean` and `Sim3_Dynamic_Scale.py` | $\Phi=0$ for the chosen profile/potential | $\Phi\to1$ in the model domain |
+| `Sim5_Emergent_Gravity.py` | `PHI_VACUUM = 0.0` | selected simulation values 0.4 and 0.9 |
 
-The repository now reads $\Phi$ one way only. The change that resolved it: §1.2 and §3.1 of the technical note were flipped to the Lean reading, Sim3's consensus potential became $V=\tfrac12m^2\Phi^2$, and Sim5 was re-based on the COD profile with `PHI_VACUUM = 0.0`, matter at $\Phi>0$ and the black hole at $\Phi=0.9$. Sim5's earlier `exp((1-\Phi)/\phi_c)` profile was dropped for the Lean-proven $\sqrt{1-\Phi^2}$, which is bounded and so keeps the black hole visible.
+The repository uses one convention to avoid internal sign flips. A Lean-checked formula or a stable simulation does not establish that this orientation describes physical vacuum or a horizon. The profile $\ell_P=\ell_{P0}\sqrt{1-\Phi^2}$ and the potential $V=\tfrac12m^2\Phi^2$ remain choices. The opposite parametrization is not ruled out by formal verification; the two conventions would need to be translated consistently if a model motivated one.
 
-Why this reading and not the other one:
-
-- **It is the one that is kernel-checked.** $\ell_P=\ell_{P0}\sqrt{1-\Phi^2}$ is proved in `DynamicCODScale.lean` with the vacuum at $\Phi=0$; the opposite reading would make $\ell_P(\text{vacuum})=0$.
-- **The potential then works.** $V=\tfrac12m^2\Phi^2$ has $V(0)=V'(0)=0$, so $\Phi=0$ is a static, asymptotically flat vacuum, and it is Yukawa-screened ($\Phi\propto e^{-m\rho}/\rho$). Sim3's default run relaxes from its initial kick back toward $\Phi=0$ (peak 0.153, still 0.138 at $t=40$ under Hubble damping) and never reaches the horizon.
-- **The other reading would need the Lean profile relabelled**, e.g. $\ell_P=\ell_{P0}\sqrt{1-(1-\Phi)^2}$, and would then make $g_{rr}\propto1/\Phi$ natural. It was rejected because it discards a kernel-checked module to save an unverified guess.
-
-The formulas below use this convention throughout; §6 gives the §1.2 translation where it matters.
+The calculations below use the current notation only. They do not treat $\Phi$ as an observed scalar or identify the mathematical endpoint $\Phi=1$ with a physical event horizon unless the stated metric dictionary is separately assumed.
 
 ## 2. Why not $g_{\mu\nu}=\delta S_{\rm ent}/\delta\rho$
 
-The left side is a symmetric rank-2 spacetime tensor field. The right side is a functional derivative of a scalar functional. With respect to a scalar density it is a scalar. With respect to a density operator it is the operator $-\ln\rho-\mathbb{1}$ on Hilbert space. Neither carries spacetime indices, so no choice of $\rho$ turns it into a metric without extra structure. The formula also appears as the "Theory Foundation" line of `README.md`.
+The left side is a symmetric rank-2 spacetime tensor field. The right side is a functional derivative of a scalar functional. With respect to a scalar density it is a scalar. With respect to a density operator it is the operator $-\ln\rho-\mathbb{1}$ on Hilbert space. Neither carries spacetime indices, so no choice of $\rho$ turns it into a metric without extra structure. The shorthand has been removed from the repository README; any replacement needs an explicit tensor-valued construction.
 
 Well-defined routes that capture the intent:
 
-- **Kinematics: distance from correlations.** The §2.1 logarithmic metric, a special case of defining distance as a decreasing function of mutual information (Cao, Carroll, Michalakis 2017). Used below.
+- **Kinematics: conditional chain length.** A negative logarithm gives an additive length only when the chosen positive kernel composes multiplicatively. The Q-region benchmark in [`docs/research/QREGION_MARKOV_MODEL.md`](docs/research/QREGION_MARKOV_MODEL.md) shows that pairwise mutual information is not itself such a kernel for a simple Markov chain. Any proposed map from mutual information to the multiplicative kernel needs its own derivation.
 - **Dynamics: entanglement equilibrium.** Stationarity of small-ball entanglement entropy at fixed volume is equivalent to the Einstein equation (Jacobson 1995, 2016). This yields field equations *for* $g$, not $g$ itself.
 - **Information geometry.** Fisher and Bures metrics live on state (parameter) space. They become spatial metrics only if the parameters are positions.
 
-## 3. [Derived] The two-factor law
+## 3. [Conditional] The two-factor chain law
 
 **Assumptions.** From §2.1:
 
-- (M) Markov factorization, $K_{AC}=K_{AB}K_{BC}$ along a chain;
+- (M) a dimensionless link kernel $0<K\leq1$ with Markov factorization, $K_{AC}=K_{AB}K_{BC}$ along a chain;
 - (A) additivity, $d_{AC}=d_{AB}+d_{BC}$;
 - $d=-\ell_P\ln K$ when $\Phi$ is constant.
 
 Added here:
 
 - (L) locality: the length of a short link depends only on that link's correlation and its local $\Phi$;
-- (R) regularity: that length is continuous or monotone in the link's correlation.
+- (R) regularity: that length is continuous or monotone in the link's correlation, excluding pathological Cauchy-equation solutions;
+- (G), only for a continuum spatial interpretation: the local correlation deficit has a smooth, positive-definite quadratic length form. This is not implied by (M), (A), (L), or (R).
 
-**Statement.** Let $\sigma=-\ln K$ (nats of correlation deficit). By (M), $\sigma$ is additive along chains, so in the continuum it defines an *information metric* $d\sigma^2=\gamma_{ij}\,dx^i dx^j$. Along a radial chain $d\sigma=\kappa(r)\,dr$, with $\kappa=-\partial_{r'}\ln K(r,r')\big|_{r'=r}$. Then
+**Statement.** Let $\sigma=-\ln K$ (nats of correlation deficit). By (M), $\sigma$ is additive along chains. If an additional continuum limit satisfying (G) exists, denote its local quadratic form by $\gamma_{ij}$, so that $d\sigma^2=\gamma_{ij}\,dx^i dx^j$. Along a differentiable radial chain $d\sigma=\kappa(r)\,dr$, with $\kappa=-\partial_{r'}\ln K(r,r')\big|_{r'=r}$. Under these assumptions,
 
 $$\boxed{\;h_{ij}=\ell_P(\Phi)^2\,\gamma_{ij},\qquad g_{rr}=\ell_P(\Phi)^2\,\kappa^2\;}$$
 
@@ -155,12 +149,9 @@ Hence $g_{rr}\propto1/\Phi$ and $\ell_P=\ell_{P0}\sqrt{1-\Phi^2}$ cannot both ho
 
 ## 7. No-hair caveat: geometry or matter?
 
-§3.2 derives $T^\Phi_{\mu\nu}$ by varying $S_\Phi$ with respect to an independent metric. It therefore treats $\Phi$ as a minimally coupled scalar that *sources* gravity. In that reading:
+The candidate action in §4 of [`Omega_Theory_v4.0_Technical.md`](Omega_Theory_v4.0_Technical.md) varies an independent metric and therefore treats $\Phi$ as a minimally coupled scalar that sources gravity. Under regularity, asymptotic-flatness, and convex-potential conditions, the integral no-hair argument in [`docs/research/COVARIANT_COMPLETION_AND_TEST_GATE.md`](docs/research/COVARIANT_COMPLETION_AND_TEST_GATE.md) leaves only the constant scalar on a static black-hole exterior. This is a conditional result for that scalar model, not a theorem about every possible Q-region theory.
 
-- Bekenstein's no-scalar-hair theorems (1972; 1995) force $\Phi$ to sit at its potential minimum everywhere outside a static black hole. They cover the massless case and the quadratic consensus potentials used here.
-- Static massless solutions with non-constant $\Phi$ are the Fisher/Janis–Newman–Winicour family, which have a naked singularity and no horizon.
-
-So "$\Phi\to1$ at the horizon" is impossible if $\Phi$ is matter. The dictionary of §5 treats $\Phi$ as part of the metric, the §2 reading. §2 and §3.2 therefore describe different theories. The framework has to choose, or show how $\Phi$ can be both without double counting.
+The Schwarzschild dictionary of §5 instead treats $\Phi$ as a coordinate-dependent label of the metric. Thus the matter-scalar action and the geometric dictionary are different constructions. A curvature-coupled gravitational-scalar candidate is now the provisional next-test branch; its linear zero mode is not a nonlinear solution and it is not derived from Q-regions. The fundamental ontology remains open, and any future map between these constructions must avoid double counting; the present calculations do not establish that "$\Phi\to1$ at the horizon" is a physical scalar boundary condition.
 
 ## 8. Side result: the golden-ratio bottleneck
 
@@ -184,12 +175,13 @@ Caveat: the bound constrains $\dot\Phi$ only. For static profiles the disformal 
 
 ## 9. What would turn this into a derivation
 
-1. ~~Fix the convention across §1.2, §2.2 and §3.1 of the technical note, Sim3's potential and Sim5, plus the Lean docstrings if the convention flips.~~ **Done:** the whole repository now uses $\Phi=0$ as the vacuum (§1).
-2. Build an explicit Q-region model in which $\Phi$ is defined from the $I_{ij}$, and test $\kappa(\Phi)$ against $(1+\Phi)^2/\sqrt{1-\Phi^2}$. A Gaussian or free-fermion lattice, where mutual information is computable, is one option.
-3. Obtain the transverse/areal structure from Q-region data, e.g. area-law entanglement across shells, so that $g_{tt}g_{RR}=-1$ is *tested* rather than imposed.
-4. Decide $\Phi$'s role (§7) and re-derive §3.2 accordingly. Its static limit should reduce to the Lichnerowicz form of §5.
-5. ~~Lean: formalize the golden-ratio minimum (§8), the finite-chain two-factor law (§3) and the $\Phi$-form Schwarzschild identities (§5).~~ **Done:** `lean_proofs/RadialMetric.lean` proves all three and is kernel-checked by the Lean CI job.
-6. **Done:** `lean_proofs/RadialDilation.lean` proves the §4 obstruction identities (`ℓ_P` alone gives `g_RR = (1-Φ²)² ≤ 1` with negative quasi-local mass and no linear term), the §5 required-`κ` consequences (exact two-factor product, integrated outrunning margin, areal dilation with lapse reciprocity), and the combined reconciliation conjunction. All are kernel-checked by the Lean CI job.
+1. **Notation fixed; physical interpretation open.** The current notes use $\Phi=0$ for the vacuum end. This resolves an internal convention clash, not the operational definition of $\Phi$.
+2. **Two explicit Q-region benchmarks completed, each with a negative consistency result.** [`docs/research/QREGION_MARKOV_MODEL.md`](docs/research/QREGION_MARKOV_MODEL.md) defines $\Phi$ from adjacent-pair mutual information in a non-degenerate, classical-diagonal qubit Markov chain and derives $\kappa(\Phi)$. [`docs/research/ENTANGLED_TFIM_BENCHMARK.md`](docs/research/ENTANGLED_TFIM_BENCHMARK.md) uses pairwise-entangled ground states, verified by positive negativity, and fits a finite-range correlation-decay rate. In both fixed model families the decay rate decreases as $\Phi$ rises, opposite to the Schwarzschild-required trend. The entangled-chain sign persists across $N=8,10,12,14$ at a common fit window. This is not a no-go for richer Q-region models or a Schwarzschild fit.
+3. Derive the transverse/areal structure from Q-region data, e.g. a specified state family and correlations across shells. The Schwarzschild identities are comparison targets; they must not be imposed as the answer to the derivation.
+4. Keep three roles for $\Phi$ distinct: a minimally coupled matter scalar, a coordinate-dependent metric label, and a gravitational scalar degree of freedom. The first has a conditional GR branch but no nonconstant static hair under the stated convex-potential assumptions. The curvature-coupled Gauss–Bonnet branch is the provisional next-test model and has a linear s-wave zero-mode test, but no nonlinear solution or Q-region derivation; see [`docs/research/COVARIANT_COMPLETION_AND_TEST_GATE.md`](docs/research/COVARIANT_COMPLETION_AND_TEST_GATE.md) and [`docs/research/GAUSS_BONNET_SCALARIZATION.md`](docs/research/GAUSS_BONNET_SCALARIZATION.md). This is a workflow choice only; the fundamental ontology and any non-double-counting map remain open.
+5. **Formalization completed, subject to the Lean audit.** `lean_proofs/RadialMetric.lean` contains the golden-ratio inequality, conditional finite-chain result, and $\Phi$-form Schwarzschild identities. These are mathematical results under their encoded assumptions, not a physical derivation.
+6. `lean_proofs/RadialDilation.lean` formalizes the $\ell_P$-only obstruction and consequences of imposing the Schwarzschild-required $\kappa$. Kernel checking verifies those formal consequences; it does not derive the required $\kappa$ from Q-regions.
+7. Before claiming an observational prediction, choose a covariant model, recover GR in its tested regime, derive a parameter-fixed observable, and preregister an independent-data test. No such Omega prediction is currently ready; the gate and required registration fields are in the covariant-completion note.
 
 ## References
 

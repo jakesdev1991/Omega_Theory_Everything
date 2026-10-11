@@ -1,23 +1,24 @@
 <!-- Copyright (c) 2025-2026 Jacob See. SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0 -->
-# Omega web unlock app
+# Omega public book & economy web app
 
-This Next.js app is the public reading and release surface for **Crucible: The Satoshi
-Protocol**, the home of the **Omega Wallet GUI**, and the **Economy Test Console** used for
-complete offline testing of the four-plane crypto economy.
+This Next.js app serves the public draft of **Crucible: The Satoshi Protocol**, the **Omega
+Wallet GUI**, and the **Economy Test Console** used for offline testing of the four-plane
+crypto economy. The book text at `/book/full-book.md` is licensed under CC BY 4.0; reading,
+sharing, and adapting it with attribution do not require a token, wallet, or proof.
 
-## Current wired currencies
+## Optional reader-proof demo
 
-The current wallet-to-web unlock flow is wired for **two currencies**:
+The web app retains a wallet-to-web proof flow for **two currencies** as an optional integration
+demonstration:
 
 - **$OMEGA** — EVM rail (current pilot: Ethereum / Sepolia)
 - **TWC** — Solana / Devnet pilot rail
 
-`AMITY` remains a separate Bitcoin/Lightning-with-Taproot workstream and is not wired into the
-live unlock flow yet.
-
-A user signs a release-day unlock statement in the wallet, the web API verifies the signature
-server-side, and then the API independently checks the configured on-chain rail before serving
-gated chapter prose.
+`AMITY` remains a separate Bitcoin/Lightning-with-Taproot workstream and is not wired into this
+demo. A visitor who chooses to try the optional flow can sign a proof in the wallet; the web API
+verifies the signature server-side and independently checks the configured on-chain rail before
+serving chapter prose through that reader route. This proof flow does not control the public
+manuscript or alter its license.
 
 ## Quick start
 
@@ -49,8 +50,10 @@ npm run dev                  # predev syncs the wallet GUI into public/omega-wal
 | `/store` | **App Store**: static frontend over the Nostr backplane — directory from kinds 31990/30017, NIP-90 job requests to the mobile node, settlement into TWC |
 | `/testnet` | **Economy Test Console**: readiness, scenario suite, faucet, action runner, audit exports, Nostr surface |
 | `/care` | C.A.R.E. social prototype |
-| `/novel`, `/novel/[slug]` | Token-gated reading experience |
-| `/invest` | Participation and unlock tiers |
+| `/book/full-book.md` | Public CC BY 4.0 manuscript; no wallet required |
+| `/book/LICENSE.md` | Public attribution and license notice |
+| `/novel`, `/novel/[slug]` | Public novel landing page plus optional proof-verified reader demo |
+| `/invest` | Participation and optional reader-proof demos |
 | `/mcp` | MCP hub overview |
 | `/ops` | Operator status for the wired rails |
 
@@ -112,7 +115,7 @@ Complete, chain-free testing of the four-plane economy (CARE, TWC, $OMEGA, AMITY
 - **Readiness** — `GET /api/economy/health`: rail configuration, AMITY scaffold, wallet GUI sync,
   Nostr surface, test-control status, ledger snapshot.
 - **Scenarios** — the suite in `src/lib/domain/scenarios.ts` covers integration slices A–G from
-  `docs/tri-token-integration-v1.md` §7 plus both unlock-rail signature round-trips and the
+  `docs/tri-token-integration-v1.md` §7 plus both optional reader-proof signature round-trips and the
   cross-plane double-entry invariants (10 scenarios / 43 steps). Runs in the browser console, in
   CI (`npm test`), and server-side via `POST /api/economy/scenarios`.
 - **Ledger & faucet** — `POST /api/economy/faucet` grants valueless balances (test mode only);
@@ -130,10 +133,10 @@ no bootstrap voting power, no test credits.
 
 | Route | Method | Purpose |
 |---|---|---|
-| `/api/unlock/status` | GET | Rail configuration status for the novel banner |
-| `/api/unlock` | POST | Verify an $OMEGA/TWC proof + on-chain rail check |
-| `/api/chapter/[slug]` | POST | Verified-readers-only chapter prose |
-| `/api/amity/status` | GET | AMITY scaffold visibility (not an unlock rail) |
+| `/api/unlock/status` | GET | Rail configuration status for the optional reader-proof demo |
+| `/api/unlock` | POST | Verify an optional $OMEGA/TWC proof + on-chain rail check |
+| `/api/chapter/[slug]` | POST | Chapter prose through the optional proof-verified reader route |
+| `/api/amity/status` | GET | AMITY scaffold visibility (not a reader-proof rail) |
 | `/api/economy/state` | GET/POST | Shared ledger snapshot / audited economy actions |
 | `/api/economy/scenarios` | GET/POST | List or run the offline scenario suite |
 | `/api/economy/health` | GET | Single readiness report |
@@ -159,8 +162,9 @@ The API routes prefer local pilot manifests when they exist:
 - `../evm/deployments/sepolia.json`
 - `../solana/deployments/twc-devnet.json`
 
-Those files are intentionally gitignored, so local unlock verification will fail closed until a
-pilot deployment manifest is present or equivalent environment variables are supplied.
+Those files are intentionally gitignored, so optional reader-proof verification will fail closed
+until a pilot deployment manifest is present or equivalent environment variables are supplied.
+This does not affect direct access to `/book/full-book.md` or the CC BY 4.0 license.
 
 ### Optional environment overrides
 
@@ -172,10 +176,10 @@ See [`.env.example`](.env.example). Highlights:
 - Nostr: `NOSTR_RELAYS`, `NOSTR_PUBLISHER_NPUB`, `NOSTR_NIP05_DOMAIN`
 
 `GET /api/amity/status` is separate on purpose: it reports the AMITY **testnet scaffold** state for
-operator visibility without changing the fact that the live wallet/web unlock flow is still wired
-for only **two currencies so far — `$OMEGA` and `TWC`**.
+operator visibility. The optional reader-proof flow is wired for only **two currencies so far —
+`$OMEGA` and `TWC`**; the public manuscript does not depend on either rail.
 
-Both unlock routes verify the signed proof first. Then:
+Both optional reader-proof routes verify the signed proof first. Then:
 
 - `$OMEGA` checks the configured Sepolia pilot gate/token on-chain
 - `TWC` checks the configured Devnet SPL mint balance on-chain

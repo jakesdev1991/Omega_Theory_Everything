@@ -6,21 +6,27 @@ This repository does **not** have one repository-wide license. This file is an i
 
 The following scientific materials are licensed under the MIT License. Read the full terms in [`LICENSES/MIT.txt`](LICENSES/MIT.txt):
 
-- `Sim1_Emergent_Geometry.py` through `Sim5_Emergent_Gravity.py`, `Sim7_Radial_Metric.py` and `sim6_v14_depletion.py`
+- `Sim2_Cosmology.py`, `Sim3_Dynamic_Scale.py`, `Sim5_Emergent_Gravity.py`, `Sim7_Radial_Metric.py` and `sim6_v14_depletion.py` (Sim1 and Sim4 are historical manuscripts in `docs/manuscripts/`)
 - `Omega_Theory_Laymans_Guide.md`, `Omega_Theory_v4.0_Technical.md` and `Omega_Theory_v4.0_Radial_Metric.md`
-- all files in `lean_proofs/`, `latex_docs/`, `txt_proofs/`, and `rcod/`
+- all files in `lean_proofs/`, `latex_docs/`, `txt_proofs/`, `rcod/`, `research/`, and `docs/research/`
 
 MIT permits commercial use of these covered materials subject to its attribution and disclaimer terms. It grants no rights to project trademarks, to the product materials below, or to the crypto materials below.
+
+## Public novel text — Creative Commons Attribution 4.0 International
+
+The original literary text in [`web/public/book/full-book.md`](web/public/book/full-book.md) is licensed under the Creative Commons Attribution 4.0 International Public License (CC BY 4.0), by Jacob See to the extent of rights he owns or is authorized to license. A public attribution notice is in [`web/public/book/LICENSE.md`](web/public/book/LICENSE.md); the full legal code is [`LICENSES/CC-BY-4.0.txt`](LICENSES/CC-BY-4.0.txt) and <https://creativecommons.org/licenses/by/4.0/>.
+
+CC BY 4.0 permits sharing and adaptation, including commercial use, with the license's attribution and other terms. This grant covers only rights the licensor can grant; it does not license third-party material, characters, names, marks, or other rights held by others, and it does not imply endorsement. See [`docs/LICENSING.md`](docs/LICENSING.md) and the open rights-review items in [`launch/novel_day_one_plan.md`](launch/novel_day_one_plan.md). The grant does not withdraw permissions already granted for earlier copies under any prior license.
 
 ## Product materials — PolyForm Noncommercial License 1.0.0
 
 The following product materials are licensed under the **PolyForm Noncommercial License 1.0.0** ([`LICENSES/PolyForm-Noncommercial-1.0.0.txt`](LICENSES/PolyForm-Noncommercial-1.0.0.txt), <https://polyformproject.org/licenses/noncommercial/1.0.0>):
 
-- all files in `web/` (website, wallet hub, and the Nostr App Store storefront), **except** the store legal texts in `web/public/legal/`, which remain all rights reserved
-- all files in `mobile-node/` (App Store execution node and license tooling), `app/`, `desktop/`, `omni-bridge/`, `cpp/`, `mcp/`, `launch/`, and `novel/`
+- all files in `web/` except `web/public/book/full-book.md`, `web/public/book/LICENSE.md`, and the store legal texts in `web/public/legal/` (the book text and its notice have the separate CC BY 4.0 scope above)
+- all files in `mobile-node/` (App Store execution node and license tooling), `app/`, `desktop/`, `omni-bridge/`, `cpp/`, `mcp/`, `launch/`, and `novel/` (the latter contains release-planning and staging tools, not the CC BY book text)
 - the App Store protocol documentation in `docs/store/`
 
-In short: **anyone may use, modify, and share these materials for noncommercial purposes for free. Commercial use requires a separate paid, signed written license from Jacob See** with percentage-based compensation; this repository sets no rate. These files are marked `PolyForm-Noncommercial-1.0.0` by per-file SPDX header or by this path-level designation. Files that cannot hold comments, such as JSON, are covered by the path-level designation. Apps distributed through the Nostr App Store are proprietary unless their listing states otherwise; end users run them only under a license issued under the Store Terms (`omega-store-eula-1.0`), and third-party publishers list them only under a signed Publisher Agreement. See `docs/LICENSING.md` § "Nostr App Store licensing".
+In short: **anyone may use, modify, and share these materials for noncommercial purposes for free. Commercial use requires a separate paid, signed written license from Jacob See** with percentage-based compensation. This repository sets no rate. These files are marked `PolyForm-Noncommercial-1.0.0` by per-file SPDX header or by this path-level designation. Files that cannot hold comments, such as JSON, are covered by the path-level designation. Apps distributed through the Nostr App Store are proprietary unless their listing states otherwise; end users run them only under a license issued under the Store Terms (`omega-store-eula-1.0`), and third-party publishers list them only under a signed Publisher Agreement. See `docs/LICENSING.md` § "Nostr App Store licensing".
 
 ## Crypto and C.A.R.E. materials — read-only, no license
 

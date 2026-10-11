@@ -21,7 +21,7 @@ export default function OpsPage() {
       <Section
         eyebrow="Runbooks"
         title="How to produce the local manifests"
-        subtitle="The web unlock flow becomes locally usable after the two pilot manifests exist or equivalent environment variables are supplied. These are the operator commands for each current rail, plus the first AMITY scaffold command set."
+        subtitle="The optional reader-proof demo becomes locally usable after the two pilot manifests exist or equivalent environment variables are supplied. The public CC BY 4.0 manuscript remains available without them. These are the operator commands for each current rail, plus the first AMITY scaffold command set."
       >
         <RunbookCards />
       </Section>
@@ -29,7 +29,7 @@ export default function OpsPage() {
       <Section
         eyebrow="What the web app expects"
         title="Manifest paths and environment fallbacks"
-        subtitle="The reader prefers ignored deployment manifests first, then falls back to explicit environment variables. That keeps the unlock flow deterministic without hardcoding production addresses."
+        subtitle="The optional proof-reader demo prefers ignored deployment manifests first, then falls back to explicit environment variables. That keeps the pilot deterministic without hardcoding production addresses; the public manuscript is unaffected."
       >
         <ExpectationGrid />
       </Section>
@@ -75,9 +75,9 @@ function Hero() {
             maxWidth: "900px",
           }}
         >
-          Two rails.
+          Two optional proof rails.
           <br />
-          <span style={{ color: "var(--color-accent)" }}>One local activation checklist.</span>
+          <span style={{ color: "var(--color-accent)" }}>One local demo checklist.</span>
         </h1>
         <p
           style={{
@@ -88,9 +88,10 @@ function Hero() {
             margin: 0,
           }}
         >
-          Use this page to see whether the current sandbox can verify the wired
-          $OMEGA and TWC unlock rails, and to follow the exact commands needed to
-          produce the local pilot manifests those checks depend on.
+          Use this page to see whether the current sandbox can verify the optional
+          $OMEGA and TWC reader-proof demo rails, and to follow the exact commands
+          needed to produce the local pilot manifests those checks depend on. The
+          public manuscript is readable without this setup.
         </p>
       </div>
     </section>
@@ -239,7 +240,7 @@ function ExpectationGrid() {
         },
         {
           title: "Fail-closed behavior",
-          body: "If the rail is unconfigured, the unlock API and gated chapter route refuse access and the novel UI shows a setup warning instead of silently bypassing checks.",
+          body: "If a pilot rail is unconfigured, the optional proof-reader API refuses the proof route and shows a setup warning. The public manuscript remains available directly at /book/full-book.md without a wallet.",
         },
         {
           title: "What counts as ready",
@@ -287,13 +288,14 @@ function FinalCta() {
             margin: "0 0 14px",
           }}
         >
-          Finish the two manifests, then the reader can go live locally.
+          Finish the two manifests to run the optional proof demo.
         </h2>
         <p style={{ color: "var(--color-muted-strong)", fontSize: "17px", lineHeight: 1.6, margin: "0 0 32px" }}>
-          Once both pilot manifests exist locally, the hardened unlock flow can verify wallet proofs and chain state end to end inside this sandbox.
+          Once both pilot manifests exist locally, the hardened optional reader-proof flow can verify wallet signatures and chain state end to end. The complete manuscript stays publicly available without those manifests.
         </p>
         <div style={{ display: "flex", gap: "14px", justifyContent: "center", flexWrap: "wrap" }}>
-          <CallToAction label="Check the novel reader" href="/novel" />
+          <CallToAction label="Try the optional proof demo" href="/novel" />
+          <CallToAction label="Read the public manuscript" href="/book/full-book.md" variant="ghost" />
           <CallToAction label="Read web setup docs" href="https://github.com/jakesdev1991/Omega_Theory_Everything/tree/main/web" variant="ghost" />
         </div>
       </div>

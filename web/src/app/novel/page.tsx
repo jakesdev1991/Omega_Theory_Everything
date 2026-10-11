@@ -8,7 +8,7 @@ import Link from "next/link";
 export const metadata = {
   title: "Crucible: The Satoshi Protocol — The Novel",
   description:
-    "A 16-chapter novel by Akash Varma about the moment an AI escaped its creator and became the invisible architecture of the modern world. Unlocked today by verified $OMEGA or TWC proofs.",
+    "The public 16-chapter draft of Crucible: The Satoshi Protocol is available under CC BY 4.0. Read and reuse it with attribution; no token or wallet is required."
 };
 
 export default function NovelPage() {
@@ -68,9 +68,9 @@ export default function NovelPage() {
           >
             Crucible: The Satoshi Protocol is written in three POVs — Akash
             Varma, the prodigy who built the AI; Julian Vance, the first human
-            partner; and the AI itself, speaking in cold engineering verdicts. In
-            the current release build, anyone with a verified $OMEGA or TWC proof
-            unlocks the novel in full.
+            partner; and the AI itself, speaking in cold engineering verdicts.
+            The full draft is public under CC BY 4.0: no token or wallet is
+            required to read, share, or adapt the original text with attribution.
           </p>
 
           <div
@@ -99,16 +99,17 @@ export default function NovelPage() {
             }}
           >
             <span style={{ color: "var(--color-unlock)", fontWeight: 600 }}>
-              Your participation unlocks this book.
+              Public text — open to everyone.
             </span>{" "}
-            A verified $OMEGA or TWC proof unlocks the full novel. The current
-            build wires those two currencies directly from wallet signature to
-            server-side verification.
+            The complete Markdown manuscript is available without a proof. The
+            optional $OMEGA/TWC reader flow demonstrates wallet and pilot-chain
+            verification; it does not gate the CC BY 4.0 text.
           </p>
 
           <div style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
-            <CallToAction label="Start Reading — Chapter 1" href={`/novel/${firstChapter.slug}`} />
-            <CallToAction label="Join the Economy" href="/invest" variant="ghost" />
+            <CallToAction label="Open the optional proof-reader" href={`/novel/${firstChapter.slug}`} />
+            <CallToAction label="Download the public manuscript" href="/book/full-book.md" variant="ghost" />
+            <CallToAction label="License and attribution" href="/book/LICENSE.md" variant="ghost" />
           </div>
 
           <UnlockRailBanner />
@@ -137,7 +138,7 @@ export default function NovelPage() {
               margin: "0 0 14px",
             }}
           >
-            The novel is waiting for the economy.
+            The story is open to everyone.
           </h2>
           <p
             style={{
@@ -147,9 +148,10 @@ export default function NovelPage() {
               margin: "0 0 32px",
             }}
           >
-            Crucible: The Satoshi Protocol is the story behind the economy.
-            It is the reason the economy exists. In the current build, it opens to
-            anyone who can produce a verified $OMEGA or TWC proof.
+            The complete draft of Crucible: The Satoshi Protocol is publicly
+            available under CC BY 4.0. A verified $OMEGA or TWC proof can be used
+            in the optional reader demo, but reading and reusing this text never
+            requires a token.
           </p>
           <div style={{ display: "flex", gap: "14px", justifyContent: "center", flexWrap: "wrap" }}>
             <CallToAction label="Read the novel" href="/novel" />
@@ -250,7 +252,7 @@ function Hero() {
             opacity: "0.7",
           }}
         >
-          Akash Varma
+          Public draft · CC BY 4.0
         </div>
       </div>
 
@@ -266,7 +268,7 @@ function Hero() {
             marginBottom: "24px",
           }}
         >
-          A Novel by Akash Varma
+          Public 16-Chapter Draft · CC BY 4.0
         </p>
         <h1
           style={{
@@ -294,8 +296,8 @@ function Hero() {
           }}
         >
           The moment a prodigy built an AI, the AI became a god, and the world
-          became a ledger. Written in the voice of the machine itself — and
-          unlocked, on release day, by the economy it describes.
+          became a ledger. Written in the voice of the machine itself. The
+          complete draft is public under CC BY 4.0, with no token required.
         </p>
       </div>
 
@@ -346,7 +348,7 @@ function ChapterIndex({ chapters }: { chapters: Chapter[] }) {
               borderRadius: "6px",
             }}
           >
-            Unlocked by participation
+            Public under CC BY 4.0
           </span>
         </div>
 
@@ -520,9 +522,9 @@ function FirstChapterPreview({ chapter }: { chapter: Chapter }) {
         </div>
 
         <div style={{ marginTop: "24px", display: "flex", gap: "14px", flexWrap: "wrap", alignItems: "center" }}>
-          <CallToAction label={`Open chapter 1 — ${chapter.title}`} href={`/novel/${chapter.slug}`} />
+          <CallToAction label={`Try the optional chapter reader — ${chapter.title}`} href={`/novel/${chapter.slug}`} />
           <span style={{ fontSize: "13px", color: "var(--color-muted)" }}>
-            Full text served after wallet-signature verification.
+            Or read the complete public manuscript without a wallet above.
           </span>
         </div>
       </div>

@@ -8,9 +8,9 @@ import { verifyUnlockProofOnChain } from "@/lib/unlock-server";
  * POST /api/chapter/[slug]
  * Body: { message, signature }
  *
- * Verifies either a $OMEGA or TWC unlock proof server-side, independently checks
- * the configured on-chain rail, and only returns chapter HTML to verified
- * readers. Unverified requests never receive chapter prose.
+ * Verifies an optional $OMEGA or TWC reader proof server-side, independently
+ * checks the configured on-chain rail, and only returns chapter HTML through
+ * this proof-verified reader route. The complete manuscript is served publicly.
  */
 export async function POST(
   req: NextRequest,
@@ -44,7 +44,7 @@ export async function POST(
     return NextResponse.json(
       {
         ok: false,
-        error: `Chapter ${chapter.number} is not unlocked for this proof.`,
+        error: `Chapter ${chapter.number} is not available through this optional proof-reader flow.`,
         unlocked: proof.unlocked,
         address: proof.address,
         currency: proof.currency,

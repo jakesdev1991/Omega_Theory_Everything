@@ -167,7 +167,7 @@ export function AmityStatusPanel() {
             AMITY testnet scaffold
           </div>
           <div style={{ fontFamily: "ui-monospace, monospace", fontSize: "12px", color: "var(--color-accent)", letterSpacing: "0.08em", textTransform: "uppercase" }}>
-            {amity.network} · separate from the two live unlock rails
+            {amity.network} · separate from the two optional reader-proof rails
           </div>
         </div>
         <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", justifyContent: "flex-end" }}>
@@ -192,7 +192,7 @@ export function AmityStatusPanel() {
         <DetailRow label="litd endpoint" value={amity.litdRpcConfigured ? "configured" : "missing"} />
         <DetailRow label="tapd endpoint" value={amity.tapdRpcConfigured ? "configured" : "missing"} />
         <DetailRow label="operator files" value={`${amity.operatorFilesPresentCount}/${amity.operatorFilesRequiredCount} present`} />
-        <DetailRow label="unlock status" value="AMITY remains outside the live wallet/web unlock flow; only $OMEGA and TWC are accepted today." />
+        <DetailRow label="reader-proof status" value="AMITY is outside the optional wallet/web proof demo; the public manuscript remains available without any token." />
       </div>
 
       <div style={{ marginTop: "16px", display: "grid", gap: "10px" }}>

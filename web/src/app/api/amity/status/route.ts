@@ -7,7 +7,7 @@ import { getAmityScaffoldStatus } from "@/lib/amity-server";
 /**
  * GET /api/amity/status
  * Returns the separate AMITY testnet scaffold status for operator visibility.
- * This does not make AMITY a third live unlock rail.
+ * This does not make AMITY a third optional reader-proof rail.
  */
 export async function GET() {
   try {

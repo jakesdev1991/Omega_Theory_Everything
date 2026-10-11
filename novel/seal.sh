@@ -2,7 +2,12 @@
 # Copyright (c) 2025-2026 Jacob See.
 # SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 #
-# Seal the novel manuscript for the token-gated day-one launch.
+# Legacy staging helper for future unpublished manuscript material only.
+# The current public CC BY 4.0 draft is web/public/book/full-book.md and is not
+# handled or protected by this script. Encrypting a copy cannot undo Git history
+# or web exposure, and this script is not DRM.
+#
+# Usage:
 #   ./seal.sh            seal .plaintext/manuscript.md -> manuscript.md.enc + manuscript.sha256
 #   ./seal.sh --unseal   decrypt manuscript.md.enc -> .plaintext/manuscript.decrypted.md
 #

@@ -151,8 +151,18 @@ export default async function ChapterReaderPage({
 
         <UnlockRailBanner />
 
-        {/* The actual gate: prose loads only after server-side signature verification */}
-        <GatedChapter slug={chapter.slug} number={chapter.number} />
+        {/* Optional proof-reader route; the complete text is also public under CC BY 4.0. */}
+        <GatedChapter slug={chapter.slug} />
+        <p style={{ marginTop: "28px", color: "var(--color-muted-strong)", fontSize: "14px", lineHeight: 1.6 }}>
+          Prefer the public manuscript? Read or download the complete text without a wallet at{" "}
+          <Link href="/book/full-book.md" className="link-soft" style={{ color: "var(--color-accent)" }}>
+            /book/full-book.md
+          </Link>
+          {" "}under CC BY 4.0. See{" "}
+          <Link href="/book/LICENSE.md" className="link-soft" style={{ color: "var(--color-accent)" }}>
+            license and attribution
+          </Link>.
+        </p>
 
         <nav
           style={{
