@@ -106,7 +106,7 @@ Properties (all checked in Sim7):
 - **Range.** $\Phi\in[0,1]$ covers exactly one exterior. $\Phi=1$ is the horizon: $\rho=M/2$, $R=2M$, area $16\pi M^2$. The throat isometry $\rho\mapsto M^2/4\rho$ acts as $\Phi\mapsto1/\Phi$.
 - **Areal gauge.** $R=\rho(1+\Phi)^2$, $g_{RR}(\Phi)=\big(\frac{1+\Phi}{1-\Phi}\big)^2$, $g_{tt}=-1/g_{RR}$, and the Misner–Sharp mass is $M$.
 - **Lapse.** $N=(1-\Phi)/(1+\Phi)$ solves the static equation $\nabla\cdot(\psi^2\nabla N)=0$ whenever $\nabla^2\Phi=0$.
-- **Weak field.** $-g_{tt}\simeq1-4\Phi$, so $\Phi\simeq-\Phi_N/2c^2$. For scale: Earth's surface $\approx3.5\times10^{-10}$, the Sun's surface $\approx1\times10^{-6}$, a $1.4\,M_\odot$ neutron star $\approx0.1$, a horizon $1$.
+- **Weak field.** $-g_{tt}\simeq1-4\Phi$, so $\Phi\simeq-\Phi_N/2c^2$. For scale, with $\Phi=GM/(2rc^2)$: Earth's surface $\approx3.5\times10^{-10}$, the Sun's surface $\approx1.1\times10^{-6}$, a $1.4\,M_\odot$ neutron star of radius 10 km $\approx0.10$, and a horizon $1$.
 - **With matter** (time-symmetric): $\nabla^2\Phi=-2\pi(1+\Phi)^5\varepsilon$ (Lichnerowicz). This is what the static limit of an Omega field equation would have to reduce to: no potential term on these scales, and a source weighted by $(1+\Phi)^5$.
 - **Several centres.** $h=(1+\Phi)^4\delta$ with $\Phi=\sum_i m_i/2|x-x_i|$ is valid (Brill–Lindquist) initial data, but it is not static. The lapse formula holds for one centre only.
 

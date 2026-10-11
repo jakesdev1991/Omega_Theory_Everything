@@ -45,6 +45,8 @@ The repository contains an exploratory information-geometric program and a set o
 
 Omega explores the hypothesis that information-theoretic structure may help characterize geometry. No equation in this repository currently derives the spacetime metric from mutual information. In particular, the former shorthand `g_μν = δS_ent/δρ` is not a well-formed tensor equation and has been removed. The logarithmic-distance proposal is conditional on a multiplicative correlation kernel; pairwise mutual information itself generally does not satisfy that composition law.
 
+The sequenced plan for tightening every claim and derivation in the repository, from the core notes through the LaTeX volumes and Lean headers, with each step's exit gate, is in [`docs/research/CLAIM_TIGHTENING_ROADMAP.md`](docs/research/CLAIM_TIGHTENING_ROADMAP.md). The derivations in the core notes are re-checked by [`research/verify_derivations.py`](research/verify_derivations.py).
+
 The immediate research results and limits are documented here:
 
 - [`Omega_Theory_v4.0_Technical.md`](Omega_Theory_v4.0_Technical.md) — exploratory technical note; its scalar action is a candidate model, not a unique derivation.
@@ -82,9 +84,9 @@ The security-boundary proofs are kept separate from the physics model:
 - `lean_proofs/CBwK_Budget_Pacer.lean` — axiom-free budget-pacer invariants
 - `lean_proofs/leandojo_tactic_harness.py` — bounded tactic search plus an explicit `lake env lean` kernel-check boundary
 
-Each physics proof has companion files:
-- **LaTeX**: `latex_docs/Vol##_*.tex` - Mathematical typesetting
-- **Text**: `txt_proofs/Vol##_*.txt` - Plain text for accessibility
+Companion files for the physics volumes:
+- **Text**: `txt_proofs/Vol##_*.txt` - plain-text copies of the Lean sources; all 54 volumes have one.
+- **LaTeX**: `latex_docs/Vol##_*.tex` - write-ups with layman's summaries. Only 41 of the 54 volumes have one (Vol01–08, Vol22 and Vol36–40 do not yet). These write-ups use claim language that is being tightened under [`docs/research/CLAIM_TIGHTENING_ROADMAP.md`](docs/research/CLAIM_TIGHTENING_ROADMAP.md); they are not evidence beyond the Lean statements they describe.
 
 ## Structure
 
@@ -98,7 +100,7 @@ Omega_Theory_Everything/
 │   ├── OmegaProtocol.lean
 │   ├── Vol01_ClassicalMechanics.lean
 │   └── ... (through Vol54)
-├── latex_docs/               # 41 LaTeX documents (Vol01-Vol54, as written so far)
+├── latex_docs/               # 41 LaTeX documents (Vol09-Vol54 with gaps: Vol01-08, Vol22, Vol36-40 have none)
 │   ├── Vol09_HolographicPrinciple.tex
 │   └── ... (through Vol54)
 ├── txt_proofs/               # 59 plain-text companions (54 volumes + 5 core)
