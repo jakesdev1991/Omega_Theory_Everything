@@ -117,19 +117,14 @@ def hostOps (w k : ℕ) (l : Layer) : ℕ :=
 
 theorem hostOps_step (w k : ℕ) (l : Layer) :
     hostOps w k (.sim l) = k * hostOps w k l := by
-  change w * k ^ (1 + level l) = k * (w * k ^ level l)
+  change w * k ^ (level l + 1) = k * (w * k ^ level l)
   rw [pow_add, pow_one]
   ring
 
 theorem hostOps_pos (w k : ℕ) (l : Layer) (hw : 0 < w) (hk : 0 < k) :
     0 < hostOps w k l := by
-  induction l with
-  | base =>
-    unfold hostOps level
-    omega
-  | sim l ih =>
-    rw [hostOps_step]
-    exact Nat.mul_pos hk ih
+  unfold hostOps
+  exact Nat.mul_pos hw (pow_pos hk (level l))
 
 /-- **Strict exponential growth of host compute overhead**: for any nontrivial
     workload `w > 0` and emulation factor `k ≥ 2`, each simulation stratum
@@ -139,8 +134,12 @@ theorem hostOps_strict_growth (w k : ℕ) (l : Layer)
     hostOps w k l < hostOps w k (.sim l) := by
   rw [hostOps_step]
   have hpos : 0 < hostOps w k l := hostOps_pos w k l hw (by omega)
+  have hlt : 1 * hostOps w k l < 2 * hostOps w k l :=
+    Nat.mul_lt_mul_of_pos_right (by decide : 1 < 2) hpos
+  have hle : 2 * hostOps w k l ≤ k * hostOps w k l :=
+    Nat.mul_le_mul_right (hostOps w k l) hk
   calc hostOps w k l = 1 * hostOps w k l := (one_mul _).symm
-    _ < 2 * hostOps w k l := by omega
-    _ ≤ k * hostOps w k l := Nat.mul_le_mul_right (hostOps w k l) hk
+    _ < 2 * hostOps w k l := hlt
+    _ ≤ k * hostOps w k l := hle
 
 end OmegaProtocol.Vol46
