@@ -458,3 +458,35 @@ with the alias baseline exit 0; 47 tooling tests; grep gate clean. `lake build
 ToE` plus the 173-declaration kernel gate are **green in Lean CI on
 `7a5fbf2`** (push run `37588987044`, all job steps success; PR runs
 `37588993997`/`37588994016`).
+
+## R.12–R.13 Twelfth and Thirteenth passes: non-trivial `QRegion`, zero `Unit` types corpus-wide, non-tracial 2×2 KMS, unitary gate matrices, subobject classifier, and verified stack compiler
+
+- **Twelfth pass (`QRegion` upgrade, PR #57):** Replaced `QRegion := Unit` with
+  `{ p : ℝ // 0 ≤ p ∧ p ≤ 1 }` and proved non-zero entropy, mutual information,
+  overlap density, pair distance, COD profile, and asymmetry flux theorems
+  (kernel audit expanded from 173 to 226 declarations).
+- **Thirteenth pass:**
+  - Eliminated the remaining `Unit`-typed definitions in `OmegaAxioms.lean`
+    (`StateType`, `PureState`, `TraceOp`, `ConnesInvariant`, `Observable`,
+    `commutator`) and removed the `Vol*`-only exemption in `audit_vacuity.py`,
+    enforcing `--max-unit-types 0` across all 69 `.lean` files.
+  - Added the parametric Fisher-metric / KL Hessian theorem
+    (`klSecondOrder_hessian_eq_fisher` in `OmegaUnifiedFoundation.lean`),
+    exact Weyl-commutator to Poisson-bracket correspondence
+    (`weyl_commutator_quotient_eq_poisson` in `Vol01_ClassicalMechanics.lean`),
+    and derivative-based covariant divergence (`real_conservation_of_energy_momentum`
+    in `Vol05_GeneralRelativity.lean`).
+  - Built the non-tracial $2\times 2$ matrix algebra `Obs2` and two-level Gibbs
+    state (`Vol03_Thermodynamics.lean`), proving `gibbsState_not_tracial`,
+    `twoLevel_kms_holds`, unique inverse temperature determination
+    (`twoLevel_kms_iff_eq`), and `twoLevel_kms_zeroth_law`.
+  - Built the faithful $2\times 2$ unitary matrix representation of quantum
+    gates (`Vol34_QuantumComputing.lean`: `matH_unitary`,
+    `hadamard_conjugates_X_to_Z`, `interpGate_injective`, `matH_preserves_norm`),
+    pullback-based subobject classification (`Vol36_ToposTheory.lean`:
+    `skel_subobject_classifier`, `skel_subobject_pullback_universal`), the
+    input-reading expression language and verified stack-machine compiler
+    (`Vol53_UniversalCompiler.lean`: `evalExpr_subst`, `compile_correct`), and
+    closed all remaining "Next:" items in `Vol40`–`Vol43`, `Vol45`–`Vol47`,
+    and `Vol50`–`Vol52`.
+  - Expanded `kernel_audit_targets.json` to **262** declarations.

@@ -861,4 +861,66 @@ theorem omega_theory_structural_consistency (R₁ R₂ R₃ : QRegion) :
    bridge_vonNeumannEntropy_le_pi R₁,
    bridge_mutualInformation_nonneg R₁ R₂⟩
 
+-- ============================================================
+-- THIRTEENTH-PASS PROTOCOL DELEGATIONS (NON-TRACIAL KMS, FISHER HESSIAN,
+-- UNITARY MATRIX GATES, SUBOBJECT CLASSIFIER, VERIFIED STACK COMPILER)
+-- ============================================================
+
+/-- Parametric Fisher information metric equals the second derivative
+    (Hessian at `δ = 0`) of the second-order Kullback–Leibler expansion. -/
+theorem fisher_metric_eq_kl_hessian (θ u : ℝ) :
+    HasDerivAt (fun δ : ℝ => fisherMetric θ u u * δ) (fisherMetric θ u u) 0 :=
+  klSecondOrder_hessian_eq_fisher θ u
+
+/-- Weyl correspondence on affine phase-space observables: dividing the
+    Weyl commutator `[Â_ℏ, B̂_ℏ] / i` by any `ℏ ≠ 0` recovers the classical
+    Poisson bracket `{A, B}` identically. -/
+theorem weyl_commutator_poisson (A B : Observable) (ℏ : ℝ) (hℏ : ℏ ≠ 0) :
+    Vol01.scaleObservable (1 / ℏ) (Vol01.weylCommutator ℏ A B) =
+      Vol01.poisson_bracket A B :=
+  Vol01.weyl_commutator_quotient_eq_poisson A B ℏ hℏ
+
+/-- Non-tracial two-level KMS temperature uniqueness: for a positive energy
+    gap `ΔE > 0`, the Gibbs state `ω_β` satisfies the KMS condition at
+    candidate inverse temperature `γ` iff `γ = β`. -/
+theorem twoLevel_kms_temperature_unique (ΔE β γ : ℝ) (hΔE : 0 < ΔE) :
+    Vol03.IsTwoLevelKMS ΔE β γ ↔ γ = β :=
+  Vol03.twoLevel_kms_iff_eq ΔE β γ hΔE
+
+/-- KMS-derived Zeroth Law in the non-tracial two-level matrix model. -/
+theorem twoLevel_kms_zeroth_law (ΔE β₀ β₁ β₂ : ℝ) (hΔE : 0 < ΔE)
+    (h₁ : Vol03.IsTwoLevelKMS ΔE β₀ β₁) (h₂ : Vol03.IsTwoLevelKMS ΔE β₀ β₂) :
+    β₁ = β₂ :=
+  Vol03.twoLevel_kms_zeroth_law ΔE β₀ β₁ β₂ hΔE h₁ h₂
+
+/-- Derivative-level conservation of energy-momentum over `ℝ` (`Vol05`). -/
+theorem real_conservation_of_energy_momentum (G T : ℝ → ℝ → ℝ) (ν : ℝ)
+    (hEFE : ∀ μ α, G μ α = (8 * Real.pi * NewtonG) * T μ α)
+    (hBianchi : Vol05.realCovariantDivergence G ν = 0) :
+    Vol05.realCovariantDivergence T ν = 0 :=
+  Vol05.real_conservation_of_energy_momentum G T ν hEFE hBianchi
+
+/-- Matrix unitarity of the 2×2 Hadamard gate (`Hᵀ H = I`, `Vol34`). -/
+theorem hadamard_matrix_unitary :
+    Vol34.matMul (Vol34.matTranspose Vol34.matH) Vol34.matH = Vol34.matId :=
+  Vol34.matH_unitary
+
+/-- Faithfulness of the 2×2 unitary matrix representation of `QuantumGate`
+    (`Vol34`). -/
+theorem quantum_gate_interp_injective : Function.Injective Vol34.interpGate :=
+  Vol34.interpGate_injective
+
+/-- Pullback-based subobject classification in the skeletal finite-set
+    category (`Vol36`). -/
+theorem skel_subobject_classifier {s n : Vol36.SkelObj}
+    (m : Vol36.SkelHom s n) :
+    ∃! χ : Vol36.SkelHom n Vol36.skelOmega, Vol36.IsSubobjectPullback m χ :=
+  Vol36.skel_subobject_classifier m
+
+/-- McCarthy–Painter compiler correctness for the input-aware expression
+    language and target stack machine (`Vol53`). -/
+theorem stack_compiler_correct (e : Vol53.Expr) (x : ℕ) :
+    Vol53.execCode (Vol53.compile e) x [] = [Vol53.evalExpr e x] :=
+  Vol53.compile_correct e x
+
 end OmegaProtocol

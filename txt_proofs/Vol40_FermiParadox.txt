@@ -84,4 +84,55 @@ theorem bridge_vol40_entropy_bounded (R : QRegion) :
     vonNeumannEntropy R ≤ Real.pi :=
   bridge_vonNeumannEntropy_le_pi R
 
+-- ============================================================
+-- PROBABILISTIC FILTER CHAINS ON [0, 1]
+-- ============================================================
+
+/-- Every filter survival probability in the list lies in `[0, 1]`. -/
+def ValidFilterProbs : List ℝ → Prop
+  | [] => True
+  | p :: ps => (0 ≤ p ∧ p ≤ 1) ∧ ValidFilterProbs ps
+
+/-- Cumulative survival probability across a sequence of independent filters. -/
+def survivalProb : List ℝ → ℝ
+  | [] => 1
+  | p :: ps => p * survivalProb ps
+
+/-- Cumulative survival probability is nonnegative for valid filter chains. -/
+theorem survivalProb_nonneg (ps : List ℝ) (h : ValidFilterProbs ps) :
+    0 ≤ survivalProb ps := by
+  induction ps with
+  | nil => norm_num [survivalProb]
+  | cons p tl ih =>
+    dsimp [survivalProb]
+    exact mul_nonneg h.1.1 (ih h.2)
+
+/-- Cumulative survival probability never exceeds `1` for valid filter chains. -/
+theorem survivalProb_le_one (ps : List ℝ) (h : ValidFilterProbs ps) :
+    survivalProb ps ≤ 1 := by
+  induction ps with
+  | nil => norm_num [survivalProb]
+  | cons p tl ih =>
+    dsimp [survivalProb]
+    have htl0 : 0 ≤ survivalProb tl := survivalProb_nonneg tl h.2
+    have htl1 : survivalProb tl ≤ 1 := ih h.2
+    nlinarith [h.1.1, h.1.2]
+
+/-- Prepending another valid filter `p ∈ [0, 1]` cannot increase survival
+    probability. -/
+theorem survivalProb_step_le (p : ℝ) (ps : List ℝ)
+    (hp1 : p ≤ 1) (hps : ValidFilterProbs ps) :
+    survivalProb (p :: ps) ≤ survivalProb ps := by
+  dsimp [survivalProb]
+  have h0 : 0 ≤ survivalProb ps := survivalProb_nonneg ps hps
+  nlinarith
+
+/-- Strict filter attrition: any filter with `p < 1` strictly reduces a
+    positive survival probability. -/
+theorem survivalProb_strict_attrition (p : ℝ) (ps : List ℝ)
+    (hp1 : p < 1) (hpos : 0 < survivalProb ps) :
+    survivalProb (p :: ps) < survivalProb ps := by
+  dsimp [survivalProb]
+  nlinarith
+
 end OmegaProtocol.Vol40

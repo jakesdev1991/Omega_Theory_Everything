@@ -75,4 +75,27 @@ theorem bridge_vol47_entropy_bounded (R : QRegion) :
 theorem bridge_vol47_metric_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 :=
   bridge_distance_nonneg R₁ R₂
 
+-- ============================================================
+-- PARAMETERIZED KARDASHEV POWER LAW & RESOURCE FEASIBILITY
+-- ============================================================
+
+/-- Continuous Kardashev power scaling `P(K) = P₀ · exp(α · K)` for baseline
+    power `P₀ > 0` and logarithmic growth rate `α > 0`. -/
+noncomputable def kardashevPower (P0 α K : ℝ) : ℝ :=
+  P0 * Real.exp (α * K)
+
+theorem kardashevPower_pos (P0 α K : ℝ) (hP0 : 0 < P0) :
+    0 < kardashevPower P0 α K :=
+  mul_pos hP0 (Real.exp_pos (α * K))
+
+/-- Continuous Kardashev power is strictly increasing in the civilizational
+    index `K`. -/
+theorem kardashevPower_strictMono (P0 α K₁ K₂ : ℝ)
+    (hP0 : 0 < P0) (hα : 0 < α) (hK : K₁ < K₂) :
+    kardashevPower P0 α K₁ < kardashevPower P0 α K₂ := by
+  unfold kardashevPower
+  have hexp : Real.exp (α * K₁) < Real.exp (α * K₂) :=
+    Real.exp_lt_exp.mpr (mul_lt_mul_of_pos_left hK hα)
+  exact mul_lt_mul_of_pos_left hexp hP0
+
 end OmegaProtocol.Vol47

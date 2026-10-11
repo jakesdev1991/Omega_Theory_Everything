@@ -67,4 +67,42 @@ theorem omega_chain_strict (chain : ℕ → Stage) (h : ∀ n, (chain n).complex
 theorem bridge_vol52_metric_self_zero (R : QRegion) : d R R = 0 :=
   bridge_qregion_self_distance_zero R
 
+-- ============================================================
+-- CONFORMAL PROPER-TIME RESCALING TO A FINITE HORIZON `t_Ω`
+-- ============================================================
+
+/-- Conformal mapping from unbounded discrete complexity stage `n : ℕ` to
+    bounded proper time `t_n = t_Ω · (1 - (1/2)^n) < t_Ω`.  Distinguishes
+    unbounded discrete stage count (`no_terminal_stage`) from a finite
+    proper-time horizon `t_Ω > 0`. -/
+noncomputable def omegaTimeMap (t_omega : ℝ) (n : ℕ) : ℝ :=
+  t_omega * (1 - (1 / 2 : ℝ) ^ n)
+
+/-- Exact remaining proper time to the horizon `t_Ω`:
+    `t_Ω - t_n = t_Ω · (1/2)^n`. -/
+theorem omegaTimeMap_gap (t_omega : ℝ) (n : ℕ) :
+    t_omega - omegaTimeMap t_omega n = t_omega * (1 / 2 : ℝ) ^ n := by
+  unfold omegaTimeMap
+  ring
+
+/-- Every finite complexity stage occurs strictly before the finite proper-time
+    horizon `t_Ω > 0`. -/
+theorem omegaTimeMap_lt_horizon (t_omega : ℝ) (n : ℕ) (ht : 0 < t_omega) :
+    omegaTimeMap t_omega n < t_omega := by
+  have hgap := omegaTimeMap_gap t_omega n
+  have hpow : 0 < (1 / 2 : ℝ) ^ n := by positivity
+  have hprod : 0 < t_omega * (1 / 2 : ℝ) ^ n := mul_pos ht hpow
+  linarith
+
+/-- Proper time increases strictly with each complexity stage when `t_Ω > 0`. -/
+theorem omegaTimeMap_strict_step (t_omega : ℝ) (n : ℕ) (ht : 0 < t_omega) :
+    omegaTimeMap t_omega n < omegaTimeMap t_omega (n + 1) := by
+  have hdiff : omegaTimeMap t_omega (n + 1) - omegaTimeMap t_omega n =
+      t_omega * (1 / 2 : ℝ) ^ (n + 1) := by
+    unfold omegaTimeMap
+    ring
+  have hpow : 0 < (1 / 2 : ℝ) ^ (n + 1) := by positivity
+  have hprod : 0 < t_omega * (1 / 2 : ℝ) ^ (n + 1) := mul_pos ht hpow
+  linarith
+
 end OmegaProtocol.Vol52

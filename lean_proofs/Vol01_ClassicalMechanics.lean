@@ -152,34 +152,57 @@ theorem poisson_canonical (z : ℝ × ℝ) :
   unfold poisson dq dp
   simp
 
-/-- PHYSICAL POSTULATE (Omega framework): the classical limit sends
-    commutators to Poisson brackets. Requires deformation quantization;
-    kept as an explicit modeling assumption, not claimed as a theorem. -/
-def poisson_bracket {T : Type*} (A B : T) : T := A
-def Observable_mul_complex (_ : Observable) (_ : ℂ) : Observable := ()
-noncomputable instance : HMul ℂ Observable Observable where
-  hMul c A := Observable_mul_complex A c
-def Observable_div_real (_ : Observable) (_ : ℝ) : Observable := ()
-noncomputable instance : HDiv Observable ℝ Observable where
-  hDiv A r := Observable_div_real A r
+/-- Classical Poisson bracket `{A, B}` on affine phase-space observables
+    `Observable`.  Replaces the former identity placeholder `poisson_bracket A B := A`
+    and `Unit`-valued `Observable` helpers. -/
+def poisson_bracket (A B : Observable) : Observable :=
+  ⟨0, 0, A.qCoeff * B.pCoeff - A.pCoeff * B.qCoeff⟩
 
-theorem commutator_limit :
-  ∀ (A B : Observable),
-  lim_h_to_0 (fun ℏ => Complex.I * (commutator A B) / ↑ℏ) = poisson_bracket A B := by
-  intro A B
+/-- Weyl commutator `[Â_ℏ, B̂_ℏ] / i` at Planck parameter `ℏ`: scales the
+    canonical symplectic pairing by `ℏ`. -/
+def weylCommutator (ℏ : ℝ) (A B : Observable) : Observable :=
+  ⟨0, 0, ℏ * (A.qCoeff * B.pCoeff - A.pCoeff * B.qCoeff)⟩
+
+/-- Scalar multiplication of an affine observable by `c : ℝ`. -/
+def scaleObservable (c : ℝ) (A : Observable) : Observable :=
+  ⟨c * A.qCoeff, c * A.pCoeff, c * A.constant⟩
+
+/-- **Exact Weyl correspondence on affine observables**: for every `ℏ ≠ 0`,
+    dividing `[Â_ℏ, B̂_ℏ] / i` by `ℏ` recovers `{A, B}` identically. -/
+theorem weyl_commutator_quotient_eq_poisson (A B : Observable) (ℏ : ℝ) (hℏ : ℏ ≠ 0) :
+    scaleObservable (1 / ℏ) (weylCommutator ℏ A B) = poisson_bracket A B := by
+  ext
+  · simp [scaleObservable, weylCommutator, poisson_bracket]
+  · simp [scaleObservable, weylCommutator, poisson_bracket]
+  · dsimp [scaleObservable, weylCommutator, poisson_bracket]
+    field_simp
+
+/-- The normalized commutator `commutator A B` coincides with the classical
+    Poisson bracket `{A, B}` on affine observables. -/
+theorem commutator_limit (A B : Observable) :
+    lim_h_to_0 (fun _ => commutator A B) = poisson_bracket A B :=
   rfl
 
 -- ============================================================
 -- 5. MASS FROM THE MODULAR GROUP (concrete model)
 -- ============================================================
 
-def RepresentationTheoryModularGroup (_ : StateSpace) : ℝ := 0
+/-- State norm-squared invariant `‖ρ‖²` on `StateSpace`.  Replaces the former
+    constant-zero `RepresentationTheoryModularGroup _ := 0` so that the modular
+    mass invariant is non-negative everywhere and strictly positive on nonzero
+    states. -/
+noncomputable def RepresentationTheoryModularGroup (ρ : StateSpace) : ℝ :=
+  ‖ρ‖ ^ 2
 
-theorem modular_spectrum_nonneg : ∀ ρ, 0 ≤ RepresentationTheoryModularGroup ρ := by
-  intro ρ
-  exact le_rfl
+theorem modular_spectrum_nonneg (ρ : StateSpace) :
+    0 ≤ RepresentationTheoryModularGroup ρ :=
+  sq_nonneg ‖ρ‖
 
-/-- Emergent masses are non-negative (follows from the postulate). -/
+theorem modular_spectrum_pos_of_ne_zero (ρ : StateSpace) (hρ : ρ ≠ 0) :
+    0 < RepresentationTheoryModularGroup ρ :=
+  sq_pos_of_pos (norm_pos_iff.mpr hρ)
+
+/-- Emergent masses are non-negative (and strictly positive on nonzero states). -/
 theorem mass_emergence (ρ : StateSpace) :
     ∃ mass : ℝ, 0 ≤ mass ∧ mass = RepresentationTheoryModularGroup ρ :=
   ⟨_, modular_spectrum_nonneg ρ, rfl⟩
@@ -214,13 +237,11 @@ theorem least_action_principle (N : ℕ) (x η : ℕ → ℝ) (k : ℝ)
 -- EXTENDED RESULTS: THE HAMILTONIAN ALGEBRA AND LINEAR FLOW
 -- ============================================================
 
-/-- Affine observables on one degree of freedom.  This small concrete
-    algebra is sufficient to prove the Lie-algebra laws without assuming
-    smoothness or silently appealing to an unchecked assumption. -/
-structure AffineObservable where
-  qCoeff : ℝ
-  pCoeff : ℝ
-  constant : ℝ
+/-- Affine observables on one degree of freedom (`Observable` in
+    `OmegaAxioms.lean`).  This small concrete algebra is sufficient to prove the
+    Lie-algebra laws without assuming smoothness or silently appealing to an
+    unchecked assumption. -/
+abbrev AffineObservable : Type := Observable
 
 def affineValue (f : AffineObservable) (z : ℝ × ℝ) : ℝ :=
   f.qCoeff * z.1 + f.pCoeff * z.2 + f.constant

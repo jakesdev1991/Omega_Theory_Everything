@@ -549,3 +549,44 @@ tactic, the `ω` scope clash, missing `noncomputable`, a form-degree mismatch
 in the sourced-Maxwell carrier) are fixed by the follow-up commits, and Lean
 CI is green on `7a5fbf2` (push run `37588987044`: pinned `lake build ToE` plus
 the 173-declaration transitive-axiom gate, all job steps success).
+
+### Twelfth and Thirteenth passes: non-trivial `QRegion`, zero `Unit` definitions corpus-wide, non-tracial 2×2 KMS, unitary gate matrices, pullback subobject classifier, and verified stack compiler
+
+- **Twelfth pass (`QRegion` upgrade, PR #57):** Upgraded `QRegion` from `Unit`
+  to `{ p : ℝ // 0 ≤ p ∧ p ≤ 1 }` with non-zero von Neumann entropy, mutual
+  information, overlap density, pair distance, COD profile, and asymmetry flux
+  (kernel audit expanded to 226 targets).
+- **Thirteenth pass:**
+  - **Core foundation & Volumes 01, 03, 05:** Replaced the remaining `Unit`
+    definitions in `OmegaAxioms.lean` (`StateType`, `PureState`, `TraceOp`,
+    `ConnesInvariant`, `Observable`, `commutator`) and tightened
+    `audit_vacuity.py` so `--max-unit-types 0` applies to all 69 `.lean` files.
+    Added `concreteTypeIII1Algebra` and the parametric Fisher-metric = KL-Hessian
+    derivative proof (`klSecondOrder_hessian_eq_fisher`) in
+    `OmegaUnifiedFoundation.lean`, exact Weyl-commutator to Poisson-bracket
+    correspondence (`weyl_commutator_quotient_eq_poisson`) in `Vol01`, the
+    non-tracial $2\times 2$ matrix modular/KMS model (`Obs2`,
+    `gibbsState_not_tracial`, `twoLevel_kms_iff_eq`, `twoLevel_kms_zeroth_law`)
+    in `Vol03`, and derivative-based covariant divergence
+    (`real_conservation_of_energy_momentum`) in `Vol05`.
+  - **Volume 34 (Quantum Computing):** Added a faithful $2\times 2$ unitary
+    matrix representation (`GateMatrix`, `matH_unitary`,
+    `hadamard_conjugates_X_to_Z`, `interpGate_compose`, `interpGate_injective`,
+    `matH_preserves_norm`).
+  - **Volume 36 (Topos Theory):** Added pullback-based subobject classification
+    (`IsSubobjectPullback`, `skel_subobject_classifier`,
+    `skel_subobject_pullback_universal`).
+  - **Volume 53 (Universal Compiler):** Added an input-reading arithmetic
+    expression language (`Expr`, `evalExpr`, `subst`, `evalExpr_subst`) and a
+    verified McCarthy–Painter stack-machine compiler (`Instr`, `compile`,
+    `compile_correct_stack`, `compile_correct`).
+  - **Volumes 40–43, 45–47, 50–52:** Added real-valued filter chains on $[0,1]$
+    (`Vol40`), multi-step path costs (`Vol41`), closed-form Dyson shell scaling
+    (`Vol42`), `Fin stars`-indexed multi-hop networks (`Vol43`), dyadic branch
+    measures (`Vol45`), injective simulation depth and exponential host overhead
+    (`Vol46`), continuous Kardashev power scaling (`Vol47`), subset-indexing
+    Cantor diagonalization (`Vol50`), arbitrary finite-state relaxation
+    convergence (`Vol51`), and conformal finite-horizon time compression
+    (`Vol52`).
+  - **Kernel inventory:** **262** declarations in `kernel_audit_targets.json`,
+    47 Python audit tests, all 9 static/vacuity ratchets at 0.

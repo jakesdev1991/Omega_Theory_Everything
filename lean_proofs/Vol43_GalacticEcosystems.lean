@@ -76,4 +76,33 @@ theorem bridge_vol43_entropy_bounded (R : QRegion) :
     vonNeumannEntropy R ≤ Real.pi :=
   bridge_vonNeumannEntropy_le_pi R
 
+-- ============================================================
+-- BOUNDED GALACTIC NETWORKS ON `Fin n` AND MULTI-HOP WALKS
+-- ============================================================
+
+/-- Finite galactic network whose vertices are strictly bounded by `Fin n`. -/
+structure BoundedGalacticNetwork (n : ℕ) where
+  adj : Fin n → Fin n → Bool
+  symm : ∀ i j, adj i j = adj j i
+  irrefl : ∀ i, adj i i = false
+
+/-- Boolean validity of a multi-hop communication walk starting at `u`. -/
+def isHopWalk {n : ℕ} (G : BoundedGalacticNetwork n) :
+    Fin n → List (Fin n) → Bool
+  | _, [] => true
+  | u, v :: rest => G.adj u v && isHopWalk G v rest
+
+/-- No multi-hop walk can begin with an immediate self-loop `u → u`. -/
+theorem hopWalk_no_self_step {n : ℕ} (G : BoundedGalacticNetwork n)
+    (u : Fin n) (rest : List (Fin n)) :
+    isHopWalk G u (u :: rest) = false := by
+  simp [isHopWalk, G.irrefl]
+
+/-- Two-hop relay symmetry (`u → v → w` is valid iff `w → v → u` is valid). -/
+theorem two_hop_walk_symm {n : ℕ} (G : BoundedGalacticNetwork n)
+    (u v w : Fin n) :
+    isHopWalk G u [v, w] = isHopWalk G w [v, u] := by
+  simp only [isHopWalk, G.symm u v, G.symm v w, Bool.and_true]
+  exact Bool.and_comm _ _
+
 end OmegaProtocol.Vol43

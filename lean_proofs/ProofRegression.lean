@@ -44,6 +44,18 @@ import Vol23_MeasurementProblem
 import Vol24_NonLocality
 import Vol27_Consciousness
 import Vol33_AGI
+import Vol01_ClassicalMechanics
+import Vol34_QuantumComputing
+import Vol40_FermiParadox
+import Vol41_PostBiologicalEvolution
+import Vol42_StellarEngineering
+import Vol43_GalacticEcosystems
+import Vol45_MultiverseTheory
+import Vol46_SimulationHypothesis
+import Vol47_TranscendentArchitectures
+import Vol50_UltimateEnsemble
+import Vol51_ClosedTimelikeCurves
+import Vol52_OmegaPointTheory
 
 /-! Boundary and non-degeneracy regression checks. Included in `lake build ToE`. -/
 
@@ -632,3 +644,108 @@ example : Vol29.PreyRate 1 2 0 0 = 0 ∧ Vol29.PredatorRate 3 4 0 0 = 0 :=
 
 example (c : ℕ) : Vol35.haltsWithin Vol35.haltMachine c 1 = true :=
   (Vol35.haltsWithin_correct Vol35.haltMachine c 1).mpr ⟨1, by decide, rfl⟩
+
+/-! Thirteenth-pass regression checks: non-Unit foundation carriers, Fisher
+    Hessian, Weyl commutator, non-tracial two-level KMS, real covariant
+    divergence, 2×2 unitary matrix gates, pullback subobject classifier,
+    probabilistic/multi-step/measure/conformal models, and verified stack
+    compiler. -/
+
+example : OmegaProtocol.III₁ ≠ OmegaProtocol.ConnesInvariant.I₁ :=
+  OmegaProtocol.connes_III1_ne_I1
+
+example : ¬ ∃ (ω : OmegaProtocol.StateType), OmegaProtocol.PureState ω :=
+  OmegaProtocol.no_pure_qregion_states
+
+example : ¬ ∃ (tr : ↥OmegaProtocol.OmegaAlgebra → ℝ), OmegaProtocol.TraceOp tr :=
+  OmegaProtocol.no_finite_trace_of_infinite_identity
+
+example : 0 < OmegaProtocol.fisherMetric 2 3 3 :=
+  OmegaProtocol.fisherMetric_pos 2 3 (by norm_num) (by norm_num)
+
+example : 0 < OmegaProtocol.Vol01.RepresentationTheoryModularGroup (1 : OmegaProtocol.StateSpace) :=
+  OmegaProtocol.Vol01.modular_spectrum_pos_of_ne_zero 1 one_ne_zero
+
+example (A B : OmegaProtocol.Observable) :
+    OmegaProtocol.Vol01.scaleObservable (1 / 2)
+      (OmegaProtocol.Vol01.weylCommutator 2 A B) =
+    OmegaProtocol.Vol01.poisson_bracket A B :=
+  OmegaProtocol.Vol01.weyl_commutator_quotient_eq_poisson A B 2 (by norm_num)
+
+example : OmegaProtocol.Vol03.Obs2.mul OmegaProtocol.Vol03.Obs2.E01 OmegaProtocol.Vol03.Obs2.E10 ≠
+    OmegaProtocol.Vol03.Obs2.mul OmegaProtocol.Vol03.Obs2.E10 OmegaProtocol.Vol03.Obs2.E01 :=
+  OmegaProtocol.Vol03.Obs2.mul_noncommutative
+
+example : OmegaProtocol.Vol03.gibbsState 1 1
+    (OmegaProtocol.Vol03.Obs2.mul OmegaProtocol.Vol03.Obs2.E01 OmegaProtocol.Vol03.Obs2.E10) ≠
+    OmegaProtocol.Vol03.gibbsState 1 1
+    (OmegaProtocol.Vol03.Obs2.mul OmegaProtocol.Vol03.Obs2.E10 OmegaProtocol.Vol03.Obs2.E01) :=
+  OmegaProtocol.Vol03.gibbsState_not_tracial 1 1 (by norm_num) (by norm_num)
+
+example (β γ : ℝ) : OmegaProtocol.Vol03.IsTwoLevelKMS 1 β γ ↔ γ = β :=
+  OmegaProtocol.Vol03.twoLevel_kms_iff_eq 1 β γ (by norm_num)
+
+example : OmegaProtocol.Vol05.realCovariantDivergence (fun μ _ => μ) 0 = 1 :=
+  OmegaProtocol.Vol05.realCovariantDivergence_nonzero_witness 0
+
+example : OmegaProtocol.Vol34.matMul
+    (OmegaProtocol.Vol34.matTranspose OmegaProtocol.Vol34.matH)
+    OmegaProtocol.Vol34.matH = OmegaProtocol.Vol34.matId :=
+  OmegaProtocol.Vol34.matH_unitary
+
+example : OmegaProtocol.Vol34.matMul
+    (OmegaProtocol.Vol34.matMul OmegaProtocol.Vol34.matH OmegaProtocol.Vol34.matX)
+    OmegaProtocol.Vol34.matH = OmegaProtocol.Vol34.matZ :=
+  OmegaProtocol.Vol34.hadamard_conjugates_X_to_Z
+
+example : Function.Injective OmegaProtocol.Vol34.interpGate :=
+  OmegaProtocol.Vol34.interpGate_injective
+
+example (v : OmegaProtocol.Vol34.QubitVec) :
+    OmegaProtocol.Vol34.normSq (OmegaProtocol.Vol34.applyGate OmegaProtocol.Vol34.matH v) =
+      OmegaProtocol.Vol34.normSq v :=
+  OmegaProtocol.Vol34.matH_preserves_norm v
+
+example {s n : OmegaProtocol.Vol36.SkelObj} (m : OmegaProtocol.Vol36.SkelHom s n) :
+    ∃! χ : OmegaProtocol.Vol36.SkelHom n OmegaProtocol.Vol36.skelOmega,
+      OmegaProtocol.Vol36.IsSubobjectPullback m χ :=
+  OmegaProtocol.Vol36.skel_subobject_classifier m
+
+example : OmegaProtocol.Vol40.survivalProb [1 / 2, 1 / 2] = 1 / 4 := by
+  norm_num [OmegaProtocol.Vol40.survivalProb]
+
+example : OmegaProtocol.Vol41.pathCost .carbon [.hybrid, .silicon] =
+    OmegaProtocol.Vol41.transitionCost .carbon .silicon :=
+  OmegaProtocol.Vol41.hybrid_path_optimal
+
+example (n base : ℕ) :
+    OmegaProtocol.Vol42.shellArea n base + base = 2 ^ n * base :=
+  OmegaProtocol.Vol42.shellArea_closed_form n base
+
+example (b : OmegaProtocol.Vol45.Branch) :
+    OmegaProtocol.Vol45.branchMeasure (.left b) +
+      OmegaProtocol.Vol45.branchMeasure (.right b) =
+    OmegaProtocol.Vol45.branchMeasure b :=
+  OmegaProtocol.Vol45.branchMeasure_split b
+
+example (l : OmegaProtocol.Vol46.Layer) :
+    OmegaProtocol.Vol46.hostOps 1 2 l < OmegaProtocol.Vol46.hostOps 1 2 (.sim l) :=
+  OmegaProtocol.Vol46.hostOps_strict_growth 1 2 l (by decide) (by decide)
+
+example (e : ℕ → Set ℕ) : ∃ S : Set ℕ, ∀ k : ℕ, e k ≠ S :=
+  OmegaProtocol.Vol50.no_surjective_subset_indexing e
+
+example (n : ℕ) : OmegaProtocol.Vol51.relaxIter n n = 0 :=
+  OmegaProtocol.Vol51.relaxIter_converges n
+
+example (n : ℕ) : OmegaProtocol.Vol52.omegaTimeMap 1 n < 1 :=
+  OmegaProtocol.Vol52.omegaTimeMap_lt_horizon 1 n (by norm_num)
+
+example : ∃ e : OmegaProtocol.Vol53.Expr, ∀ x, OmegaProtocol.Vol53.evalExpr e x = x :=
+  OmegaProtocol.Vol53.identity_representable
+
+example (x : ℕ) :
+    OmegaProtocol.Vol53.execCode
+      (OmegaProtocol.Vol53.compile
+        (.add (.mul (.const 3) .var) (.const 5))) x [] = [3 * x + 5] :=
+  OmegaProtocol.Vol53.compile_correct (.add (.mul (.const 3) .var) (.const 5)) x

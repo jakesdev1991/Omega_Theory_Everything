@@ -81,4 +81,42 @@ theorem bridge_vol45_entropy_nonneg (R : QRegion) : vonNeumannEntropy R ≥ 0 :=
 theorem bridge_vol45_metric_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 :=
   bridge_distance_nonneg R₁ R₂
 
+-- ============================================================
+-- CLOSED-FORM BRANCH WEIGHT AND NORMALIZED DYADIC MEASURE
+-- ============================================================
+
+/-- Closed-form identity for branch weight: `weight b = 2 ^ depth b`. -/
+theorem weight_eq_two_pow_depth (b : Branch) :
+    weight b = 2 ^ depth b := by
+  induction b with
+  | root => rfl
+  | left b ih =>
+    calc weight (.left b) = 2 * weight b := rfl
+      _ = 2 * 2 ^ depth b := by rw [ih]
+      _ = 2 ^ (depth b + 1) := by ring
+  | right b ih =>
+    calc weight (.right b) = 2 * weight b := rfl
+      _ = 2 * 2 ^ depth b := by rw [ih]
+      _ = 2 ^ (depth b + 1) := by ring
+
+/-- Normalized dyadic branch probability `(1/2)^(depth b)`. -/
+noncomputable def branchMeasure (b : Branch) : ℝ :=
+  (1 / 2 : ℝ) ^ depth b
+
+theorem branchMeasure_pos (b : Branch) : 0 < branchMeasure b := by
+  unfold branchMeasure
+  positivity
+
+theorem branchMeasure_root : branchMeasure .root = 1 := by
+  simp [branchMeasure, depth]
+
+/-- **Measure conservation across binary branching**: the measures of the two
+    child branches sum to the parent branch measure. -/
+theorem branchMeasure_split (b : Branch) :
+    branchMeasure (.left b) + branchMeasure (.right b) = branchMeasure b := by
+  change (1 / 2 : ℝ) ^ (depth b + 1) + (1 / 2 : ℝ) ^ (depth b + 1) =
+    (1 / 2 : ℝ) ^ depth b
+  rw [pow_add, pow_one]
+  ring
+
 end OmegaProtocol.Vol45

@@ -4,9 +4,9 @@ import OmegaUnifiedFoundation
 namespace OmegaProtocol.Vol05
 open OmegaProtocol
 
--- Concrete zero-curvature geometry for the minimal model.
+-- Concrete flat geometry over `ℝ` for the minimal `QFIMGeometry` model.
 noncomputable def Geometry : QFIMGeometry :=
-  { spacetime := Unit
+  { spacetime := ℝ
     metric := fun _ _ => 0
     christoffel := fun _ _ _ => 0
     riemann := fun _ _ _ _ => 0
@@ -172,5 +172,58 @@ theorem unitSchwarzschild_kretschmann_at_horizon :
   norm_num
 
 end SphericallySymmetricSpacetime
+
+-- ============================================================
+-- DIFFERENTIAL-CALCULUS COVARIANT DIVERGENCE & BIANCHI CONSERVATION
+-- ============================================================
+--
+-- The polymorphic `CovariantDivergence` in `OmegaAxioms.lean` is zero because
+-- `QFIMGeometry.spacetime` is an arbitrary `Type*` without a normed-field
+-- structure.  On the coordinate manifold `ℝ`, we define the genuine derivative
+-- divergence `realCovariantDivergence T ν = d/dμ (T μ ν)|_{μ=ν}` via Mathlib's
+-- `deriv`, prove its non-degeneracy (`realCovariantDivergence_nonzero_witness`)
+-- and scalar linearity (`deriv_const_mul_field`), and derive energy-momentum
+-- conservation from Einstein's field equations and the Bianchi identity.
+
+/-- Coordinate divergence `∂_μ T^{μν}` evaluated at `ν : ℝ` via Mathlib's
+    real derivative `deriv`. -/
+noncomputable def realCovariantDivergence (T : ℝ → ℝ → ℝ) (ν : ℝ) : ℝ :=
+  deriv (fun μ => T μ ν) ν
+
+/-- Scalar linearity of the differential divergence (`deriv_const_mul_field`). -/
+theorem realCovariantDivergence_smul (c : ℝ) (T : ℝ → ℝ → ℝ) (ν : ℝ) :
+    realCovariantDivergence (fun μ α => c * T μ α) ν =
+      c * realCovariantDivergence T ν :=
+  deriv_const_mul_field c
+
+/-- Non-degeneracy witness: the linear flux `T(μ, ν) = μ` has unit divergence
+    everywhere, so `realCovariantDivergence` is not identically zero. -/
+theorem realCovariantDivergence_nonzero_witness (ν : ℝ) :
+    realCovariantDivergence (fun μ _ => μ) ν = 1 := by
+  simp [realCovariantDivergence]
+
+/-- **Derivative-level conservation of energy-momentum**: for any coordinate
+    tensor fields `G, T : ℝ → ℝ → ℝ` satisfying `G = 8πG_N T` and the
+    contracted Bianchi identity `realCovariantDivergence G ν = 0`, the
+    stress-energy divergence `realCovariantDivergence T ν` vanishes. -/
+theorem real_conservation_of_energy_momentum (G T : ℝ → ℝ → ℝ) (ν : ℝ)
+    (hEFE : ∀ μ α, G μ α = (8 * Real.pi * NewtonG) * T μ α)
+    (hBianchi : realCovariantDivergence G ν = 0) :
+    realCovariantDivergence T ν = 0 := by
+  have hG : G = fun μ α => (8 * Real.pi * NewtonG) * T μ α := by
+    funext μ α
+    exact hEFE μ α
+  have hdiv : realCovariantDivergence G ν =
+      realCovariantDivergence (fun μ α => (8 * Real.pi * NewtonG) * T μ α) ν := by
+    rw [hG]
+  rw [hBianchi, realCovariantDivergence_smul (8 * Real.pi * NewtonG)] at hdiv
+  have h_const_neq_zero : 8 * Real.pi * NewtonG ≠ 0 := by
+    have h1 : (8 : ℝ) > 0 := by norm_num
+    have h2 : Real.pi > 0 := Real.pi_pos
+    have h3 : NewtonG > 0 := NewtonG_pos
+    positivity
+  cases mul_eq_zero.mp hdiv.symm with
+  | inl h => exact False.elim (h_const_neq_zero h)
+  | inr h => exact h
 
 end OmegaProtocol.Vol05
