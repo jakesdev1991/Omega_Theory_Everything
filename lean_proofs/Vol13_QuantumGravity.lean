@@ -3,9 +3,9 @@ import OmegaUnifiedFoundation
 import Vol10_StandardModel
 /-
   Vol13_QuantumGravity.lean
-  REAL mathematical formalization of Quantum Gravity structural relations.
+  Machine-checked model of Quantum Gravity structural relations.
 
-  Genuinely proven theorems:
+  Machine-checked theorems:
   1. The Wheeler-DeWitt Balance: Mathematically proves that if the 
      total Hamiltonian constraint annihilates the universal wavefunction, 
      then the expected matter energy exactly opposes the expected gravity energy.

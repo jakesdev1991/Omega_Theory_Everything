@@ -3,7 +3,7 @@ import OmegaUnifiedFoundation
 
 /-
   Vol20_ChaosTheory.lean
-  REAL mathematical formalization of Chaos Theory.
+  Machine-checked model of Chaos Theory.
 
   Contains:
   1. Lyapunov Exponents & Exponential Divergence:
@@ -27,7 +27,7 @@ def LyapunovExponent : ℝ := 1
 theorem chaos_condition : LyapunovExponent > 0 := by
   norm_num [LyapunovExponent]
 
-/-- THEOREM: Sensitive Dependence on Initial Conditions (GENUINE PROOF)
+/-- THEOREM: Sensitive Dependence on Initial Conditions (machine-checked)
     The argument for exponential divergence, e^(λt), requires λt > 0.
     We strictly prove this for t > 0. -/
 theorem sensitive_dependence (t : ℝ) (ht : t > 0) :

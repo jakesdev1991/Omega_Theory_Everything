@@ -62,7 +62,7 @@ theorem covariant_divergence_smul {spacetime : Type*} (c : ℝ) (T : spacetime �
   simp [CovariantDivergence]
 
 -- ============================================================
--- THEOREM 1: CONSERVATION OF ENERGY-MOMENTUM (GENUINE PROOF)
+-- THEOREM 1: CONSERVATION OF ENERGY-MOMENTUM (machine-checked)
 -- ∇_μ T^μν = 0
 -- Proof: Apply covariant divergence to both sides of EFE.
 -- The LHS vanishes by the Bianchi identity, forcing the RHS to vanish.

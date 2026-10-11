@@ -1,11 +1,10 @@
 \documentclass[11pt, a4paper]{article}
-
 \usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
 
-\title{Theory of Everything - Volume 32 \\ \Large Cybernetics \& Control Theory}
+\title{Omega Theory --- Volume 32\\\Large Cybernetics and Feedback: A Model-Scoped Summary}
 \author{Omega Protocol}
 \date{\today}
 
@@ -13,16 +12,28 @@
 
 \maketitle
 
+\begin{quote}
+\textbf{Status.} Formal counterpart: \texttt{lean\_proofs/Vol32\_Cybernetics.lean}. The file is a scalar feedback model, $x(n) = x_0\, g^n$. It establishes: (i) for $0 \le g < 1$, the state tends to zero; (ii) for unit gain $g = 1$, a nonzero initial state persists, so there is no decay. A legacy one-step inequality is retained under its old name but is not a convergence statement. The file does not derive a controller, and it does not establish stability for any physical system. Ashby's law, the free energy principle, and the claims about homeostasis in earlier text have no formal counterpart. Physical interpretation: open.
+\end{quote}
+
 \section*{Layman's Summary}
-How do you build a robot that can walk without falling over? How does your body keep your temperature perfectly at 98.6 degrees? Volume 32 explores Cybernetics—the science of control. We prove the absolute mathematical limits of how systems can steer themselves through a chaotic universe.
+Cybernetics studies how systems regulate themselves through feedback. A thermostat is a familiar example. This volume records a one-dimensional feedback model, and its basic convergence and non-convergence cases. It is not a general theory of control or of biological regulation.
 
-\section{Control Theory (Axiom 35)}
-"Ashby's Law of Requisite Variety" states that a control system must be as complex as the environment it is trying to control. We establish this as a core axiom of the universe. An informational network can only survive and regulate its surroundings if its internal mathematical complexity matches the chaos outside. You cannot control what you cannot compute.
+\section{Scalar Feedback Decay (Formal Result within the Model)}
+For a gain $0 \le g < 1$, the state $x_0 g^n$ tends to zero. For $g = 1$, it does not decay. These are standard facts about geometric sequences.
 
-\section{Negative Feedback (Theorem)}
-When you get hot, you sweat to cool down. This is negative feedback. We prove that all forms of "homeostasis" (stable balance) are achieved strictly through topological loops that invert the sign of an incoming informational signal. The universe maintains stability by mathematically fighting back against changes.
+\section{Requisite Variety (Ashby's Law, Not Formalized)}
+The earlier claim that a control system must match the complexity of its environment, and that this is a core axiom of the universe, is not formalized. It is withdrawn as a claim of this work.
 
-\section{Feedforward Anticipation (Theorem)}
-The most advanced networks don't just react; they predict. We prove that complex systems, driven by the "Free Energy Principle," will inevitably build internal, virtual models of their environment. By simulating the future inside their own network, they minimize the mathematical "surprise" of future events, effectively steering reality before it happens.
+\section{Negative Feedback and Homeostasis (No Formal Counterpart)}
+The earlier claim that all homeostasis arises from topological loops that invert informational signals has no formal counterpart. The model is scalar, with no sign inversion of a physical signal. It is withdrawn.
+
+\section{Feedforward Anticipation (No Formal Counterpart)}
+The earlier claim that complex systems inevitably build internal predictive models, following the free energy principle, has no formal counterpart. It is withdrawn and is listed as an open item.
+
+\section{Scope and Open Items}
+\begin{itemize}
+  \item Not established here: controller design; stability of physical systems; requisite variety; homeostasis in biological organisms.
+\end{itemize}
 
 \end{document}

@@ -14,7 +14,7 @@ Each file corresponds to a volume in `../lean_proofs/` and provides:
 
 ## Volumes Available
 
-41 of the 54 volumes are currently documented in LaTeX format. The following have no LaTeX file yet: Vol01-Vol08, Vol22, and Vol36-Vol40.
+41 of the 54 volumes are currently documented in LaTeX format. The following have no LaTeX file yet: Vol01-Vol08 and Vol36-Vol40.
 - Vol09_HolographicPrinciple.tex through Vol54_TheoryOfNothing.tex (where a file exists)
 
 ## Compiling

@@ -1,11 +1,10 @@
 \documentclass[11pt, a4paper]{article}
-
 \usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
 
-\title{Theory of Everything - Volume 50 \\ \Large The Ultimate Ensemble (Tegmark Level IV)}
+\title{Omega Theory --- Volume 50\\\Large The Ensemble of Structures: A Model-Scoped Summary}
 \author{Omega Protocol}
 \date{\today}
 
@@ -13,16 +12,28 @@
 
 \maketitle
 
+\begin{quote}
+\textbf{Status.} Formal counterpart: \texttt{lean\_proofs/Vol50\_UltimateEnsemble.lean}. The file formalizes the ``ensemble'' as the class of type-theoretic structures that can be named inside the formal system. It establishes that this ensemble cannot be enumerated by the formal system, and that there is no surjection from a subset of the indexing set onto it. It does not formalize the set of all mathematical structures, and it does not establish that every consistent structure exists physically. The Tegmark Level IV and anthropic claims in earlier text are not formalized and are withdrawn. Physical interpretation: open.
+\end{quote}
+
 \section*{Layman's Summary}
-Why is the universe mathematical? Max Tegmark famously proposed that the universe doesn't just *use* math; it *is* math. Volume 50 formalizes this. We prove that every single mathematically consistent structure doesn't just exist as an idea—it exists as a physical, real universe somewhere in the ultimate multiverse.
+Max Tegmark's Mathematical Universe hypothesis proposes that all mathematical structures exist as physical universes. It is a speculative proposal, and it is not established. This volume records a formal limitation on enumerating the structures that a formal system can name. It does not confirm the hypothesis.
 
-\section{The Mathematical Universe (Axiom 53)}
-We establish that existence is a mathematical property. There is no magical "fire" breathed into some equations to make them physically real while leaving others as mere ideas. Physics is simply what a mathematical structure looks like from the inside.
+\section{The Ensemble of Nameable Structures (Formal Result within the Model)}
+In the file, a member of the ensemble is a structure together with a proof that it is inhabited. The ensemble is therefore the set of structures representable inside the formal system. The file proves that this ensemble is not enumerable by the system.
 
-\section{Tegmark Level IV (Theorem)}
-We prove the existence of the Level IV Multiverse. This isn't just a multiverse of different histories (like "what if the dinosaurs survived?"). It is an ensemble of completely different universes governed by totally alien mathematics—universes with 17 dimensions, universes without time, universes based on non-commutative geometry. All of them physically exist.
+\section{Mathematical Existence (Interpretation, Not Formalized)}
+The earlier claim that mathematical existence implies physical existence is the Mathematical Universe hypothesis. It is not formalized, and it is withdrawn as a claim of this work.
 
-\section{The Anthropic Selection (Theorem)}
-If every possible mathematical universe exists, why do we find ourselves in this specific one? We prove that this is a matter of anthropic selection. Most mathematical structures are too simple or too chaotic to allow "informational flow" (life). Conscious observers will mathematically *only* ever wake up in the tiny sliver of universes capable of supporting their existence.
+\section{Tegmark Level IV (No Formal Counterpart)}
+The earlier claim that a Level IV multiverse exists is not formalized. It is withdrawn and is listed as an open item.
+
+\section{Anthropic Selection (No Formal Counterpart)}
+The earlier claim that observers can only find themselves in the structures that allow life has no formal counterpart. It is withdrawn.
+
+\section{Scope and Open Items}
+\begin{itemize}
+  \item Not established here: the set of all mathematical structures; physical existence of mathematical structures; the multiverse; anthropic selection.
+\end{itemize}
 
 \end{document}

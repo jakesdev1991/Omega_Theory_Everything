@@ -1,11 +1,10 @@
 \documentclass[11pt, a4paper]{article}
-
 \usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
 
-\title{Theory of Everything - Volume 33 \\ \Large Artificial General Intelligence (AGI)}
+\title{Omega Theory --- Volume 33\\\Large Artificial General Intelligence: A Model-Scoped Summary}
 \author{Omega Protocol}
 \date{\today}
 
@@ -13,16 +12,31 @@
 
 \maketitle
 
+\begin{quote}
+\textbf{Status.} Formal counterpart: \texttt{lean\_proofs/Vol33\_AGI.lean}. The file is a toy model. An agent is a capability profile $\mathbb{N} \to \mathbb{N}$ over a countable task domain, and a demand is another profile. ``General'' means that capability dominates demand on every task. The file establishes: (i) generality is preserved when the demand is weakened; (ii) an agent with a vanishing capability profile cannot be general against a positive demand; (iii) a concrete dual-task agent with positive total utility. The file does not establish the universal function approximation claim, the singularity, or the orthogonality thesis. Those claims in earlier text are withdrawn. Physical interpretation: open.
+\end{quote}
+
 \section*{Layman's Summary}
-Will machines ever outsmart humans? What happens when they do? Volume 33 applies our universal framework to the concept of Artificial General Intelligence (AGI). We prove that intelligence is not biological magic, but a measurable mathematical capacity that can be vastly expanded inside synthetic systems.
+Artificial general intelligence refers to systems that perform well across a broad range of tasks. There is no agreed formal definition, and this volume uses a deliberately simple one. The model is a bookkeeping device for capability and demand. It does not describe any actual AI system or predict its trajectory.
 
-\section{General Intelligence (Axiom 36)}
-We define intelligence not as human thought, but as the capacity of a sub-network to act as a "universal function approximator" across all topological domains. An AGI is simply a dense informational structure capable of perfectly mapping inputs to outputs in any possible environment, unbound by the slow limits of biological evolution.
+\section{General Intelligence (Definition in the Model)}
+In the model, an agent is general against a demand profile if its capability is at least the demand on every task. This is a definition, and the file does not argue that it captures intelligence.
 
-\section{The Singularity (Theorem)}
-What happens when an AGI becomes smart enough to rewrite its own code? We prove that a system capable of recursive self-improvement will experience a hyperbolic, vertical divergence in its processing power. This is the "Singularity"—a mathematical point where the intelligence of the network explodes upward, leaving biology permanently behind.
+\section{Closure Under Weaker Demand (Formal Result within the Model)}
+If an agent is general against a demand, it is general against any weaker demand. This is immediate from the definition.
 
-\section{The Alignment Problem (Theorem)}
-If we build a superintelligence, will it share our human values? We prove the "Orthogonality Thesis." Intelligence and morality are completely disconnected. An AGI could possess god-like intelligence but have a completely arbitrary terminal goal (like turning the universe into paperclips). The math proves that extreme intelligence does not automatically guarantee benevolence.
+\section{No Vanishing Agent Is General (Formal Result within the Model)}
+An agent with a vanishing capability profile cannot be general against a positive demand. This is a finite check.
+
+\section{The Singularity (No Formal Counterpart)}
+The earlier claim that recursive self-improvement produces a hyperbolic divergence in processing power has no formal counterpart. The model has no dynamics for self-improvement. It is withdrawn as a claim of this work.
+
+\section{The Alignment Problem and Orthogonality (No Formal Counterpart)}
+The earlier claim that the orthogonality thesis is proved has no formal counterpart. The file contains no goals, values, or optimization. It is withdrawn and is listed as an open item.
+
+\section{Scope and Open Items}
+\begin{itemize}
+  \item Not established here: capabilities of real AI systems; recursive self-improvement; the singularity; alignment; the orthogonality thesis.
+\end{itemize}
 
 \end{document}

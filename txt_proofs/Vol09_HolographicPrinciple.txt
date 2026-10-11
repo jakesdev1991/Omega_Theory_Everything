@@ -4,9 +4,9 @@ import Vol08_BlackHoleThermodynamics
 
 /-
   Vol09_HolographicPrinciple.lean
-  REAL mathematical formalization of the Holographic Principle.
+  Machine-checked model of the Holographic Principle.
 
-  Genuinely proven theorems:
+  Machine-checked theorems:
   1. AdS Bulk & Conformal Boundary: Poincaré half-space parameterization
      AdS_{d+1} with radial coordinate z > 0 and conformal boundary at z → 0.
   2. Subsystem Entanglement & Ryu-Takayanagi Formula:

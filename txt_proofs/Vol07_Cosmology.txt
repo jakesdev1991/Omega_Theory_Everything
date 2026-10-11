@@ -2,9 +2,9 @@ import Mathlib
 import OmegaUnifiedFoundation
 /-
   Vol07_Cosmology.lean
-  REAL mathematical formalization of Cosmology.
+  Machine-checked model of Cosmology.
 
-  Genuinely proven theorems:
+  Machine-checked theorems:
   1. Cosmological Redshift: 1 + z = a(t_obs) / a(t_emit)
   2. Critical Density: For a flat universe (k=0, Λ=0), ρ = 3H² / 8πG.
      This is strictly derived from the First Friedmann Equation.
@@ -57,7 +57,7 @@ theorem global_state_dynamics (t : CosmologicalTime) :
   simp [TimeDerivative, ScaleFactor, EnergyDensity, Pressure, CosmologicalConstant]
 
 -- ============================================================
--- THEOREM 1: COSMOLOGICAL REDSHIFT (GENUINE PROOF)
+-- THEOREM 1: COSMOLOGICAL REDSHIFT (machine-checked)
 -- ============================================================
 
 /-- Definition of redshift z -/
@@ -70,7 +70,7 @@ theorem cosmologicalredshift (t_emit t_obs : CosmologicalTime) :
   ring
 
 -- ============================================================
--- THEOREM 2: CRITICAL DENSITY (GENUINE PROOF)
+-- THEOREM 2: CRITICAL DENSITY (machine-checked)
 -- For a flat universe (k=0) with no cosmological constant (Λ=0),
 -- the density of the universe must exactly equal the critical density.
 -- ============================================================

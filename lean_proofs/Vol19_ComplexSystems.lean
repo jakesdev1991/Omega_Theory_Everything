@@ -3,9 +3,9 @@ import OmegaUnifiedFoundation
 
 /-
   Vol19_ComplexSystems.lean
-  REAL mathematical formalization of Complex Systems.
+  Machine-checked model of Complex Systems.
 
-  Genuinely proven theorems:
+  Machine-checked theorems:
   1. Concrete Observable & State Transition: Provides a state space with
      explicit entropy evaluations, witnessing genuine entropy increase
      and emergent information gain.
@@ -17,7 +17,7 @@ import OmegaUnifiedFoundation
   `ComplexityEntropy := 0`, `emergent_information_gain`) restated
   `ComplexityEntropy B > ComplexityEntropy A` — unsatisfiable in the
   zero-entropy legacy carrier — as both hypothesis and conclusion. The
-  non-degenerate `ComplexState` model below carries the genuine content.
+  non-degenerate `ComplexState` model below carries the content.
 -/
 
 namespace OmegaProtocol.Vol19

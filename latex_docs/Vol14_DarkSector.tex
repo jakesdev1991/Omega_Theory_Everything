@@ -1,11 +1,10 @@
 \documentclass[11pt, a4paper]{article}
-
 \usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
 
-\title{Theory of Everything - Volume 14 \\ \Large The Dark Sector (Dark Matter \& Energy)}
+\title{Omega Theory --- Volume 14\\\Large The Dark Sector: A Model-Scoped Summary}
 \author{Omega Protocol}
 \date{\today}
 
@@ -13,16 +12,25 @@
 
 \maketitle
 
+\begin{quote}
+\textbf{Status.} Formal counterpart: \texttt{lean\_proofs/Vol14\_DarkSector.lean}. The file is a model. It establishes: (i) a cosmic density budget on the 2-simplex, in which the dark-energy fraction is determined by the matter fractions for any nonnegative fractions summing to one; (ii) a strict bound, under which the dark-energy fraction is below one whenever the baryonic and dark-matter fractions are strictly positive; (iii) a concrete $\Lambda$CDM-type benchmark in which dark energy dominates. The file does not construct dark matter or dark energy from the framework. The ``informational pressure'' and ``gravitational memory'' mechanisms described in earlier text have no formal counterpart here. Physical interpretation: open.
+\end{quote}
+
 \section*{Layman's Summary}
-95\% of our universe is missing. We call it "Dark Matter" (which pulls things together) and "Dark Energy" (which pushes the universe apart). Volume 14 proves that we don't need to invent invisible ghost particles to explain this. Instead, these phenomena are natural, emergent effects of how the informational fabric of space bends, stretches, and remembers.
+Observations indicate that most of the energy content of the universe is not ordinary matter. Dark matter is inferred from the gravitational behavior of galaxies, and dark energy from the accelerated expansion. This volume states the bookkeeping constraints that any such budget must satisfy, and a concrete benchmark. It does not identify what dark matter or dark energy is.
 
-\section{Dark Energy as Informational Pressure (Axiom 17)}
-Why is the universe expanding faster and faster? The "cosmological constant" is often viewed as a mysterious anti-gravity force. We establish that this is actually the baseline "informational pressure" of the vacuum. Empty space isn't empty; it's a boiling soup of quantum information, and the inherent pressure of this information network pushes space outward.
+\section{Dark Energy as Budget Remainder (Formal Result within the Model)}
+If the baryonic, dark-matter, and dark-energy fractions are nonnegative and sum to one, the dark-energy fraction is fixed by the other two. The formal file also shows that it is below one whenever the other two are strictly positive. This is an algebraic fact about a budget, not a mechanism. The earlier claim that dark energy is the baseline informational pressure of the vacuum is withdrawn; it has no formal counterpart.
 
-\section{Dark Matter as Gravitational Memory (Theorem)}
-Galaxies spin too fast to be held together by the gravity of the stars we can see. Rather than assuming invisible "dark matter" particles exist, we prove that the fabric of space has "memory." When massive bodies move through the informational metric, space doesn't snap back to being flat instantly; it relaxes slowly. This delayed relaxation creates an extra gravitational pull that exactly mimics dark matter.
+\section{Dark Matter Mechanism (No Formal Counterpart)}
+The earlier claim that space ``remembers'' past motion and produces an extra gravitational pull mimicking dark matter has no formal counterpart in this volume. It is withdrawn as a claim of this work and is listed as an open item.
 
-\section{Modification of Newtonian Dynamics (Theorem)}
-When gravity gets extremely weak—like at the very edges of a galaxy—Isaac Newton's laws seem to break down. We prove that in this low-acceleration regime, the entropic bounds of the universe naturally modify gravity. This results in behavior exactly like MOND (Modified Newtonian Dynamics), elegantly explaining galactic rotation without any dark matter particles.
+\section{Modified Newtonian Dynamics (No Formal Counterpart)}
+The earlier claim that entropic bounds reproduce MOND-like behavior has no formal counterpart. The file does not derive galactic rotation curves. This is an open item.
+
+\section{Scope and Open Items}
+\begin{itemize}
+  \item Not established here: the physical nature of dark matter or dark energy; galactic rotation curves; agreement with observed cosmological parameters beyond the benchmark.
+\end{itemize}
 
 \end{document}

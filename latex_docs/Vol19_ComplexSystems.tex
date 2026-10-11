@@ -1,11 +1,10 @@
 \documentclass[11pt, a4paper]{article}
-
 \usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
 
-\title{Theory of Everything - Volume 19 \\ \Large Complex Systems \& Emergence}
+\title{Omega Theory --- Volume 19\\\Large Complex Systems: A Model-Scoped Summary}
 \author{Omega Protocol}
 \date{\today}
 
@@ -13,16 +12,28 @@
 
 \maketitle
 
+\begin{quote}
+\textbf{Status.} Formal counterpart: \texttt{lean\_proofs/Vol19\_ComplexSystems.lean}. The file is a model with a concrete \texttt{ComplexState} carrying explicit entropy values. It establishes: (i) an entropy increase between an ordered and a disordered state of the model; (ii) that when correlations reduce joint entropy below the sum of the uncoupled entropies, the emergent mutual information is strictly positive. A legacy cluster with zero entropy is retired, since its hypotheses were unsatisfiable. Self-organized criticality and the biological claims in earlier text have no formal counterpart. Physical interpretation: open.
+\end{quote}
+
 \section*{Layman's Summary}
-How do dumb, lifeless atoms arrange themselves into something as incredibly complex as a living cell, a human brain, or a flock of birds? Volume 19 addresses the profound mystery of "emergence." We prove that complexity isn't a miraculous accident; the universe is mathematically designed to build complex, self-organizing systems.
+Complex systems, such as flocks, brains, and ecosystems, show order that emerges from many interacting parts. This volume records a finite model in which correlations between parts reduce joint entropy, which gives a positive mutual information. It does not explain biological complexity.
 
-\section{Emergent Complexity (Axiom 22)}
-It seems counter-intuitive: if the universe is always increasing in disorder (entropy), how do highly ordered things like trees and animals form? We establish that macroscopic order actually arises *spontaneously* because highly ordered systems are the most efficient engines for dissipating energy and entropy into their environment. The universe builds complexity to speed up the spread of disorder.
+\section{Emergent Order (Formal Result within the Model)}
+In the concrete model, the file shows an entropy difference between an organized and a disordered state, and records the emergent information gain. The model is chosen so that these values are explicit. The earlier claim that macroscopic order arises spontaneously in general because it speeds the spread of disorder is withdrawn; it is not formalized.
 
-\section{Self-Organized Criticality (Theorem)}
-A pile of sand will naturally build up until it reaches a critical, avalanche-prone state. We prove that dynamic systems in the universe naturally tune themselves to this razor's edge—the boundary between stable structure and chaotic collapse. The universe balances on the edge of "informational freeze," which is the sweet spot where complexity thrives.
+\section{Emergent Mutual Information (Formal Result within the Model)}
+If the joint entropy of two parts is strictly smaller than the sum of their individual entropies, the file shows that the emergent mutual information is strictly positive. This is the standard non-negativity-of-mutual-information argument for the stated model.
 
-\section{Biological Information (Theorem)}
-What makes biology different from physics? We show that the replicating information found in DNA corresponds mathematically to "stable limit cycles" in the informational manifold. Life is a self-sustaining loop of quantum information that has learned how to maintain its geometry against the constant pull of the universe's modular flow.
+\section{Self-Organized Criticality (No Formal Counterpart)}
+The earlier claim that dynamical systems tune themselves to a critical state has no formal counterpart. It is withdrawn as a claim of this work and is listed as an open item.
+
+\section{Biological Information (No Formal Counterpart)}
+The earlier claim that DNA corresponds to stable limit cycles of the informational manifold, and that life maintains its geometry against modular flow, has no formal counterpart. It is withdrawn as a claim of this work.
+
+\section{Scope and Open Items}
+\begin{itemize}
+  \item Not established here: self-organized criticality; biological information; emergence in real systems.
+\end{itemize}
 
 \end{document}

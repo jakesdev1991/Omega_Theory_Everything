@@ -1,11 +1,10 @@
 \documentclass[11pt, a4paper]{article}
-
 \usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
 
-\title{Theory of Everything - Volume 35 \\ \Large The Theory of Computation}
+\title{Omega Theory --- Volume 35\\\Large Theory of Computation: A Model-Scoped Summary}
 \author{Omega Protocol}
 \date{\today}
 
@@ -13,16 +12,31 @@
 
 \maketitle
 
+\begin{quote}
+\textbf{Status.} Formal counterpart: \texttt{lean\_proofs/Vol35\_TheoryOfComputation.lean}. The file contains: (i) Cantor's diagonal argument: there is no surjection from $\mathbb{N}$ onto $\mathbb{N} \to \mathrm{Bool}$; this is a standard, genuine proof. (ii) A toy computability semantics, which is not a Turing-machine model. Within it, bounded halting is decidable, and a halting-diagonal theorem shows that no enumeration of toy machines captures all halting behavior. The file proves no equivalence with any standard machine class. The Church--Turing--Deutsch principle, the P versus NP separation, and the Gödel results claimed in earlier text are not formalized and are withdrawn. Physical interpretation: open.
+\end{quote}
+
 \section*{Layman's Summary}
-Are there questions the universe simply cannot answer? Volume 35 explores the ultimate limits of logic and computation. We prove that the universe is basically a gigantic computer, but even this cosmic computer is bound by strict, unbreakable mathematical laws that prevent it from knowing everything.
+The theory of computation studies what can be computed and what cannot. Cantor's diagonal argument and the halting problem are its classic results. This volume records Cantor's argument and a toy model of halting. It does not prove general results about physical computation or about P versus NP.
 
-\section{Church-Turing-Deutsch Principle (Axiom 38)}
-We establish the ultimate equivalence between reality and computation. Every single physical system in the universe—whether it's a falling apple, a hurricane, or a black hole—can be perfectly, flawlessly simulated by a universal quantum computer. Physics is computation; computation is physics.
+\section{Cantor's Diagonal Argument (Formal Result)}
+There is no surjection from $\mathbb{N}$ onto the set of infinite binary sequences. This is a standard, fully general proof.
 
-\section{Undecidability (Theorem)}
-Can a computer program tell you if another computer program will ever finish running (the Halting Problem)? Can mathematics prove that mathematics is perfectly consistent (Gödel's Incompleteness)? We prove that the answer to both is NO. Any closed universe capable of thinking about itself will inevitably hit geometric paradoxes that cannot be resolved.
+\section{Toy Computability Semantics (Formal Result within the Model)}
+The file defines a simple step-function model of computation over natural-number configurations. In this model, bounded halting is decidable, and a diagonal machine shows that no enumeration of toy machines captures all halting behavior. This is not a Turing-machine model, and it is not equivalent to one.
 
-\section{Complexity Classes (P vs NP) (Theorem)}
-Why is it easy to solve a puzzle, but incredibly hard to find the solution from scratch? The boundary between easy problems (P) and practically impossible problems (NP) is one of the biggest mysteries in math. We prove that P does not equal NP. The separation between them is a physical, geometric wall created by the "informational stiffness" of the universe itself.
+\section{Church--Turing--Deutsch Principle (Model Assumption, Not Formalized)}
+The earlier claim that every physical system can be perfectly simulated by a universal quantum computer is a principle from the literature, not a result of this volume. It is not formalized here, and it is withdrawn as a claim of this work.
+
+\section{Gödel and Undecidability (Not Formalized)}
+The earlier claim that Gödel's incompleteness and undecidability follow from geometric paradoxes of the universe has no formal counterpart. The toy halting diagonal is not Gödel's theorem. The claim is withdrawn.
+
+\section{P versus NP (No Formal Counterpart)}
+The earlier claim that P is not equal to NP, as a physical wall created by informational stiffness, has no formal counterpart. The P versus NP problem is open in the standard literature, and this work does not resolve it. The claim is withdrawn and is listed as an open item.
+
+\section{Scope and Open Items}
+\begin{itemize}
+  \item Not established here: equivalence with Turing machines; Gödel's theorems; P versus NP; the physical Church--Turing--Deutsch principle.
+\end{itemize}
 
 \end{document}

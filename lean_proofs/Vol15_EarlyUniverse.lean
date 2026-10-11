@@ -3,7 +3,7 @@ import OmegaUnifiedFoundation
 
 /-
   Vol15_EarlyUniverse.lean
-  REAL mathematical formalization of the Early Universe & Cosmic Inflation.
+  Machine-checked model of the Early Universe & Cosmic Inflation.
 
   Contains:
   1. Non-degenerate Inflationary Fluid Model:
@@ -17,7 +17,7 @@ import OmegaUnifiedFoundation
   The retired legacy theorem `inflation_acceleration` hypothesized
   `EnergyDensity t + 3 * Pressure t < 0` over the zero minimal Vol07 model,
   where `EnergyDensity ≡ 0` and `Pressure ≡ 0` make the hypothesis
-  unsatisfiable; its genuine content is the fluid model below.
+  unsatisfiable; its content is the fluid model below.
 -/
 
 namespace OmegaProtocol.Vol15

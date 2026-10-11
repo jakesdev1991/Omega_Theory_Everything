@@ -1,11 +1,10 @@
 \documentclass[11pt, a4paper]{article}
-
 \usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
 
-\title{Theory of Everything - Volume 10 \\ \Large The Standard Model of Particle Physics}
+\title{Omega Theory --- Volume 10\\\Large Standard Model Structure: A Model-Scoped Summary}
 \author{Omega Protocol}
 \date{\today}
 
@@ -13,16 +12,26 @@
 
 \maketitle
 
+\begin{quote}
+\textbf{Status.} Formal counterpart: \texttt{lean\_proofs/Vol10\_StandardModel.lean}. The file is a model. It establishes: (i) a signed-amplitude quartic potential $(\phi^2 - v^2)^2$ with two minimizers, which become unique once amplitudes are restricted to be nonnegative; (ii) an integer generation count, which is set to $3$ by definition (\texttt{NumberOfGenerations = 3}). The gauge-group carriers are singleton stubs inherited from earlier volumes. The file does not derive the gauge group, the Higgs doublet, spontaneous symmetry breaking from the modular structure, or the number of fermion generations. Earlier text claiming that these are derived has been withdrawn. Physical interpretation: open.
+\end{quote}
+
 \section*{Layman's Summary}
-The Standard Model is the recipe book for the universe, describing all the basic ingredients (quarks, electrons) and the forces that stick them together. Volume 10 explains *why* this specific recipe exists. Instead of just accepting the particles we observe, we show how they naturally emerge from the fundamental geometry and information flow of space itself.
+The Standard Model describes the known particles and forces through a gauge group, a Higgs field, and three generations of fermions. This volume records a small formal model of one piece of that structure: a double-well potential whose minima sit at $\pm v$. It does not derive the Standard Model from first principles, and the number of generations is an input, not an output.
 
-\section{Gauge Symmetry Emergence (Axiom 13)}
-Forces like electromagnetism and the strong nuclear force are based on mathematical rules called "gauge symmetries" (specifically SU(3), SU(2), and U(1)). We prove that these aren't arbitrary rules handed down from nowhere. Instead, they naturally bubble up from the way the underlying quantum information network twists and vibrates (the "modular Dirac operator").
+\section{Symmetry-Breaking Potential (Formal Result within the Model)}
+The formal file analyzes a quartic potential $(\phi^2 - v^2)^2$ on signed amplitudes. It has two minimizers, $\phi = \pm v$. Restricting to nonnegative amplitudes selects one of them. This is a standard calculus fact about a specific polynomial. It is not a derivation of spontaneous symmetry breaking in the Standard Model.
 
-\section{The Higgs Mechanism (Theorem)}
-Why do particles have mass? The famous Higgs boson gives particles mass by creating a field that "drags" on them. In our theory, we show that this isn't an accident. As the early universe cooled down, the underlying informational network had to settle into a stable state. This "cooling" process mathematically forces the creation of the Higgs mechanism, spontaneously giving particles their mass.
+\section{Gauge Group (Stub in the Model)}
+The gauge-group carriers are inherited as singleton stubs from earlier volumes. They carry no dynamical content. The formal file therefore does not establish the gauge group $SU(3)\times SU(2)\times U(1)$ or any representation content.
 
-\section{Fermion Generations (Theorem)}
-There are exactly three "families" or generations of matter particles (like the electron, muon, and tau). Physicists have long wondered why it's three and not two or four. We prove that this number is determined by the specific shape and topology of the emergent spacetime manifold. The geometry of the universe dictates the families of matter that can exist within it.
+\section{Generation Count (Definition, Not Derivation)}
+The number of generations is written as the integer $3$ by definition. The formal file does not show that geometry or the modular structure forces this value. The earlier claim that the generation count is determined by topology is withdrawn.
+
+\section{Scope and Open Items}
+\begin{itemize}
+  \item Not established here: gauge symmetry from the framework; the Higgs doublet and its couplings; the fermion mass hierarchy; the number of generations.
+  \item The Standard Model is recovered only as an input to later volumes, and only as far as those files state.
+\end{itemize}
 
 \end{document}

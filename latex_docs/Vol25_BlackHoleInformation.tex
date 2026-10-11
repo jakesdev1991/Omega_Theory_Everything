@@ -1,11 +1,10 @@
 \documentclass[11pt, a4paper]{article}
-
 \usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
 
-\title{Theory of Everything - Volume 25 \\ \Large Black Hole Information Paradox}
+\title{Omega Theory --- Volume 25\\\Large Black Hole Information: A Model-Scoped Summary}
 \author{Omega Protocol}
 \date{\today}
 
@@ -13,16 +12,31 @@
 
 \maketitle
 
+\begin{quote}
+\textbf{Status.} Formal counterpart: \texttt{lean\_proofs/Vol25\_BlackHoleInformation.lean}. The file is a conditional model. Joint entropy is not the sum of marginal entropies. The file assumes nonnegative entropies and the Araki--Lieb difference bound as model hypotheses. Within that model it establishes: (i) a pure joint state has zero joint entropy; (ii) a pure bipartite state has equal marginal entropies; (iii) an endpoint statement for the Page-curve model. No density operators or entropy functional are constructed, and no Page curve is computed. The Page-curve reconstruction, firewall resolution, and horizon-encoding claims in earlier text have no formal counterpart. Physical interpretation: open.
+\end{quote}
+
 \section*{Layman's Summary}
-Stephen Hawking proved that black holes slowly evaporate and disappear. But if everything that fell into them is destroyed, this breaks the most sacred rule of physics: information cannot be destroyed. Volume 25 definitively solves the Black Hole Information Paradox, proving that black holes are the ultimate hard drives, not cosmic incinerators.
+The black hole information paradox asks whether information that falls into a black hole is lost when the black hole evaporates. The answer is widely expected to be no, but it remains an open problem. This volume records a conditional model of pure bipartite states. It does not solve the paradox.
 
-\section{Information Preservation (Axiom 28)}
-We establish the strict preservation of quantum information as a fundamental axiom. Information that falls past the event horizon of a black hole is never deleted. Instead, the incredible gravitational forces instantly scramble the information and encode it onto the 2D surface of the horizon itself, like a holographic hard drive.
+\section{Information Preservation (Model Assumption)}
+Information preservation is taken as a model assumption, through the Araki--Lieb inequality and the nonnegativity of entropy. It is not derived from gravity or from the framework.
 
-\section{The Page Curve (Theorem)}
-If information isn't destroyed, how does it get out when the black hole evaporates? We prove that the escaping Hawking radiation eventually starts carrying the information out with it. The mathematical graph tracking this (the Page Curve) shows that once the black hole is half-evaporated, the outgoing radiation perfectly reconstructs the "destroyed" data.
+\section{Pure-State Entropy (Formal Result within the Model)}
+Under the stated assumptions, a pure joint state has zero joint entropy, and its two marginal entropies are equal. This is the standard relation for pure bipartite states, in the model's notation.
 
-\section{Firewall Resolution (Theorem)}
-Physicists worried that preserving information would require a blazing wall of high-energy radiation (a "firewall") at the event horizon, burning anything that fell in. We resolve this paradox by proving that the interior of the black hole is simply a highly complex mathematical reconstruction of the exterior radiation. No firewall is needed; the math perfectly balances.
+\section{The Page Curve (No Computation; Endpoint Statement Only)}
+The formal file contains an endpoint statement for a Page-curve model. It does not compute an evaporation process, and it does not show that Hawking radiation reconstructs the infalling data. The earlier claim that the Page curve is reconstructed is withdrawn.
+
+\section{Firewall Resolution (No Formal Counterpart)}
+The earlier claim that the interior of a black hole is a mathematical reconstruction of the exterior radiation, and that no firewall is needed, has no formal counterpart. It is withdrawn as a claim of this work and is listed as an open item.
+
+\section{Horizon Encoding (No Formal Counterpart)}
+The earlier claim that infalling information is scrambled and encoded on the horizon has no formal counterpart. It is withdrawn.
+
+\section{Scope and Open Items}
+\begin{itemize}
+  \item Not established here: resolution of the information paradox; Hawking radiation dynamics; the firewall question; any holographic encoding of black-hole information.
+\end{itemize}
 
 \end{document}

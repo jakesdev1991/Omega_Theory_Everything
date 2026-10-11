@@ -56,7 +56,7 @@ theorem spacelike_hereditary (O₁ O₂ O₃ O₄ : SpacetimeRegion)
       _ ≤ O₁.x_min := h12.1
 
 -- ============================================================
--- THEOREM 1: NESTED MICROCAUSALITY (GENUINE PROOF)
+-- THEOREM 1: NESTED MICROCAUSALITY (machine-checked)
 -- ============================================================
 
 theorem nested_microcausality (O₁ O₂ O₃ O₄ : SpacetimeRegion)

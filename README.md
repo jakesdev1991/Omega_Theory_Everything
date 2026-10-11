@@ -86,7 +86,7 @@ The security-boundary proofs are kept separate from the physics model:
 
 Companion files for the physics volumes:
 - **Text**: `txt_proofs/Vol##_*.txt` - plain-text copies of the Lean sources; all 54 volumes have one.
-- **LaTeX**: `latex_docs/Vol##_*.tex` - write-ups with layman's summaries. Only 41 of the 54 volumes have one (Vol01–08, Vol22 and Vol36–40 do not yet). These write-ups use claim language that is being tightened under [`docs/research/CLAIM_TIGHTENING_ROADMAP.md`](docs/research/CLAIM_TIGHTENING_ROADMAP.md); they are not evidence beyond the Lean statements they describe.
+- **LaTeX**: `latex_docs/Vol##_*.tex` - write-ups with layman's summaries. Only 41 of the 54 volumes have one (Vol01–08 and Vol36–40 do not yet). These write-ups use claim language that is being tightened under [`docs/research/CLAIM_TIGHTENING_ROADMAP.md`](docs/research/CLAIM_TIGHTENING_ROADMAP.md); they are not evidence beyond the Lean statements they describe.
 
 ## Structure
 
@@ -100,7 +100,7 @@ Omega_Theory_Everything/
 │   ├── OmegaProtocol.lean
 │   ├── Vol01_ClassicalMechanics.lean
 │   └── ... (through Vol54)
-├── latex_docs/               # 41 LaTeX documents (Vol09-Vol54 with gaps: Vol01-08, Vol22, Vol36-40 have none)
+├── latex_docs/               # 41 LaTeX documents (Vol09-Vol54 with gaps: Vol01-08 and Vol36-40 have none)
 │   ├── Vol09_HolographicPrinciple.tex
 │   └── ... (through Vol54)
 ├── txt_proofs/               # 59 plain-text companions (54 volumes + 5 core)
@@ -154,6 +154,10 @@ python -m pytest tests/test_quantum_ising_chain.py -q
 # Reproduce the curvature-coupled scalar zero-mode diagnostic
 python research/gauss_bonnet_scalarization.py
 python -m pytest tests/test_gauss_bonnet_scalarization.py -q
+python research/verify_derivations.py
+python research/verify_covariant.py
+python research/verify_tfim.py
+python research/claim_scan.py
 
 # Sim1 and Sim4 are historical manuscripts, not executable scripts; read their status notes in docs/manuscripts/
 

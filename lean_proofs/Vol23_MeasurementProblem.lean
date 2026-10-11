@@ -4,7 +4,7 @@ import OmegaUnifiedFoundation
 
 /-
   Vol23_MeasurementProblem.lean
-  REAL formalization: Quantum Decoherence.
+  Machine-checked model: Quantum Decoherence.
 
   Using Omega Protocol:
   - 0D: Q-Region = quantum state

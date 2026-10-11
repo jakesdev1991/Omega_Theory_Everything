@@ -1,11 +1,10 @@
 \documentclass[11pt, a4paper]{article}
-
 \usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
 
-\title{Theory of Everything - Volume 49 \\ \Large Quantum Reference Frames}
+\title{Omega Theory --- Volume 49\\\Large Quantum Reference Frames: A Model-Scoped Summary}
 \author{Omega Protocol}
 \date{\today}
 
@@ -13,16 +12,28 @@
 
 \maketitle
 
+\begin{quote}
+\textbf{Status.} Formal counterpart: \texttt{lean\_proofs/Vol49\_QuantumReferenceFrames.lean}. The file is a one-dimensional model in which reference frames are unit-norm complex phases, and a change of frame multiplies by a phase ratio. It establishes: frame transformations compose, have an identity, satisfy a round-trip identity, preserve norm on the state space, and can change a nontrivial state. This is not a theory of relational observers or of general quantum reference frames. The claims about Wigner's friend and gauge-invariant reality in earlier text are not formalized and are withdrawn. Physical interpretation: open.
+\end{quote}
+
 \section*{Layman's Summary}
-There is no "God's eye view" of the universe. Volume 49 proves that reality is entirely relative. Your perspective of the universe depends fundamentally on how you are entangled with it. We resolve deep quantum paradoxes by proving that objective reality is just the overlapping consensus of all subjective viewpoints.
+Quantum reference frames study how the description of a system depends on the reference frame of the observer. This is an active research area with several competing formulations. This volume records a one-dimensional phase model, which captures only the simplest case of frame change. It does not settle the interpretive questions.
 
-\section{Relational Quantum Mechanics (Axiom 52)}
-We establish that quantum states do not exist in a vacuum. A particle doesn't simply "have" a location or a speed; it only has a location *relative to* a specific observer node. The entire structure of the universe is built on these relative informational relationships.
+\section{Phase Frames (Formal Result within the Model)}
+Frames are unit-norm phases, and a change of frame multiplies by the ratio of phases. The file establishes composition, identity, round-trip, and norm preservation for these maps.
 
-\section{Wigner's Friend Resolved (Theorem)}
-Imagine a scientist in a box making a measurement, while you stand outside the box. To the scientist, the measurement is done. To you, the scientist is still in a fuzzy quantum superposition. Who is right? We prove that both are right. Contradictions only happen if you assume a universal absolute truth. When you account for the network geometry, the paradox vanishes.
+\section{Relational Quantum Mechanics (Interpretation, Not Formalized)}
+The earlier claim that quantum states only have properties relative to observer nodes is an interpretation. The file does not formalize relational quantum mechanics. It is withdrawn as a claim of this work.
 
-\section{Gauge Invariance of Reality (Theorem)}
-If everyone sees a slightly different quantum reality, does objective reality even exist? We prove that it does. The objective, physical universe is the "gauge-invariant intersection"—the core mathematical structure that remains perfectly consistent across all subjective reference frames. Reality is the mathematical overlap of everyone's perspective.
+\section{Wigner's Friend (No Formal Counterpart)}
+The earlier claim that both the friend's and the outside observer's descriptions are right, and that no contradiction arises, has no formal counterpart. It is withdrawn and is listed as an open item.
+
+\section{Gauge Invariance of Reality (No Formal Counterpart)}
+The earlier claim that objective reality is the gauge-invariant intersection of all reference frames has no formal counterpart. It is withdrawn.
+
+\section{Scope and Open Items}
+\begin{itemize}
+  \item Not established here: relational observers; general quantum reference frames; Wigner's friend; objectivity of physical reality.
+\end{itemize}
 
 \end{document}

@@ -5,7 +5,8 @@
 
 The field profile, mass proxy, gradient force, inertia constant, and high-Phi
 region are hand-selected. The displayed coordinate is a cumulative sum of the
-chosen local scale profile, not a derived spacetime metric. The red region is a
+chosen local scale profile (`physical_x = cumsum(local_l_p)`, a uniform-decay assumption
+that is not derived from any field equation), not a derived spacetime metric. The red region is a
 visual marker, not an event horizon. No physical prediction is made.
 """
 

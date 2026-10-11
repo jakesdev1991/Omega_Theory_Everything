@@ -43,7 +43,7 @@ Wording rules for prose surfaces:
 | Sim7 self-check | Runs; prints the Schwarzschild identities | `python Sim7_Radial_Metric.py --no-plots` |
 | Derivation checks (new) | 11 of 11 pass | `python research/verify_derivations.py` |
 | Claim scan, unhedged hits (measured on a clean export of `HEAD`) | 82 in LaTeX (41 files), 36 Lean labels (21 files), 36 text-companion labels (21 files), 1 in core notes | `python research/claim_scan.py --list` |
-| LaTeX coverage | 41 of 54 volumes (none for Vol01–08, Vol22, Vol36–40) | `ls latex_docs/Vol*.tex` |
+| LaTeX coverage | 41 of 54 volumes (none for Vol01–08 and Vol36–40) | `ls latex_docs/Vol*.tex` |
 | Plain-text coverage | 54 of 54 volumes, 5 core files | `ls txt_proofs` |
 | Lean | Not runnable here (no `lake`, no network to the toolchain). Kernel truth is CI-only. | `lean_proofs/PROOF_AUDIT.md` §Validation |
 
@@ -54,6 +54,20 @@ a zero. The one core-notes hit is a sentence that quotes a rejected claim
 and is left in place.
 
 ---
+
+### 1a. Measured after the Phase 3–5 pass
+
+| Measure | Result | Command |
+|---|---|---|
+| Claim scan, unhedged hits | latex_docs 0 (15 hedged, 12 files); txt_proofs 0; lean_proofs 0; core notes 1 (documented false positive); **total 1** (was 49 on `HEAD`) | `python research/claim_scan.py` |
+| LaTeX coverage | 41 of 54 volumes (missing Vol01–08, Vol36–40, by decision) | `ls latex_docs/Vol*.tex` |
+| Covariant checks (new) | 4 of 4 pass; four negative controls fail as they must | `python research/verify_covariant.py` |
+| TFIM checks (new) | 2 of 2 pass (independent dense ED row; Schwarzschild column) | `python research/verify_tfim.py` |
+| Derivation checks | 11 of 11 pass (unchanged) | `python research/verify_derivations.py` |
+| `ruff check .`, `ruff format --check .` | pass (120 files formatted) | venv, CI versions |
+| `mypy . --ignore-missing-imports` | pass (49 source files) | venv, CI versions |
+| `pytest -q` | 118 passed, 81 subtests passed | venv, CI versions |
+| Lean | Not compiled here (no `lake`). Lean edits are comment and docstring only; `txt_proofs/` copies are byte-identical to the Lean files. | CI only |
 
 ## 2. The road
 
@@ -99,7 +113,7 @@ reduction to the \(x\)-ODE.
 **Exit gate (met for the core notes):** every number that the core notes state in §3 is
 either Verified, or is labelled "reported" with the script that prints it.
 
-### Phase 3 — Remaining core-note items · **NEXT**
+### Phase 3 — Remaining core-note items · **PARTIAL (items 1–4 done; 5–6 open)**
 
 These are the statements the checks have not yet reached. Each must become Verified,
 or be relabelled Derived (hand) or Conditional, before the core notes are called final.
@@ -125,12 +139,31 @@ or be relabelled Derived (hand) or Conditional, before the core notes are called
 6. **Radial note §8 and §9:** the claim that the disformal bound constrains \(\dot\Phi\) only
    is hand-checked against the stated bound. Machine-check the bound's dependence on \(\dot\Phi\).
 
-**Exit gate:** `python research/claim_scan.py` shows zero unhedged hits in
-`docs/research/` and the core notes, apart from the documented false positive; each
-core-note number has a check or a "reported" label; the Phase 3 items are marked Verified
-or Conditional in §3.
+**Done in this pass.**
 
-### Phase 4 — LaTeX volumes · **BLOCKED on one decision (see §4)**
+- Items 1–2: `research/verify_covariant.py` (4 checks). The scalar equation is derived from the
+  minisuperspace Euler–Lagrange equation and matched to the covariant form; the FLRW
+  Friedmann and acceleration equations come from the SymPy Einstein tensor; the linear mass
+  is checked on both branches; the no-hair integration-by-parts identity is checked at
+  R = 3 r_s, where the boundary term is nonzero. Negative controls (sign flips, dropped
+  boundary term) fail, so the checks are not vacuous.
+- Item 3: `research/verify_tfim.py`. The Schwarzschild column is checked row by row against
+  the formula. One exact-diagonalization row (N = 8, h/J = 4) is rebuilt from Kronecker
+  products and reproduces the module and the note.
+- Item 4: Sim2, Sim3, Sim5 and Sim6 re-run with exit 0. Sim6 reproduces its calibrated
+  H₀ = 73.50 km/s/Mpc, which the README states is an input. Sim5's header now states the
+  `cumsum` uniform-decay assumption. Sim3 writes three PDFs to the working directory on each
+  run; these were removed as untracked artifacts.
+
+**Open.** Item 5 (line-by-line pass of the Layman's Guide against the Verified table) and
+item 6 (machine-check of the disformal bound's dependence on \(\dot\Phi\)) are not done.
+The core notes are therefore **not** yet called final.
+
+**Exit gate:** `python research/claim_scan.py` shows zero unhedged hits in the core notes,
+apart from the documented false positive (met). Each core-note number has a check or a
+"reported" label (met for items 1–4). Items 5–6 remain (not met).
+
+### Phase 4 — LaTeX volumes · **DONE (option a; 13 volumes absent by decision)**
 
 Scope: 41 files, 82 unhedged prose hits. Most are of the form "Volume N proves that …"
 in a layman's summary, and the layman's summaries make claims the Lean statements do not
@@ -146,11 +179,22 @@ Steps, per volume:
    [Model choice / Identified / Open]."
 4. For the 14 volumes with no LaTeX file, decide whether to write one at all (see §4).
 
-**Exit gate:** `python research/claim_scan.py` shows zero unhedged `latex_docs` hits; every
-volume with a LaTeX file cites Lean declarations that exist (a script check to be added
-in this phase); `docs` CI job passes.
+**Done.** All 41 LaTeX volumes were rewritten in place. Each now has a status box that names
+the Lean file, lists what the file establishes, and lists what it does not. Stipulated
+values, definitional identities, and hypotheses are labelled as such. Claims with no formal
+counterpart are withdrawn and listed as open items. Known problems exposed by the rewrite
+include: Vol10 sets the generation count to 3 by definition; Vol13's "graviton–SM coupling"
+reduces to a zero self-distance; Vol09's bulk reconstruction holds by reflexivity.
 
-### Phase 5 — Lean headers and text mirrors · **PLANNED**
+**Not done.** A script check that every cited declaration exists (step 2 of this phase). The
+LaTeX sources were not compiled, since no LaTeX toolchain is installed here; they were checked
+for brace balance and unescaped special characters only.
+
+**Exit gate:** `python research/claim_scan.py` shows zero unhedged `latex_docs` hits (met).
+The declaration-existence script check is still to be added. The `docs` CI job was not run
+here.
+
+### Phase 5 — Lean headers and text mirrors · **DONE (comments and docstrings only; automated check not yet added)**
 
 Scope: 21 Lean files carry "REAL formalization", "REAL mathematical formalization", or
 "GENUINE PROOF" labels (36 lines). The text companions in `txt_proofs/` mirror those headers.
@@ -158,7 +202,11 @@ Scope: 21 Lean files carry "REAL formalization", "REAL mathematical formalizatio
 Steps:
 
 1. Replace each label with a description of what the declaration establishes. Edit comments
-   and docstrings only. No declaration name, statement, or proof may change.
+   and docstrings only. No declaration name, statement, or proof may change. **Done** for the
+   exact phrases "REAL formalization", "REAL mathematical formalization", "GENUINE PROOF",
+   "Genuinely proven", "genuine content" and "genuine proof" in all 69 Lean files and their
+   text companions. The remaining lowercase "genuine" in prose (for example in
+   `OmegaAxioms.lean`) is ordinary mathematical wording and was left in place.
 2. Add a check that compares the non-comment declaration lines of every `lean_proofs/*.lean`
    file before and after, so a comment edit cannot change a theorem.
 3. Regenerate `txt_proofs/` from `lean_proofs/`, as `PROOF_AUDIT.md` describes.
@@ -214,32 +262,34 @@ after this step.
 | 13 | Linearised scalar–Gauss–Bonnet equation equals \(\frac{1}{4M^2x^2}\times\) stated \(x\)-ODE (GB §2) | Derived | **Verified** | `check_gauss_bonnet_reduction` |
 | 14 | Kretschmann invariant \(=48M^2/r^6\) on Schwarzschild (GB §1) | Derived | **Verified** | `check_kretschmann` |
 | 15 | Scalarization threshold \(\eta/M^2\) (GB §3) | Numerical | **Verified** as \(0.725613\pm10^{-6}\); headline corrected | `check_gauss_bonnet_threshold` (Rayleigh–Ritz) |
-| 16 | Scalar field equation and \(T^{(\Phi)}_{\mu\nu}\) from the action (COVARIANT §1) | Derived | Derived (hand); Phase 3 item 1 | sign conventions re-read |
+| 16 | Scalar field equation and \(T^{(\Phi)}_{\mu\nu}\) from the action (COVARIANT §1) | Derived | **Verified** (SymPy) | `check_scalar_eom_flrw`, `check_flrw_equations` in `research/verify_covariant.py` |
 | 17 | GR limit at \(\Phi\equiv0\) under \(V(0)=V'(0)=0\), \(Z(0)>0\) (COVARIANT §2) | Conditional | Derived (hand) | immediate from item 16 |
-| 18 | Static no-hair identity for the minimally coupled scalar (COVARIANT §2) | Conditional | Derived (hand); Phase 3 item 2 | Green's identity; horizon term vanishes |
-| 19 | Linear mass \(m_{\rm eff}^2\) for the minimal and curvature-coupled branches (COVARIANT §2, GB §1) | Derived | Derived (hand); Phase 3 item 1 | consistent with \(f''(0)=Z_0\eta\) |
-| 20 | FLRW equations and scalar equation (COVARIANT §3) | Derived | Derived (hand); Phase 3 item 1 | standard; signs re-read |
+| 18 | Static no-hair identity for the minimally coupled scalar (COVARIANT §2) | Conditional | **Verified** as an identity on a Schwarzschild exterior with stated boundary (R = 3 r_s); the no-hair conclusion stays conditional on the boundary terms and a convex potential | `check_no_hair_identity` in `research/verify_covariant.py` |
+| 19 | Linear mass \(m_{\rm eff}^2\) for the minimal and curvature-coupled branches (COVARIANT §2, GB §1) | Derived | **Verified** (SymPy) | `check_linear_mass` in `research/verify_covariant.py` |
+| 20 | FLRW equations and scalar equation (COVARIANT §3) | Derived | **Verified** (SymPy) | `check_flrw_equations` in `research/verify_covariant.py` |
 | 21 | Earth, Sun, neutron-star values of \(\Phi\) (Radial §5) | Arithmetic | **Verified** by hand with rounded standard constants | Sun corrected to \(1.1\times10^{-6}\) |
-| 22 | Uniform correlation decay in Sim5 (`cumsum`) | Code fact | Verified by reading `Sim5_Emergent_Gravity.py` L74–75 | — |
-| 23 | Schwarzschild-required trend opposite to Markov and Ising decay rates | Reported | Reproduced; tests check the sign | `tests/test_quantum_ising_chain.py`, `tests/test_qregion_markov.py` |
-| 24 | \(H_0=73.5\) in the depletion simulation | Calibration input | Not a prediction; re-run is Phase 3 item 4 | `sim6_v14_depletion.py` |
+| 22 | Uniform correlation decay in Sim5 (`cumsum`) | Code fact | Verified by reading `Sim5_Emergent_Gravity.py` L74–75; now stated in the module header | — |
+| 23 | Schwarzschild-required trend opposite to Markov and Ising decay rates | Reported | Reproduced; tests check the sign; Schwarzschild column and one dense-ED row now checked | `tests/test_quantum_ising_chain.py`, `tests/test_qregion_markov.py`, `research/verify_tfim.py` |
+| 24 | \(H_0=73.5\) in the depletion simulation | Calibration input | Not a prediction; re-run done (Phase 3 item 4), reproduces 73.50 by construction | `sim6_v14_depletion.py` |
 
 ---
 
 ## 4. Decisions needed from the owner
 
+**Resolved.** The user delegated these decisions ("take the best route, the most optimal").
+The route taken is recorded in each item.
+
 These decisions gate later phases. The roadmap does not assume an answer.
 
-1. **LaTeX layman's summaries (Phase 4).** Options:
+1. **LaTeX layman's summaries (Phase 4).** Taken: option (a). Options:
    (a) rewrite each volume's summary in place under the rules in §0 (recommended; keeps the
    public material and removes the overclaim);
    (b) move the 41 files to an archive folder marked "superseded" until each volume's Lean
    counterpart has been audited in Phase 6;
    (c) remove the layman's summaries and keep only the formal statements.
-2. **Missing LaTeX volumes (Phase 4).** Write the 13 missing files now under the new rules, or
-   leave them absent and say so.
-3. **Lean label replacement (Phase 5).** Confirm that editing comments and docstrings in the
-   Lean files is acceptable, given that the audit notes the files are kernel-checked in CI.
+2. **Missing LaTeX volumes (Phase 4).** Taken: leave the 13 files absent and say so in the README
+   and in this roadmap.
+3. **Lean label replacement (Phase 5).** Taken: comments and docstrings only. No code changed.
 
 ---
 

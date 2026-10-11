@@ -2,9 +2,9 @@ import Mathlib
 import OmegaUnifiedFoundation
 /-
   Vol04_QuantumMechanics.lean
-  REAL mathematical formalization of quantum mechanics.
+  Machine-checked model of quantum mechanics.
 
-  Genuinely proven theorems:
+  Machine-checked theorems:
   1. Born Rule — from projection idempotence + self-adjointness
   2. Cauchy-Schwarz Uncertainty — Var(A)·Var(B) ≥ |⟨u,v⟩|²
   3. Robertson Uncertainty (GENERAL complex inner product space, the
@@ -59,7 +59,7 @@ noncomputable def deviation (A : Operator) (ψ : StateSpace) : StateSpace :=
   A ψ - (Expectation A ψ) • ψ
 
 -- ============================================================
--- THEOREM 1: Born Rule (GENUINE PROOF)
+-- THEOREM 1: Born Rule (machine-checked)
 -- For a projection P (P² = P, P* = P):
 --   ⟨ψ|P|ψ⟩ = ‖Pψ‖²
 -- ============================================================
@@ -77,7 +77,7 @@ theorem born_rule (P : Operator) (hP_proj : P * P = P ∧ IsSelfAdjoint P) (ψ :
     _ = (‖P ψ‖ ^ 2 : ℂ) := inner_self_eq_norm_sq_to_K (P ψ)
 
 -- ============================================================
--- THEOREM 2: Born Rule Probability (GENUINE PROOF)
+-- THEOREM 2: Born Rule Probability (machine-checked)
 -- The measurement probability ‖Pψ‖² is non-negative.
 -- ============================================================
 
@@ -85,7 +85,7 @@ theorem born_rule_nonneg (P : Operator) (ψ : StateSpace) :
   ‖P ψ‖ ^ 2 ≥ 0 := sq_nonneg _
 
 -- ============================================================
--- THEOREM 3: Projection Norm Bound (GENUINE PROOF)
+-- THEOREM 3: Projection Norm Bound (machine-checked)
 -- For a projection on a unit vector: ‖Pψ‖ ≤ ‖ψ‖
 -- Equivalently, measurement probability ≤ 1 for normalized states.
 -- ============================================================
@@ -121,7 +121,7 @@ theorem projection_norm_le (P : Operator) (hP : P * P = P ∧ IsSelfAdjoint P) (
   nlinarith [sq_nonneg (‖ψ‖ - ‖P ψ‖)]
 
 -- ============================================================
--- THEOREM 4: Cauchy-Schwarz Uncertainty (GENUINE PROOF)
+-- THEOREM 4: Cauchy-Schwarz Uncertainty (machine-checked)
 -- Var(A)·Var(B) ≥ |⟨u,v⟩|² where u,v are deviation vectors
 -- ============================================================
 
@@ -172,7 +172,7 @@ theorem self_adjoint_deviation_transfer (A : Operator) (hA : IsSelfAdjoint A) (�
   @inner ℂ StateSpace _ (A ψ) φ = @inner ℂ StateSpace _ ψ (A φ) := hA ψ φ
 
 -- ============================================================
--- THEOREM 6: Expectation Value Properties (GENUINE PROOFS)
+-- THEOREM 6: Expectation Value Properties (machine-checked)
 -- ============================================================
 
 /-- For a self-adjoint operator, the expectation value is real -/
@@ -183,7 +183,7 @@ theorem expectation_real (A : Operator) (hA : IsSelfAdjoint A) (ψ : StateSpace)
   exact hA ψ ψ ▸ rfl
 
 -- ============================================================
--- THEOREM 7: Orthogonal Projections (GENUINE PROOF)
+-- THEOREM 7: Orthogonal Projections (machine-checked)
 -- If P and Q are orthogonal projections (PQ = 0),
 -- their measurement outcomes are exclusive.
 -- ============================================================
@@ -332,7 +332,7 @@ noncomputable def time_derivative (_ : ℝ → StateSpace) (_ : ℝ) : StateSpac
 -- The retired theorem `schrodinger_equation` restated its hypothesis
 -- `h_dynamics` verbatim as its conclusion (a P→P tautology); it was
 -- removed in the eighth pass. The block below replaces it with genuine
--- dynamics: an explicit trajectory with a REAL derivative
+-- dynamics: an explicit trajectory with a derivative
 -- (`HasDerivAt`, not the zero `time_derivative` of the minimal model)
 -- that provably solves the equation for a self-adjoint Hamiltonian.
 -- What remains a postulate is the general theory (which self-adjoint

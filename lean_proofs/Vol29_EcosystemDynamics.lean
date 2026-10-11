@@ -4,7 +4,7 @@ import OmegaUnifiedFoundation
 
 /-
   Vol29_EcosystemDynamics.lean
-  REAL formalization: Ecosystem Dynamics (Lotka-Volterra).
+  Machine-checked model: Ecosystem Dynamics (Lotka-Volterra).
 
   Using Omega Protocol:
   - 0D: Species = Q-Regions
@@ -25,7 +25,7 @@ noncomputable def PreyRate (alpha beta x y : ℝ) : ℝ :=
 noncomputable def PredatorRate (delta gamma x y : ℝ) : ℝ :=
   delta * x * y - gamma * y
 
-/-- THEOREM: Equilibrium Point (GENUINE PROOF)
+/-- THEOREM: Equilibrium Point (machine-checked)
     At x = γ/δ, y = α/β, both rates are zero. -/
 theorem lotka_volterra_equilibrium
   (alpha beta delta gamma : ℝ)

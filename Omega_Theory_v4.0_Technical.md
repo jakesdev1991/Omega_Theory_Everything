@@ -228,6 +228,8 @@ python -m pytest tests/test_gauss_bonnet_scalarization.py -q
 python Sim7_Radial_Metric.py --no-plots
 python research/verify_derivations.py
 python -m pytest tests/test_verify_derivations.py -q
+python research/verify_covariant.py
+python research/verify_tfim.py
 ```
 
 The Lean source and CI audit are documented in

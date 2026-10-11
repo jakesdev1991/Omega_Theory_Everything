@@ -3,7 +3,7 @@ import OmegaUnifiedFoundation
 /-
   Vol01_ClassicalMechanics.lean
 
-  Classical mechanics, formalized with GENUINE proofs (no definitional
+  Classical mechanics, formalized with machine-checked proofs (no definitional
   tautologies, no rigged `if` statements).
 
   Proven theorems (from Mathlib calculus / algebra only):

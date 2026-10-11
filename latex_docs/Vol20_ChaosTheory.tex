@@ -1,11 +1,10 @@
 \documentclass[11pt, a4paper]{article}
-
 \usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
 
-\title{Theory of Everything - Volume 20 \\ \Large Chaos Theory \& Quantum Scrambling}
+\title{Omega Theory --- Volume 20\\\Large Chaos Theory: A Model-Scoped Summary}
 \author{Omega Protocol}
 \date{\today}
 
@@ -13,16 +12,31 @@
 
 \maketitle
 
+\begin{quote}
+\textbf{Status.} Formal counterpart: \texttt{lean\_proofs/Vol20\_ChaosTheory.lean}. The file is a model. It establishes: (i) that a positive Lyapunov exponent gives a positive divergence exponent $\lambda t$ for $t > 0$; (ii) for the doubling map $x \mapsto 2x \bmod 1$, the separation of unseparated trajectories doubles at each step, $|f^n(x) - f^n(y)| = 2^n |x - y|$, with a concrete three-step instance. The file does not establish quantum chaos, out-of-time-order correlators, fast scrambling, or the butterfly effect in weather. The claims about black holes and quantum scrambling in earlier text are withdrawn. Physical interpretation: open.
+\end{quote}
+
 \section*{Layman's Summary}
-If a butterfly flaps its wings in Brazil, can it cause a tornado in Texas? Volume 20 tackles Chaos Theory. We prove that unpredictability isn't just because we have bad measuring tools; the universe is fundamentally wired to scramble information as fast as mathematically possible.
+Chaotic systems are sensitive to their starting conditions: nearby trajectories separate exponentially. This volume records that behavior for a standard toy map. It does not show that the physical world, or black holes, scramble information at a maximal rate.
 
-\section{Quantum Chaos (Axiom 23)}
-If you throw a book into a fire, the information in the book is scrambled, but not destroyed. We establish that this scrambling happens at a very specific, exponential speed. The mathematical tools used to measure this (Out-of-Time-Order Correlators) show that information decays and mixes at the absolute maximum speed allowed by the temperature of the environment.
+\section{Lyapunov Exponents (Formal Result)}
+If a Lyapunov exponent $\lambda$ is positive and $t > 0$, then $\lambda t > 0$. This is elementary. It becomes meaningful only for a specified dynamical system.
 
-\section{Fast Scrambling (Theorem)}
-What is the fastest paper-shredder in the universe? A black hole. We prove that black holes, and the universal informational substrate itself, are "fast scramblers." They take incoming quantum information and mix it up so thoroughly and so quickly that it reaches a state of maximum chaos in the shortest time mathematically permitted by the laws of physics.
+\section{Doubling Map (Formal Result within the Model)}
+For the doubling map, the formal file shows that the separation of two trajectories that have not yet separated doubles at each step, with a concrete check over three steps. This is a property of the toy map, not of weather or any physical system.
 
-\section{The Butterfly Effect (Theorem)}
-The macroscopic "butterfly effect"—where tiny changes in the weather today lead to massive changes next week—is not just a feature of wind and air. We prove that macroscopic chaos is actually the visible, zoomed-out shadow of the universe's underlying quantum algebraic scrambling. The unpredictability of our world is born from the aggressive mixing of the fundamental informational fabric.
+\section{Sensitive Dependence (Formal Result within the Model)}
+The file shows exponential growth of separation for the expanding map. This is sensitive dependence on initial conditions for that map only.
+
+\section{Quantum Chaos and Fast Scrambling (No Formal Counterpart)}
+The earlier claims about out-of-time-order correlators, maximal scrambling speed, and black holes as fast scramblers have no formal counterpart. They are withdrawn as claims of this work and are listed as open items.
+
+\section{The Butterfly Effect in Nature (No Formal Counterpart)}
+The earlier claim that the macroscopic butterfly effect is a shadow of quantum algebraic scrambling has no formal counterpart. Weather predictability is not analyzed here.
+
+\section{Scope and Open Items}
+\begin{itemize}
+  \item Not established here: chaos in physical systems; quantum chaos; scrambling; predictability limits of any real system.
+\end{itemize}
 
 \end{document}

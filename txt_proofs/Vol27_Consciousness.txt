@@ -4,7 +4,7 @@ import OmegaUnifiedFoundation
 
 /-
   Vol27_Consciousness.lean
-  REAL formalization: Integrated Information Theory.
+  Machine-checked model: Integrated Information Theory.
 
   Using Omega Protocol:
   - 4D: RCOD Asymmetry Tensor = Integrated Information Φ (Tononi)

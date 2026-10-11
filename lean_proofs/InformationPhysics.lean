@@ -10,7 +10,7 @@ The non-ideal erasure section adds explicit excess costs and aggregate
 feasibility. It does not change the ideal `informationMass` used by the
 phenomenological density/scale pipeline.
 
-Genuinely proven theorems:
+Machine-checked theorems:
 1. **Information-Mass-Energy Equivalence** — converting the mass equivalent of
    `I` bits back through Einstein's equation yields the exact Landauer erasure
    energy.

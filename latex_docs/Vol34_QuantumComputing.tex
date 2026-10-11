@@ -1,11 +1,10 @@
 \documentclass[11pt, a4paper]{article}
-
 \usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
 
-\title{Theory of Everything - Volume 34 \\ \Large Quantum Computing \& P vs NP}
+\title{Omega Theory --- Volume 34\\\Large Quantum Computing: A Model-Scoped Summary}
 \author{Omega Protocol}
 \date{\today}
 
@@ -13,16 +12,31 @@
 
 \maketitle
 
+\begin{quote}
+\textbf{Status.} Formal counterpart: \texttt{lean\_proofs/Vol34\_QuantumComputing.lean}. The file is a toy model of gates. It has two parts. The first is an abstract two-element gate fragment $\{I, H\}$ with explicit composition tables, which establishes that $H$ is self-adjoint, involutive, and unitary, that composition is associative, and that every gate has an inverse. The second is explicit $2 \times 2$ matrices for $H$, $X$, and $Z$. It establishes that these are unitary, that Hadamard conjugates $X$ to $Z$, that $X$ and $Z$ do not commute, and that $H$ preserves norm on a qubit vector. The file does not establish quantum supremacy, Shor's algorithm, or topological error correction. Those claims in earlier text are withdrawn. Physical interpretation: open.
+\end{quote}
+
 \section*{Layman's Summary}
-Standard computers calculate one thing at a time. Quantum computers calculate everything at once. Volume 34 explains how quantum computers tap directly into the fundamental mathematical fabric of the universe, bypassing the limits of normal physics to perform impossible calculations.
+Quantum computers process information using quantum gates, which are unitary transformations on qubits. This volume records the basic algebra of a few standard gates. It is a check of textbook facts about these gates. It is not a demonstration of quantum advantage.
 
-\section{Quantum Supremacy (Axiom 37)}
-We establish that the computational capacity of the universe doesn't scale normally; it scales exponentially with the size of its "Hilbert space." A quantum computer isn't just a fast calculator; it is a machine that borrows the massive, parallel processing power of the universe's underlying quantum algebra to achieve "Quantum Supremacy."
+\section{Gate Algebra (Formal Result within the Model)}
+The two-element gate fragment forms a finite algebra in which $H$ is self-adjoint and involutive. Composition is associative and every gate has an inverse. These are finite checks.
 
-\section{Shor's Algorithm (Theorem)}
-Modern internet security relies on the fact that multiplying two huge numbers is easy, but breaking them back apart (factoring) is incredibly hard. We prove that Shor's Algorithm—which breaks this security instantly—works because it exploits the hidden, periodic "modular flow" of the universe. It finds the hidden rhythms of numbers by vibrating the quantum fabric.
+\section{Explicit Gate Matrices (Formal Result within the Model)}
+The file defines $H$, $X$, and $Z$ as $2 \times 2$ matrices and verifies that they are unitary. It also verifies that Hadamard conjugates $X$ to $Z$, that $X$ and $Z$ do not commute, and that $H$ preserves the norm of a qubit vector. These are standard identities.
 
-\section{Topological Error Correction (Theorem)}
-Quantum computers are notoriously fragile; a slight change in temperature destroys their calculations. We prove that the only way to build a stable quantum computer is through "Topological Error Correction." Instead of storing data in single, fragile atoms, information must be hidden in the global, unbreakable geometry of the quantum network (like tying a knot).
+\section{Quantum Supremacy (No Formal Counterpart)}
+The earlier claim that quantum computers exploit an exponential computational capacity of the universe's algebra has no formal counterpart. The file contains no complexity analysis. It is withdrawn as a claim of this work and is listed as an open item.
+
+\section{Shor's Algorithm (No Formal Counterpart)}
+The earlier claim that Shor's algorithm works because it exploits a hidden modular flow of the universe has no formal counterpart. The file does not implement or analyze period finding. It is withdrawn.
+
+\section{Topological Error Correction (No Formal Counterpart)}
+The earlier claim that the only route to stable quantum computation is topological error correction has no formal counterpart. It is withdrawn.
+
+\section{Scope and Open Items}
+\begin{itemize}
+  \item Not established here: quantum speedups; Shor's algorithm; fault tolerance; any hardware realization.
+\end{itemize}
 
 \end{document}

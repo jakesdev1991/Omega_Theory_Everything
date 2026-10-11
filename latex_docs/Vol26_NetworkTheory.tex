@@ -1,11 +1,10 @@
 \documentclass[11pt, a4paper]{article}
-
 \usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
 
-\title{Theory of Everything - Volume 26 \\ \Large Network Theory \& Graph Dynamics}
+\title{Omega Theory --- Volume 26\\\Large Network Theory: A Model-Scoped Summary}
 \author{Omega Protocol}
 \date{\today}
 
@@ -13,16 +12,34 @@
 
 \maketitle
 
+\begin{quote}
+\textbf{Status.} Formal counterpart: \texttt{lean\_proofs/Vol26\_NetworkTheory.lean}. The file is a combinatorial model on finite simple graphs. It establishes: (i) the handshaking lemma (the degree sum equals twice the number of edges); (ii) the number of odd-degree vertices is even; (iii) a degree-sum lower bound; (iv) concrete small-graph counts. It does not derive social or physical adjacency from mutual information. The scale-free, small-world, and preferential-attachment claims in earlier text have no formal counterpart. Physical interpretation: open.
+\end{quote}
+
 \section*{Layman's Summary}
-Why do the internet, the human brain, and a galaxy of stars all look mathematically similar? Volume 26 proves that the universe naturally organizes itself into a specific kind of network. Reality isn't built on a rigid grid; it's a living, breathing web of connections that follows universal mathematical rules.
+Networks appear in the internet, in brains, and in social systems. Basic network theory contains some general counting facts, such as the handshaking lemma. This volume records those facts for finite graphs. It does not show that the universe is a scale-free or small-world network.
 
-\section{Network Topology (Axiom 29)}
-We establish that the macroscopic structure of reality can be represented as an expanding "scale-free network." Whether you zoom in on quantum particles or zoom out to cosmic superclusters, you see the exact same web-like pattern. The universe is fundamentally built on connections (edges) between points of information (nodes).
+\section{Handshaking Lemma (Formal Result)}
+In any finite simple graph, the sum of degrees equals twice the number of edges. The formal file establishes this from Mathlib's graph theory.
 
-\section{Small World Phenomenon (Theorem)}
-Have you heard of "six degrees of separation"? This theorem proves that no matter how gigantic the universe gets, the mathematical "distance" between any two points stays incredibly small. As the network grows, the number of steps required to get from A to B only grows logarithmically. The universe is incredibly tightly knit.
+\section{Odd-Degree Vertices (Formal Result)}
+In any finite graph, the number of odd-degree vertices is even. This is a corollary of the handshaking lemma.
 
-\section{Hub Emergence (Theorem)}
-In any network, some nodes become wildly more popular and connected than others (think of Google on the internet, or major airports). We prove that this "preferential attachment" is a mathematical inevitability. Information naturally flows toward nodes that already have information, creating massive "Archive" hubs that anchor the structure of reality.
+\section{Concrete Examples (Formal Result within the Model)}
+The file computes the degree and edge counts for a small empty graph and a two-vertex graph. These are finite checks.
+
+\section{Scale-Free Structure (No Formal Counterpart)}
+The earlier claim that the macroscopic structure of reality is an expanding scale-free network has no formal counterpart. The file contains no growth model and no degree distribution. It is withdrawn as a claim of this work and is listed as an open item.
+
+\section{Small-World Behavior (No Formal Counterpart)}
+The earlier claim that path lengths grow logarithmically in the universe's network has no formal counterpart. It is withdrawn.
+
+\section{Hub Emergence (No Formal Counterpart)}
+The earlier claim that preferential attachment is an inevitable consequence of the framework has no formal counterpart. It is withdrawn. The graph model in the file does not include a growth or attachment rule.
+
+\section{Scope and Open Items}
+\begin{itemize}
+  \item Not established here: derivation of network adjacency from mutual information; scale-free or small-world structure of any physical system; preferential attachment.
+\end{itemize}
 
 \end{document}

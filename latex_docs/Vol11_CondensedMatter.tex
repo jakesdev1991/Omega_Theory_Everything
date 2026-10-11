@@ -1,11 +1,10 @@
 \documentclass[11pt, a4paper]{article}
-
 \usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue, citecolor=blue]{hyperref}
 
-\title{Theory of Everything - Volume 11 \\ \Large Condensed Matter \& Topological Phases}
+\title{Omega Theory --- Volume 11\\\Large Condensed Matter and Topological Phases: A Model-Scoped Summary}
 \author{Omega Protocol}
 \date{\today}
 
@@ -13,16 +12,28 @@
 
 \maketitle
 
+\begin{quote}
+\textbf{Status.} Formal counterpart: \texttt{lean\_proofs/Vol11\_CondensedMatter.lean}. The file is a model. It establishes: (i) the minimization of a quartic Landau free energy with positive quartic coefficient; (ii) a \texttt{ChernBand} structure with an integer Chern index (integrality is built into the definition), with a Hall-response computation for a specific model band. The topological section also retains a legacy zero-Chern-number model, which the source labels as legacy. The file does not derive the band structure from the modular flow, and it has no formal counterpart for superconductivity or for the ``freezing of informational flow'' described in earlier text. Physical interpretation: open.
+\end{quote}
+
 \section*{Layman's Summary}
-When trillions of atoms get together, they can behave in incredibly bizarre ways, creating states of matter that act like they have a mind of their own. Volume 11 bridges the gap between the fundamental fabric of the universe and these exotic everyday materials, proving that things like superconductivity are just macro-scale versions of spacetime geometry.
+Some materials show quantized electrical responses, and some conduct with zero resistance. This volume records two formal models: a Landau free-energy minimization, and a Chern-band model with an integer invariant. Neither model is derived from the Omega framework, and neither is a theory of superconductivity.
 
-\section{Topological Sectors (Axiom 14)}
-Some materials don't change their behavior even if you bend or stretch them—they are "topologically protected." We show that these stable macroscopic states of matter map directly onto fundamental mathematical structures deep within the universe's informational foundation (the Type III\_1 algebra). The macroscopic world mirrors the deepest quantum rules.
+\section{Landau Phase Transition (Formal Result within the Model)}
+For a quartic Landau free energy with positive quartic coefficient, the formal file characterizes the minimizers and shows how the order parameter changes at the critical point. This is standard Landau theory for the chosen polynomial. It does not establish the microscopic origin of the coefficients.
 
-\section{The Quantum Hall Effect (Theorem)}
-In certain super-cold materials, electrical conductivity jumps in perfect, exact steps, no matter how messy the material is. This is the Quantum Hall Effect. We prove that this perfect quantization isn't just about electrons; it emerges from global, unbreakable rules governing how information flows (the modular flow) through the fabric of space itself.
+\section{Topological Band and Hall Response (Formal Result within the Model)}
+The formal file defines a \texttt{ChernBand} as a structure whose Chern index is an integer field. The quantization theorem (\texttt{chern\_number\_quantized}) therefore holds by construction: integrality is built into the definition, not derived from Berry curvature (\texttt{BerryCurvature} is defined as the constant $0$ in the file). The file also computes the Hall response of the specific Haldane-type model band. The file does not show that physical materials realize this band structure, and it does not derive the band from the modular flow. The quantized Hall response described in earlier text is therefore a property of the model only.
 
-\section{Superconductivity (Theorem)}
-Superconductors let electricity flow forever with absolutely zero resistance. This happens when electrons pair up and condense into a single, unified quantum state. Our theory proves that this condensation is actually a localized "freezing" of the universe's informational flow. It’s an area where the usual chaotic jitter of space has completely locked together into a smooth, frictionless highway.
+\section{Legacy Zero-Chern Model}
+Earlier stubs with zero Chern number are retained and labeled legacy in the source. They are not used as evidence for any physical claim.
+
+\section{Superconductivity (No Formal Counterpart)}
+The earlier description of superconductivity as a localized freezing of informational flow has no corresponding formal statement in this volume. It is withdrawn as a claim of this work and is listed as an open item.
+
+\section{Scope and Open Items}
+\begin{itemize}
+  \item Not established here: derivation of Landau coefficients; band structure from the framework; superconductivity; agreement of the model with measured material quantization.
+\end{itemize}
 
 \end{document}
