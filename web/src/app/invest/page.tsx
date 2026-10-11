@@ -5,14 +5,13 @@
 import { Section } from "@/components/Section";
 import { CallToAction } from "@/components/CallToAction";
 import { TOKENS, WIRED_TOKENS } from "@/lib/types";
-import Link from "next/link";
 
 export default function InvestPage() {
   return (
     <>
       <Hero />
       <ParticipationPrinciples />
-      <UnlockTiers />
+      <ReaderProofOptions />
       <TokenParticipate />
       <HowItWorks />
       <WalletSection />
@@ -57,9 +56,9 @@ function Hero() {
             maxWidth: "860px",
           }}
         >
-          Invest in the economy.
+          Participate in the economy.
           <br />
-          <span style={{ color: "var(--color-care)" }}>Unlock the novel.</span>
+          <span style={{ color: "var(--color-care)" }}>Read the public novel.</span>
         </h1>
         <p
           style={{
@@ -71,14 +70,14 @@ function Hero() {
           }}
         >
           This economy is meant to help people earn while they learn to become
-          better people. The current release build wires two live rails into the
-          wallet and web app, inside the C.A.R.E. Economy — three currencies,
-          one base layer: care. Sign with
-          either live rail to unlock{" "}
+          safer, wiser, and more trustworthy together. Its current wallet flow
+          demonstrates two optional proof rails — $OMEGA and TWC — inside the
+          C.A.R.E. Economy. The complete draft of{" "}
           <em style={{ color: "var(--color-accent-soft)" }}>
             Crucible: The Satoshi Protocol
           </em>{" "}
-          by Akash Varma.
+          is public under CC BY 4.0; no token or wallet is required to read or
+          reuse the original text with attribution.
         </p>
         <div
           style={{
@@ -87,8 +86,9 @@ function Hero() {
             flexWrap: "wrap",
           }}
         >
-          <CallToAction label="Start participating" href="#tokens" />
-          <CallToAction label="See the unlock rails" href="#tiers" variant="ghost" />
+          <CallToAction label="Explore participation" href="#tokens" />
+          <CallToAction label="See optional proof demos" href="#tiers" variant="ghost" />
+          <CallToAction label="Read the public text" href="/book/full-book.md" variant="ghost" />
         </div>
 
         <div
@@ -149,7 +149,7 @@ function Hero() {
               16 chapters
             </div>
             <div style={{ fontSize: "13px", color: "var(--color-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
-              Unlocked by participation
+              Public under CC BY 4.0
             </div>
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
@@ -244,13 +244,13 @@ function ParticipationPrinciples() {
   );
 }
 
-function UnlockTiers() {
+function ReaderProofOptions() {
   const tiers = [
     {
       tier: "1",
       title: "$OMEGA",
-      requirement: "Sign an EVM-side release proof from the wired $OMEGA wallet flow",
-      unlocks: "All 16 chapters, uncut — including The Final Hybrid and Epilogue",
+      requirement: "Optional EVM proof demo using the wired $OMEGA wallet flow",
+      readerFlow: "Proof-flow demonstration only; the full text is public without a token",
       color: "var(--color-omega)",
       icon: (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -261,8 +261,8 @@ function UnlockTiers() {
     {
       tier: "2",
       title: "TWC",
-      requirement: "Sign a Solana-side release proof from the wired TWC wallet flow",
-      unlocks: "All 16 chapters, uncut — including The Final Hybrid and Epilogue",
+      requirement: "Optional Solana proof demo using the wired TWC wallet flow",
+      readerFlow: "Proof-flow demonstration only; the full text is public without a token",
       color: "var(--color-twc)",
       icon: (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -276,9 +276,9 @@ function UnlockTiers() {
 
   return (
     <Section
-      eyebrow="The Unlock"
-      title="Two wired currencies unlock the novel"
-      subtitle="The current release build does not use five chapter tiers. Instead, either of the two wired currencies — $OMEGA or TWC — can sign a proof that unlocks the full novel."
+      eyebrow="Optional reader-proof demos"
+      title="Two pilot rails demonstrate wallet verification"
+      subtitle="The complete manuscript is public under CC BY 4.0. These $OMEGA and TWC proof flows are optional demonstrations and do not gate reading, sharing, or adaptation of the text."
       id="tiers"
     >
       <div
@@ -385,8 +385,8 @@ function UnlockTiers() {
                 lineHeight: 1.5,
               }}
             >
-              <span style={{ color: "var(--color-unlock)", fontWeight: 600 }}>Unlocks:</span>{" "}
-              {tier.unlocks}
+              <span style={{ color: "var(--color-unlock)", fontWeight: 600 }}>Reader flow:</span>{" "}
+              {tier.readerFlow}
             </div>
 
             <div
@@ -424,7 +424,7 @@ function TokenParticipate() {
     <Section
       eyebrow="Tokens"
       title="Choose which wired currency you use"
-      subtitle="Two currencies are connected end to end today. You do not need both — a verified $OMEGA proof or a verified TWC proof unlocks Crucible in full."
+      subtitle="Two currencies are connected end to end for optional reader-proof demonstrations. You need neither to read or reuse the complete public CC BY 4.0 text."
       id="tokens"
     >
       <div
@@ -567,7 +567,7 @@ function TokenParticipate() {
                 lineHeight: 1.45,
               }}
             >
-              <span style={{ fontWeight: 600 }}>Unlocks:</span> {token.unlockRequirement}
+              <span style={{ fontWeight: 600 }}>Reader flow:</span> {token.unlockRequirement}
             </div>
           </div>
         ))}
@@ -581,25 +581,25 @@ function HowItWorks() {
     {
       step: "01",
       title: "Enter without judgment",
-      body: "Start with a wallet, not a confession booth. No account and no KYC are required for the current proof flow.",
+      body: "Read the public manuscript without signing up. If you choose to explore the pilot economy, its optional proof demo also needs no account or KYC.",
       color: "var(--color-sov)",
     },
     {
       step: "02",
-      title: "Choose a live rail",
-      body: "Use the wired $OMEGA EVM flow or the wired TWC Solana flow. Both currently issue a signed full-unlock proof.",
+      title: "Try an optional proof flow",
+      body: "Use the $OMEGA EVM or TWC Solana pilot flow to demonstrate wallet signatures and server-side verification. This is not required to read the public text.",
       color: "var(--color-use)",
     },
     {
       step: "03",
-      title: "Unlock the novel",
-      body: "On release day, a verified $OMEGA or TWC proof unlocks the full text of Crucible.",
+      title: "Read the public novel",
+      body: "The full draft of Crucible is available to everyone under CC BY 4.0. No token or wallet is required; reuse it with attribution and the license terms.",
       color: "var(--color-care)",
     },
     {
       step: "04",
       title: "Grow into the wider economy",
-      body: "The broader economy is the C.A.R.E. Economy: three currencies — $OMEGA, TWC, and AMITY — over one base layer of care. The live release build starts with two rails and expands from there.",
+      body: "The broader economy is the C.A.R.E. Economy: three currencies — $OMEGA, TWC, and AMITY — over one base layer of care. The current optional reader-proof demo starts with two pilot rails.",
       color: "var(--color-amity)",
     },
     {
@@ -613,8 +613,8 @@ function HowItWorks() {
   return (
     <Section
       eyebrow="How it works"
-      title="From participation to unlock"
-      subtitle="Five steps from dignified entry to verified access. Simple, sovereign, and built around choice instead of coercion."
+      title="From public reading to participation"
+      subtitle="The manuscript is freely available; wallet proofs are optional demonstrations for people exploring the pilot economy."
     >
       <ol style={{ listStyle: "none", margin: "0", padding: "0", display: "flex", flexDirection: "column", gap: "0" }}>
         {steps.map((s, i) => (
@@ -689,7 +689,7 @@ function WalletSection() {
     <Section
       eyebrow="Wallet"
       title="What you need to participate"
-      subtitle="A wallet is all you need. No account. No KYC. Start privately if you want. Just bring a wallet, choose one of the two wired currencies, and decide later how visible you want to become."
+      subtitle="A wallet is needed only to try an optional $OMEGA or TWC proof demo. No account or KYC is required to read, download, share, or adapt the public CC BY 4.0 manuscript."
     >
       <div
         style={{
@@ -701,17 +701,17 @@ function WalletSection() {
         {[
           {
             title: "Wallet",
-            desc: "Use an Ethereum wallet for $OMEGA or a Solana wallet for TWC. Those are the two release currencies currently wired into the app.",
+            desc: "Use an Ethereum wallet for the optional $OMEGA proof demo or a Solana wallet for the TWC demo. No wallet is needed to read the public manuscript.",
             color: "var(--color-sov)",
           },
           {
             title: "Tokens",
-            desc: "Choose the $OMEGA Ethereum rail or the TWC Solana rail. Both currently sign a full-unlock proof for the novel.",
+            desc: "Try the optional $OMEGA Ethereum or TWC Solana proof demo. The manuscript itself remains publicly available under CC BY 4.0.",
             color: "var(--color-use)",
           },
           {
-            title: "Release day",
-            desc: "On release day, your signed $OMEGA or TWC proof unlocks Crucible. The current release flow opens the whole novel.",
+            title: "Public manuscript",
+            desc: "Read the complete draft without a token. If you use a proof route, it demonstrates the optional reader flow and does not grant exclusive rights.",
             color: "var(--color-care)",
           },
           {
@@ -789,14 +789,13 @@ function FinalCta() {
             margin: "0 0 14px",
           }}
         >
-          The novel opens on release day.
+          The complete manuscript is open now.
         </h2>
         <p style={{ color: "var(--color-muted-strong)", fontSize: "17px", lineHeight: 1.6, margin: "0 0 32px" }}>
-          Two currencies are wired in today: $OMEGA and TWC. Crucible is the
-          reward, the MCP hub is the operating layer, and the C.A.R.E. Economy is
-          the whole design — its manifesto and extensive whitepaper are readable
-          on this site. The wallet-to-web unlock path already works across both
-          current rails.
+          Two optional proof demonstrations are wired today: $OMEGA and TWC.
+          Crucible is public under CC BY 4.0; the MCP hub is the operating layer,
+          and the C.A.R.E. Economy is the broader design. Reading and reusing the
+          manuscript does not require a token or proof.
         </p>
         <div style={{ display: "flex", gap: "14px", justifyContent: "center", flexWrap: "wrap" }}>
           <CallToAction label="Participate now" href="#tokens" />

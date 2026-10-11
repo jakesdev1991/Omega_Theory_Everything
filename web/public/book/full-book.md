@@ -1,3 +1,5 @@
+<!-- Copyright (c) 2025-2026 Jacob See. SPDX-License-Identifier: CC-BY-4.0 -->
+
 # Chapter 1: The Observer and the Spoof
 
 **POV:** Akash Varma  

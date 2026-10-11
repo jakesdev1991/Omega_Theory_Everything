@@ -15,7 +15,7 @@ export default function EconomyPage() {
       <Section
         eyebrow="The C.A.R.E. Economy"
         title="The C.A.R.E. Economy has three currencies"
-        subtitle="The public economy is three-currency: $OMEGA on the EVM rail, TWC on Solana, and AMITY on Bitcoin / Lightning / Taproot. Only two rails are wired into the live wallet-to-web unlock flow today, but the economic structure is already three-currency — and the whole economy is named the C.A.R.E. Economy: Call About Resuscitating Everyone."
+        subtitle="The public economy has three currencies: $OMEGA on EVM, TWC on Solana, and AMITY on Bitcoin / Lightning / Taproot. Two currencies power the optional reader-proof demo; they do not gate the public CC BY 4.0 manuscript. The whole economy is named C.A.R.E.: Call About Resuscitating Everyone."
       >
         <TokenShowcase variant="economy" />
       </Section>
@@ -29,9 +29,9 @@ export default function EconomyPage() {
       </Section>
 
       <Section
-        eyebrow="Live unlock rails"
-        title="Two currencies are wired into the current release build"
-        subtitle="$OMEGA and TWC are the two release-day currencies currently connected from wallet proof creation to server-side verification. AMITY remains a separate Bitcoin / Lightning / Taproot workstream until holder verification exists."
+        eyebrow="Optional reader-proof demo"
+        title="Two pilot currencies demonstrate wallet verification"
+        subtitle="$OMEGA and TWC are connected from wallet proof creation to server-side verification for an optional reader route. AMITY remains a separate Bitcoin / Lightning / Taproot workstream. None of these proofs is required to access the public manuscript."
       >
         <EconomyFlow />
       </Section>
@@ -57,8 +57,8 @@ export default function EconomyPage() {
 
       <Section
         eyebrow="Governance"
-        title="What the current release rails imply"
-        subtitle="$OMEGA is the explicit EVM-side macro-governance currency in the current build, while TWC is the Solana-side release currency. AMITY expands the long-term economy toward Bitcoin / Lightning / Taproot, but it is not wired into the unlock flow yet."
+        title="What the current pilot rails imply"
+        subtitle="$OMEGA is the EVM-side macro-governance currency in the current build, while TWC is the Solana-side pilot currency. AMITY expands the long-term economy toward Bitcoin / Lightning / Taproot; it is not part of the optional reader-proof demo."
       >
         <GovernancePreview />
       </Section>
@@ -121,8 +121,8 @@ function Hero() {
           The entire economy is the C.A.R.E. Economy — Call About
           Resuscitating Everyone. It settles across three currencies: $OMEGA
           on the EVM rail, TWC on Solana, and AMITY on Bitcoin / Lightning /
-          Taproot. Today, only the $OMEGA and TWC rails are wired from wallet
-          signature to web unlock verification.
+          Taproot. Today, $OMEGA and TWC power an optional reader-proof demo;
+          the public manuscript is available independently under CC BY 4.0.
         </p>
       </div>
     </section>
@@ -145,13 +145,13 @@ function EconomyFlow() {
         {
           step: "01",
           title: "$OMEGA — EVM release rail",
-          body: "$OMEGA is the EVM-side currency currently wired into the wallet and web app. Its signed proof path unlocks the full novel.",
+          body: "$OMEGA is the EVM-side currency currently wired into an optional wallet-proof reader demonstration. The public CC BY 4.0 manuscript does not require a token or proof.",
           color: "var(--color-omega)",
         },
         {
           step: "02",
           title: "TWC — Solana release rail",
-          body: "TWC is the Solana-side currency currently wired into the wallet and web app. Its signed proof path also unlocks the full novel.",
+          body: "TWC is the Solana-side currency currently wired into an optional wallet-proof reader demonstration. Reading or reusing the public CC BY 4.0 manuscript does not require a token or proof.",
           color: "var(--color-twc)",
         },
       ].map((item, i) => (
@@ -425,10 +425,10 @@ function GovernancePreview() {
         {
           token: "TWC",
           color: "var(--color-twc)",
-          role: "Current Solana release rail",
+          role: "Current Solana pilot rail",
           examples: [
             "Solana-side holder verification",
-            "Release-day novel access",
+            "Optional reader-proof demo",
             "Cross-chain launch coordination",
             "Pilot-to-mainnet transition planning",
           ],
@@ -556,7 +556,7 @@ function FinalCta() {
             margin: "0 0 14px",
           }}
         >
-          Read the novel. Join the economy.
+          Read the public novel. Explore the economy.
         </h2>
         <p
           style={{
@@ -566,10 +566,11 @@ function FinalCta() {
             margin: "0 0 32px",
           }}
         >
-          The current public build wires two currencies into the unlock flow.
-          The novel is the reward. The MCP hub is the operating layer of the
-          C.A.R.E. Economy. The whole design — manifesto, extensive whitepaper,
-          and every subsystem paper — is documented on this site.
+          The manuscript is publicly available under CC BY 4.0. The current
+          wallet integration demonstrates two optional proof routes; the MCP hub
+          is the operating layer of the C.A.R.E. Economy. The whole design —
+          manifesto, extensive whitepaper, and every subsystem paper — is
+          documented on this site.
         </p>
         <div
           style={{

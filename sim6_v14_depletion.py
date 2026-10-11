@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 # Copyright (c) 2025-2026 Jacob See.
 # SPDX-License-Identifier: MIT
-"""
-sim6_v14_depletion.py
-- Implements "Proposal A: The Depletion Model"
-- Physics Change: dI/dt = -gamma * A^kappa * I (Proportional Decay)
-- Math Consequence: du/dt = -gamma * A^kappa (No exponential feedback)
-- Result: Naturally stable Dark Energy (w ~ -1) without Big Rip.
+"""Phenomenological depletion-model cosmology toy.
+
+The code assumes an information-like variable with
+``dI/dt = -gamma * A_BH(a)**kappa * I`` and adds the resulting
+``H_info**2`` term to a matter/radiation background. The horizon-area history
+is a hand-entered interpolation, not a measured dataset or a covariant source
+model. ``gamma`` is calibrated to the selected ``H0_fid`` by construction, so
+reproducing that H0 is not a prediction. The code is useful for exploring the
+chosen ODE, but does not derive dark energy, establish a GR limit, or test the
+model against independent cosmological data.
 """
 
 import matplotlib.pyplot as plt
@@ -197,7 +201,7 @@ def compute_observables(sol, params, zmax=8.0, nz=1500):
 # Calibration (Simpler now)
 # --------------------------
 def H0_model_at_today(params, gamma):
-    """H0 the model predicts for a trial `gamma`, evaluated at a = 1.
+    """Compute the model's H0 output for a trial `gamma`, at a = 1.
 
     The background is algebraic in `gamma`: H(a)^2 = H_matter(a)^2 +
     (alpha * gamma * A_BH(a)^kappa)^2, so the a = 1 value needs no ODE

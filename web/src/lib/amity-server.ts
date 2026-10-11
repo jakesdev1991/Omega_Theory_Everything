@@ -382,13 +382,13 @@ export async function getAmityScaffoldStatus() {
   const envConfigured = envPresent || processEnvConfigured;
   const configSource = manifest.valid ? (envConfigured ? "manifest + env" : "manifest") : envConfigured ? "env" : "none";
 
-  let message = "AMITY remains a separate testnet scaffold and is not wired into the live unlock flow.";
+  let message = "AMITY remains a separate testnet scaffold and is not wired into the optional reader-proof demo.";
   if (!scaffoldConfigured) {
     message = "AMITY scaffold configuration is incomplete. Add amity/.env or generate amity/deployments/amity-testnet.json before attempting node/proof integration.";
   } else if (!operatorFilesReady) {
     message = "AMITY scaffold configuration is present, but TLS/macaroon operator files are still incomplete or missing.";
   } else {
-    message = "AMITY scaffold configuration and local operator files are present, but live holder verification is still not implemented. The wallet/web unlock flow remains two rails only: $OMEGA and TWC.";
+    message = "AMITY scaffold configuration and local operator files are present, but live holder verification is still not implemented. The optional wallet/web reader-proof demo remains two rails only: $OMEGA and TWC; the public manuscript does not depend on either.";
   }
 
   return {

@@ -68,7 +68,7 @@ export function UnlockRailBanner() {
         }}
       >
         <div style={{ fontWeight: 600, color: "var(--color-care)", marginBottom: "6px" }}>
-          Unlock rail status unavailable
+          Optional reader-proof status unavailable
         </div>
         <div style={{ fontSize: "14px", lineHeight: 1.55 }}>{state.error}</div>
       </div>
@@ -87,11 +87,12 @@ export function UnlockRailBanner() {
       }}
     >
       <div style={{ fontWeight: 600, color: "var(--color-care)", marginBottom: "8px" }}>
-        Operator setup still required
+        Optional reader-proof setup still required
       </div>
       <p style={{ margin: "0 0 12px", fontSize: "14px", lineHeight: 1.6 }}>
-        This reader now fails closed unless the web app has local pilot deployment metadata or explicit
-        environment variables for the two wired currencies. At least one unlock rail is still unconfigured.
+        The optional proof-reader route fails closed unless the web app has local pilot deployment
+        metadata or explicit environment variables for the two wired currencies. This does not affect
+        the public manuscript, available without a wallet at /book/full-book.md.
       </p>
       <ul style={{ margin: 0, paddingLeft: "18px", fontSize: "14px", lineHeight: 1.6 }}>
         <li>

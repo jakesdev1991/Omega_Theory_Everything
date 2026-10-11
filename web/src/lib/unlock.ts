@@ -6,7 +6,7 @@ import nacl from "tweetnacl";
 
 export const UNLOCK_STORAGE_KEY = "omega.unlock.proof";
 export const FULL_NOVEL_UNLOCK_CHAPTERS = 16;
-export const UNLOCK_MESSAGE_PREAMBLE = "OMEGA RELEASE-DAY NOVEL UNLOCK";
+export const UNLOCK_MESSAGE_PREAMBLE = "OMEGA OPTIONAL NOVEL READER PROOF";
 export const OMEGA_NETWORK = "ethereum-sepolia";
 export const TWC_NETWORK = "solana-devnet";
 
@@ -67,7 +67,7 @@ export function buildUnlockMessage({
     `Network: ${network}`,
     `Origin: ${origin}`,
     `Timestamp: ${timestamp}`,
-    "Unlock: full novel",
+    "Reader demo: full chapter view",
   ].join("\n");
 }
 
@@ -84,10 +84,13 @@ export function parseUnlockMessage(message: string) {
   const network = parseLabeledLine(lines[3], "Network");
   const origin = parseLabeledLine(lines[4], "Origin");
   const timestamp = parseLabeledLine(lines[5], "Timestamp");
-  const unlock = parseLabeledLine(lines[6], "Unlock");
+  const readerDemo = parseLabeledLine(lines[6], "Reader demo");
 
   assert(origin.length > 0, "Origin is required.");
-  assert(unlock === "full novel", "Unlock line must equal " + JSON.stringify("full novel") + ".");
+  assert(
+    readerDemo === "full chapter view",
+    "Reader demo line must equal " + JSON.stringify("full chapter view") + ".",
+  );
 
   const parsedTimestamp = Date.parse(timestamp);
   assert(Number.isFinite(parsedTimestamp), "Timestamp must be a valid ISO-8601 datetime.");

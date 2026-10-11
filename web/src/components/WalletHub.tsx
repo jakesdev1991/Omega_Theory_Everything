@@ -43,8 +43,8 @@ const FEATURES = [
   },
   {
     icon: "✍️",
-    title: "Auditable unlock proofs",
-    body: "Release-day statements are signed locally and verified server-side by this website before any gated chapter is served.",
+    title: "Optional reader-proof demos",
+    body: "Proof statements are signed locally and verified server-side if you choose to try the chapter-reader demo. The public manuscript remains accessible without a proof.",
   },
   {
     icon: "📡",
@@ -105,10 +105,10 @@ export function WalletHub() {
           <span className="accent">It runs right here.</span>
         </h1>
         <p className="lede">
-          The Omega release wallet is a real client-side wallet GUI: BIP-39 keys, an encrypted
-          keystore, MetaMask and Phantom bridges, and signed release-day proofs for the two wired
-          rails — $OMEGA on EVM and TWC on Solana. Launch it in your browser, install it as an app,
-          or take the offline bundle with you.
+          The Omega wallet is a real client-side GUI: BIP-39 keys, an encrypted keystore,
+          MetaMask and Phantom bridges, and optional reader-proof demos for $OMEGA on EVM and TWC
+          on Solana. The public manuscript does not require a wallet or token. Launch the GUI in
+          your browser, install it as an app, or take the offline bundle with you.
         </p>
         <div className="cta-row">
           <CallToAction label="Launch the wallet GUI ↗" href={launchUrl} />

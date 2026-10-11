@@ -30,13 +30,13 @@ export async function GET() {
   const rails = await getUnlockRailStatus();
   checks.push({
     id: "rail-omega",
-    label: "$OMEGA EVM unlock rail",
+    label: "$OMEGA EVM optional reader-proof rail",
     status: rails.rails.omega.configured ? "pass" : "warn",
     detail: rails.rails.omega.message,
   });
   checks.push({
     id: "rail-twc",
-    label: "TWC Solana unlock rail",
+    label: "TWC Solana optional reader-proof rail",
     status: rails.rails.twc.configured ? "pass" : "warn",
     detail: rails.rails.twc.message,
   });
@@ -49,7 +49,7 @@ export async function GET() {
       id: "rail-amity",
       label: "AMITY Bitcoin/Lightning scaffold",
       status: "warn",
-      detail: "Separate scaffold workstream — operator visibility only, not a live unlock rail.",
+      detail: "Separate scaffold workstream — operator visibility only, not a live optional reader-proof rail.",
     });
   } catch (error) {
     checks.push({

@@ -115,5 +115,5 @@ console.log(`  holder                  ${result.address}`);
 console.log(`  balance tokens          ${result.balanceTokens} ${PILOT_TOKEN_SYMBOL}`);
 console.log("  signature verification  valid (Ed25519 signer)");
 console.log("  origin match            verified (https://omega.example/novel)");
-console.log("  novel unlock status     granted (all chapters)");
+console.log("  optional reader demo    verified (public text remains open)");
 console.log("\nFixture policy, signature binding, and balance verification passed.");

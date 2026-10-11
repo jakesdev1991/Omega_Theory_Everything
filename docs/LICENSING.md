@@ -6,12 +6,13 @@
 
 ## Chosen model
 
-There is no single license for the whole repository. The root [`LICENSE`](../LICENSE) is a scope index, not a grant covering everything. Materials fall into four buckets:
+There is no single license for the whole repository. The root [`LICENSE`](../LICENSE) is a scope index, not a grant covering everything. Materials fall into five buckets:
 
 | Scope | License / status | What it means |
 |---|---|---|
-| Science and physics: simulations, Omega Theory notes, Lean proofs, LaTeX and plain-text proof companions, `rcod/` | **MIT** | Open source. Commercial use is permitted under MIT's attribution and disclaimer terms. No royalty is charged for use of these covered files. |
-| Products: `web/` (website, wallet hub, App Store storefront), `mobile-node/`, `app/`, `desktop/`, `omni-bridge/`, `cpp/`, `mcp/`, `launch/`, `novel/`, `docs/store/` | **PolyForm Noncommercial License 1.0.0** | Free to use, modify, and share for **noncommercial** purposes. **Commercial use requires a separate paid, signed written license from Jacob See** with percentage-based compensation. This repository sets no rate. |
+| Science and physics: simulations, Omega Theory notes, Lean proofs, LaTeX and plain-text proof companions, `rcod/`, `research/`, `docs/research/` | **MIT** | Open source. Commercial use is permitted under MIT's attribution and disclaimer terms. No royalty is charged for use of these covered files. |
+| Public novel text: `web/public/book/full-book.md` and its license notice | **CC BY 4.0** | Share and adapt, including commercially, with attribution and the license conditions. Third-party rights are not included. |
+| Products: `web/` (except the public book files and store legal texts), `mobile-node/`, `app/`, `desktop/`, `omni-bridge/`, `cpp/`, `mcp/`, `launch/`, `novel/` (release/staging tools), `docs/store/` | **PolyForm Noncommercial License 1.0.0** | Free to use, modify, and share for **noncommercial** purposes. **Commercial use requires a separate paid, signed written license from Jacob See** with percentage-based compensation. This repository sets no rate. |
 | Crypto and C.A.R.E.: `rust/`, `evm/`, `solana/`, `amity/`, `whitepapers/`, the Tri-Token blueprint, `docs/care-architecture-v2.md`, `docs/care-policy-v2.json`, `docs/tri-token-integration-v1.md` | **Read-only, no license** (`LicenseRef-Omega-ReadOnly`) | View-only in this repository. No copying, reproduction, modification, distribution, or derivative works without prior written permission. |
 | Store legal texts (`web/public/legal/`), project administration and legal notices (`LICENSE`, `LICENSES/`, `NOTICE`, `CONTRIBUTING.md`, `README.md`, `docs/` otherwise, `.github/`) | **All rights reserved / read-only** | These documents explain the policy; they do not expand the grants above or license the product architecture. |
 
@@ -25,13 +26,19 @@ The MIT grant applies to these repository paths, to the extent the rights holder
 
 - `Sim2_Cosmology.py`, `Sim3_Dynamic_Scale.py`, `Sim5_Emergent_Gravity.py`, `Sim7_Radial_Metric.py`, and `sim6_v14_depletion.py` (Sim1 and Sim4 are manuscripts at `docs/manuscripts/sim1_emergent_geometry.md` and `docs/manuscripts/sim4_evolution.md`);
 - `Omega_Theory_Laymans_Guide.md`, `Omega_Theory_v4.0_Technical.md`, and `Omega_Theory_v4.0_Radial_Metric.md`;
-- all files in `lean_proofs/`, `latex_docs/`, `txt_proofs/`, and `rcod/`.
+- all files in `lean_proofs/`, `latex_docs/`, `txt_proofs/`, `rcod/`, `research/`, and `docs/research/`.
 
 The full license is [`LICENSES/MIT.txt`](../LICENSES/MIT.txt). MIT grants no trademark rights and does not relicense third-party content or dependencies.
 
+### Public novel text — CC BY 4.0
+
+The current public manuscript [`web/public/book/full-book.md`](../web/public/book/full-book.md) and its accompanying public notice [`web/public/book/LICENSE.md`](../web/public/book/LICENSE.md) are licensed under the Creative Commons Attribution 4.0 International Public License (CC BY 4.0), by Jacob See only to the extent he owns or is authorized to license the relevant rights. The full legal code is [`LICENSES/CC-BY-4.0.txt`](../LICENSES/CC-BY-4.0.txt) and <https://creativecommons.org/licenses/by/4.0/>.
+
+CC BY 4.0 permits redistribution and adaptation, including commercial use, subject to its attribution, change-notice, and other terms. Suggested attribution is: “Jacob See, *Crucible: The Satoshi Protocol* (public draft), CC BY 4.0,” with a link to the license and an indication of changes. The grant is not a public-domain dedication and is not a warranty of authorship, originality, or rights clearance. It grants no third-party rights in characters, names, marks, quotations, or other material the licensor cannot license. The manuscript's references to third-party material, including the Naruto and D-Wave items flagged in the launch plan, remain subject to separate review. CC BY 4.0 is irrevocable for compliant recipients; this notice does not withdraw permissions already granted under earlier terms. See [`PROVENANCE.md`](PROVENANCE.md) before relying on ownership or clearance assumptions.
+
 ### PolyForm Noncommercial product materials
 
-The product scope is `web/**` (except `web/public/legal/**`), `mobile-node/**`, `app/**`, `desktop/**`, `omni-bridge/**`, `cpp/**`, `mcp/**`, `launch/**`, `novel/**`, and `docs/store/**`. These files carry or inherit `SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0`; see [`LICENSES/PolyForm-Noncommercial-1.0.0.txt`](../LICENSES/PolyForm-Noncommercial-1.0.0.txt).
+The product scope is `web/**` except `web/public/book/full-book.md`, `web/public/book/LICENSE.md`, and `web/public/legal/**`; plus `mobile-node/**`, `app/**`, `desktop/**`, `omni-bridge/**`, `cpp/**`, `mcp/**`, `launch/**`, `novel/**`, and `docs/store/**`. The files in the `novel/` directory are release-planning and staging tools; they do not include the separately licensed manuscript text. Product files carry or inherit `SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0`; see [`LICENSES/PolyForm-Noncommercial-1.0.0.txt`](../LICENSES/PolyForm-Noncommercial-1.0.0.txt).
 
 The PolyForm Noncommercial License permits any noncommercial use, including modification and redistribution with attribution. Charitable, educational, public-research, public-safety-or-health, environmental, and government institutions count as noncommercial regardless of funding. **Any commercial purpose requires a license from Jacob See.** The intended commercial route is an **advance, signed written license with percentage-based compensation**. This repository does not set a rate, royalty base (for example, gross or net receipts), minimum, term, reporting/audit terms, territory, sublicensing rights, or other deal terms. Those must be negotiated and written into the separate agreement. Do not infer commercial permission from the fact that the files are publicly viewable or downloadable.
 
@@ -77,7 +84,7 @@ This licensing change is prospective. It cannot retroactively withdraw the permi
 
 ## Public disclosure and patents
 
-The repository and product materials are already publicly accessible on GitHub. Public disclosure can affect patent rights, with consequences that vary by jurisdiction and facts; this repository cannot undo disclosure. No patent-pending status is represented here. See [`PATENT-POSTURE.md`](PATENT-POSTURE.md) and [`PROVENANCE.md`](PROVENANCE.md), and consult patent counsel before any further disclosure or patent-related claim.
+The repository and product materials are already publicly accessible on GitHub. The current novel manuscript is also committed in plaintext and served from the web app's public asset directory; its CC BY 4.0 notice makes the intended reuse terms explicit but cannot undo prior disclosure. Public disclosure can affect patent rights, with consequences that vary by jurisdiction and facts; this repository cannot undo disclosure. No patent-pending status is represented here. See [`PATENT-POSTURE.md`](PATENT-POSTURE.md) and [`PROVENANCE.md`](PROVENANCE.md), and consult patent counsel before any further disclosure or patent-related claim.
 
 ## Third-party material, contributions, and ownership
 

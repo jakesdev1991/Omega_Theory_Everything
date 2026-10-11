@@ -25,7 +25,7 @@ test("AMITY holder unlock challenges are canonicalized and parseable", () => {
 
 test("AMITY holder unlock challenges reject malformed network and timestamps", () => {
   const message = [
-    "OMEGA AMITY TESTNET PILOT - RELEASE-DAY NOVEL UNLOCK",
+    "OMEGA AMITY TESTNET PILOT - OPTIONAL READER PROOF",
     "Address: tb1ptestwalletaddressplaceholder",
     `Asset ID: ${"A".repeat(64)}`,
     "Network: regtest",
@@ -33,7 +33,7 @@ test("AMITY holder unlock challenges reject malformed network and timestamps", (
     "Origin: https://omega.example/novel",
     "Nonce: nonce-12345678",
     "Issued At: 2026-09-23T22:00:00.000Z",
-    "Purpose: Verify current AMITY testnet Taproot Asset holdings for release-day novel unlock.",
+    "Purpose: Optional proof-of-holdings demonstration; public CC BY 4.0 manuscript does not require proof.",
   ].join("\n");
 
   assert.throws(() => parseHolderUnlockChallenge(message), /network must be testnet/);

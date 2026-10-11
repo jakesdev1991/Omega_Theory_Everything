@@ -9,13 +9,13 @@ This directory is the **first local scaffold** for the AMITY leg of the C.A.R.E.
 ## What exists here now
 
 - a strict **testnet-only** operator config parser;
-- a canonical **AMITY holder unlock challenge** builder/parser for the future proof-of-holdings gate;
+- a canonical **optional AMITY reader-proof challenge** builder/parser for a future proof-of-holdings demo;
 - a source-neutral holder-proof policy boundary with an explicitly test-only fixture adapter;
 - a non-broadcasting **preflight** command for local operator setup;
 - a local **status-manifest scaffold** generator for operator/web visibility; and
 - offline tests for config, manifest, challenge format, and invalid/stale/wrong-asset proof cases.
 
-This is meant to derisk the shape of the AMITY operator workflow before wiring a real `litd` / `tapd` stack into the release path.
+This is meant to derisk the shape of the AMITY operator workflow before any real `litd` / `tapd` stack is considered for the separate, optional reader-proof demo. The public manuscript itself is not gated on this work.
 
 ## Local validation
 
@@ -27,7 +27,7 @@ npm run test:fixture
 
 `npm run test:fixture` runs a non-networking holder-claim harness. It exercises the exact testnet, asset-ID, Universe, origin, freshness, positive-balance, and signed-claim bindings through an injected fixture source. The fixture uses a real secp256k1 ECDSA test key, so tampering with the signed claim is detected. The fixture public key is not bound to a wallet address, however, so this is **not** a Taproot wallet Schnorr signature or a real asset-ownership proof.
 
-Fixture proofs are rejected by the verifier unless `allowFixture: true` is passed explicitly. The fixture source is not used by the web app and cannot make AMITY eligible for unlocks.
+Fixture proofs are rejected by the verifier unless `allowFixture: true` is passed explicitly. The fixture source is not used by the web app and cannot make AMITY eligible for the optional reader-proof demo.
 
 ## Preflight
 
@@ -51,7 +51,7 @@ That command writes the ignored local snapshot:
 
 - `deployments/amity-testnet.json`
 
-It is a **status scaffold only**. It records the AMITY testnet asset/operator shape that the future web status surface can display, but it does **not** imply issuance, proof verification, or a third live unlock rail. The wallet/web unlock flow in this repository still accepts only **two wired currencies so far: `$OMEGA` and `TWC`**.
+It is a **status scaffold only**. It records the AMITY testnet asset/operator shape that the future web status surface can display, but it does **not** imply issuance, proof verification, or a third reader-proof rail. The optional wallet/web reader-proof demo in this repository still accepts only **two wired currencies so far: `$OMEGA` and `TWC`**; the public manuscript remains directly accessible without either.
 
 Use `npm run manifest:testnet -- --force` to refresh an existing snapshot after local operator files change.
 
@@ -82,10 +82,10 @@ Optional file paths can be supplied for TLS certs and macaroons once the real te
 
 ## Canonical holder challenge format
 
-The future AMITY novel-unlock flow is expected to use a signed proof-of-holdings challenge. This scaffold already standardizes the challenge bytes so later wallet/server work can target a single format:
+A future AMITY proof-of-holdings route may support the **optional reader-proof demonstration**. It does not gate the public CC BY 4.0 manuscript. This scaffold standardizes challenge bytes for later wallet/server work:
 
 ```text
-OMEGA AMITY TESTNET PILOT - RELEASE-DAY NOVEL UNLOCK
+OMEGA AMITY TESTNET PILOT - OPTIONAL READER PROOF
 Address: <holder address>
 Asset ID: <taproot asset id>
 Network: testnet
@@ -93,10 +93,10 @@ Universe: <universe url>
 Origin: <site origin>
 Nonce: <opaque nonce>
 Issued At: <canonical UTC timestamp>
-Purpose: Verify current AMITY testnet Taproot Asset holdings for release-day novel unlock.
+Purpose: Optional proof-of-holdings demonstration; public CC BY 4.0 manuscript does not require proof.
 ```
 
-The fixture policy boundary does **not** implement Bitcoin/Lightning/Taproot ownership verification, Taproot wallet Schnorr verification, or live Universe proof validation. A successful fixture run must never be interpreted as a live holding or as an unlock authorization.
+The fixture policy boundary does **not** implement Bitcoin/Lightning/Taproot ownership verification, Taproot wallet Schnorr verification, or live Universe proof validation. A successful fixture run must never be interpreted as a live holding or as authorization to access the public manuscript; at most, it exercises an optional reader-proof format.
 
 ## Intended live-test path
 
@@ -105,6 +105,6 @@ The fixture policy boundary does **not** implement Bitcoin/Lightning/Taproot own
 3. publish or configure a trusted Universe endpoint;
 4. implement the injected source adapter using real `tapd`/Universe proof responses and verify the wallet's supported signature scheme (including Schnorr where applicable);
 5. add integration tests against that adapter for invalid, stale, wrong-asset, wrong-holder, and insufficient-balance proofs; and
-6. only then consider wiring AMITY into the web unlock app alongside `$OMEGA` and `TWC`.
+6. only then consider wiring AMITY into the optional reader-proof demo alongside `$OMEGA` and `TWC`; manuscript access remains public.
 
 Until those steps have real infrastructure and evidence, the manifest and web status surface must continue to report `holderVerificationReady=false` and `wiredIntoWebUnlock=false`.

@@ -664,11 +664,12 @@ function StatusSection() {
             margin: "0 auto 36px",
           }}
         >
-          The wallet, the hub, the consoles, and two unlock rails are real
-          code you can run today. Everything is a valueless pilot by design,
-          and the extensive whitepaper carries the honest table: what exists,
-          what is simulated, and what does not exist yet. An economy asking
-          for trust in care should model honesty first.
+          The wallet, the hub, the consoles, and two optional reader-proof rails
+          are real code you can run today. The current manuscript is separately
+          public under CC BY 4.0 and needs no token or proof. The extensive
+          whitepaper carries the honest table: what exists, what is simulated,
+          and what does not exist yet. An economy asking for trust in care should
+          model honesty first.
         </p>
         <div
           style={{

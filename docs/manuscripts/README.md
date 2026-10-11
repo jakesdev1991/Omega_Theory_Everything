@@ -9,7 +9,7 @@ papered over the fact that they were not (`... --help || true`).
 | Document | Was | Why it is not a script |
 |---|---|---|
 | [`sim1_emergent_geometry.md`](sim1_emergent_geometry.md) | `Sim1_Emergent_Geometry.py` | The v4.0 paste of this paper passed the text through a Markdown round-trip that consumed underscores and `**`. The appendix listing lost every underscore in its identifiers (`build_mutual_info` → `buildmutualinfo`, `D**2` → `D  2`) and is truncated mid-expression, so the file never parsed. The prose is intact; the listing is marked damaged in place. |
-| [`sim4_evolution.md`](sim4_evolution.md) | `Sim4_Evolution.py` | A bundle: prose header, the v2.3.0 Wright-Fisher script and its run transcript, and a complete standalone HTML simulator (Tailwind + Chart.js). The prose sections are not Python, and the code imports `jax` plus an `omega` package that is not part of this repository (recorded in [`../PROVENANCE.md`](../PROVENANCE.md)). |
+| [`sim4_evolution.md`](sim4_evolution.md) | `Sim4_Evolution.py` | A historical bundle: prose header, a non-reproducible v2.3.0 toy script/run transcript, and a standalone HTML simulator (Tailwind + Chart.js). It is not a reproduction of the LTEE: the shown script imports an absent `omega` package and hard-codes the Cit+ fitness switch. The prose sections are not Python; see the status warning in the manuscript and [`../PROVENANCE.md`](../PROVENANCE.md). |
 
 Two other files in this family were *fixed* rather than moved:
 

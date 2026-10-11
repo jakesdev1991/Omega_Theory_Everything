@@ -74,7 +74,7 @@ function refreshWalletView() {
     fetchBalance();
   } else {
     els.address.textContent = 'No OMEGA wallet connected yet';
-    els.label.textContent = 'Connect MetaMask or create/import an EVM key to sign $OMEGA unlock proofs.';
+    els.label.textContent = 'Connect MetaMask or create/import an EVM key to try the optional $OMEGA reader-proof demo.';
     els.networkLabel.textContent = 'TWC only · Solana/Devnet proof rail';
     els.ethBalance.textContent = '—';
     els.balanceStatus.textContent = 'No EVM wallet connected';
@@ -87,7 +87,7 @@ function refreshWalletView() {
     els.balTwc.textContent = 'Connected';
   } else {
     els.solanaAddress.textContent = 'No Phantom wallet connected yet';
-    els.twcStatus.textContent = 'Connect Phantom to sign TWC unlock proofs';
+    els.twcStatus.textContent = 'Connect Phantom to try the optional TWC reader-proof demo';
     els.balTwc.textContent = 'Not connected';
   }
 }
@@ -208,7 +208,7 @@ document.getElementById('btn-forget')?.addEventListener('click', () => {
 document.getElementById('btn-sign-unlock')?.addEventListener('click', async () => {
   try {
     const currency = document.getElementById('unlock-currency').value;
-    showToast('Signing unlock statement…');
+    showToast('Signing optional reader proof…');
 
     let proof;
     if (currency === 'TWC') {
@@ -238,7 +238,7 @@ document.getElementById('btn-sign-unlock')?.addEventListener('click', async () =
       signature: proof.signature,
     }, null, 2);
     els.proofResult.classList.remove('hidden');
-    showToast(`${proof.currency} unlock proof signed. Verify it at the novel reader.`);
+    showToast(`${proof.currency} optional reader proof signed. Verify it at the chapter demo; the public manuscript needs no proof.`);
   } catch (error) {
     showToast(`Signing failed: ${error.message || error}`);
   }
@@ -295,5 +295,5 @@ document.querySelectorAll('.privacy-level').forEach((level) => level.addEventLis
   if (els.phantomStatus && !els.phantomStatus.textContent) {
     els.phantomStatus.textContent = wallet.hasPhantom() ? 'Phantom detected.' : 'Phantom not detected.';
   }
-  console.info('Omega wallet prototype loaded. Live unlock rails: $OMEGA on EVM and TWC on Solana. AMITY remains separate on Bitcoin/Lightning/Taproot.');
+  console.info('Omega wallet prototype loaded. Optional reader-proof rails: $OMEGA on EVM and TWC on Solana. AMITY remains separate on Bitcoin/Lightning/Taproot.');
 })();

@@ -282,7 +282,7 @@ export function EconomyTestConsole() {
           One surface for the whole four-plane economy: readiness across every rail, the offline
           scenario suite from <code>docs/tri-token-integration-v1.md</code> §7, a valueless faucet,
           every audited mutation, and the Nostr surface your client plugs into. Nothing here touches
-          a chain; chain verification stays in the unlock rails.
+          a chain; optional reader-proof verification stays separate from the public manuscript.
         </p>
         <div className="etc-tabs">
           {(
@@ -362,7 +362,7 @@ export function EconomyTestConsole() {
             <div>
               <h2>Scenario suite</h2>
               <p>
-                {summaries.length} scenarios covering slices A–G, both unlock rails, and the
+                {summaries.length} scenarios covering slices A–G, both optional reader-proof rails, and the
                 cross-plane invariants. Runs are deterministic and use fresh engines.
               </p>
             </div>

@@ -3,20 +3,31 @@
 
 # Omega Evolution Sim v2.3.0 — LTEE-inspired E. coli
 
-## Header as written
+## Status and limits (2026-10-11)
 
-Omega Evolution Sim v2.3.0 - LTEE-Inspired E. coli
+This is a historical computational toy, not a reproduction or analysis of the
+Long-Term Evolution Experiment and not evidence for Omega physics. The shown
+script imports an `omega` package absent from this repository, hard-codes a
+Cit+ fitness bonus for generations after 30,000, and uses fallback COD values
+when the pre/post arrays are empty. The reported generation and overlap numbers
+therefore cannot be cited as independent or measured LTEE results. The
+biological-information interpretation is speculative and has not been
+validated.
 
-Compatible with Omega Protocol v2.3.0
+## What the historical code actually models
 
-Author: Jacob See
+The shown draft describes 12 simulated populations, a 10-locus Wright-Fisher
+update, an optimizer-selected mutation rate, and a custom cluster-overlap
+quantity. It is not a reproduction of the biological LTEE.
 
-Simulates 12 pops over 75k gens: Wright-Fisher + mutation/selection.
-- Cit+ emerges ~31.5k gens (rare mutation + epistasis for realism).
-- Entropy: diversity in geno freqs (bits of evolvability).
-- COD: redundancy in pop clusters (low = efficient evolution; tracked pre/post Cit+ for sharper story).
-- UniversalOptimizer tunes mutation rate for optimal paths.
-- JAX for GPU-parallel pops; scaling bench included.
+- The script gives the Cit+ locus an explicit fitness bonus after generation
+  30,000; Cit+ is therefore not a spontaneous emergence in this model.
+- The “COD” is calculated from mock per-locus clusters and has no validated
+  mapping to biological redundancy or physical \(\Phi\).
+- The script imports unavailable project modules; the transcript and numerical
+  claims are not independently reproducible from this repository.
+- Nothing in this draft establishes that information processing causes
+  adaptation or validates the gravitational/cosmological hypotheses.
 
 ## The v2.3.0 script and run transcript
 

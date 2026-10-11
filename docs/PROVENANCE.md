@@ -17,7 +17,9 @@
 The intended current licensing split is recorded in [`../LICENSE`](../LICENSE) and [`LICENSING.md`](LICENSING.md):
 
 - Scientific materials: root simulations and theory files, `lean_proofs/`, `latex_docs/`, `txt_proofs/`, and `rcod/` — MIT.
-- Product materials: `app/`, `rust/`, `whitepapers/`, and `tri_token_sovereign_economy_blueprint.md` — all rights reserved / `LicenseRef-Omega-Product-Proprietary`.
+- Public novel text: `web/public/book/full-book.md` and its notice — CC BY 4.0, applied by Jacob See on 2026-10-10 to the extent he owns or is authorized to license the relevant rights. The full draft is already public in Git and the web app's static asset directory. This grant does not clear third-party material or establish ownership beyond the rights the licensor controls.
+- Product software and staging tools: `web/**` except the CC BY book files and all-rights-reserved store legal texts; `mobile-node/`, `app/`, `desktop/`, `omni-bridge/`, `cpp/`, `mcp/`, `launch/`, `novel/`, and `docs/store/` — PolyForm Noncommercial 1.0.0.
+- Crypto and C.A.R.E. materials: `rust/`, `evm/`, `solana/`, `amity/`, `whitepapers/`, the Tri-Token blueprint, and specified C.A.R.E. docs — read-only / `LicenseRef-Omega-ReadOnly`.
 - Other project-administration and legal notices — no separate grant to product assets.
 
 The scope map is an intent; it does not establish that the rights holder owns every item or cure a third-party licensing issue.

@@ -22,16 +22,16 @@ export const TOKENS: TokenInfo[] = [
     symbol: "$OMEGA",
     color: "var(--color-omega)",
     purpose:
-      "EVM-side macro-governance currency and one of the two currently wired release-day unlock rails.",
+      "EVM-side macro-governance currency and one of the two currently wired optional reader-proof rails.",
     role: "macro",
     transferable: true,
     network: "EVM / Sepolia pilot",
     availability: "wired",
     notionalPrice: "Pilot rail — wallet signature + EVM proof",
     unlockRequirement:
-      "Sign an $OMEGA release-day proof from the wired EVM wallet flow to unlock the full novel.",
+      "Optional: sign an $OMEGA proof to try the verified reader flow. The public CC BY 4.0 manuscript needs no token or wallet.",
     description:
-      "$OMEGA is the EVM-side anchor. In the current build it is one of the two wallet-to-web currencies that can sign a release-day proof and unlock Crucible in full.",
+      "$OMEGA is the EVM-side anchor. Its current wallet-to-web proof flow is an optional reader demonstration; it does not restrict the public text of Crucible.",
   },
   {
     id: "twc",
@@ -39,16 +39,16 @@ export const TOKENS: TokenInfo[] = [
     symbol: "TWC",
     color: "var(--color-twc)",
     purpose:
-      "Solana-side world-citizen currency and the second currently wired release-day unlock rail.",
+      "Solana-side world-citizen currency and the second currently wired optional reader-proof rail.",
     role: "world",
     transferable: true,
     network: "Solana / Devnet pilot",
     availability: "wired",
     notionalPrice: "Pilot rail — wallet signature + Solana proof",
     unlockRequirement:
-      "Sign a TWC release-day proof from a Solana wallet to unlock the full novel.",
+      "Optional: sign a TWC proof to try the verified reader flow. The public CC BY 4.0 manuscript needs no token or wallet.",
     description:
-      "TWC is the Solana-side release currency. In the current build it is wired from wallet proof creation through server-side signature verification for the novel unlock flow.",
+      "TWC is the Solana-side pilot currency. Its current proof flow demonstrates server-side verification for the optional reader; it does not restrict the public text.",
   },
   {
     id: "amity",
@@ -61,11 +61,11 @@ export const TOKENS: TokenInfo[] = [
     transferable: true,
     network: "Bitcoin / Lightning / Taproot testnet scaffold",
     availability: "scaffold",
-    notionalPrice: "Separate scaffold — not wired into the live unlock flow yet",
+    notionalPrice: "Separate scaffold — not wired into the optional reader-proof flow",
     unlockRequirement:
-      "Not live yet. AMITY remains a separate Bitcoin / Lightning / Taproot workstream until holder verification exists.",
+      "Not live as a reader-proof rail. AMITY remains a separate Bitcoin / Lightning / Taproot workstream; the public manuscript is not gated.",
     description:
-      "AMITY is the third currency in the economy. In the current repository it exists as a separate Bitcoin / Lightning / Taproot scaffold, not a live wallet-to-web unlock rail.",
+      "AMITY is the third currency in the economy. In the current repository it exists as a separate Bitcoin / Lightning / Taproot scaffold, not a live reader-proof rail.",
   },
 ];
 

@@ -97,9 +97,9 @@ npm run verify:devnet
 
 Verification fails closed if the RPC is not Devnet, a mint/freeze authority remains, supply or treasury balance differs, the standard program/PDA differs, metadata is mutable or malformed, or the public JSON no longer matches the committed SHA-256.
 
-## Holder-signature gate helper
+## Optional holder-proof demo helper
 
-This directory now also includes a **Devnet-only holder verifier helper** for the later novel-unlock gate. It does **not** replace a web service, nonce store, wallet UI, legal review, or a release process; it is a reusable verifier that checks two things independently:
+This directory now also includes a **Devnet-only holder verifier helper** for the optional reader-proof demonstration. It does **not** gate the public CC BY 4.0 manuscript and does **not** replace a web service, nonce store, wallet UI, legal review, or release process; it is a reusable verifier that checks two things independently:
 
 1. the holder signed the exact challenge bytes with the private key for the claimed Solana address; and
 2. that address currently holds a positive `tTWC` balance for the deployed mint on Devnet.
@@ -109,7 +109,7 @@ A proof JSON file has this shape:
 ```json
 {
   "address": "<holder wallet>",
-  "message": "OMEGA TWC DEVNET PILOT - RELEASE-DAY NOVEL UNLOCK\nAddress: ...\nMint: ...\nNetwork: devnet\nOrigin: ...\nNonce: ...\nIssued At: ...\nPurpose: Verify current tTWC pilot holdings for release-day novel unlock.",
+  "message": "OMEGA TWC DEVNET PILOT - OPTIONAL READER PROOF\nAddress: ...\nMint: ...\nNetwork: devnet\nOrigin: ...\nNonce: ...\nIssued At: ...\nPurpose: Optional proof-of-holdings demonstration; public CC BY 4.0 manuscript does not require proof.",
   "signature": "<base58 detached signature>"
 }
 ```
@@ -120,12 +120,12 @@ The signed message must name the deployed mint, the Devnet network, an origin st
 npm run verify:holder -- path/to/proof.json --manifest /path/to/twc-devnet.json --origin https://omega.example/novel --max-age-minutes 15
 ```
 
-The verifier refuses zero-balance holders, wrong origins, stale proofs (when a max age is supplied), non-Devnet RPCs, malformed signatures, and messages whose mint/network do not match the deployment manifest. On success it returns a JSON receipt including the verified address and current token balance. In the current release design, any positively verified TWC holder unlocks the **full novel**; this helper therefore reports a full-unlock receipt rather than a client-claimed tier.
+The verifier refuses zero-balance holders, wrong origins, stale proofs (when a max age is supplied), non-Devnet RPCs, malformed signatures, and messages whose mint/network do not match the deployment manifest. On success it returns a JSON receipt including the verified address and current token balance. A successful proof may produce a receipt for the optional reader route. The public CC BY 4.0 manuscript is served separately and requires no token, proof, or exclusive authorization.
 
 ## Operating limits and handoff
 
 - `tTWC` is a valueless test artifact. Do not advertise it, list it, sell it, bridge it, or treat it as a right to a product, payment, governance power, or real-world service.
-- This work does **not** make the existing web unlock route suitable for Solana. That route must later verify an independently sourced balance or claim event; it must not trust a client-supplied tier or address.
+- This work does **not** make the optional web reader-proof route suitable for Solana. That route must verify an independently sourced balance or claim event; it must not trust a client-supplied tier or address. The public manuscript remains directly available regardless of this pilot.
 - A real-value or mainnet token requires a new specification, separate contracts/tooling review, approved treasury policy, legal/securities/compliance analysis, trademark clearance, economics review, external audit, incident process, and explicit approval.
 - Review [`THREAT_MODEL.md`](THREAT_MODEL.md) before any Devnet broadcast. It describes residual risks and the failure/incident runbook.
 

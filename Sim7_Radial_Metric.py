@@ -4,15 +4,20 @@
 Simulation 7: Toward the Macroscopic Radial Metric g_rr(Phi)
 ============================================================
 
-Companion to ``Omega_Theory_v4.0_Radial_Metric.md``. Every formula quoted in
-that note is checked here: numerically (NumPy/SciPy) and, when SymPy is
-installed, symbolically. ``self_check()`` runs on every invocation.
+Companion to ``Omega_Theory_v4.0_Radial_Metric.md``. This script checks the
+radial identities and candidate dictionaries implemented below, numerically
+(NumPy/SciPy) and, when SymPy is installed, symbolically. It does not implement
+the separate Q-region model in ``docs/research/QREGION_MARKOV_MODEL.md``.
+``self_check()`` runs on every invocation.
 
-Convention (the one used by ``lean_proofs/DynamicCODScale.lean``, section 2.2
-of the technical note and ``Sim3_Dynamic_Scale.py``): Phi = 0 is the vacuum,
-Phi -> 1 is the bound-state / horizon end, and
+Model convention (also used by ``DynamicCODScale.lean`` and
+``Sim3_Dynamic_Scale.py``): Phi = 0 is called the vacuum end and Phi -> 1 the
+high-overlap end. The profile
 
-    l_P(Phi) = l_P0 sqrt(1 - Phi^2)          (imported from Sim3, not copied).
+    l_P(Phi) = l_P0 sqrt(1 - Phi^2)          (imported from Sim3, not copied)
+
+is a model choice; this convention does not empirically identify a physical
+vacuum or horizon.
 
 Units: G = c = 1 and l_P0 = kappa_0 = 1.
 

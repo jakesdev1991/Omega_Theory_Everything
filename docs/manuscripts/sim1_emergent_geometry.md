@@ -1,7 +1,7 @@
 # Copyright (c) 2025-2026 Jacob See.
 # SPDX-License-Identifier: MIT
 
-# Simulation 1: Emergent Distances and 1D Embedding
+# Simulation 1: Exponential Kernel and 1D Embedding (toy)
 
 > **Status: manuscript, not an executable simulation.** This file spent its
 > life as `Sim1_Emergent_Geometry.py` at the repository root, where the
@@ -17,68 +17,61 @@
 > back into a `.py` file.
 
 Abstract
-We present a toy simulation demonstrating how information‑theoretic correlations can generate emergent spatial structure. Starting from a mutual‑information kernel on a one‑dimensional chain, we construct effective distances via logarithmic mapping, embed the system using classical multidimensional scaling (MDS), and quantify the fidelity of the emergent geometry. This simulation establishes the baseline case for a hierarchy of models supporting a unification framework in which geometry arises from correlation structure.
+This historical manuscript describes a one-dimensional numerical toy in which a prescribed exponential kernel is transformed with a logarithm and embedded by classical multidimensional scaling (MDS). The construction can reproduce a line because the kernel is chosen to decay exponentially with lattice separation; it does not calculate mutual information from a quantum state, derive a physical spatial metric, or establish an emergent-geometry theory. The appendix is damaged and the reported numerical results are not currently reproducible from this file.
 
 ---
 
 1. Introduction
-A central theme of the proposed framework is that geometry is not fundamental but emergent. Correlation patterns between subsystems encode effective distances, and from these distances one can reconstruct a spatial embedding. Simulation 1 provides the simplest demonstration: a one‑dimensional chain with exponentially decaying correlations. By calibrating the decay length to a target end‑to‑end separation, we recover a linear embedding consistent with classical metric space structure. This serves as the seed case for higher‑dimensional and dynamical extensions (Simulations 2 and 3).
+The exercise tests an elementary construction: start with an exponentially decaying positive kernel on a line, take its negative logarithm, and apply MDS. Since the decay is specified as a function of the line separation and its scale is calibrated to a target end-to-end length, recovering a line is expected by construction. The result is a code/model sanity check only; it does not show that a physical correlation pattern determines space or support higher-dimensional or dynamical extensions.
 
 ---
 
 2. Methods
 
-2.1 Mutual Information Kernel
-We define a toy mutual information matrix:
+2.1 Prescribed Exponential Kernel
+We prescribe a dimensionless toy kernel:
 \[
-I_{ij} = \exp\!\left(-\frac{|i-j|}{\xi}\right),
+C_{ij} = \exp\!\left(-\frac{|i-j|}{\xi}\right),
 \]
-where \(\xi\) is the correlation length in units of lattice steps. This captures the intuition that nearby sites share stronger correlations.
+where \(\xi\) is a chosen decay length in lattice steps. This is not a mutual-information matrix calculated from a quantum state. It is a mathematical input selected to have exponential decay.
 
 2.2 Kernel Normalization and Distance Mapping
-- The kernel is symmetrized and normalized so that \(K_{ii} = 1\).  
-- Effective distances are defined by
+- The prescribed kernel is symmetrized and normalized so that \(K_{ii}=1\).
+- A toy distance matrix is defined by
 \[
-r{ij} = -\lambda_P \ln K_{ij},
+r_{ij}=-\lambda_P\ln K_{ij},
 \]
-where \(\lambda_P\) is calibrated so that the end‑to‑end distance \(r_{0,N-1}\) matches a chosen target.
+where \(\lambda_P\) is calibrated so that the end-to-end distance \(r_{0,N-1}\) matches a chosen target. This is a definition plus calibration, not an independently predicted length.
 
 2.3 Embedding and Alignment
 - Classical MDS is applied to the distance matrix, yielding a one‑dimensional embedding.  
 - Procrustes alignment maps the emergent coordinates onto the expected linear chain, allowing direct comparison.  
 - Stress‑1 and triangle inequality checks quantify metric consistency.
 
-2.4 Noise Experiment
-To model decoherence or depolarization, we introduce kernel‑level noise:
+2.4 Kernel Perturbation (not a quantum noise channel)
+A numerical perturbation is applied directly to the kernel:
 \[
-K \;\to\; (1-p)K + pI,
+K \;\to\; (1-p)K + p\mathbb{1}.
 \]
-which dilates distances and stretches the embedding.
+This operation is not derived from a quantum channel or a decoherence model. Its effect on the transformed distances is a property of this chosen perturbation.
 
 ---
 
-3. Results
+3. Historical Results (not independently reproducible here)
 
-- Calibration: The kernel decay length was tuned so that the reconstructed chain spanned the target end‑to‑end distance.  
-- Embedding: The MDS embedding aligned closely with the true linear chain, with high correlation and low relative RMS error.  
-- Metricity: Stress‑1 values were small, and triangle inequality violations were within numerical tolerance, confirming that the emergent distances form a valid metric.  
-- Noise: Adding depolarizing noise stretched the embedding by ~10%, consistent with the interpretation that information loss increases effective separation.
+The earlier text reported that the calibrated MDS embedding aligned closely with a target linear chain, that numerical metric checks passed, and that the kernel perturbation stretched the embedding by about 10%. The appendix below is corrupted and the original executable is not present, so those values cannot be reproduced from this manuscript and should not be treated as verified results. Even if reproduced, the alignment is expected from the exponential kernel, logarithm, and target-length calibration; it is not evidence about physical space or decoherence.
 
 ---
 
 4. Discussion
-This simulation demonstrates that spatial structure can be reconstructed from correlation data alone. The one‑dimensional chain provides a controlled baseline: correlations decay exponentially, distances emerge logarithmically, and the embedding recovers the expected geometry. The noise experiment illustrates how decoherence manifests geometrically as dilation.  
+The exercise illustrates that a selected positive kernel can be transformed into a distance-like matrix and embedded. Because the input kernel already encodes a line through its exponential dependence on index separation, this is not a reconstruction from independent physical data. The kernel perturbation is likewise not a decoherence experiment.
 
-In the broader framework, this result is the first step toward:
-- Simulation 2: Higher‑dimensional embeddings from more complex correlation topologies.  
-- Simulation 3: Dynamical evolution of emergent geometry under time‑dependent correlations.  
-
-Together, these simulations support the thesis that geometry, dynamics, and ultimately physical law can be derived from information‑theoretic primitives.
+This manuscript motivates possible mathematical experiments with other kernels, but it supplies no physical result and does not support a claim that geometry, dynamics, or physical law have been derived from information-theoretic primitives.
 
 ---
 
 5. Conclusion
-Simulation 1 establishes the principle that geometry is emergent from information. By grounding this in a simple, reproducible toy model, we prepare the foundation for scaling to richer structures. This baseline case will serve as the reference point for the subsequent simulations in the series.
+This historical toy construction does not establish that geometry is emergent from information. Because the code listing is damaged, it should first be recovered and independently tested before its numerical values are reused. A future model would need to calculate correlations from a specified state, avoid calibrating to the target geometry, and test whether the resulting metric recovers known limits.
 
 ---
 
@@ -88,7 +81,7 @@ Appendix A: Cleaned Code (Python)
 
 # sim1.py — recovered listing (DAMAGED, see the note at the top of this file)
 
-Simulation 1: Emergent Distances and 1D Embedding
+Simulation 1: Prescribed Exponential Kernel and 1D Embedding
 
 - PSD-normalized kernel (no projection needed for exp-decay)
 
