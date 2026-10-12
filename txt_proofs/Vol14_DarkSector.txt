@@ -22,15 +22,20 @@ def OmegaBaryon : ℝ := 0
 def OmegaDarkMatter : ℝ := 0
 def OmegaDarkEnergy : ℝ := 1
 
-theorem flat_universe_sum : OmegaBaryon + OmegaDarkMatter + OmegaDarkEnergy = 1 := by
+/-- The legacy constants above (`0`, `0`, `1`) sum to 1 by `norm_num`: flatness
+    here is a chosen constant, not a derived property, and the parameterized
+    model is `CosmicDensityBudget`.  Renamed from `flat_universe_sum` in the
+    Phase 6 rename pass. -/
+theorem legacy_density_constants_sum_eq_one : OmegaBaryon + OmegaDarkMatter + OmegaDarkEnergy = 1 := by
   norm_num [OmegaBaryon, OmegaDarkMatter, OmegaDarkEnergy]
 
-/-- THEOREM 1: Dark Energy Density (machine-checked)
-    If the universe is flat, we can strictly deduce the Dark Energy density 
-    parameter from the Baryonic and Dark Matter components. -/
-theorem dark_energy_deduction : 
+/-- Over the legacy constants, the dark-energy parameter is 1 − Ω_b − Ω_m by
+    `linarith`; the parameterized deduction is
+    `CosmicDensityBudget.dark_energy_eq`.  Renamed from `dark_energy_deduction`
+    in the Phase 6 rename pass. -/
+theorem legacy_density_constants_dark_energy_eq :
   OmegaDarkEnergy = 1 - OmegaBaryon - OmegaDarkMatter := by
-  have h := flat_universe_sum
+  have h := legacy_density_constants_sum_eq_one
   calc OmegaDarkEnergy 
       = 1 - OmegaBaryon - OmegaDarkMatter := by linarith
 

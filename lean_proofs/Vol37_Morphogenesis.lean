@@ -29,7 +29,12 @@ def InhibitorDiffusion : ℝ := 2
 theorem turing_condition : InhibitorDiffusion > ActivatorDiffusion := by
   norm_num [InhibitorDiffusion, ActivatorDiffusion]
 
-theorem turing_instability_ratio
+/-- The ratio of the (constant) diffusivities exceeds 1, given a positive
+    activator diffusivity.  A bare ratio is NOT a Turing-instability proof, as
+    the file's scope note says; the hypothesis-carrying statement is
+    `turing_instability`.  Renamed from `turing_instability_ratio` in the
+    Phase 6 rename pass. -/
+theorem diffusion_ratio_gt_one_of_activator_pos
   (h_pos : ActivatorDiffusion > 0) :
   InhibitorDiffusion / ActivatorDiffusion > 1 := by
   have h_turing := turing_condition
@@ -45,7 +50,7 @@ theorem bridge_vol37_metric_self_zero (R : QRegion) : d R R = 0 := by
 
 theorem turing_ratio_pos (h_pos : ActivatorDiffusion > 0) :
   InhibitorDiffusion / ActivatorDiffusion > 0 := by
-  have h := turing_instability_ratio h_pos
+  have h := diffusion_ratio_gt_one_of_activator_pos h_pos
   linarith
 
 /-- Consistency bridge (VOL37): the von Neumann entropy is nonnegative.

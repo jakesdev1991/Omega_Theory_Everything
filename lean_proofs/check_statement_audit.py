@@ -29,11 +29,23 @@ placeholder layer: forcing those rows to name a "witness" would report a
 degenerate witness as a non-degenerate one. The audit file therefore records the
 count it carries in a `carried_cap` field, and the gate fails when the number of
 `carried` rows exceeds that cap, so the count is a ratchet that may only go down
-(fix a row, lower the cap in the same commit).
+(fix a row, lower the cap in the same commit). The one thing that does raise it
+is adding rows: the Phase 6 rename pass renamed three declarations the lexicon
+never matched and gave them rows, so the cap moved 30 -> 33 in that commit, in
+plain sight, with no existing row reclassified.
 
 The scratch sketch's third reading is preserved: a rename performed by an audit
 pass lands under its new name with `previous_name` set, exactly like the renames
-recorded for earlier passes.
+recorded for earlier passes. Because such a rename is orthogonal to the
+statement's disposition, `previous_name` is validated on *any* row, not only on
+`renamed` rows: the retired name must be a declaration nowhere and must not
+survive as a live token in the corpus (comments are masked) or in any other JSON
+in this directory. The Phase 6 rename pass (2026-10-12) renamed sixteen
+declarations this way -- the six `zeroCurvature_*` restatements in Vol05, the
+Vol02 postulate and Maxwell pair, the two gauge-group definitional equalities,
+the placeholder optical identity, the Vol09 definitional entropy bridge, the two
+legacy-constant Vol14 rows, the Vol34 gate restatement and the Vol37 diffusivity
+ratio -- each one a name that asserted a result the statement does not contain.
 
 This script is the gate. It is *lexical*, like the rest of this directory's
 audits: it decides which declarations need a row from a documented lexicon of
@@ -268,8 +280,16 @@ def load_audit(path: pathlib.Path) -> tuple[list[dict[str, object]], object]:
     return rows, payload[CARRY_CAP_FIELD]
 
 
+# A retired name is matched on identifier boundaries.  A new name that contains
+# the old one -- `zeroCurvature_bianchi_identity` from `bianchi_identity`, or a
+# deliberately kept law field like `law_metric_is_qfim` beside the retired
+# `metric_is_qfim` -- is a different identifier and not a survivor.
+RETIRED_TOKEN = "(?<![A-Za-z0-9_']){}(?![A-Za-z0-9_'])".format
+
+
 def stale_uses(root: pathlib.Path, name: str) -> list[str]:
-    """Files that still mention a name this pass renamed away."""
+    """Files that still mention a name this pass renamed away, as a token."""
+    pattern = re.compile(RETIRED_TOKEN(re.escape(name)))
     hits: list[str] = []
     for path in sorted(root.glob("*.lean")) + sorted(root.glob("*.json")):
         if path.name == AUDIT_NAME:
@@ -277,7 +297,7 @@ def stale_uses(root: pathlib.Path, name: str) -> list[str]:
         text = path.read_text(encoding="utf-8")
         if path.suffix == ".lean":
             text = mask_comments_and_strings(text)
-        if name in text:
+        if pattern.search(text):
             hits.append(path.name)
     return hits
 
@@ -352,17 +372,21 @@ def validate(
             target = row.get("renamed_to")
             if not isinstance(target, str) or target not in by_name:
                 problems.append(f"{label}: renamed_to {target!r} is not a declaration")
-            previous = row.get("previous_name")
-            if isinstance(previous, str) and previous:
-                if previous in by_name:
-                    problems.append(f"{label}: previous_name {previous} still exists")
-                else:
-                    hits = stale_uses(root, previous)
-                    if hits:
-                        problems.append(
-                            f"{label}: previous_name {previous} is still mentioned in "
-                            + ", ".join(hits)
-                        )
+        # A name retired by a rename pass is checked on every disposition: the
+        # rename records what the declaration is now called, not what it proves.
+        previous = row.get("previous_name")
+        if isinstance(previous, str) and previous:
+            if previous == name:
+                problems.append(f"{label}: previous_name is the row's own name")
+            elif previous in by_name:
+                problems.append(f"{label}: previous_name {previous} still exists")
+            else:
+                hits = stale_uses(root, previous)
+                if hits:
+                    problems.append(
+                        f"{label}: previous_name {previous} is still mentioned in "
+                        + ", ".join(hits)
+                    )
     missing = [decl.name for decl in candidate_decls if decl.name not in seen]
     return problems, missing
 
@@ -434,7 +458,15 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     carried = sum(1 for row in rows if row.get("disposition") == "carried")
-    print(f"{audit_path.name}: {len(rows)} row(s) -- {summarize(rows)}")
+    retired = sum(
+        1
+        for row in rows
+        if isinstance(row.get("previous_name"), str) and row["previous_name"]
+    )
+    print(
+        f"{audit_path.name}: {len(rows)} row(s) -- {summarize(rows)}; "
+        f"{retired} record a retired name"
+    )
     print(
         f"{carried} carried row(s), cap {carried_cap}: "
         + (

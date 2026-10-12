@@ -18,12 +18,13 @@ unexpected axioms — are green on `main`
 ([Lean CI run 38119532226](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/38119532226),
 the merge of PR #79) and were re-confirmed on
 [PR #83](https://github.com/jakesdev1991/Omega_Theory_Everything/pull/83)
-(run 38251369698). Reproducible locally without a toolchain: 103 Python/tooling
+(run 38251369698). Reproducible locally without a toolchain: 107 Python/tooling
 tests, `audit_axioms --max 0` → 0, all eight `audit_vacuity` ratchets and the
 alias baseline at 0, the comment-parity gate across 69 files, 68
-byte-identical `txt_proofs/` mirrors, and the Phase 6 statement audit — one row
-for each of the 160 physics-sounding volume declarations, with the 30 `carried`
-rows capped by the audit file's own ratchet. Lean/mathlib remain pinned to
+byte-identical `txt_proofs/` mirrors, and the Phase 6 statement audit — 163 rows
+for the 161 physics-sounding volume declarations, with the 33 `carried` rows
+capped by the audit file's own ratchet and the 16 names the rename pass retired
+recorded as `previous_name` on their rows. Lean/mathlib remain pinned to
 v4.32.0.
 Kernel acceptance cannot be reproduced here: the toolchain and the mathlib olean
 cache are served from release-asset hosts that are unreachable in this
@@ -232,8 +233,9 @@ This corpus is maintained under an explicit honesty policy, enforced in CI:
    for every theorem or lemma in `Vol*.lean` whose name carries a
    physics-sounding word (a documented lexicon, matched after splitting names on
    `_`, `.` and camelCase). `check_statement_audit.py` is the gate and
-   `statement_audit.json` is the record: **160 rows** for the current corpus,
-   each with a disposition and a note —
+   `statement_audit.json` is the record: **163 rows** for the current corpus
+   (161 candidates plus two rows for renamed declarations the lexicon no longer
+   matches), each with a disposition and a note —
 
    ```bash
    python3 check_statement_audit.py            # gate (also in Lean CI)
@@ -247,16 +249,22 @@ This corpus is maintained under an explicit honesty policy, enforced in CI:
    survive nowhere once comments are masked; 14), or **carried** (true only from
    data the model carries — a structure field, a postulate, a placeholder or
    constant definition, a definitional restatement, or a degenerate instance —
-   and names that declaration; 30, the count the file's `carried_cap` ratchets,
-   which may only be lowered). The fourth disposition is a deliberate addition
+   and names that declaration; 33, the count the file's `carried_cap` ratchets,
+   which may only be lowered). Any row may also carry a `previous_name`: the
+   Phase 6 rename pass renamed sixteen declarations whose names asserted results
+   their statements do not contain, kept each row's disposition, and recorded
+   the retired name, which must then survive nowhere in the corpus — the match is
+   on identifier boundaries, so `zeroCurvature_bianchi_identity` is not a
+   surviving `bianchi_identity`. The fourth disposition is a deliberate addition
    to the roadmap's sketch: the three-way split has no honest place for
-   `theorem photon_massless : PhotonMass = 0 := rfl` or for `|0| ≤ |0|` in a
-   placeholder layer, and calling those "witnessed" is the misreport this phase
-   exists to stop. The gate is lexical, so it also runs offline and inside
-   `research/consistency_gate.py`; it checks that rows exist and are well formed
-   — a witness or source is a declaration, a condition occurs, a retired name is
-   gone — but not that a judgement is *right*. That half is CI: `lake build ToE`
-   compiles every witness and source a row names.
+   `theorem photonMass_eq_zero : PhotonMass = 0 := rfl` (formerly
+   `photon_massless`) or for `|0| ≤ |0|` in a placeholder layer, and calling
+   those "witnessed" is the misreport this phase exists to stop. The gate is
+   lexical, so it also runs offline and inside `research/consistency_gate.py`;
+   it checks that rows exist and are well formed — a witness or source is a
+   declaration, a condition occurs, a retired name is gone — but not that a
+   judgement is *right*. That half is CI: `lake build ToE` compiles every
+   witness and source a row names.
 
 The ratchet values live in `.github/workflows/lean-ci.yml`, except the statement
 audit's `carried_cap`, which lives in `statement_audit.json`; lowering them is
@@ -519,7 +527,8 @@ No gate was weakened; the kernel-audit inventory grew from 142 to
 - **Protocol renames.** All 44 `*_axiom` protocol delegations now carry the
   name of the content they prove (`handshaking_lemma`,
   `feedback_convergence`, `hadamard_unitary`, `cantor_diagonal`,
-  `wheeler_dewitt_balance`, `dark_energy_deduction`, …). The P→P
+  `wheeler_dewitt_balance`, `dark_energy_deduction` (since qualified to
+  `legacy_density_constants_dark_energy_eq` by the rename pass below), …). The P→P
   `schrodinger_equation` wrapper was removed.
 - **Vacuous hypotheses retired.** The unsatisfiable premises are gone at
   the source and replaced by non-degenerate restatements:
@@ -836,10 +845,66 @@ and the two files added are a checker, an audit record, and its tests.
   (`SMatrix := 1`, `TMatrix := 0`), `flat_universe_sum` (the legacy (0,0,1)
   constants), and the tracial-model KMS rows, among others — and each of those
   notes says what is carried and by which declaration instead of implying a
-  derivation.
+  derivation. (The names above are the phase-6 names; the rename pass below
+  qualified sixteen of them and grew the audit to 163 rows with a cap of 33.)
 - **Verified in CI.** Green on PR #83 at
   [Lean CI run 38251369698](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/38251369698)
   — the new `Gate - statement audit of the physics volumes` step passes next to
   `lake build ToE`, the cited-name gate and the 260-declaration kernel audit
   ([CI run 38251369679](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/38251369679)
   for the pytest side).
+
+### Seventeenth pass: the Phase 6 rename pass (names qualified, code changed)
+
+The audit's follow-up: sixteen declarations whose *name* asserted a result the statement
+does not contain were renamed to names that state the content. This is the one pass in the
+report that changes code, so it ships the parity baseline regenerated
+(`check_declaration_parity.py --update`), the `txt_proofs/` mirrors re-synced
+(`sync_txt_mirrors.py --write`), the updated `ProofRegression.lean` reference and
+kernel-audit target, and the `OmegaProtocol.lean` re-exports under the same names — in the
+same commit.
+
+| old name | new name | why the old name overstated |
+|---|---|---|
+| `photon_massless` | `photonMass_eq_zero` | the statement is the postulate `PhotonMass := 0` unfolded by `rfl` |
+| `maxwells_equations` | `maxwell_equations_of_sourced_field` | one of the two conjuncts is the carried model law |
+| `metric_is_qfim` | `zeroCurvature_metric_eq_qfim` | restates the carried law field at the degenerate instance (both sides 0) |
+| `einstein_field_equations` | `zeroCurvature_einstein_field_equations` | same, `law_einstein_equations`; both sides 0 |
+| `bianchi_identity` | `zeroCurvature_bianchi_identity` | same, `law_bianchi_identity`; ∇·0 = 0 |
+| `cosmological_constant` | `zeroCurvature_cosmological_constant` | same, `law_cosmological_constant`; Λ = 0 |
+| `conservation_of_energy_momentum` | `zeroCurvature_conservation_of_energy_momentum` | the chain is real, but both tensors vanish at this instance |
+| `em_sources_gravity` | `zeroCurvature_stress_energy_eq_em_stress_energy` | `EMStressEnergy` is *defined* as `stress_energy`; no coupling is shown |
+| `optical_expansion` | `placeholder_optical_expansion` | `SMatrix := 1`, `TMatrix := 0`; no optical theorem is derived |
+| `standard_model_gauge_group` | `GaugeSymmetry_eq_product` | the carrier is defined as the product; no Lie-group construction |
+| `bridge_bh_entropy_is_holographic` | `bridge_entanglement_entropy_eq_bh_entropy` | the identity is definitional; no holographic dictionary |
+| `gauge_symmetry` | `SM_Gauge_Group_eq_product` | the same definitional equality, not a gauge-group construction |
+| `flat_universe_sum` | `legacy_density_constants_sum_eq_one` | flatness is the legacy constant `1`, not a derived property |
+| `dark_energy_deduction` | `legacy_density_constants_dark_energy_eq` | the "deduction" is `linarith` on the legacy constants |
+| `quantum_computing_from_omega` | `hadamard_unitary_restated` | restates `hadamard_unitary`; no construction from Ω |
+| `turing_instability_ratio` | `diffusion_ratio_gt_one_of_activator_pos` | a ratio of two constant diffusivities is not an instability proof |
+
+- **The gate grew with the pass.** `previous_name` is now validated on *any* row, not only
+  on `renamed` rows: a renamed declaration keeps the disposition of its statement and still
+  records what it used to be called. Matching is on identifier boundaries, so
+  `zeroCurvature_bianchi_identity` is not a surviving `bianchi_identity`, while a
+  deliberately kept law field beside it (`law_bianchi_identity`, `law_metric_is_qfim`) is a
+  different name and not a stale use. A `previous_name` equal to the row's own name is
+  rejected.
+- **Coverage grew with the cap visible.** Three renamed declarations
+  (`einstein_field_equations`, `bianchi_identity`, `maxwells_equations`) were never lexicon
+  candidates and now have `carried` rows naming their carriers, so the audit grew
+  160 → 163 rows and `carried_cap` 30 → 33 in one visible diff, with no existing row
+  reclassified. Two rows (`maxwell_equations_of_sourced_field`,
+  `hadamard_unitary_restated`) record renamed declarations whose new names the lexicon no
+  longer matches; the gate prints them as extras.
+- **4 new regression tests** (27 in `test_statement_audit.py`, 107 in this directory): the
+  retirement check on a non-`renamed` disposition, the token-boundary match, a row whose
+  `previous_name` is its own name, and a test that the shipped audit's rename records are
+  complete (every retired name absent from the corpus, every replacement declared).
+- **Verified locally**: 107 `lean_proofs` tests, 215 repo tests, the statement audit green
+  at 163 rows (33 carried, cap 33, 30 retirement records), mirrors and parity in sync, all
+  eight `audit_vacuity` ratchets and the alias baseline at 0, the cited-name check 0
+  suspicious names against the pinned trees, `ruff`/`mypy` clean, the consistency gate
+  16/16. The push that carries this pass re-runs Lean CI (`lake build ToE`, the kernel
+  audit, the cited-name gate and the statement-audit step); the run URLs are recorded in
+  the follow-up docs commit once those runs are green.

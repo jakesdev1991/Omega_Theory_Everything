@@ -1,6 +1,6 @@
 {
-  "about": "Phase 6 statement-level audit of the Lean physics volumes (docs/research/CLAIM_TIGHTENING_ROADMAP.md). One row per physics-sounding theorem/lemma in lean_proofs/Vol*.lean, decided from the Phase 6 review (lean_proofs/check_statement_audit.py --review) and the module inventory in PROOF_AUDIT.md.",
-  "method": "Rows are judgements recorded per declaration, not machine-proved claims: a witness is checked to exist (and to differ from its theorem), a stated_condition to occur verbatim in the statement, a source to exist, and a previous_name to be absent from the corpus with comments masked. What the kernel can check is checked by CI's lake build ToE, which compiles every witness and source named here.",
+  "about": "Phase 6 statement-level audit of the Lean physics volumes (docs/research/CLAIM_TIGHTENING_ROADMAP.md). One row per physics-sounding theorem/lemma in lean_proofs/Vol*.lean, decided from the Phase 6 review (lean_proofs/check_statement_audit.py --review) and the module inventory in PROOF_AUDIT.md. Rows may carry a `previous_name` -- a name this pass retired; the gate checks that the retired name is a declaration nowhere and a live token nowhere.",
+  "method": "Rows are judgements recorded per declaration, not machine-proved claims: a witness is checked to exist (and to differ from its theorem), a stated_condition to occur verbatim in the statement, a source to exist, and a previous_name to be absent from the corpus with comments masked. What the kernel can check is checked by CI's lake build ToE, which compiles every witness and source named here. `previous_name` is validated on any row, not only on `renamed` rows: a rename performed by a later pass lands under the new name and keeps its disposition.",
   "dispositions": {
     "witness": "the statement is about a declared, non-degenerate object or instance (named in `witness`); its hypotheses, where it has any, are realized",
     "conditional": "the statement carries its hypotheses in its own signature (`stated_condition` quotes the text)",
@@ -9,12 +9,12 @@
   },
   "lexicon": "The candidate census is lexical: a theorem/lemma counts when one of the words in its name (split on _, ., camelCase) is a PHYSICS_TOKENS word in check_statement_audit.py. The lexicon is a floor, not a ceiling.",
   "reviewed": "2026-10-12",
-  "carried_cap": 30,
+  "carried_cap": 33,
   "counts": {
     "witness": 73,
     "conditional": 43,
     "renamed": 14,
-    "carried": 30
+    "carried": 33
   },
   "rows": [
     {
@@ -130,11 +130,20 @@
       "stated_condition": "hχ : ContDiff ℝ ∞ χ"
     },
     {
-      "name": "photon_massless",
+      "name": "maxwell_equations_of_sourced_field",
       "file": "Vol02_Electromagnetism.lean",
       "disposition": "carried",
-      "note": "Definitional restatement (rfl) of the model postulate `PhotonMass := 0`; the docstring says it is not a derived result, so the name records the model's choice, not a derivation of photon masslessness.",
-      "source": "PhotonMass"
+      "note": "Conjunction of the homogeneous identity `d (d A) = 0` (from `d² = 0`) with the model law `law_dual_maxwell` carried by the sourced configuration, so only one conjunct is derived. Renamed from `maxwells_equations` in the Phase 6 rename pass.",
+      "source": "SourcedField",
+      "previous_name": "maxwells_equations"
+    },
+    {
+      "name": "photonMass_eq_zero",
+      "file": "Vol02_Electromagnetism.lean",
+      "disposition": "carried",
+      "note": "Definitional restatement (rfl) of the model postulate `PhotonMass := 0`; the docstring says it is not a derived result, so the name records the model's choice, not a derivation of photon masslessness. Renamed from `photon_massless` in the Phase 6 rename pass: the new name states the definition it unfolds.",
+      "source": "PhotonMass",
+      "previous_name": "photon_massless"
     },
     {
       "name": "bh_entropy_pos",
@@ -277,27 +286,6 @@
       "witness": "hamiltonian"
     },
     {
-      "name": "conservation_of_energy_momentum",
-      "file": "Vol05_GeneralRelativity.lean",
-      "disposition": "carried",
-      "note": "The statement is the zero-curvature instance's law: `stress_energy := 0`, so ∇·0 = 0. The name must not be read as a derived conservation law; this instance is deliberately degenerate.",
-      "source": "Geometry"
-    },
-    {
-      "name": "cosmological_constant",
-      "file": "Vol05_GeneralRelativity.lean",
-      "disposition": "carried",
-      "note": "An ∃Λ restatement of the instance's carried field `law_cosmological_constant` (Λ = 0 at the zero-curvature instance); a MODEL CLAIM by the docstring's own label.",
-      "source": "Geometry"
-    },
-    {
-      "name": "em_sources_gravity",
-      "file": "Vol05_GeneralRelativity.lean",
-      "disposition": "carried",
-      "note": "`EMStressEnergy` is defined as `stress_energy`, so the identity is a definitional alias on the zero instance; no coupling between electromagnetism and gravity is established.",
-      "source": "EMStressEnergy"
-    },
-    {
       "name": "horizonRadius_pos",
       "file": "Vol05_GeneralRelativity.lean",
       "disposition": "conditional",
@@ -310,13 +298,6 @@
       "disposition": "conditional",
       "note": "K = 48G²M²/r⁶ > 0 outside the horizon, conditional on G > 0 and r > 0.",
       "stated_condition": "hr : 0 < r"
-    },
-    {
-      "name": "metric_is_qfim",
-      "file": "Vol05_GeneralRelativity.lean",
-      "disposition": "carried",
-      "note": "Both sides are 0 by definition at the zero-curvature instance (`metric := 0`; the model QFIM reduces definitionally), so this restates the instance's carried law field `law_metric_is_qfim`; the general claim is that field, not this theorem.",
-      "source": "Geometry"
     },
     {
       "name": "real_conservation_of_energy_momentum",
@@ -340,18 +321,68 @@
       "witness": "unitSchwarzschild"
     },
     {
-      "name": "optical_expansion",
-      "file": "Vol06_QuantumFieldTheory.lean",
+      "name": "zeroCurvature_bianchi_identity",
+      "file": "Vol05_GeneralRelativity.lean",
       "disposition": "carried",
-      "note": "In the placeholder layer `SMatrix := 1` and `TMatrix := 0`, so the expansion is 1 = 1 by simp; the file keeps a separate hypothesis-carrying `optical_theorem` wrapper, and no optical theorem is derived.",
-      "source": "SMatrix"
+      "note": "∇·G^μν = 0 for the zero Einstein tensor: the carried law field `law_bianchi_identity` read at the zero-curvature instance. Renamed from `bianchi_identity` in the Phase 6 rename pass: the qualifier names the degenerate instance.",
+      "source": "Geometry",
+      "previous_name": "bianchi_identity"
     },
     {
-      "name": "standard_model_gauge_group",
+      "name": "zeroCurvature_conservation_of_energy_momentum",
+      "file": "Vol05_GeneralRelativity.lean",
+      "disposition": "carried",
+      "note": "The statement is the zero-curvature instance's law: `stress_energy := 0`, so ∇·0 = 0. The name must not be read as a derived conservation law; this instance is deliberately degenerate. Renamed from `conservation_of_energy_momentum` in the Phase 6 rename pass: the qualifier names the degenerate instance the theorem is about.",
+      "source": "Geometry",
+      "previous_name": "conservation_of_energy_momentum"
+    },
+    {
+      "name": "zeroCurvature_cosmological_constant",
+      "file": "Vol05_GeneralRelativity.lean",
+      "disposition": "carried",
+      "note": "An ∃Λ restatement of the instance's carried field `law_cosmological_constant` (Λ = 0 at the zero-curvature instance); a MODEL CLAIM by the docstring's own label. Renamed from `cosmological_constant` in the Phase 6 rename pass: the qualifier names the degenerate instance the theorem is about.",
+      "source": "Geometry",
+      "previous_name": "cosmological_constant"
+    },
+    {
+      "name": "zeroCurvature_einstein_field_equations",
+      "file": "Vol05_GeneralRelativity.lean",
+      "disposition": "carried",
+      "note": "G_μν = 8πG T_μν is the instance's carried law field `law_einstein_equations` with both sides 0 here; not a derivation of the field equations. Renamed from `einstein_field_equations` in the Phase 6 rename pass: the qualifier names the degenerate instance.",
+      "source": "Geometry",
+      "previous_name": "einstein_field_equations"
+    },
+    {
+      "name": "zeroCurvature_metric_eq_qfim",
+      "file": "Vol05_GeneralRelativity.lean",
+      "disposition": "carried",
+      "note": "Both sides are 0 by definition at the zero-curvature instance (`metric := 0`; the model QFIM reduces definitionally), so this restates the instance's carried law field `law_metric_is_qfim`; the general claim is that field, not this theorem. Renamed from `metric_is_qfim` in the Phase 6 rename pass: the qualifier names the degenerate instance the theorem is about.",
+      "source": "Geometry",
+      "previous_name": "metric_is_qfim"
+    },
+    {
+      "name": "zeroCurvature_stress_energy_eq_em_stress_energy",
+      "file": "Vol05_GeneralRelativity.lean",
+      "disposition": "carried",
+      "note": "`EMStressEnergy` is defined as `stress_energy`, so the identity is a definitional alias on the zero instance; no coupling between electromagnetism and gravity is established. Renamed from `em_sources_gravity` in the Phase 6 rename pass: the new name states the definitional alias instead of a gravity source.",
+      "source": "EMStressEnergy",
+      "previous_name": "em_sources_gravity"
+    },
+    {
+      "name": "GaugeSymmetry_eq_product",
       "file": "Vol06_QuantumFieldTheory.lean",
       "disposition": "carried",
-      "note": "`GaugeSymmetry` is defined as SU3 × SU2 × U1, so this is the definition restated (rfl); no Lie-group structure is constructed.",
-      "source": "GaugeSymmetry"
+      "note": "`GaugeSymmetry` is defined as SU3 × SU2 × U1, so this is the definition restated (rfl); no Lie-group structure is constructed. Renamed from `standard_model_gauge_group` in the Phase 6 rename pass: the new name states the definitional equality, not a gauge-group construction.",
+      "source": "GaugeSymmetry",
+      "previous_name": "standard_model_gauge_group"
+    },
+    {
+      "name": "placeholder_optical_expansion",
+      "file": "Vol06_QuantumFieldTheory.lean",
+      "disposition": "carried",
+      "note": "In the placeholder layer `SMatrix := 1` and `TMatrix := 0`, so the expansion is 1 = 1 by simp; the file keeps a separate hypothesis-carrying `optical_theorem` wrapper, and no optical theorem is derived. Renamed from `optical_expansion` in the Phase 6 rename pass: the new name names the placeholder layer that makes it true.",
+      "source": "SMatrix",
+      "previous_name": "optical_expansion"
     },
     {
       "name": "criticalDensity_pos",
@@ -403,11 +434,12 @@
       "witness": "standardSchwarzschild"
     },
     {
-      "name": "bridge_bh_entropy_is_holographic",
+      "name": "bridge_entanglement_entropy_eq_bh_entropy",
       "file": "Vol09_HolographicPrinciple.lean",
       "disposition": "carried",
-      "note": "`EntanglementEntropy` and `BHEntropy` are the same expression (`MinimalSurfaceArea`/4G), so the identity is definitional (dsimp); NOT a derivation of the holographic dictionary, as the docstring says.",
-      "source": "EntanglementEntropy"
+      "note": "`EntanglementEntropy` and `BHEntropy` are the same expression (`MinimalSurfaceArea`/4G), so the identity is definitional (dsimp); NOT a derivation of the holographic dictionary, as the docstring says. Renamed from `bridge_bh_entropy_is_holographic` in the Phase 6 rename pass: the new name states the identity, not a holographic dictionary.",
+      "source": "EntanglementEntropy",
+      "previous_name": "bridge_bh_entropy_is_holographic"
     },
     {
       "name": "er_epr_bridge_entails_entanglement",
@@ -417,11 +449,12 @@
       "stated_condition": "h : EinsteinRosenBridge ψ"
     },
     {
-      "name": "gauge_symmetry",
+      "name": "SM_Gauge_Group_eq_product",
       "file": "Vol10_StandardModel.lean",
       "disposition": "carried",
-      "note": "`SM_Gauge_Group` is defined as SU3 × SU2 × U1, so this is the definition restated (rfl); the docstring says it is not a construction of Lie groups.",
-      "source": "SM_Gauge_Group"
+      "note": "`SM_Gauge_Group` is defined as SU3 × SU2 × U1, so this is the definition restated (rfl); the docstring says it is not a construction of Lie groups. Renamed from `gauge_symmetry` in the Phase 6 rename pass: the new name states the definitional equality, not a gauge-group construction.",
+      "source": "SM_Gauge_Group",
+      "previous_name": "gauge_symmetry"
     },
     {
       "name": "higgs_vacuum_minimum",
@@ -459,13 +492,6 @@
       "witness": "graviton_sm_coupling"
     },
     {
-      "name": "dark_energy_deduction",
-      "file": "Vol14_DarkSector.lean",
-      "disposition": "carried",
-      "note": "Over the legacy constants (0, 0, 1) this restates `flat_universe_sum` by linarith; the parameterized deduction is `CosmicDensityBudget.dark_energy_eq`.",
-      "source": "flat_universe_sum"
-    },
-    {
       "name": "dark_energy_eq",
       "file": "Vol14_DarkSector.lean",
       "disposition": "witness",
@@ -487,11 +513,20 @@
       "stated_condition": "hb : 0 < b.omegaB"
     },
     {
-      "name": "flat_universe_sum",
+      "name": "legacy_density_constants_dark_energy_eq",
       "file": "Vol14_DarkSector.lean",
       "disposition": "carried",
-      "note": "The legacy (0, 0, 1) constants sum to 1 by norm_num; flatness here is a chosen constant, not a derived property. The honest parameterized model is `CosmicDensityBudget`.",
-      "source": "OmegaDarkEnergy"
+      "note": "Over the legacy constants (0, 0, 1) this restates `legacy_density_constants_sum_eq_one` by linarith; the parameterized deduction is `CosmicDensityBudget.dark_energy_eq`. Renamed from `dark_energy_deduction` in the Phase 6 rename pass: the new name says the constants are legacy choices and drops `deduction`.",
+      "source": "legacy_density_constants_sum_eq_one",
+      "previous_name": "dark_energy_deduction"
+    },
+    {
+      "name": "legacy_density_constants_sum_eq_one",
+      "file": "Vol14_DarkSector.lean",
+      "disposition": "carried",
+      "note": "The legacy (0, 0, 1) constants sum to 1 by norm_num; flatness here is a chosen constant, not a derived property. The honest parameterized model is `CosmicDensityBudget`. Renamed from `flat_universe_sum` in the Phase 6 rename pass: the new name says the constants are legacy choices.",
+      "source": "OmegaDarkEnergy",
+      "previous_name": "flat_universe_sum"
     },
     {
       "name": "matter_dark_energy_complement",
@@ -849,11 +884,12 @@
       "witness": "bridge_qregion_self_distance_zero"
     },
     {
-      "name": "quantum_computing_from_omega",
+      "name": "hadamard_unitary_restated",
       "file": "Vol34_QuantumComputing.lean",
       "disposition": "carried",
-      "note": "Content is H†H = I for the two-element gate algebra (`HadamardGate := QGate.H`); the docstring says the legacy name is kept for the protocol, and no quantum-computing construction is established.",
-      "source": "HadamardGate"
+      "note": "Content is H†H = I for the two-element gate algebra (`HadamardGate := QGate.H`); the docstring says the legacy name is kept for the protocol, and no quantum-computing construction is established. Renamed from `quantum_computing_from_omega` in the Phase 6 rename pass: the new name states the restatement it is.",
+      "source": "HadamardGate",
+      "previous_name": "quantum_computing_from_omega"
     },
     {
       "name": "bridge_vol35_entropy_nonneg",
@@ -896,18 +932,19 @@
       "renamed_to": "bridge_vol37_metric_self_zero"
     },
     {
+      "name": "diffusion_ratio_gt_one_of_activator_pos",
+      "file": "Vol37_Morphogenesis.lean",
+      "disposition": "carried",
+      "note": "The diffusivities are the constants 1 and 2, so the 'ratio' is 2/1 > 1; the file's own scope note says a bare diffusivity ratio is NOT a Turing instability proof (the hypothesis is discharged by the constant). Renamed from `turing_instability_ratio` in the Phase 6 rename pass: the new name is the ratio, with its hypothesis.",
+      "source": "InhibitorDiffusion",
+      "previous_name": "turing_instability_ratio"
+    },
+    {
       "name": "turing_instability",
       "file": "Vol37_Morphogenesis.lean",
       "disposition": "conditional",
       "note": "Linear-stability criterion (drive plus discriminant imply a negative-dispersion wavenumber, evaluated at k² = P/2Q) for the stated two-species model; the docstring says textbook algebra, not a PDE derivation.",
       "stated_condition": "hDrive : 0 < S.Du * S.d + S.Dv * S.a"
-    },
-    {
-      "name": "turing_instability_ratio",
-      "file": "Vol37_Morphogenesis.lean",
-      "disposition": "carried",
-      "note": "The diffusivities are the constants 1 and 2, so the 'ratio' is 2/1 > 1; the file's own scope note says a bare diffusivity ratio is NOT a Turing instability proof (the hypothesis is discharged by the constant).",
-      "source": "InhibitorDiffusion"
     },
     {
       "name": "bridge_vol38_entropy_nonneg",

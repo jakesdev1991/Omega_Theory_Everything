@@ -101,7 +101,11 @@ structure U1 where
   phase : ℝ
 
 def GaugeSymmetry := SU3 × SU2 × U1
-theorem standard_model_gauge_group : GaugeSymmetry = (SU3 × SU2 × U1) := rfl
+/-- The carrier `GaugeSymmetry` is *defined* as `SU3 × SU2 × U1`, so this
+    restates the definition: no Lie-group structure is constructed and no
+    physical gauge group is identified.  Renamed from
+    `standard_model_gauge_group` in the Phase 6 rename pass. -/
+theorem GaugeSymmetry_eq_product : GaugeSymmetry = (SU3 × SU2 × U1) := rfl
 
 -- ============================================================
 -- THE OPTICAL THEOREM
@@ -111,7 +115,12 @@ def OperatorAdjoint (A : Operator) : Operator := A
 noncomputable def SMatrix : Operator := 1
 noncomputable def TMatrix : Operator := 0
 
-theorem optical_expansion :
+/-- The optical-theorem identity at the placeholder layer (`SMatrix := 1`,
+    `TMatrix := 0`), where both sides are 1.  It is an identity of that layer
+    and derives no optical theorem; the hypothesis-carrying companion is
+    `optical_theorem`.  Renamed from `optical_expansion` in the Phase 6 rename
+    pass. -/
+theorem placeholder_optical_expansion :
   OperatorAdjoint SMatrix * SMatrix = (1 : Operator) + Complex.I • TMatrix - Complex.I • OperatorAdjoint TMatrix + OperatorAdjoint TMatrix * TMatrix := by
   simp [OperatorAdjoint, SMatrix, TMatrix]
 
@@ -120,6 +129,6 @@ theorem optical_theorem
   (1 : Operator) = (1 : Operator) + Complex.I • TMatrix - Complex.I • OperatorAdjoint TMatrix + OperatorAdjoint TMatrix * TMatrix := by
   calc (1 : Operator)
       = OperatorAdjoint SMatrix * SMatrix := h_unitary.symm
-    _ = (1 : Operator) + Complex.I • TMatrix - Complex.I • OperatorAdjoint TMatrix + OperatorAdjoint TMatrix * TMatrix := optical_expansion
+    _ = (1 : Operator) + Complex.I • TMatrix - Complex.I • OperatorAdjoint TMatrix + OperatorAdjoint TMatrix * TMatrix := placeholder_optical_expansion
 
 end OmegaProtocol.Vol06

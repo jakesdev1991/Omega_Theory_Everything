@@ -21,7 +21,13 @@ import pathlib
 import tempfile
 import unittest
 
-from check_statement_audit import PHYSICS_TOKENS, main, physics_words
+from check_statement_audit import (
+    PHYSICS_TOKENS,
+    corpus,
+    main,
+    physics_words,
+    stale_uses,
+)
 
 ROOT = pathlib.Path(__file__).resolve().parent
 
@@ -242,6 +248,44 @@ class GateTestCase(unittest.TestCase):
         )
         self.assertIn("is still mentioned in", self.assert_fails())
 
+    def test_retired_name_is_checked_on_every_disposition(self) -> None:
+        # Not only `renamed` rows: a rename performed by a later pass leaves its
+        # record on whatever row the declaration already had.
+        rows = self.audit()
+        rows[2]["previous_name"] = "photonMass"
+        self.write_audit(rows)
+        self.assertIn("previous_name photonMass still exists", self.assert_fails())
+        rows[2]["previous_name"] = "metric_from_omega"
+        self.write_audit(rows)
+        path = self.root / "Vol01_Fixture.lean"
+        path.write_text(
+            FAKE_VOLUME + "def old_alias : ℝ := metric_from_omega\n",
+            encoding="utf-8",
+        )
+        self.assertIn("is still mentioned in", self.assert_fails())
+
+    def test_retired_name_is_matched_on_token_boundaries(self) -> None:
+        # A new name may contain the retired one (`zeroCurvature_bianchi_identity`
+        # from `bianchi_identity`); a longer identifier is a different name.
+        rows = self.audit()
+        rows[2]["previous_name"] = "metric_from_omega"
+        self.write_audit(rows)
+        path = self.root / "Vol01_Fixture.lean"
+        path.write_text(
+            FAKE_VOLUME
+            + "def metric_from_omega_alias : ℝ := 0\n"
+            + "def law_metric_from_omega : ℝ := 1\n",
+            encoding="utf-8",
+        )
+        status, out, _ = self.run_main()
+        self.assertEqual(status, 0, out)
+
+    def test_previous_name_may_not_be_the_rows_own_name(self) -> None:
+        rows = self.audit()
+        rows[2]["previous_name"] = "photon_massless"
+        self.write_audit(rows)
+        self.assertIn("previous_name is the row's own name", self.assert_fails())
+
     # --- unreadable audits --------------------------------------------------
 
     def test_missing_audit_exits_two(self) -> None:
@@ -274,6 +318,29 @@ class LexiconTests(unittest.TestCase):
 
 
 class ShippedAuditTests(unittest.TestCase):
+    def test_every_recorded_rename_is_retired_and_replaced(self) -> None:
+        rows = json.loads((ROOT / "statement_audit.json").read_text(encoding="utf-8"))[
+            "rows"
+        ]
+        retired = {
+            row["previous_name"]: row["name"]
+            for row in rows
+            if isinstance(row.get("previous_name"), str) and row["previous_name"]
+        }
+        self.assertGreaterEqual(len(retired), 16, retired)
+        names = {decl.name for decl in corpus(ROOT)}
+        for old, new in retired.items():
+            self.assertNotIn(old, names, old)
+            self.assertIn(new, names, new)
+            self.assertEqual(stale_uses(ROOT, old), [], old)
+        # The pass's own records, including the three declarations the lexicon
+        # never matched before their names were qualified.
+        self.assertEqual(retired["photon_massless"], "photonMass_eq_zero")
+        self.assertEqual(retired["gauge_symmetry"], "SM_Gauge_Group_eq_product")
+        self.assertEqual(
+            retired["maxwells_equations"], "maxwell_equations_of_sourced_field"
+        )
+
     def test_the_repository_audit_covers_the_repository_corpus(self) -> None:
         out = io.StringIO()
         with contextlib.redirect_stdout(out):

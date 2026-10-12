@@ -23,8 +23,10 @@ open Vol06
 
 def SM_Gauge_Group := SU3 × SU2 × U1
 
-/-- Definitional product of the legacy carriers, not a construction of Lie groups. -/
-theorem gauge_symmetry : SM_Gauge_Group = (SU3 × SU2 × U1) := rfl
+/-- Definitional product of the legacy carriers, not a construction of Lie
+    groups and not an identification of the physical Standard-Model gauge
+    group.  Renamed from `gauge_symmetry` in the Phase 6 rename pass. -/
+theorem SM_Gauge_Group_eq_product : SM_Gauge_Group = (SU3 × SU2 × U1) := rfl
 
 -- ============================================================
 -- FERMION GENERATIONS

@@ -67,12 +67,12 @@ and is left in place.
 | LaTeX citation gate (new) | 0 errors: 41 volumes cite 41 modules and 5 declarations; 2 documented external exemptions | `python research/check_latex_citations.py` |
 | LaTeX structure gate (new) | 0 findings over 41 volumes: braces, environment nesting, document markers, math delimiters | `python research/check_latex_structure.py` |
 | Consistency gate (new) | 16 passed, 0 failed, 0 skipped (one command runs every local check) | `python research/consistency_gate.py` |
-| Statement audit (new) | **160 rows** for 160 physics-sounding volume declarations: 73 witness, 43 conditional, 14 renamed, 30 carried (cap 30, ratcheted) | `python lean_proofs/check_statement_audit.py` |
+| Statement audit | **163 rows** for 161 physics-sounding volume declarations (two rows record renamed names the lexicon no longer matches): 73 witness, 43 conditional, 14 renamed, 33 carried (cap 33, ratcheted). The Phase 6 rename pass retired 16 names that asserted results the statements do not contain; each is recorded as a `previous_name` on its row. | `python lean_proofs/check_statement_audit.py` |
 | `ruff check .`, `ruff format --check .` | pass (132 files formatted) | venv, CI versions |
 | `mypy . --ignore-missing-imports` | pass (61 source files) | venv, CI versions |
-| `pytest -q` | 211 passed, 81 subtests passed (needs the full `requirements.txt`: `matplotlib` for the Sim6 tests and `sympy`/`scipy` for the derivation checks) | venv, CI versions |
+| `pytest -q` | 215 passed, 81 subtests passed (needs the full `requirements.txt`: `matplotlib` for the Sim6 tests and `sympy`/`scipy` for the derivation checks) | venv, CI versions |
 | Cited-name check (new) | **0 suspicious names** against the pinned sources — 563,126 mathlib + 292,520 Lean core + 7,429 repository declarations; the previous script reported 205 on the same trees. Four injected typos all detected, clean copy 0. | CI only, `.github/workflows/lean-ci.yml` |
-| Lean | Not compiled here (no `lake`). Lean edits are comment and docstring only; all 68 `txt_proofs/` mirrors are byte-identical, and the code-projection parity check covers 69 files / 1,448 declarations. | CI only |
+| Lean | Not compiled here (no `lake`). Apart from the Phase 6 rename pass (declaration names only, code otherwise untouched), Lean edits are comments and docstrings only; all 68 `txt_proofs/` mirrors are byte-identical, and the code-projection parity check covers 69 files / 1,448 declarations. | CI only |
 
 ## 2. The road
 
@@ -327,8 +327,9 @@ whether a non-degenerate witness exists. Each result is recorded in the audit fi
 **Exit gate:** every physics-volume theorem with a physical-sounding name has a row in the
 audit with one of: non-degenerate witness, conditional with stated hypothesis, or renamed.
 
-**Implemented.** `lean_proofs/statement_audit.json` carries one row for each of the **160**
-theorems/lemmas in `Vol*.lean` whose name carries a word from a documented lexicon
+**Implemented.** `lean_proofs/statement_audit.json` carries one row for each of the **161**
+theorems/lemmas in `Vol*.lean` whose name carries a word from a documented lexicon (163 rows
+in all: two record renamed declarations whose new names the lexicon does not match)
 (`lean_proofs/check_statement_audit.py`). A row states a disposition, an honest note, and
 the evidence that disposition needs:
 
@@ -339,7 +340,7 @@ the evidence that disposition needs:
 * **renamed** (14 rows) — records a name retired for the `bridge_*` convention, with the
   retired name checked to survive nowhere in the corpus once comments are masked (the
   renames were made by earlier passes; this phase performed none);
-* **carried** (30 rows) — records a statement that is true only from data the model
+* **carried** (33 rows) — records a statement that is true only from data the model
   carries: a structure field, a postulate, a placeholder or constant definition, a
   definitional restatement, or a degenerate instance. It names the declaration that
   carries the data, and no non-degenerate witness exists for it.
@@ -350,11 +351,38 @@ not looser: against this corpus the three-way split has no honest place for
 layer, or for a structure field returned unchanged — those rows would have had to name a
 "witness" for a degenerate instance, which is exactly the misreport this phase exists to
 stop. The count of `carried` rows is ratcheted by a `carried_cap` field in the audit file
-(30, the measured count): a new `carried` row fails the gate until the cap is raised in a
-visible diff, and fixing a row means lowering the cap in the same commit. Rows whose name
-still reads as a legacy label (`photon_massless`, `metric_is_qfim`,
-`quantum_computing_from_omega`, `turing_instability_ratio`, ...) record that in their note
-rather than renaming the declaration.
+(30, the measured count when the audit landed): a new `carried` row fails the gate until the
+cap is raised in a visible diff, and fixing a row means lowering the cap in the same commit.
+Rows whose name still read as a legacy label (`photon_massless`, `metric_is_qfim`,
+`quantum_computing_from_omega`, `turing_instability_ratio`, ...) recorded the mismatch in
+their note instead of renaming the declaration — and the rename pass that followed did the
+renaming, described below.
+
+**The rename pass (2026-10-12).** Sixteen declarations whose *name* asserted a result the
+statement does not contain were renamed to names that state the content: the six
+`zeroCurvature_*` restatements in Vol05 (`metric_is_qfim`, `einstein_field_equations`,
+`bianchi_identity`, `cosmological_constant`, `conservation_of_energy_momentum`,
+`em_sources_gravity`), the Vol02 postulate and Maxwell pair (`photonMass_eq_zero`,
+`maxwell_equations_of_sourced_field`), the two definitional gauge-group equalities
+(`GaugeSymmetry_eq_product`, `SM_Gauge_Group_eq_product`), the placeholder optical identity
+(`placeholder_optical_expansion`), the Vol09 definitional entropy bridge
+(`bridge_entanglement_entropy_eq_bh_entropy`), the two legacy-constant Vol14 rows
+(`legacy_density_constants_sum_eq_one`, `legacy_density_constants_dark_energy_eq`), the Vol34
+gate restatement (`hadamard_unitary_restated`) and the Vol37 diffusivity ratio
+(`diffusion_ratio_gt_one_of_activator_pos`). This is the one pass in the report that changes
+code: it ships `check_declaration_parity.py --update`, the re-synced `txt_proofs/` mirrors,
+the updated `ProofRegression.lean` reference and kernel-audit target, and the
+`OmegaProtocol.lean` re-exports under the same names. The gate grew with it — `previous_name`
+is now validated on *any* row (a renamed declaration keeps the disposition of its statement
+and still records what it was called), with identifier-boundary matching, so
+`zeroCurvature_bianchi_identity` does not count as a surviving `bianchi_identity` while a
+kept law field such as `law_metric_is_qfim` is a different name. The three renamed
+declarations the lexicon never matched (`einstein_field_equations`, `bianchi_identity`,
+`maxwells_equations`) now have rows, so the audit grew 160 → 163 rows and `carried_cap`
+30 → 33: a coverage expansion in one visible diff, with no existing row reclassified. Four
+new tests (27 in the file, 107 in `lean_proofs/`) cover the per-row retirement check, the
+boundary match, a `previous_name` equal to the row's own name, and the shipped audit's
+rename records.
 
 The gate is lexical and runs offline: `python3 check_statement_audit.py` in `lean_proofs/`
 (also a command in `research/consistency_gate.py`) fails on a missing row, a malformed row,
@@ -363,8 +391,9 @@ a witness or source that is not a declaration, a `stated_condition` that does no
 passing when the audit is unreadable. What it cannot do is decide whether a judgement is
 *right*: that half is CI's `lake build ToE`, which compiles every witness and source a row
 names. 23 new tests (103 in `lean_proofs/`, all `unittest`), one negative control per
-disposition, plus a test that the shipped audit covers the shipped corpus. No Lean
-declaration was added, removed, or renamed by this phase.
+disposition, plus a test that the shipped audit covers the shipped corpus. The audit itself
+added, removed and renamed no Lean declaration; the rename pass that followed it renamed
+sixteen, as recorded above.
 
 ### Phase 7 — Consistency gate and review · **DONE (gate added 2026-10-12; the review step is human)**
 

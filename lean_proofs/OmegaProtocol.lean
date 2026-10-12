@@ -239,22 +239,22 @@ theorem bridge_vol04_metric_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := 
 -- Vol 05: General Relativity
 /-- Restatement of the QFIMGeometry model law `law_metric_is_qfim` at the
     concrete zero-curvature instance. -/
-theorem metric_is_qfim (x y : Vol05.Geometry.spacetime) :
+theorem zeroCurvature_metric_eq_qfim (x y : Vol05.Geometry.spacetime) :
   Vol05.Geometry.metric x y = QFIM (state_at x) (tangent_at x) (tangent_at y) :=
-  Vol05.metric_is_qfim x y
+  Vol05.zeroCurvature_metric_eq_qfim x y
 
-theorem einstein_field_equations (x y : Vol05.Geometry.spacetime) :
+theorem zeroCurvature_einstein_field_equations (x y : Vol05.Geometry.spacetime) :
   Vol05.Geometry.einstein_tensor x y = 8 * Real.pi * NewtonG * Vol05.Geometry.stress_energy x y := by
-  exact Vol05.einstein_field_equations x y
+  exact Vol05.zeroCurvature_einstein_field_equations x y
 
-theorem bianchi_identity (ν : Vol05.Geometry.spacetime) :
+theorem zeroCurvature_bianchi_identity (ν : Vol05.Geometry.spacetime) :
   CovariantDivergence Vol05.Geometry.einstein_tensor ν = 0 := by
-  exact Vol05.bianchi_identity ν
+  exact Vol05.zeroCurvature_bianchi_identity ν
 
-theorem cosmological_constant :
+theorem zeroCurvature_cosmological_constant :
   ∃ (Λ : ℝ), ∀ (x y : Vol05.Geometry.spacetime),
   Vol05.Geometry.einstein_tensor x y + Λ * Vol05.Geometry.metric x y = 8 * Real.pi * NewtonG * Vol05.Geometry.stress_energy x y := by
-  exact Vol05.cosmological_constant
+  exact Vol05.zeroCurvature_cosmological_constant
 
 -- Vol 06: QFT
 /-- Consistency bridge (VOL06): the coupling `Φ` is nonnegative.
@@ -271,8 +271,8 @@ theorem bridge_vol06_coupling_nonneg (R₁ R₂ : QRegion) : Φ R₁ R₂ ≥ 0 
 theorem bridge_vol06_metric_nonneg (R₁ R₂ : QRegion) : d R₁ R₂ ≥ 0 := by
   exact bridge_distance_nonneg R₁ R₂
 
-theorem standard_model_gauge_group : Vol10.SM_Gauge_Group = (Vol06.SU3 × Vol06.SU2 × Vol06.U1) := by
-  exact Vol10.gauge_symmetry
+theorem SM_Gauge_Group_eq_product : Vol10.SM_Gauge_Group = (Vol06.SU3 × Vol06.SU2 × Vol06.U1) := by
+  exact Vol10.SM_Gauge_Group_eq_product
 
 /-- Consistency bridge (VOL06): the von Neumann entropy is nonnegative.
     Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;
@@ -352,7 +352,7 @@ theorem bridge_vol09_metric_self_zero (R : QRegion) : d R R = 0 := by
   exact bridge_qregion_self_distance_zero R
 
 -- Vol 10: Standard Model
--- (The gauge-group delegation is `standard_model_gauge_group` in the
+-- (The gauge-group delegation is `SM_Gauge_Group_eq_product` in the
 -- Vol 06 section above; the former duplicate `axiom_gauge_symmetry` was
 -- removed.)
 
@@ -384,8 +384,8 @@ theorem wheeler_dewitt_balance (H_m H_g : Operator) (Ψ : StateSpace)
   Vol13.wheeler_dewitt_balance H_m H_g Ψ h
 
 -- Vol 14: Dark Sector
-theorem dark_energy_deduction : Vol14.OmegaDarkEnergy = 1 - Vol14.OmegaBaryon - Vol14.OmegaDarkMatter :=
-  Vol14.dark_energy_deduction
+theorem legacy_density_constants_dark_energy_eq : Vol14.OmegaDarkEnergy = 1 - Vol14.OmegaBaryon - Vol14.OmegaDarkMatter :=
+  Vol14.legacy_density_constants_dark_energy_eq
 
 -- Vol 15: Early Universe
 /-- Inflationary acceleration, restated over the non-degenerate fluid
@@ -605,9 +605,9 @@ theorem boolean_excluded_middle (a : Prop) [Decidable a] : a ∨ ¬a :=
   Vol36.boolean_excluded_middle a
 
 -- Vol 37: Morphogenesis
-theorem turing_instability_ratio (h_pos : Vol37.ActivatorDiffusion > 0) :
+theorem diffusion_ratio_gt_one_of_activator_pos (h_pos : Vol37.ActivatorDiffusion > 0) :
   Vol37.InhibitorDiffusion / Vol37.ActivatorDiffusion > 1 :=
-  Vol37.turing_instability_ratio h_pos
+  Vol37.diffusion_ratio_gt_one_of_activator_pos h_pos
 
 -- Vol 38: Economics
 /-- Clearing in the explicit linear-market model, not general equilibrium. -/
@@ -733,7 +733,7 @@ theorem bridge_cross_v01_v04_coupling_symm (R₁ R₂ : QRegion) : Φ R₁ R₂ 
   exact bridge_overlapDensity_symm R₁ R₂
 
 theorem cross_vol02_vol05_em_stress_energy : Vol05.Geometry.stress_energy = Vol05.EMStressEnergy := by
-  exact Vol05.em_sources_gravity
+  exact Vol05.zeroCurvature_stress_energy_eq_em_stress_energy
 
 /-- Cross-volume bridge (VOL03/VOL08): the Vol08 Bekenstein-Hawking entropy
     (in natural units `G = 1`) agrees with the Vol03 black-hole entropy
