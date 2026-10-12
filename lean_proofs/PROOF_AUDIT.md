@@ -10,11 +10,12 @@ semantic non-vacuity. Earlier pass-status notes below are historical.
 carried out on 2026-09-26; the scope line above describes that day, not today.
 Measured on `main` now: 68 proof modules plus `lakefile.lean`, 1,448
 declarations (928 theorems, 407 defs, 76 structures, 19 abbrevs, 14 inductives,
-4 instances), 260 selected kernel-audit targets, 66 Python/tooling tests, and
+4 instances), 260 selected kernel-audit targets, 79 Python/tooling tests, and
 all eight `audit_vacuity` ratchets plus the alias baseline at zero. The pinned
 build and the kernel gate are green on `main` (CI run 38119532226) and on PR #83
 (run 38234115307). The fourteenth pass (Phase 5 exit gate: comment-parity and
-text-mirror tooling, documented in `README.md`) changed no declaration. This
+text-mirror tooling, documented in `README.md`) changed no declaration, and
+neither did the fifteenth (the cited-name check, now a gate in Lean CI). This
 note is bookkeeping, not a re-audit: the per-declaration statement review is
 Phase 6 of the claim-tightening roadmap and remains planned.
 

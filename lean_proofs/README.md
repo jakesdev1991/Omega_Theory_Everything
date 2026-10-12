@@ -18,13 +18,15 @@ unexpected axioms — are green on `main`
 ([Lean CI run 38119532226](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/38119532226),
 the merge of PR #79) and were re-confirmed on
 [PR #83](https://github.com/jakesdev1991/Omega_Theory_Everything/pull/83)
-(run 38234115307). Reproducible locally without a toolchain: 66 Python/tooling
+(run 38234115307). Reproducible locally without a toolchain: 79 Python/tooling
 tests, `audit_axioms --max 0` → 0, all eight `audit_vacuity` ratchets and the
 alias baseline at 0, the comment-parity gate across 69 files, and 68
 byte-identical `txt_proofs/` mirrors. Lean/mathlib remain pinned to v4.32.0.
 Kernel acceptance cannot be reproduced here: the toolchain and the mathlib olean
 cache are served from release-asset hosts that are unreachable in this
-environment, so `lake build` is CI-only. The
+environment, so `lake build` is CI-only. The same is true of the cited-name
+check (`check_mathlib_names.py`), which needs the pinned mathlib and Lean
+sources and therefore runs, like the build, only in Lean CI. The
 [adversarial audit](ADVERSARIAL_AUDIT.md) is dated 2026-09-26; its executive
 summary is a pre-remediation record, and its status note carries the counts
 above. Earlier pass-status notes below are historical.
@@ -202,6 +204,26 @@ This corpus is maintained under an explicit honesty policy, enforced in CI:
    its content. `audit_vacuity.py --max-axiom-names 0` (CI) rejects such
    names; model laws carried as structure data are named `law_*` with an
    honest docstring, and witness theorems are named `*_witness`/`*_exists`.
+8. **Cited names exist in the pinned sources.** `check_mathlib_names.py`
+   indexes every declaration in a Mathlib4 checkout plus the Lean core sources,
+   then reports qualified names used by the corpus that appear in neither —
+   `Finset.sum_range_succs` where the real lemma is `Finset.sum_range_succ`,
+   or a structure field that was renamed. It is a ratchet: `--max N` fails when
+   the count exceeds `N`, and CI runs it at `0`:
+
+   ```bash
+   python3 check_mathlib_names.py \
+       --mathlib /path/to/mathlib4 --lean /path/to/lean4/src --max 0
+   ```
+
+   It is a *lexical* net with known blind spots — no `open` scoping, no
+   notation, no type-class resolution, and it cannot see that a name exists but
+   needs an import the file lacks — so a clean run is not well-typedness. It
+   needs the pinned sources (the mathlib checkout and the toolchain's own
+   `src/lean`), which exist only in CI, so unlike the rest of this list it
+   cannot run in the offline consistency gate; `.github/workflows/lean-ci.yml`
+   invokes it after the Lean build, and it exits 2 rather than reporting a
+   clean run when a source tree yields no declarations.
 
 The ratchet values live in `.github/workflows/lean-ci.yml`; lowering them is
 always welcome, raising them is not.
@@ -654,3 +676,43 @@ added, removed, or restated**: the code projection of the corpus is unchanged.
 
 Verified: green on PR #83 (Lean CI run 38234115307), including `lake build ToE`
 and the 260-declaration kernel-axiom gate.
+
+### Fifteenth pass: the cited-name check becomes a gate (tooling, no proof content changed)
+
+`docs/PROJECT_STATUS_2026-10-08.md` recorded `check_mathlib_names.py` as
+existing "for the next round": a lexical check that would catch a typo like
+`Finset.sum_range_succs` offline, before a CI build has to walk to the failing
+module one dependency layer at a time. This pass completes that round. **No
+declaration was added, removed, or restated.**
+
+- **The indexer was rebuilt for recall, because every miss is a false
+  "suspicious" name and a ratchet over false positives is pressure to raise
+  it.** It now registers declarations whose attribute block spans preceding
+  lines, constructors of `inductive`/`structure`/`class` with the names Lean
+  generates (`X.rec`, `X.injEq`, `X.noConfusion`, ...), structure fields where
+  they are declared, the `nonrec`/`public`/`expose` modifiers, same-line
+  `| ctor`, unicode-dotted components, and the `to_additive`/`to_dual` twins of
+  all of the above. Namespace and section scopes are tracked separately, so
+  `end someSection` can no longer pop the enclosing namespace.
+- **Baseline measured, not assumed.** Against the pinned sources (mathlib4
+  `81a5d257…`, lean4 `v4.32.0`): 563,126 mathlib declarations + 292,520 core
+  declarations + 7,429 repository declarations indexed, **0 suspicious names**
+  (the previous script reported 205 on the same trees). Negative control on a
+  copy of the tree with four injected typos (`Real.sqrtt`,
+  `Finset.sum_range_succs`, `RadialMetric.chainLenght`, `Set.mem_Ioi.mpq`): all
+  four reported; the unmodified copy reports 0.
+- **A hollow pass is an error, not a result.** Exit status 2 when any tree —
+  mathlib, core, or the repository itself, so a wrong `--repo` counts too —
+  yields no declarations, instead of reporting a clean run from an empty index.
+- **13 new regression tests** (79 total in this directory, all `unittest` so
+  the CI audit step does not need pytest).
+- **Wired into Lean CI** after the build, with `if: always()` so a compile
+  failure still produces a suspect list. The trees are located by derivation,
+  not assumption: mathlib at `.lake/packages/mathlib`, core sources at
+  `<lean --print-prefix>/src/lean` — the location the pinned `src/CMakeLists.txt`
+  installs to (`install(... DESTINATION src/lean)`). Four scenarios were
+  exercised against the real sources before pushing: sources present (exit 0,
+  0 suspicious), missing mathlib, unexpected toolchain layout, and no toolchain
+  on `PATH` (each exits 1 with an actionable message).
+- The offline consistency gate states plainly that this check is one of the
+  three it cannot run (with `lake build ToE` and the kernel audit).

@@ -35,6 +35,7 @@ def test_gate_covers_every_check_script() -> None:
         "covariant checks",
         "TFIM checks",
         "LaTeX citations",
+        "LaTeX structure",
         "claim scan",
         "axiom audit",
         "vacuity ratchets",

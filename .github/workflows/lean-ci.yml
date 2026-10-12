@@ -88,6 +88,49 @@ jobs:
           test: false
           lint: false
 
+      # Ratchet for qualified names used in the corpus: `check_mathlib_names.py`
+      # indexes every declaration in mathlib and in the toolchain's own core
+      # sources and reports repository names that exist in neither. It needs
+      # those pinned sources, so -- like `lake build` -- it is CI-only and
+      # deliberately absent from the offline consistency gate.
+      #
+      # `if: always()` is deliberate: the check reads sources, not oleans, so it
+      # does not need a successful compile, and a compile failure is exactly
+      # when a list of suspect names is worth having. Both trees must be real;
+      # the checker exits 2 rather than reporting a clean run on an empty index.
+      - name: Gate - cited names exist in the pinned mathlib/Lean sources
+        if: always()
+        working-directory: lean_proofs
+        run: |
+          set -e
+          mathlib=.lake/packages/mathlib
+          if [ ! -d "$mathlib/Mathlib" ]; then
+            echo "::error::pinned mathlib sources are missing at $PWD/$mathlib"
+            echo "::error::they are fetched by the Lean build step above, so this also happens when an earlier step failed"
+            exit 1
+          fi
+          # lean-action puts elan on PATH; fall back to its install dirs so the
+          # step does not depend on that detail.
+          for bin in "${ELAN_HOME:-$HOME/.elan}/bin" "$HOME/.elan/bin"; do
+            if [ -x "$bin/lean" ]; then export PATH="$bin:$PATH"; break; fi
+          done
+          prefix="$(lean --print-prefix 2>/dev/null)" || prefix=""
+          if [ -z "$prefix" ]; then
+            echo "::error::cannot locate the pinned toolchain ('lean --print-prefix' failed)"
+            exit 1
+          fi
+          # The pinned construction installs its core sources to <prefix>/src/lean
+          # (src/CMakeLists.txt, `install(... DESTINATION src/lean)`), so the
+          # location is derived, not guessed; print the prefix when it drifts.
+          lean_src="$prefix/src/lean"
+          if [ ! -d "$lean_src/Init" ]; then
+            echo "::error::Lean core sources not found at $lean_src"
+            find "$prefix" -maxdepth 3 -type d | head -40
+            exit 1
+          fi
+          echo "mathlib: $mathlib; Lean core: $lean_src"
+          python3 check_mathlib_names.py --mathlib "$mathlib" --lean "$lean_src" --repo . --max 0
+
       - name: Audit transitive kernel axioms of key declarations
         working-directory: lean_proofs
         run: python3 audit_kernel.py

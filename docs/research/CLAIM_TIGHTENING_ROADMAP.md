@@ -69,7 +69,8 @@ and is left in place.
 | Consistency gate (new) | 15 passed, 0 failed, 0 skipped (one command runs every local check) | `python research/consistency_gate.py` |
 | `ruff check .`, `ruff format --check .` | pass (129 files formatted) | venv, CI versions |
 | `mypy . --ignore-missing-imports` | pass (58 source files) | venv, CI versions |
-| `pytest -q` | 174 passed, 81 subtests passed (needs the full `requirements.txt`: `matplotlib` for the Sim6 tests and `sympy`/`scipy` for the derivation checks) | venv, CI versions |
+| `pytest -q` | 187 passed, 81 subtests passed (needs the full `requirements.txt`: `matplotlib` for the Sim6 tests and `sympy`/`scipy` for the derivation checks) | venv, CI versions |
+| Cited-name check (new) | **0 suspicious names** against the pinned sources — 563,126 mathlib + 292,520 Lean core + 7,429 repository declarations; the previous script reported 205 on the same trees. Four injected typos all detected, clean copy 0. | CI only, `.github/workflows/lean-ci.yml` |
 | Lean | Not compiled here (no `lake`). Lean edits are comment and docstring only; all 68 `txt_proofs/` mirrors are byte-identical, and the code-projection parity check covers 69 files / 1,448 declarations. | CI only |
 
 ## 2. The road
@@ -282,6 +283,31 @@ Steps:
 (**not runnable from this environment**; green on `main` at CI run 38119532226, the merge
 of PR #79).
 
+**Also scripted (2026-10-12): the cited-name check.** `docs/PROJECT_STATUS_2026-10-08.md`
+listed `lean_proofs/check_mathlib_names.py` as existing "for the next round" — a lexical
+check that would turn a name typo into an offline finding instead of a CI build that stops
+one dependency layer at a time. The next round is now done. The checker indexes every
+declaration in the pinned Mathlib4 checkout plus the Lean core sources and reports qualified
+names used by the corpus that exist in neither. The indexer was rebuilt for recall, because
+every miss is a false "suspicious" name and a ratchet over false positives is pressure to
+raise it: it now registers declarations behind attribute blocks that span lines, constructors
+of `inductive`/`structure`/`class` together with the names Lean generates for them
+(`X.rec`, `X.injEq`, `X.noConfusion`, ...), structure fields, the
+`nonrec`/`public`/`expose` modifiers, same-line `| ctor`, and the `to_additive`/`to_dual`
+twins of all of the above; `end <section>` no longer pops the enclosing namespace.
+
+**Result on the pinned sources:** 563,126 mathlib + 292,520 Lean core + 7,429 repository
+declarations indexed, **0 suspicious names** (the previous script reported 205 on the same
+trees). Negative control: a copy of the tree with four injected typos (`Real.sqrtt`,
+`Finset.sum_range_succs`, `RadialMetric.chainLenght`, `Set.mem_Ioi.mpq`) reports all four.
+The check exits 2 rather than reporting a clean run when a tree yields no declarations, and
+`--max N` is the ratchet. It needs the pinned sources, so — like `lake build` — it is
+CI-only: it cannot join the consistency gate, which names it as one of the three checks it
+cannot run. Lean CI runs it after the build with `if: always()`, finding the trees by
+derivation rather than assumption (mathlib at `.lake/packages/mathlib`, core sources at
+`<lean --print-prefix>/src/lean`, the destination the pinned `src/CMakeLists.txt` installs
+to). 13 new tests (79 in `lean_proofs/`, all `unittest`).
+
 ### Phase 6 — Statement-level audit of the Lean physics volumes · **PLANNED, CI-ONLY**
 
 `PROOF_AUDIT.md` lists the existing findings: degenerate models, parameterized stubs, and
@@ -301,14 +327,15 @@ A single command runs every check the repository can run without the Lean toolch
 python research/consistency_gate.py          # add --quick to skip the pytest suite
 ```
 
-It runs, in order: the three derivation-check scripts, the LaTeX citation gate, the claim
-scanner, the Lean sorry/trivial grep, the axiom audit, the eight vacuity ratchets plus the
-alias baseline, the declaration-parity gate, the text-mirror gate, the pytest suite, and
-`ruff check` / `ruff format --check` / `mypy` when those tools are on `PATH` (a missing tool
-is reported as skipped, never as a pass). It reports one line per command and the tail of any
-failure, and exits non-zero if anything failed. It states in its own summary that
-`lake build ToE` and the kernel audit are CI-only here, so a green run is not read as more
-than it is.
+It runs, in order: the three derivation-check scripts, the two LaTeX gates (citation and
+structure), the claim scanner, the Lean sorry/trivial grep, the axiom audit, the eight vacuity
+ratchets plus the alias baseline, the declaration-parity gate, the text-mirror gate, the
+pytest suite, and `ruff check` / `ruff format --check` / `mypy` when those tools are on `PATH`
+(a missing tool is reported as skipped, never as a pass). It reports one line per command and
+the tail of any failure, and exits non-zero if anything failed. It states in its own summary
+that three checks are CI-only here — `lake build ToE`, the kernel audit, and the cited-name
+check, all of which need the pinned Lean sources — so a green run is not read as more than it
+is.
 
 Negative control: on a copy of the tree with one theorem appended to
 `Vol18_StatisticalMechanics.lean`, the gate exits 1 and four commands fail -- the vacuity
@@ -373,7 +400,9 @@ These decisions gate later phases. The roadmap does not assume an answer.
 
 ## 5. What this roadmap cannot do from this environment
 
-- Build or check Lean. Kernel truth for the Lean corpus comes from GitHub CI only.
+- Build or check Lean. Kernel truth for the Lean corpus comes from GitHub CI only. The same
+  applies to the cited-name check, which needs the pinned mathlib and Lean core sources; the
+  consistency gate lists it with `lake build ToE` and the kernel audit as checks it cannot run.
 - Run deployments, or any external empirical comparison. The empirical-test gate in
   `COVARIANT_COMPLETION_AND_TEST_GATE.md` §5 stays closed until its six items are frozen.
 - Establish that the physical model is correct. Every "Verified" row means the stated

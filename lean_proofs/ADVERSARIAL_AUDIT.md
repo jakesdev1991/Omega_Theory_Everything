@@ -29,7 +29,7 @@ the things a kernel cannot check.
 > | Declarations | ~460 theorems | 1,448 — 928 theorems, 407 defs, 76 structures, 19 abbrevs, 14 inductives, 4 instances |
 > | Comment-free code lines | — | 7,492 |
 > | Kernel-audit targets | 155 | 260 |
-> | Tooling tests | 35 | 66 |
+> | Tooling tests | 35 | 79 |
 > | Vacuity / axiom-name / `Unit`-stub ratchets | several non-zero (see C1, H2, H3, Medium) | all zero |
 > | Kernel status | green in CI | green on `main` (run 38119532226) and on PR #83 (run 38234115307) |
 >

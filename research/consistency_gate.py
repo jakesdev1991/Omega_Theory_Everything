@@ -8,7 +8,8 @@ that command.
 It runs, in order:
 
 * the three derivation-check scripts (`verify_derivations.py`,
-  `verify_covariant.py`, `verify_tfim.py`) and the LaTeX citation gate;
+  `verify_covariant.py`, `verify_tfim.py`) and the two LaTeX gates
+  (`check_latex_citations.py`, `check_latex_structure.py`);
 * the claim scanner;
 * the Lean-side static gates in `lean_proofs/`: the sorry/trivial grep, the
   axiom audit, the vacuity ratchets, the declaration-parity gate and the
@@ -18,10 +19,12 @@ It runs, in order:
   installed (they are the pinned versions in `requirements.txt`; CI runs them
   from there, so a missing tool here is reported as skipped, not as a pass).
 
-It cannot run `lake build ToE` or the kernel audit: those need the pinned Lean
-toolchain, whose download hosts are not reachable from every environment. That
-half of the verification is CI-only and this script says so in its summary
-rather than implying the tree is fully verified.
+It cannot run three of the CI checks: `lake build ToE`, the transitive
+kernel-axiom audit, and the `lean_proofs/check_mathlib_names.py` name check.
+All three need the pinned Lean sources -- the toolchain and the mathlib
+checkout it builds against -- whose download hosts are not reachable from every
+environment. That part of the verification is CI-only and this script says so
+in its summary rather than implying the tree is fully verified.
 
 Nothing here is a substitute for reading a diff. The gate says a set of
 commands exited 0.
@@ -248,8 +251,8 @@ def summarize(results: list[GateResult], stream: IO[str] = sys.stdout) -> int:
         file=stream,
     )
     print(
-        "CI-only and therefore not run here: `lake build ToE` and the transitive kernel-axiom "
-        "audit, which need the pinned Lean toolchain.",
+        "CI-only and therefore not run here: `lake build ToE`, the transitive kernel-axiom "
+        "audit and the cited-name check, which need the pinned Lean sources.",
         file=stream,
     )
     return 0 if not failed else 1
