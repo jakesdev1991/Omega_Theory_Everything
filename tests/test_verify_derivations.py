@@ -24,5 +24,5 @@ def test_each_derivation_check_passes(check: Callable[[], CheckResult]) -> None:
 
 def test_all_checks_pass_in_one_run() -> None:
     results = run_all()
-    assert len(results) == len(CHECKS) == 11
+    assert len(results) == len(CHECKS) == 12
     assert all(r.passed for r in results), [r.name for r in results if not r.passed]

@@ -2,7 +2,7 @@
 
 # Claim and derivation tightening: end-to-end roadmap
 
-**Status date:** 2026-10-11 · **Branch:** `arena/0f3b6b8f-omega-theory-everything`
+**Status date:** 2026-10-12 · **Branch:** `arena/fd09e6cb-omega-theory-everything`
 **Scope:** every claim-bearing surface in the repository, from the core technical notes
 to the 41 LaTeX volumes and the 69 Lean modules. Phases run in the order given; each
 phase has an exit gate that is a command, not an opinion.
@@ -63,10 +63,10 @@ and is left in place.
 | LaTeX coverage | 41 of 54 volumes (missing Vol01–08, Vol36–40, by decision) | `ls latex_docs/Vol*.tex` |
 | Covariant checks (new) | 4 of 4 pass; four negative controls fail as they must | `python research/verify_covariant.py` |
 | TFIM checks (new) | 2 of 2 pass (independent dense ED row; Schwarzschild column) | `python research/verify_tfim.py` |
-| Derivation checks | 11 of 11 pass (unchanged) | `python research/verify_derivations.py` |
+| Derivation checks | 12 of 12 pass (one added by Phase 3 item 6) | `python research/verify_derivations.py` |
 | `ruff check .`, `ruff format --check .` | pass (120 files formatted) | venv, CI versions |
 | `mypy . --ignore-missing-imports` | pass (49 source files) | venv, CI versions |
-| `pytest -q` | 118 passed, 81 subtests passed | venv, CI versions |
+| `pytest -q` | 138 passed, 81 subtests passed (needs the full `requirements.txt`: `matplotlib` for the Sim6 tests and `sympy`/`scipy` for the derivation checks) | venv, CI versions |
 | Lean | Not compiled here (no `lake`). Lean edits are comment and docstring only; all 68 `txt_proofs/` mirrors are byte-identical, and the code-projection parity check covers 69 files / 1,448 declarations. | CI only |
 
 ## 2. The road
@@ -84,12 +84,14 @@ and is left in place.
 ### Phase 1 — Core derivation ledger and machine checks · **DONE**
 
 Each displayed identity in the core notes was re-derived. The table in §3 gives the result.
-The eleven checks in `research/verify_derivations.py` cover every "Verified" row. They are
-exact SymPy identities where the algebra is closed-form, and floating-point or independent
-numerical methods where it is not.
+The checks in `research/verify_derivations.py` cover every "Verified" row. They are exact
+SymPy identities where the algebra is closed-form, and floating-point or independent
+numerical methods where it is not. There were eleven at the end of this phase; Phase 3
+item 6 added a twelfth, so the run prints 12 of 12.
 
-**Exit gate (met):** `python research/verify_derivations.py` exits 0 with 11 of 11 passing;
-`tests/test_verify_derivations.py` runs the same checks in `pytest`, so CI enforces them.
+**Exit gate (met):** `python research/verify_derivations.py` exits 0 with every check
+passing (11 of 11 as of this phase, then 12 of 12); `tests/test_verify_derivations.py` runs
+the same checks in `pytest`, so CI enforces them.
 
 ### Phase 2 — Correct the core text · **DONE**
 
@@ -113,7 +115,7 @@ reduction to the \(x\)-ODE.
 **Exit gate (met for the core notes):** every number that the core notes state in §3 is
 either Verified, or is labelled "reported" with the script that prints it.
 
-### Phase 3 — Remaining core-note items · **PARTIAL (items 1–4 done; 5–6 open)**
+### Phase 3 — Remaining core-note items · **PARTIAL (items 1–4 and 6 done; item 5 open)**
 
 These are the statements the checks have not yet reached. Each must become Verified,
 or be relabelled Derived (hand) or Conditional, before the core notes are called final.
@@ -138,6 +140,14 @@ or be relabelled Derived (hand) or Conditional, before the core notes are called
    technical notes. A line-by-line pass against the Verified table is still required.
 6. **Radial note §8 and §9:** the claim that the disformal bound constrains \(\dot\Phi\) only
    is hand-checked against the stated bound. Machine-check the bound's dependence on \(\dot\Phi\).
+   **Done** — `check_disformal_bound_depends_on_phidot` in `research/verify_derivations.py`:
+   the disformed \((t,r)\) determinant is \(C(D\dot\Phi^2-C-D\Phi'^2)\), so the signature
+   condition is exactly \(D\dot\Phi^2<C+D\Phi'^2\) (checked against the matrix on 200,000
+   samples across three \(\beta\)); the published bound is that condition at \(\Phi'=0\) and
+   is therefore sufficient but not tight once the gradient is nonzero; \(g_{rr}>0\) at every
+   gradient up to \(10^6\), so static profiles cannot threaten the signature; and the bound's
+   minimum reproduces \(0.6856/\sqrt\beta\) at \(\Phi^*\). Sim3's header now states the general
+   condition rather than the gradient-free one as if it were general.
 
 **Done in this pass.**
 
@@ -154,14 +164,15 @@ or be relabelled Derived (hand) or Conditional, before the core notes are called
   H₀ = 73.50 km/s/Mpc, which the README states is an input. Sim5's header now states the
   `cumsum` uniform-decay assumption. Sim3 writes three PDFs to the working directory on each
   run; these were removed as untracked artifacts.
+- Item 6: `check_disformal_bound_depends_on_phidot` (see the item above). The derivation-check
+  count rises from 11 to 12; `tests/test_verify_derivations.py` pins the new count.
 
-**Open.** Item 5 (line-by-line pass of the Layman's Guide against the Verified table) and
-item 6 (machine-check of the disformal bound's dependence on \(\dot\Phi\)) are not done.
-The core notes are therefore **not** yet called final.
+**Open.** Item 5 (line-by-line pass of the Layman's Guide against the Verified table) is not
+done. The core notes are therefore **not** yet called final.
 
 **Exit gate:** `python research/claim_scan.py` shows zero unhedged hits in the core notes,
 apart from the documented false positive (met). Each core-note number has a check or a
-"reported" label (met for items 1–4). Items 5–6 remain (not met).
+"reported" label (met for items 1–4 and 6). Item 5 remains (not met).
 
 ### Phase 4 — LaTeX volumes · **DONE (option a; 13 volumes absent by decision)**
 
@@ -286,6 +297,7 @@ after this step.
 | 22 | Uniform correlation decay in Sim5 (`cumsum`) | Code fact | Verified by reading `Sim5_Emergent_Gravity.py` L74–75; now stated in the module header | — |
 | 23 | Schwarzschild-required trend opposite to Markov and Ising decay rates | Reported | Reproduced; tests check the sign; Schwarzschild column and one dense-ED row now checked | `tests/test_quantum_ising_chain.py`, `tests/test_qregion_markov.py`, `research/verify_tfim.py` |
 | 24 | \(H_0=73.5\) in the depletion simulation | Calibration input | Not a prediction; re-run done (Phase 3 item 4), reproduces 73.50 by construction | `sim6_v14_depletion.py` |
+| 25 | Disformal causality bound constrains \(\dot\Phi\) only; static profiles safe (Radial §8) | Derived | **Verified** for the model as stated (\(C=e^{-2\Phi}\), \(D=\beta(1-\Phi^2)\), flat background): the Lorentzian condition is \(D\dot\Phi^2<C+D\Phi'^2\), the printed bound \(e^{-\Phi}/(\sqrt\beta\sqrt{1-\Phi^2})\) is its \(\Phi'=0\) case (sufficient, and conservative when \(\Phi'\neq0\)), and \(g_{rr}=C+D\Phi'^2>0\) at every gradient. Not a claim about any other \(C\), \(D\), or background. | `check_disformal_bound_depends_on_phidot` |
 
 ---
 

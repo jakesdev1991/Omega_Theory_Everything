@@ -171,7 +171,7 @@ which is golden if and only if $a=p$. For example, $a=\tfrac12,\,p=1$ gives $\sq
 
 **Where it would sit around a hole.** In the isotropic dictionary $R^*=\tfrac{2+\sqrt5}{4}\,r_s\approx1.059\,r_s$. In the areal dictionary $R^*=\tfrac{1+\sqrt5}{2}\,r_s\approx1.618\,r_s$.
 
-Caveat: the bound constrains $\dot\Phi$ only. For static profiles the disformal term adds $D\,\Phi'^2\ge0$ to $g_{rr}$ and never threatens the signature, so this matters only for collapse or ringdown.
+Caveat: the bound constrains $\dot\Phi$ only. For the metric $Cg+D\,d\Phi\,d\Phi$ with $C=e^{-2\Phi}$ and $D=\beta(1-\Phi^2)$ on a flat background, the $(t,r)$ determinant is $C\,(D\dot\Phi^2-C-D\Phi'^2)$, so the exact signature condition is $D\dot\Phi^2<C+D\Phi'^2$ and the quoted bound $e^{-\Phi}/(\sqrt\beta\sqrt{1-\Phi^2})$ is the $\Phi'=0$ case of it. It is therefore sufficient for every profile and *conservative* rather than tight once the gradient is nonzero — the published number understates the room available. For static profiles the disformal term adds $D\,\Phi'^2\ge0$ to $g_{rr}$ and never threatens the signature, at any gradient, so this matters only for collapse or ringdown. Both statements are machine-checked by `research/verify_derivations.py` (`check_disformal_bound_depends_on_phidot`), for this $C$, $D$ and background only.
 
 ## 9. What would turn this into a derivation
 

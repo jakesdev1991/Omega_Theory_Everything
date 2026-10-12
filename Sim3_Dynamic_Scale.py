@@ -50,9 +50,19 @@ and how does an optional scalar ODE behave for chosen parameters?
 - Conformal factor:  C(Phi) = exp(-2 Phi).
 - Disformal coupling: D(Phi) = beta * l_P(Phi)^2 = beta * (1 - Phi^2).
 - Disformal causality bound. For the disformal metric
-  g_hat = C g + D dPhi dPhi, the Lorentzian signature is preserved iff
-  D * Phidot^2 < C, i.e.
+  g_hat = C g + D dPhi dPhi on a flat background, the (t, r) block has determinant
+  C * (D * Phidot^2 - C - D * Phi'^2), so the Lorentzian signature is
+  preserved iff
+      D * Phidot^2 < C + D * Phi'^2,
+  a condition on the time derivative alone (Phi' is the radial gradient). This
+  script evaluates the gradient-free case, which is what the printed bound
+  assumes:
       |Phidot| < sqrt(C / D) = exp(-Phi) / (sqrt(beta) * sqrt(1 - Phi^2)).
+  That bound is sufficient for every profile and conservative (not tight) when
+  Phi' != 0; the exact condition is |Phidot| < sqrt(C/D + Phi'^2).
+  A static profile -- Phidot = 0 at any gradient -- cannot break the signature,
+  since g_tt = -C < 0 and g_rr = C + D * Phi'^2 > 0. Checked in
+  research/verify_derivations.py (check_disformal_bound_depends_on_phidot).
   (With the old exponential profile the same derivation gives the previous
   bound exp(-(phi+1)/2)/sqrt(beta); the derivation is unchanged, only l_P is.)
 
