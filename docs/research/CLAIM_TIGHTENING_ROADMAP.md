@@ -65,9 +65,10 @@ and is left in place.
 | TFIM checks (new) | 2 of 2 pass (independent dense ED row; Schwarzschild column) | `python research/verify_tfim.py` |
 | Derivation checks | 12 of 12 pass (one added by Phase 3 item 6) | `python research/verify_derivations.py` |
 | LaTeX citation gate (new) | 0 errors: 41 volumes cite 41 modules and 5 declarations; 2 documented external exemptions | `python research/check_latex_citations.py` |
-| `ruff check .`, `ruff format --check .` | pass (125 files formatted) | venv, CI versions |
-| `mypy . --ignore-missing-imports` | pass (54 source files) | venv, CI versions |
-| `pytest -q` | 151 passed, 81 subtests passed (needs the full `requirements.txt`: `matplotlib` for the Sim6 tests and `sympy`/`scipy` for the derivation checks) | venv, CI versions |
+| Consistency gate (new) | 14 passed, 0 failed, 0 skipped (one command runs every local check) | `python research/consistency_gate.py` |
+| `ruff check .`, `ruff format --check .` | pass (127 files formatted) | venv, CI versions |
+| `mypy . --ignore-missing-imports` | pass (56 source files) | venv, CI versions |
+| `pytest -q` | 160 passed, 81 subtests passed (needs the full `requirements.txt`: `matplotlib` for the Sim6 tests and `sympy`/`scipy` for the derivation checks) | venv, CI versions |
 | Lean | Not compiled here (no `lake`). Lean edits are comment and docstring only; all 68 `txt_proofs/` mirrors are byte-identical, and the code-projection parity check covers 69 files / 1,448 declarations. | CI only |
 
 ## 2. The road
@@ -265,27 +266,30 @@ cannot be done without a Lean toolchain, so it runs in CI or on a machine with `
 **Exit gate:** every physics-volume theorem with a physical-sounding name has a row in the
 audit with one of: non-degenerate witness, conditional with stated hypothesis, or renamed.
 
-### Phase 7 — Consistency gate and review · **PLANNED**
+### Phase 7 — Consistency gate and review · **DONE (gate added 2026-10-12; the review step is human)**
 
-A single command runs every check in the repository:
+A single command runs every check the repository can run without the Lean toolchain:
 
 ```bash
-python research/verify_derivations.py
-python research/verify_covariant.py
-python research/verify_tfim.py
-python research/check_latex_citations.py
-python research/claim_scan.py
-python -m pytest -v
-ruff check . && ruff format --check . && mypy . --ignore-missing-imports
+python research/consistency_gate.py          # add --quick to skip the pytest suite
 ```
 
-(The three check scripts that predate this list -- `verify_covariant.py`,
-`verify_tfim.py` and `check_latex_citations.py` -- are run by `pytest -v` as well, so the
-list is a convenience for a human reviewer, not the enforcement path.)
+It runs, in order: the three derivation-check scripts, the LaTeX citation gate, the claim
+scanner, the Lean sorry/trivial grep, the axiom audit, the eight vacuity ratchets plus the
+alias baseline, the declaration-parity gate, the text-mirror gate, the pytest suite, and
+`ruff check` / `ruff format --check` / `mypy` when those tools are on `PATH` (a missing tool
+is reported as skipped, never as a pass). It reports one line per command and the tail of any
+failure, and exits non-zero if anything failed. It states in its own summary that
+`lake build ToE` and the kernel audit are CI-only here, so a green run is not read as more
+than it is.
 
-Then a reviewer reads the `claim_scan.py --list` output and the Verified table in §3, and
-confirms that every status in §3 matches the evidence. The pull request is opened only
-after this step.
+Negative control: on a copy of the tree with one theorem appended to
+`Vol18_StatisticalMechanics.lean`, the gate exits 1 and four commands fail -- the vacuity
+ratchets, declaration parity, the text mirrors and the pytest suite.
+
+Still human, and not claimed by the gate: a reviewer reads the `claim_scan.py --list` output
+and the Verified table in §3 and confirms that every status matches the evidence. The gate
+says a list of commands exited 0; it does not read the diff.
 
 ---
 

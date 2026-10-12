@@ -160,6 +160,9 @@ python research/verify_tfim.py
 python research/check_latex_citations.py
 python research/claim_scan.py
 
+# Or run every local check at once (needs the pinned requirements.txt for ruff/mypy)
+python research/consistency_gate.py
+
 # Sim1 and Sim4 are historical manuscripts, not executable scripts; read their status notes in docs/manuscripts/
 
 # Build Lean 4 proofs (requires Lean 4 + Mathlib4)

@@ -231,11 +231,14 @@ python -m pytest tests/test_verify_derivations.py -q
 python research/verify_covariant.py
 python research/verify_tfim.py
 python research/check_latex_citations.py
+python research/consistency_gate.py
 ```
 
 `check_latex_citations.py` verifies that each LaTeX volume's status box points
 at a Lean module that exists and cites declarations that exist, so the volumes
-cannot drift away from the code they describe.
+cannot drift away from the code they describe. `consistency_gate.py` runs every
+check above in one command and reports which ones passed, failed or were
+skipped; the Lean build and the kernel audit are CI-only and it says so.
 
 The Lean source and CI audit are documented in
 [`lean_proofs/README.md`](lean_proofs/README.md) and
