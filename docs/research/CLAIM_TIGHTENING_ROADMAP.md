@@ -117,7 +117,7 @@ reduction to the \(x\)-ODE.
 **Exit gate (met for the core notes):** every number that the core notes state in §3 is
 either Verified, or is labelled "reported" with the script that prints it.
 
-### Phase 3 — Remaining core-note items · **PARTIAL (items 1–4 and 6 done; item 5 open)**
+### Phase 3 — Remaining core-note items · **DONE (items 1–6)**
 
 These are the statements the checks have not yet reached. Each must become Verified,
 or be relabelled Derived (hand) or Conditional, before the core notes are called final.
@@ -140,6 +140,21 @@ or be relabelled Derived (hand) or Conditional, before the core notes are called
    header.
 5. **Laymans Guide:** the whole document has been read once and is consistent with the
    technical notes. A line-by-line pass against the Verified table is still required.
+   **Done 2026-10-12.** Every quantitative sentence in `Omega_Theory_Laymans_Guide.md`
+   was read against the ledger in §3 and the artifacts behind it. Three were sharpened
+   rather than left standing: the Markov non-composition sentence now says the two-link
+   mutual information differs from the squared one-link value at every nonzero link
+   strength in that model, which needed a new assertion (the scaled difference has a
+   floor of 0.204 on a grid down to 10⁻³, so the claim is not an artifact of the sample
+   link); the scalarization threshold is quoted as 0.725613 ± 10⁻⁶, the value the two
+   numerical methods agree on, with the truncated 0.725609 called out as not it; and the
+   \(\Phi\equiv0\) branch of the Gauss–Bonnet model is now labelled a hand derivation
+   under the stated vacuum conditions, not a machine check. The guide's §8 now lists the
+   checks that exist -- including the citation gate and the one-command gate -- and points
+   at the adversarial audit, with its executive summary marked as the pre-remediation
+   scoreboard. Two claims were verified as already correct: the ℓ_P algebraic properties
+   (`dynamicPlanckCOD_zero`/`_one`/`_strictAntiOn`) and the 2 ln 2 normalization in
+   `research/quantum_ising_chain.py`.
 6. **Radial note §8 and §9:** the claim that the disformal bound constrains \(\dot\Phi\) only
    is hand-checked against the stated bound. Machine-check the bound's dependence on \(\dot\Phi\).
    **Done** — `check_disformal_bound_depends_on_phidot` in `research/verify_derivations.py`:
@@ -168,13 +183,18 @@ or be relabelled Derived (hand) or Conditional, before the core notes are called
   run; these were removed as untracked artifacts.
 - Item 6: `check_disformal_bound_depends_on_phidot` (see the item above). The derivation-check
   count rises from 11 to 12; `tests/test_verify_derivations.py` pins the new count.
+- Item 5: the line-by-line reading of the guide, described under the item itself.
 
-**Open.** Item 5 (line-by-line pass of the Layman's Guide against the Verified table) is not
-done. The core notes are therefore **not** yet called final.
+**Open.** Nothing in this phase. The core notes are the three documents `claim_scan.py`
+tracks (`Omega_Theory_v4.0_Technical.md`, `Omega_Theory_v4.0_Radial_Metric.md`,
+`Omega_Theory_Laymans_Guide.md`); each number they state either has a check or carries a
+"reported"/"model choice" label, and the line-by-line pass is recorded in item 5 above.
 
 **Exit gate:** `python research/claim_scan.py` shows zero unhedged hits in the core notes,
 apart from the documented false positive (met). Each core-note number has a check or a
-"reported" label (met for items 1–4 and 6). Item 5 remains (not met).
+"reported" label (met for items 1–6, 2026-10-12). The pass is manual and stays manual:
+a number added to those documents later needs a check or a label, and nothing stops that
+drift automatically.
 
 ### Phase 4 — LaTeX volumes · **DONE (option a; 13 volumes absent by decision; cited-declaration gate added)**
 

@@ -413,15 +413,31 @@ def check_markov_mutual_information() -> CheckResult:
     i1 = _i_closed(lam)
     i2 = _i_closed(lam**2)
     not_composing = abs(i2 / np.log(2) - (i1 / np.log(2)) ** 2) > 1e-3
+    # The guide's stronger sentence: at every nonzero link, I_2 != I_1^2. The two
+    # sides agree only at lambda = 0, where both vanish; on a grid to 1e-3 the
+    # difference is far above floating-point noise everywhere else.
+    grid = np.linspace(1e-3, 1.0, 2001)
+
+    def i_vector(lam_n: np.ndarray) -> np.ndarray:
+        # Clip away from the pure-state endpoint, where p*log(p) is 0 * -inf = nan.
+        p = np.clip((1 + lam_n) / 2, 1e-300, 1 - 1e-15)
+        return np.log(2) + p * np.log(p) + (1 - p) * np.log(1 - p)
+
+    # Scale by lambda^4: both sides are O(lambda^4) near 0, so the raw gap shrinks
+    # with the grid spacing while the scaled gap stays near its limit 0.2027.
+    grid_ratio = np.abs(i_vector(grid**2) - i_vector(grid) ** 2) / grid**4
+    composing_nowhere = bool(np.all(grid_ratio > 0.1))
     # derivative dI1/dlambda = atanh(lambda)
     h = 1e-6
     deriv = (_i_closed(0.5 + h) - _i_closed(0.5 - h)) / (2 * h)
     deriv_ok = abs(deriv - np.arctanh(0.5)) < 1e-6
-    ok = max_err < 1e-12 and not_composing and deriv_ok
+    ok = max_err < 1e-12 and not_composing and composing_nowhere and deriv_ok
     return CheckResult(
         "Markov: explicit density-matrix MI equals closed form; MI does not compose; dI/dlambda=atanh",
         ok,
-        f"max_err={max_err:.2e}, I2/ln2={i2 / np.log(2):.6f}, (I1/ln2)^2={(i1 / np.log(2)) ** 2:.6f}, deriv_ok={deriv_ok}",
+        f"max_err={max_err:.2e}, I2/ln2={i2 / np.log(2):.6f}, "
+        f"(I1/ln2)^2={(i1 / np.log(2)) ** 2:.6f}, "
+        f"composing nowhere (min scaled gap {grid_ratio.min():.4f})={composing_nowhere}, deriv_ok={deriv_ok}",
     )
 
 
