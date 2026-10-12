@@ -726,3 +726,12 @@ declaration was added, removed, or restated.**
   with an actionable message).
 - The offline consistency gate states plainly that this check is one of the
   three it cannot run (with `lake build ToE` and the kernel audit).
+
+Verified in CI: [Lean CI run 38247512557](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/38247512557)
+step 6, "Gate - cited names exist in the pinned mathlib/Lean sources", green on
+the same commit as `lake build ToE` and the 260-declaration kernel gate. The
+first attempt is [run 38246572524](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/38246572524),
+recorded here because its failure is the reason the step searches for the
+mathlib checkout: it looked for `.lake/packages/mathlib`, the package is named
+`mathlib4`, and it exited 1 rather than reporting a clean run from a tree it
+had never read.
