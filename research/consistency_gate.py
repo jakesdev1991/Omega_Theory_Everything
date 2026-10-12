@@ -12,8 +12,8 @@ It runs, in order:
   (`check_latex_citations.py`, `check_latex_structure.py`);
 * the claim scanner;
 * the Lean-side static gates in `lean_proofs/`: the sorry/trivial grep, the
-  axiom audit, the vacuity ratchets, the declaration-parity gate and the
-  text-mirror gate;
+  axiom audit, the vacuity ratchets, the declaration-parity gate, the
+  text-mirror gate and the statement audit of the physics volumes;
 * the whole pytest suite;
 * `ruff check`, `ruff format --check` and `mypy`, when those executables are
   installed (they are the pinned versions in `requirements.txt`; CI runs them
@@ -152,6 +152,13 @@ def gate_commands(python: str) -> list[GateCommand]:
             (python, "sync_txt_mirrors.py"),
             "lean_proofs",
             "txt_proofs/ is byte-identical to lean_proofs/",
+        ),
+        GateCommand(
+            "statement audit",
+            (python, "check_statement_audit.py", "--repo", "."),
+            "lean_proofs",
+            "every physics-sounding volume declaration has an audit row"
+            " (witness/conditional/renamed/carried, carried count capped)",
         ),
         GateCommand(
             "pytest suite",

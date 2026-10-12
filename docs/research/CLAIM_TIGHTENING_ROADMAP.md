@@ -66,10 +66,11 @@ and is left in place.
 | Derivation checks | 12 of 12 pass (one added by Phase 3 item 6) | `python research/verify_derivations.py` |
 | LaTeX citation gate (new) | 0 errors: 41 volumes cite 41 modules and 5 declarations; 2 documented external exemptions | `python research/check_latex_citations.py` |
 | LaTeX structure gate (new) | 0 findings over 41 volumes: braces, environment nesting, document markers, math delimiters | `python research/check_latex_structure.py` |
-| Consistency gate (new) | 15 passed, 0 failed, 0 skipped (one command runs every local check) | `python research/consistency_gate.py` |
-| `ruff check .`, `ruff format --check .` | pass (129 files formatted) | venv, CI versions |
-| `mypy . --ignore-missing-imports` | pass (58 source files) | venv, CI versions |
-| `pytest -q` | 188 passed, 81 subtests passed (needs the full `requirements.txt`: `matplotlib` for the Sim6 tests and `sympy`/`scipy` for the derivation checks) | venv, CI versions |
+| Consistency gate (new) | 16 passed, 0 failed, 0 skipped (one command runs every local check) | `python research/consistency_gate.py` |
+| Statement audit (new) | **160 rows** for 160 physics-sounding volume declarations: 73 witness, 43 conditional, 14 renamed, 30 carried (cap 30, ratcheted) | `python lean_proofs/check_statement_audit.py` |
+| `ruff check .`, `ruff format --check .` | pass (132 files formatted) | venv, CI versions |
+| `mypy . --ignore-missing-imports` | pass (61 source files) | venv, CI versions |
+| `pytest -q` | 211 passed, 81 subtests passed (needs the full `requirements.txt`: `matplotlib` for the Sim6 tests and `sympy`/`scipy` for the derivation checks) | venv, CI versions |
 | Cited-name check (new) | **0 suspicious names** against the pinned sources — 563,126 mathlib + 292,520 Lean core + 7,429 repository declarations; the previous script reported 205 on the same trees. Four injected typos all detected, clean copy 0. | CI only, `.github/workflows/lean-ci.yml` |
 | Lean | Not compiled here (no `lake`). Lean edits are comment and docstring only; all 68 `txt_proofs/` mirrors are byte-identical, and the code-projection parity check covers 69 files / 1,448 declarations. | CI only |
 
@@ -316,16 +317,54 @@ workflow's hardcoded path did not exist in CI. It exited 1 rather than passing h
 honest failure — and the step now searches for the checkout that holds `Mathlib/`. The
 fixture was then rebuilt to the CI layout so a smoke test can fail the same way again.
 
-### Phase 6 — Statement-level audit of the Lean physics volumes · **PLANNED, CI-ONLY**
+### Phase 6 — Statement-level audit of the Lean physics volumes · **DONE (audit and gate added 2026-10-12)**
 
 `PROOF_AUDIT.md` lists the existing findings: degenerate models, parameterized stubs, and
 conditional lemmas. Phase 6 goes through each physics volume and decides, per theorem,
 whether the name overstates the statement, whether the hypotheses are satisfiable, and
-whether a non-degenerate witness exists. Each result is recorded in the audit file. This
-cannot be done without a Lean toolchain, so it runs in CI or on a machine with `lake`.
+whether a non-degenerate witness exists. Each result is recorded in the audit file.
 
 **Exit gate:** every physics-volume theorem with a physical-sounding name has a row in the
 audit with one of: non-degenerate witness, conditional with stated hypothesis, or renamed.
+
+**Implemented.** `lean_proofs/statement_audit.json` carries one row for each of the **160**
+theorems/lemmas in `Vol*.lean` whose name carries a word from a documented lexicon
+(`lean_proofs/check_statement_audit.py`). A row states a disposition, an honest note, and
+the evidence that disposition needs:
+
+* **witness** (73 rows) — names a declared, non-degenerate object or instance that the
+  statement is about, or that realizes (or refutes) its setting;
+* **conditional** (43 rows) — quotes the hypothesis the statement carries in its own
+  signature, checked to occur verbatim in the collapsed statement;
+* **renamed** (14 rows) — records a name retired for the `bridge_*` convention, with the
+  retired name checked to survive nowhere in the corpus once comments are masked (the
+  renames were made by earlier passes; this phase performed none);
+* **carried** (30 rows) — records a statement that is true only from data the model
+  carries: a structure field, a postulate, a placeholder or constant definition, a
+  definitional restatement, or a degenerate instance. It names the declaration that
+  carries the data, and no non-degenerate witness exists for it.
+
+The fourth disposition is a deliberate addition to the sketch above, and it is stricter,
+not looser: against this corpus the three-way split has no honest place for
+`theorem photon_massless : PhotonMass = 0 := rfl`, for `|0| ≤ |0|` in the placeholder
+layer, or for a structure field returned unchanged — those rows would have had to name a
+"witness" for a degenerate instance, which is exactly the misreport this phase exists to
+stop. The count of `carried` rows is ratcheted by a `carried_cap` field in the audit file
+(30, the measured count): a new `carried` row fails the gate until the cap is raised in a
+visible diff, and fixing a row means lowering the cap in the same commit. Rows whose name
+still reads as a legacy label (`photon_massless`, `metric_is_qfim`,
+`quantum_computing_from_omega`, `turing_instability_ratio`, ...) record that in their note
+rather than renaming the declaration.
+
+The gate is lexical and runs offline: `python3 check_statement_audit.py` in `lean_proofs/`
+(also a command in `research/consistency_gate.py`) fails on a missing row, a malformed row,
+a witness or source that is not a declaration, a `stated_condition` that does not occur, a
+`previous_name` that survives, or a `carried` count above the cap, and exits 2 rather than
+passing when the audit is unreadable. What it cannot do is decide whether a judgement is
+*right*: that half is CI's `lake build ToE`, which compiles every witness and source a row
+names. 23 new tests (103 in `lean_proofs/`, all `unittest`), one negative control per
+disposition, plus a test that the shipped audit covers the shipped corpus. No Lean
+declaration was added, removed, or renamed by this phase.
 
 ### Phase 7 — Consistency gate and review · **DONE (gate added 2026-10-12; the review step is human)**
 
@@ -338,7 +377,8 @@ python research/consistency_gate.py          # add --quick to skip the pytest su
 It runs, in order: the three derivation-check scripts, the two LaTeX gates (citation and
 structure), the claim scanner, the Lean sorry/trivial grep, the axiom audit, the eight vacuity
 ratchets plus the alias baseline, the declaration-parity gate, the text-mirror gate, the
-pytest suite, and `ruff check` / `ruff format --check` / `mypy` when those tools are on `PATH`
+statement audit of the physics volumes, the pytest suite, and
+`ruff check` / `ruff format --check` / `mypy` when those tools are on `PATH`
 (a missing tool is reported as skipped, never as a pass). It reports one line per command and
 the tail of any failure, and exits non-zero if anything failed. It states in its own summary
 that three checks are CI-only here — `lake build ToE`, the kernel audit, and the cited-name

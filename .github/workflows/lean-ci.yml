@@ -146,6 +146,22 @@ jobs:
           echo "mathlib: $mathlib; Lean core: $lean_src"
           python3 check_mathlib_names.py --mathlib "$mathlib" --lean "$lean_src" --repo . --max 0
 
+      # Phase 6 statement-level audit: every theorem/lemma in `Vol*.lean` whose
+      # name carries a lexicon word must have a row in `statement_audit.json`
+      # (witness / conditional / renamed / carried), and the number of `carried`
+      # rows is ratcheted by the file's own `carried_cap`. The check is lexical
+      # and runs offline too (it is a command in research/consistency_gate.py);
+      # the *judgements* are only as strong as this job, whose build compiles
+      # every witness and source a row names. `if: always()` is deliberate: a
+      # compile failure is exactly when an unreadable or incomplete audit should
+      # still be reported rather than hidden.
+      - name: Gate - statement audit of the physics volumes
+        if: always()
+        working-directory: lean_proofs
+        run: |
+          set -e
+          python3 check_statement_audit.py --repo .
+
       - name: Audit transitive kernel axioms of key declarations
         working-directory: lean_proofs
         run: python3 audit_kernel.py

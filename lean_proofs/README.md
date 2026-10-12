@@ -18,10 +18,13 @@ unexpected axioms — are green on `main`
 ([Lean CI run 38119532226](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/38119532226),
 the merge of PR #79) and were re-confirmed on
 [PR #83](https://github.com/jakesdev1991/Omega_Theory_Everything/pull/83)
-(run 38234115307). Reproducible locally without a toolchain: 80 Python/tooling
+(run 38234115307). Reproducible locally without a toolchain: 103 Python/tooling
 tests, `audit_axioms --max 0` → 0, all eight `audit_vacuity` ratchets and the
-alias baseline at 0, the comment-parity gate across 69 files, and 68
-byte-identical `txt_proofs/` mirrors. Lean/mathlib remain pinned to v4.32.0.
+alias baseline at 0, the comment-parity gate across 69 files, 68
+byte-identical `txt_proofs/` mirrors, and the Phase 6 statement audit — one row
+for each of the 160 physics-sounding volume declarations, with the 30 `carried`
+rows capped by the audit file's own ratchet. Lean/mathlib remain pinned to
+v4.32.0.
 Kernel acceptance cannot be reproduced here: the toolchain and the mathlib olean
 cache are served from release-asset hosts that are unreachable in this
 environment, so `lake build` is CI-only. The same is true of the cited-name
@@ -224,8 +227,39 @@ This corpus is maintained under an explicit honesty policy, enforced in CI:
    cannot run in the offline consistency gate; `.github/workflows/lean-ci.yml`
    invokes it after the Lean build, and it exits 2 rather than reporting a
    clean run when a source tree yields no declarations.
+9. **The physics volumes have a per-statement audit.** Phase 6 of
+   `../docs/research/CLAIM_TIGHTENING_ROADMAP.md` requires a recorded judgement
+   for every theorem or lemma in `Vol*.lean` whose name carries a
+   physics-sounding word (a documented lexicon, matched after splitting names on
+   `_`, `.` and camelCase). `check_statement_audit.py` is the gate and
+   `statement_audit.json` is the record: **160 rows** for the current corpus,
+   each with a disposition and a note —
 
-The ratchet values live in `.github/workflows/lean-ci.yml`; lowering them is
+   ```bash
+   python3 check_statement_audit.py            # gate (also in Lean CI)
+   python3 check_statement_audit.py --review   # the candidates, with statements
+   python3 check_statement_audit.py --list     # one line per row
+   ```
+
+   A row is **witness** (names a declared, non-degenerate object or instance;
+   73 rows), **conditional** (quotes a hypothesis that occurs verbatim in the
+   statement; 43), **renamed** (records a name retired earlier, which must
+   survive nowhere once comments are masked; 14), or **carried** (true only from
+   data the model carries — a structure field, a postulate, a placeholder or
+   constant definition, a definitional restatement, or a degenerate instance —
+   and names that declaration; 30, the count the file's `carried_cap` ratchets,
+   which may only be lowered). The fourth disposition is a deliberate addition
+   to the roadmap's sketch: the three-way split has no honest place for
+   `theorem photon_massless : PhotonMass = 0 := rfl` or for `|0| ≤ |0|` in a
+   placeholder layer, and calling those "witnessed" is the misreport this phase
+   exists to stop. The gate is lexical, so it also runs offline and inside
+   `research/consistency_gate.py`; it checks that rows exist and are well formed
+   — a witness or source is a declaration, a condition occurs, a retired name is
+   gone — but not that a judgement is *right*. That half is CI: `lake build ToE`
+   compiles every witness and source a row names.
+
+The ratchet values live in `.github/workflows/lean-ci.yml`, except the statement
+audit's `carried_cap`, which lives in `statement_audit.json`; lowering them is
 always welcome, raising them is not.
 
 ## Security-gate proofs and tactic search
@@ -735,3 +769,70 @@ recorded here because its failure is the reason the step searches for the
 mathlib checkout: it looked for `.lake/packages/mathlib`, the package is named
 `mathlib4`, and it exited 1 rather than reporting a clean run from a tree it
 had never read.
+
+### Sixteenth pass: the Phase 6 statement audit (audit record and tooling, no proof content changed)
+
+Phase 6 of the claim-tightening roadmap asked for a per-statement judgement over
+the physics volumes, and has been deferred as the one phase that needs the Lean
+toolchain to be meaningful. This pass implements it. **No Lean declaration was
+added, removed, or renamed**: the parity baseline and the mirrors are untouched,
+and the two files added are a checker, an audit record, and its tests.
+
+- **One row per physics-sounding declaration, and "physics-sounding" is a
+  documented rule.** `check_statement_audit.py` accepts a `theorem`/`lemma` in
+  `Vol*.lean` when one of the words in its name — split on `_`, `.` and
+  camelCase — is a token of a 92-word lexicon kept in the file (quantities,
+  relativity and quantum theory, thermodynamics and information, and the
+  disciplines in the volume titles). The lexicon is a floor, not a ceiling: a
+  false positive costs one row, a false negative hides a claim, and adding a
+  word immediately demands rows for everything it matches. Measured on the
+  corpus: **160 candidates in 49 volumes**, indexed against 1,438 declarations.
+- **Four dispositions, each with a checkable obligation.** *witness* (73 rows)
+  names a declared, non-degenerate object or instance the statement is about or
+  that realizes its setting; *conditional* (43) quotes a hypothesis that must
+  occur verbatim in the statement; *renamed* (14) records a name retired by an
+  earlier pass, and the retired name must survive nowhere in the corpus once
+  comments are masked; *carried* (30) records a statement that is true only from
+  data the model carries (a structure field, a postulate, a placeholder or
+  constant definition, a definitional restatement, a degenerate instance) and
+  names the declaration carrying it.
+- **The fourth disposition is an addition, and it is a tightening.** The
+  roadmap's sketch listed three. Writing the rows showed the three-way split has
+  no honest place for `photon_massless` (`PhotonMass := 0` restated by `rfl`),
+  for `bridge_decoherence_suppresses` (`|0| ≤ |0|` in the placeholder layer), or
+  for a structure field returned unchanged: those rows would have to name a
+  "witness" for a degenerate instance. The audit file carries a `carried_cap`
+  ratchet (30, the measured count) that the gate enforces, so a new `carried`
+  row fails until the cap is raised in a visible diff and fixing one means
+  lowering the cap.
+- **The gate fails closed.** Exit 2 when the audit is unreadable or lacks the
+  cap; exit 1 on a missing row, a malformed row, a witness or source that is not
+  a declaration, a witness that is the theorem itself, a condition that does not
+  occur, a retired name that survives, or a `carried` count over the cap. It is
+  lexical and offline, so it also runs in `research/consistency_gate.py` — but
+  what it cannot do is decide whether a judgement is *right*, and its own output
+  says so: that half is `lake build ToE`, which has to compile every witness and
+  source a row names.
+- **23 new regression tests** (103 in this directory, all `unittest` so the CI
+  audit step does not need pytest): one negative control per disposition
+  (witness missing, witness self-referential, condition absent, condition
+  unquoted, source absent, source self-referential, `renamed_to` unknown,
+  retired name still declared, retired name live in code while a comment mention
+  is ignored), the missing-row and duplicate-row cases, the cap, the wrong-file
+  case, unreadable and cap-less audits exiting 2, the lexicon's own
+  no-prose-words regression, and one test that the shipped audit covers the
+  shipped corpus.
+- **Wired into Lean CI as its own step** with `if: always()` (a compile failure
+  still reports an unreadable or incomplete audit), and into the consistency
+  gate as a sixteenth command.
+- **What the rows say, in aggregate.** 73 of the 160 declarations are about
+  declared, non-degenerate objects; 43 carry their hypotheses in their own
+  signature; 14 are renames recorded rather than performed; 30 are true only
+  from carried data. The `carried` list is the phase's finding: it names the
+  declarations whose truth is a definitional or degenerate-model artifact —
+  `metric_is_qfim` (both sides 0 on the zero-curvature instance),
+  `clausius_inequality` (the structure's own balance field), `optical_expansion`
+  (`SMatrix := 1`, `TMatrix := 0`), `flat_universe_sum` (the legacy (0,0,1)
+  constants), and the tracial-model KMS rows, among others — and each of those
+  notes says what is carried and by which declaration instead of implying a
+  derivation.

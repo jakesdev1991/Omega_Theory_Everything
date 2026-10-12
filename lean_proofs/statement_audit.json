@@ -1,0 +1,1155 @@
+{
+  "about": "Phase 6 statement-level audit of the Lean physics volumes (docs/research/CLAIM_TIGHTENING_ROADMAP.md). One row per physics-sounding theorem/lemma in lean_proofs/Vol*.lean, decided from the Phase 6 review (lean_proofs/check_statement_audit.py --review) and the module inventory in PROOF_AUDIT.md.",
+  "method": "Rows are judgements recorded per declaration, not machine-proved claims: a witness is checked to exist (and to differ from its theorem), a stated_condition to occur verbatim in the statement, a source to exist, and a previous_name to be absent from the corpus with comments masked. What the kernel can check is checked by CI's lake build ToE, which compiles every witness and source named here.",
+  "dispositions": {
+    "witness": "the statement is about a declared, non-degenerate object or instance (named in `witness`); its hypotheses, where it has any, are realized",
+    "conditional": "the statement carries its hypotheses in its own signature (`stated_condition` quotes the text)",
+    "renamed": "the name was changed so it no longer overstates; `previous_name` is the retired name and must not survive anywhere",
+    "carried": "true only from data the model carries (structure field, postulate, placeholder or constant definition, definitional restatement, or degenerate instance), so no non-degenerate witness exists; `source` names the declaration that carries it"
+  },
+  "lexicon": "The candidate census is lexical: a theorem/lemma counts when one of the words in its name (split on _, ., camelCase) is a PHYSICS_TOKENS word in check_statement_audit.py. The lexicon is a floor, not a ceiling.",
+  "reviewed": "2026-10-12",
+  "carried_cap": 30,
+  "counts": {
+    "witness": 73,
+    "conditional": 43,
+    "renamed": 14,
+    "carried": 30
+  },
+  "rows": [
+    {
+      "name": "affine_poisson_antisymm",
+      "file": "Vol01_ClassicalMechanics.lean",
+      "disposition": "witness",
+      "note": "Antisymmetry of the affine bracket: a polynomial identity on the declared definition.",
+      "witness": "affinePoisson"
+    },
+    {
+      "name": "affine_poisson_jacobi",
+      "file": "Vol01_ClassicalMechanics.lean",
+      "disposition": "witness",
+      "note": "Jacobi identity for the concrete affine-observable algebra; the docstring states it is a genuine polynomial identity, not an assumption.",
+      "witness": "affinePoisson"
+    },
+    {
+      "name": "affine_poisson_self",
+      "file": "Vol01_ClassicalMechanics.lean",
+      "disposition": "witness",
+      "note": "Alternation of the affine bracket on affine observables; the bracket is the concrete polynomial definition.",
+      "witness": "affinePoisson"
+    },
+    {
+      "name": "conservation_of_energy",
+      "file": "Vol01_ClassicalMechanics.lean",
+      "disposition": "conditional",
+      "note": "H(t₁) = H(t₂) for all times under the stated differentiability hypotheses; conservation is derived, not assumed.",
+      "stated_condition": "hV : ∀ x, HasDerivAt V (V' x) x"
+    },
+    {
+      "name": "energy_deriv_zero",
+      "file": "Vol01_ClassicalMechanics.lean",
+      "disposition": "conditional",
+      "note": "dH/dt = 0 along any differentiable solution of q̇ = p/m, ṗ = −V′(q); the differentiability hypotheses are in the signature.",
+      "stated_condition": "hq : ∀ t, HasDerivAt q (p t / m) t"
+    },
+    {
+      "name": "force_eq_mass_times_accel",
+      "file": "Vol01_ClassicalMechanics.lean",
+      "disposition": "conditional",
+      "note": "Newton's second law as uniqueness of the derivative of m*v: the two differentiability hypotheses are stated, so nothing beyond F = d(mv)/dt is assumed.",
+      "stated_condition": "hF : HasDerivAt (fun s => m * v s) F t"
+    },
+    {
+      "name": "mass_emergence",
+      "file": "Vol01_ClassicalMechanics.lean",
+      "disposition": "witness",
+      "note": "The 'mass' is the declared state-norm-squared invariant ‖ρ‖², and the theorem states its nonnegativity as an existential. Strict positivity on nonzero states is `modular_spectrum_pos_of_ne_zero`; no emergence dynamics is claimed.",
+      "witness": "RepresentationTheoryModularGroup"
+    },
+    {
+      "name": "poisson_antisymm",
+      "file": "Vol01_ClassicalMechanics.lean",
+      "disposition": "witness",
+      "note": "Antisymmetry of the declared bracket {f,g} = ∂_q f ∂_p g − ∂_p f ∂_q g on ℝ×ℝ; ring algebra on the concrete definition, no hypotheses.",
+      "witness": "poisson"
+    },
+    {
+      "name": "poisson_canonical",
+      "file": "Vol01_ClassicalMechanics.lean",
+      "disposition": "witness",
+      "note": "{q,p} = 1 on the canonical pair: the declared bracket is non-degenerate there, so the model is not a zero bracket.",
+      "witness": "poisson"
+    },
+    {
+      "name": "poisson_self",
+      "file": "Vol01_ClassicalMechanics.lean",
+      "disposition": "witness",
+      "note": "{f,f} = 0 for the declared bracket; ring algebra on the concrete definition.",
+      "witness": "poisson"
+    },
+    {
+      "name": "symplectic_linear_map",
+      "file": "Vol01_ClassicalMechanics.lean",
+      "disposition": "conditional",
+      "note": "Symplectic-form (area) preservation by a linear map, conditional on determinant 1: the two-dimensional Liouville case.",
+      "stated_condition": "hdet : a * d - b * c = 1"
+    },
+    {
+      "name": "time_independent_hamiltonian_conserved",
+      "file": "Vol01_ClassicalMechanics.lean",
+      "disposition": "conditional",
+      "note": "A time-independent Hamiltonian with vanishing derivative is constant; the hypothesis is stated rather than hidden in a definition.",
+      "stated_condition": "hH : ∀ t, HasDerivAt H 0 t"
+    },
+    {
+      "name": "uniform_gravity_force",
+      "file": "Vol01_ClassicalMechanics.lean",
+      "disposition": "conditional",
+      "note": "Uniform gravity as the constant-acceleration special case of F = d(mv)/dt; the trajectory derivative is the stated hypothesis.",
+      "stated_condition": "hq : HasDerivAt q (-(g * t)) t"
+    },
+    {
+      "name": "weyl_commutator_quotient_eq_poisson",
+      "file": "Vol01_ClassicalMechanics.lean",
+      "disposition": "conditional",
+      "note": "Exact Weyl correspondence on the affine algebra: [A,B]/iℏ = {A,B}; the division by ℏ is the stated hypothesis.",
+      "stated_condition": "hℏ : ℏ ≠ 0"
+    },
+    {
+      "name": "field_strength_gauge_invariant",
+      "file": "Vol02_Electromagnetism.lean",
+      "disposition": "conditional",
+      "note": "d(A + dχ) = dA for smooth forms: gauge invariance of the field strength derived from d² = 0, with the smoothness hypotheses stated.",
+      "stated_condition": "hA : ContDiff ℝ ∞ A"
+    },
+    {
+      "name": "gauge_transform_comp",
+      "file": "Vol02_Electromagnetism.lean",
+      "disposition": "conditional",
+      "note": "Gauge transformations compose additively on smooth form data: (A+dχ)+dψ = A+d(χ+ψ).",
+      "stated_condition": "hχ : ContDiff ℝ ∞ χ"
+    },
+    {
+      "name": "photon_massless",
+      "file": "Vol02_Electromagnetism.lean",
+      "disposition": "carried",
+      "note": "Definitional restatement (rfl) of the model postulate `PhotonMass := 0`; the docstring says it is not a derived result, so the name records the model's choice, not a derivation of photon masslessness.",
+      "source": "PhotonMass"
+    },
+    {
+      "name": "bh_entropy_pos",
+      "file": "Vol03_Thermodynamics.lean",
+      "disposition": "carried",
+      "note": "Positivity follows from the carried area law `law_bekenstein_hawking : entropy = horizonArea / 4` and the field `area_pos`; the area law is a postulate of the structure, not derived.",
+      "source": "BlackHoleThermo"
+    },
+    {
+      "name": "carnot_efficiency_lt_one",
+      "file": "Vol03_Thermodynamics.lean",
+      "disposition": "witness",
+      "note": "η_Carnot = 1 − T_C/T_H < 1 for engines with 0 < T_C < T_H; `idealCarnotEngine` is the declared non-degenerate instance of that constraint set.",
+      "witness": "idealCarnotEngine"
+    },
+    {
+      "name": "carnot_efficiency_pos",
+      "file": "Vol03_Thermodynamics.lean",
+      "disposition": "witness",
+      "note": "0 < η_Carnot for the same constraint set, derived from the engine's temperature-order fields; the declared instance realizes it.",
+      "witness": "idealCarnotEngine"
+    },
+    {
+      "name": "clausius_equality_iff_reversible",
+      "file": "Vol03_Thermodynamics.lean",
+      "disposition": "carried",
+      "note": "The iff is the carried balance law read at zero irreversibility: `irreversibility = 0` is what the structure calls reversible, so 'attainment' is definitional on the data.",
+      "source": "ThermoProcess"
+    },
+    {
+      "name": "clausius_inequality",
+      "file": "Vol03_Thermodynamics.lean",
+      "disposition": "carried",
+      "note": "ΔS ≥ Q/T is the carried fields `law_entropy_balance` and `irr_nonneg` unfolded; the docstring records that the hypotheses are satisfiable (T = 1, σ = 0).",
+      "source": "ThermoProcess"
+    },
+    {
+      "name": "clausius_reversible_equality",
+      "file": "Vol03_Thermodynamics.lean",
+      "disposition": "carried",
+      "note": "`heatExchange` is *defined* as T·ΔS, so ΔS = Q/T is arithmetic once the temperature is positive: reversibility is built into the definition.",
+      "source": "heatExchange"
+    },
+    {
+      "name": "gibbsPartition_pos",
+      "file": "Vol03_Thermodynamics.lean",
+      "disposition": "witness",
+      "note": "Z(β) = 1 + e^(−βΔE) > 0 for the declared partition function: genuine real analysis (exp_pos), no hypotheses.",
+      "witness": "gibbsPartition"
+    },
+    {
+      "name": "gibbsState_not_tracial",
+      "file": "Vol03_Thermodynamics.lean",
+      "disposition": "conditional",
+      "note": "ω_β(E₀₁E₁₀) ≠ ω_β(E₁₀E₀₁) for ΔE > 0, β ≠ 0: the two-level Gibbs state is non-tracial, the non-degenerate counterpart of the tracial model.",
+      "stated_condition": "hβ : β ≠ 0"
+    },
+    {
+      "name": "gibbsState_one",
+      "file": "Vol03_Thermodynamics.lean",
+      "disposition": "witness",
+      "note": "Normalization ω_β(1) = 1 of the declared Gibbs state; algebra on the definition with the partition function positive.",
+      "witness": "gibbsState"
+    },
+    {
+      "name": "heatExchange_nonneg_of_entropy_growth",
+      "file": "Vol03_Thermodynamics.lean",
+      "disposition": "conditional",
+      "note": "Q = T·ΔS ≥ 0 given entropy growth and a positive temperature: growth is the stated hypothesis, temperature positivity a structure field.",
+      "stated_condition": "hS : s1.entropy ≤ s2.entropy"
+    },
+    {
+      "name": "idealCarnotEngine_attains_carnot",
+      "file": "Vol03_Thermodynamics.lean",
+      "disposition": "carried",
+      "note": "The engine's `workOutput` is defined as (1 − T_C/T_H)·Q_in, so 'attaining Carnot efficiency' is true by construction; the docstring's 'benchmark' wording is the honest reading.",
+      "source": "idealCarnotEngine"
+    },
+    {
+      "name": "kms_holds_at_every_temperature",
+      "file": "Vol03_Thermodynamics.lean",
+      "disposition": "carried",
+      "note": "The tracial model is KMS at every β because its modular flow is the identity: the KMS equation is the trace equation ω_ρ_trace. Temperature content is degenerate; the non-degenerate two-level model is `twoLevel_kms_iff_eq`.",
+      "source": "concreteModularTheory"
+    },
+    {
+      "name": "kms_temperature_uniqueness_fails",
+      "file": "Vol03_Thermodynamics.lean",
+      "disposition": "witness",
+      "note": "Refutation of the zeroth-law uniqueness premise in the tracial model, witnessed by KMS-at-every-β; this is why downstream statements carry temperature as data (`InEquilibrium`).",
+      "witness": "kms_holds_at_every_temperature"
+    },
+    {
+      "name": "twoLevel_kms_holds",
+      "file": "Vol03_Thermodynamics.lean",
+      "disposition": "witness",
+      "note": "The two-level Gibbs state satisfies KMS at γ = β: the non-degenerate KMS model, proved by explicit modular algebra.",
+      "witness": "gibbsState"
+    },
+    {
+      "name": "twoLevel_kms_iff_eq",
+      "file": "Vol03_Thermodynamics.lean",
+      "disposition": "conditional",
+      "note": "KMS-temperature uniqueness in the non-tracial model: IsTwoLevelKMS ΔE β γ ↔ γ = β for a positive gap; the gap hypothesis is stated.",
+      "stated_condition": "hΔE : 0 < ΔE"
+    },
+    {
+      "name": "twoLevel_kms_zeroth_law",
+      "file": "Vol03_Thermodynamics.lean",
+      "disposition": "conditional",
+      "note": "Two reservoirs KMS against one probe state have equal inverse temperature, conditional on the two KMS hypotheses and ΔE > 0.",
+      "stated_condition": "h₁ : IsTwoLevelKMS ΔE β₀ β₁"
+    },
+    {
+      "name": "hamiltonian_self_adjoint",
+      "file": "Vol04_QuantumMechanics.lean",
+      "disposition": "witness",
+      "note": "Self-adjointness ⟨Hψ,φ⟩ = ⟨ψ,Hφ⟩ of the declared one-dimensional Hamiltonian for real energies: a concrete model operator.",
+      "witness": "hamiltonian"
+    },
+    {
+      "name": "hasDerivAt_schrodingerTrajectory",
+      "file": "Vol04_QuantumMechanics.lean",
+      "disposition": "witness",
+      "note": "The declared trajectory ψ(t) = e^(−iωt)ψ₀ is differentiable with ψ′ = −iωψ: a genuine derivative, explicitly computed.",
+      "witness": "schrodingerTrajectory"
+    },
+    {
+      "name": "robertson_uncertainty",
+      "file": "Vol04_QuantumMechanics.lean",
+      "disposition": "conditional",
+      "note": "Var(A)·Var(B) ≥ (|⟨ψ,[A,B]ψ⟩|/2)² for self-adjoint A, B and a normalized ψ; the normalization (and self-adjointness) are stated hypotheses.",
+      "stated_condition": "hψ : @inner ℂ H _ ψ ψ = 1"
+    },
+    {
+      "name": "schrodinger_equation",
+      "file": "Vol04_QuantumMechanics.lean",
+      "disposition": "witness",
+      "note": "iℏψ′ = H_{ℏω}ψ for the explicit trajectory and the declared Hamiltonian; the docstring notes the identity is proved without unfolding ℏ.",
+      "witness": "hamiltonian"
+    },
+    {
+      "name": "conservation_of_energy_momentum",
+      "file": "Vol05_GeneralRelativity.lean",
+      "disposition": "carried",
+      "note": "The statement is the zero-curvature instance's law: `stress_energy := 0`, so ∇·0 = 0. The name must not be read as a derived conservation law; this instance is deliberately degenerate.",
+      "source": "Geometry"
+    },
+    {
+      "name": "cosmological_constant",
+      "file": "Vol05_GeneralRelativity.lean",
+      "disposition": "carried",
+      "note": "An ∃Λ restatement of the instance's carried field `law_cosmological_constant` (Λ = 0 at the zero-curvature instance); a MODEL CLAIM by the docstring's own label.",
+      "source": "Geometry"
+    },
+    {
+      "name": "em_sources_gravity",
+      "file": "Vol05_GeneralRelativity.lean",
+      "disposition": "carried",
+      "note": "`EMStressEnergy` is defined as `stress_energy`, so the identity is a definitional alias on the zero instance; no coupling between electromagnetism and gravity is established.",
+      "source": "EMStressEnergy"
+    },
+    {
+      "name": "horizonRadius_pos",
+      "file": "Vol05_GeneralRelativity.lean",
+      "disposition": "conditional",
+      "note": "r_s = 2GM > 0 for positive mass (a structure field) given the stated G > 0.",
+      "stated_condition": "hG : 0 < G"
+    },
+    {
+      "name": "kretschmann_pos",
+      "file": "Vol05_GeneralRelativity.lean",
+      "disposition": "conditional",
+      "note": "K = 48G²M²/r⁶ > 0 outside the horizon, conditional on G > 0 and r > 0.",
+      "stated_condition": "hr : 0 < r"
+    },
+    {
+      "name": "metric_is_qfim",
+      "file": "Vol05_GeneralRelativity.lean",
+      "disposition": "carried",
+      "note": "Both sides are 0 by definition at the zero-curvature instance (`metric := 0`; the model QFIM reduces definitionally), so this restates the instance's carried law field `law_metric_is_qfim`; the general claim is that field, not this theorem.",
+      "source": "Geometry"
+    },
+    {
+      "name": "real_conservation_of_energy_momentum",
+      "file": "Vol05_GeneralRelativity.lean",
+      "disposition": "conditional",
+      "note": "Derivative-level conservation: from the stated EFE relation and the contracted Bianchi identity, ∇·T = 0 for arbitrary coordinate tensor fields; genuine algebra with conditions stated.",
+      "stated_condition": "hEFE : ∀ μ α, G μ α = (8 * Real.pi * NewtonG) * T μ α"
+    },
+    {
+      "name": "unitSchwarzschild_horizon",
+      "file": "Vol05_GeneralRelativity.lean",
+      "disposition": "witness",
+      "note": "r_s = 2 for the unit benchmark (G = M = 1): a concrete, non-degenerate instance of the geometry.",
+      "witness": "unitSchwarzschild"
+    },
+    {
+      "name": "unitSchwarzschild_kretschmann_at_horizon",
+      "file": "Vol05_GeneralRelativity.lean",
+      "disposition": "witness",
+      "note": "K = 3/4 at the unit benchmark's horizon: an explicit nonzero value at a concrete instance.",
+      "witness": "unitSchwarzschild"
+    },
+    {
+      "name": "optical_expansion",
+      "file": "Vol06_QuantumFieldTheory.lean",
+      "disposition": "carried",
+      "note": "In the placeholder layer `SMatrix := 1` and `TMatrix := 0`, so the expansion is 1 = 1 by simp; the file keeps a separate hypothesis-carrying `optical_theorem` wrapper, and no optical theorem is derived.",
+      "source": "SMatrix"
+    },
+    {
+      "name": "standard_model_gauge_group",
+      "file": "Vol06_QuantumFieldTheory.lean",
+      "disposition": "carried",
+      "note": "`GaugeSymmetry` is defined as SU3 × SU2 × U1, so this is the definition restated (rfl); no Lie-group structure is constructed.",
+      "source": "GaugeSymmetry"
+    },
+    {
+      "name": "criticalDensity_pos",
+      "file": "Vol07_Cosmology.lean",
+      "disposition": "conditional",
+      "note": "ρ_c = 3H²/(8πG) > 0 for the stated G > 0, with the rate positivity carried by the model.",
+      "stated_condition": "hG : 0 < G"
+    },
+    {
+      "name": "flat_friedmann_critical_density_eq",
+      "file": "Vol07_Cosmology.lean",
+      "disposition": "conditional",
+      "note": "H² = (8πG/3)ρ ↔ ρ = ρ_c: the flatness condition and the critical-density identity are the same algebraic relation, an equivalence under G > 0.",
+      "stated_condition": "hG : 0 < G"
+    },
+    {
+      "name": "redshift_positive_of_expansion",
+      "file": "Vol07_Cosmology.lean",
+      "disposition": "conditional",
+      "note": "z = a_obs/a_emit − 1 > 0 whenever the scale factor grows, with both factors positive as stated.",
+      "stated_condition": "h_exp : a_emit < a_obs"
+    },
+    {
+      "name": "kms_beta_hawking",
+      "file": "Vol08_BlackHoleThermodynamics.lean",
+      "disposition": "carried",
+      "note": "T_H is defined as κ/2π, so (2π/κ)·T_H = 1 is definitional arithmetic (κ > 0 is a structure field): it pins the definition, not a derivation of the Hawking temperature.",
+      "source": "HawkingTemperature"
+    },
+    {
+      "name": "kms_exterior_vacuum",
+      "file": "Vol08_BlackHoleThermodynamics.lean",
+      "disposition": "carried",
+      "note": "The exterior region's KMS state comes from the tracial model (identity modular flow, trace equation), so β is not pinned by the statement; the docstring points to `kms_beta_hawking` (definitional) and to the failure of temperature uniqueness.",
+      "source": "concreteModularTheory"
+    },
+    {
+      "name": "standardSchwarzschild_entropy",
+      "file": "Vol08_BlackHoleThermodynamics.lean",
+      "disposition": "witness",
+      "note": "S = A/4 = 4π on the unit-mass benchmark: a concrete value at a non-degenerate instance.",
+      "witness": "standardSchwarzschild"
+    },
+    {
+      "name": "standardSchwarzschild_hawking_temp",
+      "file": "Vol08_BlackHoleThermodynamics.lean",
+      "disposition": "witness",
+      "note": "T_H = κ/2π = 1/(8π) on the unit benchmark, whose surface gravity is nonzero.",
+      "witness": "standardSchwarzschild"
+    },
+    {
+      "name": "bridge_bh_entropy_is_holographic",
+      "file": "Vol09_HolographicPrinciple.lean",
+      "disposition": "carried",
+      "note": "`EntanglementEntropy` and `BHEntropy` are the same expression (`MinimalSurfaceArea`/4G), so the identity is definitional (dsimp); NOT a derivation of the holographic dictionary, as the docstring says.",
+      "source": "EntanglementEntropy"
+    },
+    {
+      "name": "er_epr_bridge_entails_entanglement",
+      "file": "Vol09_HolographicPrinciple.lean",
+      "disposition": "conditional",
+      "note": "The sound direction of the ER=EPR dictionary in the two-qubit separability model, conditional on the bridge predicate; the converse is `product_of_correlation_det_zero` / `er_epr_iff`.",
+      "stated_condition": "h : EinsteinRosenBridge ψ"
+    },
+    {
+      "name": "gauge_symmetry",
+      "file": "Vol10_StandardModel.lean",
+      "disposition": "carried",
+      "note": "`SM_Gauge_Group` is defined as SU3 × SU2 × U1, so this is the definition restated (rfl); the docstring says it is not a construction of Lie groups.",
+      "source": "SM_Gauge_Group"
+    },
+    {
+      "name": "higgs_vacuum_minimum",
+      "file": "Vol10_StandardModel.lean",
+      "disposition": "carried",
+      "note": "V(φ) = (φ² − v²)² with v := 1, so V(v) = 0 is ring arithmetic on the definition; uniqueness of the minimizer needs a domain restriction (`higgs_zero_iff_nonneg`).",
+      "source": "HiggsPotential"
+    },
+    {
+      "name": "bellPair_subsystem_entropy",
+      "file": "Vol12_QuantumInformation.lean",
+      "disposition": "witness",
+      "note": "S = ln 2 for the declared 2-qubit Bell benchmark, below its capacity 2 ln 2: a concrete non-degenerate instance.",
+      "witness": "bellPairSystem"
+    },
+    {
+      "name": "quantum_information_bound",
+      "file": "Vol12_QuantumInformation.lean",
+      "disposition": "carried",
+      "note": "The bound is the structure's own field `h_bound` with capacity := n·ln 2; the declaration returns the carried constraint, it does not prove that nature honours it.",
+      "source": "BoundedQubitSystem"
+    },
+    {
+      "name": "bridge_vol13_entropy_nonneg",
+      "file": "Vol13_QuantumGravity.lean",
+      "disposition": "witness",
+      "note": "Entropy nonnegativity restated for the Vol13 layer; the content is the QRegion fact (structure field `entropy_pos`).",
+      "witness": "bridge_vonNeumannEntropy_nonneg"
+    },
+    {
+      "name": "bridge_vol13_metric_self_zero",
+      "file": "Vol13_QuantumGravity.lean",
+      "disposition": "witness",
+      "note": "Vol13's coupling fact `SM_Interaction g s` reduces to the model's self-distance identity; the wrapper certifies naming coherence, not a physical graviton coupling.",
+      "witness": "graviton_sm_coupling"
+    },
+    {
+      "name": "dark_energy_deduction",
+      "file": "Vol14_DarkSector.lean",
+      "disposition": "carried",
+      "note": "Over the legacy constants (0, 0, 1) this restates `flat_universe_sum` by linarith; the parameterized deduction is `CosmicDensityBudget.dark_energy_eq`.",
+      "source": "flat_universe_sum"
+    },
+    {
+      "name": "dark_energy_eq",
+      "file": "Vol14_DarkSector.lean",
+      "disposition": "witness",
+      "note": "In any flat budget Ω_DE = 1 − Ω_b − Ω_dm; `standardLCDM` (0.05, 0.26, 0.69) is the declared non-degenerate instance.",
+      "witness": "standardLCDM"
+    },
+    {
+      "name": "dark_energy_le_one",
+      "file": "Vol14_DarkSector.lean",
+      "disposition": "witness",
+      "note": "Ω_DE ≤ 1 on the simplex; the concrete ΛCDM benchmark realizes it with a strictly interior value.",
+      "witness": "standardLCDM"
+    },
+    {
+      "name": "dark_energy_lt_one_of_matter_pos",
+      "file": "Vol14_DarkSector.lean",
+      "disposition": "conditional",
+      "note": "Strict inequality Ω_DE < 1 when the matter sectors are strictly positive; the positivity hypothesis is stated.",
+      "stated_condition": "hb : 0 < b.omegaB"
+    },
+    {
+      "name": "flat_universe_sum",
+      "file": "Vol14_DarkSector.lean",
+      "disposition": "carried",
+      "note": "The legacy (0, 0, 1) constants sum to 1 by norm_num; flatness here is a chosen constant, not a derived property. The honest parameterized model is `CosmicDensityBudget`.",
+      "source": "OmegaDarkEnergy"
+    },
+    {
+      "name": "matter_dark_energy_complement",
+      "file": "Vol14_DarkSector.lean",
+      "disposition": "witness",
+      "note": "Ω_m + Ω_DE = 1 for the derived matter fraction; realized concretely by `standardLCDM`.",
+      "witness": "standardLCDM"
+    },
+    {
+      "name": "standardLCDM_dark_energy_dominant",
+      "file": "Vol14_DarkSector.lean",
+      "disposition": "witness",
+      "note": "0.31 < 0.69 on the declared ΛCDM benchmark: a concrete numeric fact, so the dominance claim is non-vacuous.",
+      "witness": "standardLCDM"
+    },
+    {
+      "name": "cosmic_acceleration_positive",
+      "file": "Vol15_EarlyUniverse.lean",
+      "disposition": "conditional",
+      "note": "ä > 0 for a fluid with ρ + 3p < 0 under G > 0; the acceleration-source condition is the stated hypothesis.",
+      "stated_condition": "h_source : F.accelerationSource < 0"
+    },
+    {
+      "name": "entropy_balance",
+      "file": "Vol16_NonEquilibriumThermodynamics.lean",
+      "disposition": "carried",
+      "note": "The balance equation is the carried field `entropy_hasDerivAt : HasDerivAt entropy (flux + production)` read back through `deriv`; the structure assumes it.",
+      "source": "EntropyProcess"
+    },
+    {
+      "name": "entropy_nonneg_after_initial",
+      "file": "Vol16_NonEquilibriumThermodynamics.lean",
+      "disposition": "conditional",
+      "note": "Initial nonnegativity propagates forward under isolation; the isolation hypothesis is stated.",
+      "stated_condition": "h : IsIsolated sys"
+    },
+    {
+      "name": "entropy_production_nonneg",
+      "file": "Vol16_NonEquilibriumThermodynamics.lean",
+      "disposition": "carried",
+      "note": "Nonnegative production is the carried field `production_nonneg`; the second law here is data, not a derivation.",
+      "source": "EntropyProcess"
+    },
+    {
+      "name": "isolated_entropy_monotone",
+      "file": "Vol16_NonEquilibriumThermodynamics.lean",
+      "disposition": "conditional",
+      "note": "Isolation (zero flux at every time) gives monotone entropy through the derivative chain; the hypothesis is stated.",
+      "stated_condition": "h : IsIsolated sys"
+    },
+    {
+      "name": "isolated_entropy_nondecreasing",
+      "file": "Vol16_NonEquilibriumThermodynamics.lean",
+      "disposition": "conditional",
+      "note": "Pointwise rate statement: zero flux at t makes the derivative nonnegative; global monotonicity is `isolated_entropy_monotone`.",
+      "stated_condition": "h_isolated : EntropyFlux sys t = 0"
+    },
+    {
+      "name": "isolated_entropy_strictMono",
+      "file": "Vol16_NonEquilibriumThermodynamics.lean",
+      "disposition": "conditional",
+      "note": "Strict growth needs strictly positive production at every time, stated as the hypothesis.",
+      "stated_condition": "hp : ∀ t, 0 < EntropyProduction sys t"
+    },
+    {
+      "name": "density_rate_zero_iff",
+      "file": "Vol17_FluidDynamics.lean",
+      "disposition": "witness",
+      "note": "Zero material derivative iff zero divergence, derived from the carried continuity law and positivity of density; `expandingFlow` is the declared non-degenerate instance.",
+      "witness": "expandingFlow"
+    },
+    {
+      "name": "expandingFlow_density_decreases",
+      "file": "Vol17_FluidDynamics.lean",
+      "disposition": "witness",
+      "note": "ρ(t) = e^(−t) strictly decreases: a concrete non-constant solution of the scalar continuity law, so the model is not a zero-divergence stub.",
+      "witness": "expandingFlow"
+    },
+    {
+      "name": "incompressible_density_constant",
+      "file": "Vol17_FluidDynamics.lean",
+      "disposition": "conditional",
+      "note": "Divergence-free at every time implies a constant density history; the hypothesis is stated and the proof uses differentiability.",
+      "stated_condition": "h : ∀ t, FlowDivergence flow t = 0"
+    },
+    {
+      "name": "disordered_macroEntropy",
+      "file": "Vol19_ComplexSystems.lean",
+      "disposition": "witness",
+      "note": "S(disordered) = 1 − 1 = 0 on the declared witness state: arithmetic on a concrete instance.",
+      "witness": "disorderedState"
+    },
+    {
+      "name": "informationGain_pos_of_entropy_increase",
+      "file": "Vol19_ComplexSystems.lean",
+      "disposition": "conditional",
+      "note": "Information gain is defined as ΔS, so positivity under entropy increase is immediate given the stated inequality.",
+      "stated_condition": "h : macroEntropy s1 < macroEntropy s2"
+    },
+    {
+      "name": "organized_macroEntropy",
+      "file": "Vol19_ComplexSystems.lean",
+      "disposition": "witness",
+      "note": "S(organized) = 3 − 1 = 2 on the declared witness state; the emergence witness pair is concrete and non-degenerate.",
+      "witness": "organizedState"
+    },
+    {
+      "name": "expansion_pos",
+      "file": "Vol20_ChaosTheory.lean",
+      "disposition": "carried",
+      "note": "σ > 1 is the carried field `h_expansion`; `doublingMap` (σ = 2) is the declared benchmark. The statement is the field, not a derivation of chaotic behaviour.",
+      "source": "ExpandingMap"
+    },
+    {
+      "name": "arrow_of_time_entropy_nonneg",
+      "file": "Vol21_ArrowOfTime.lean",
+      "disposition": "conditional",
+      "note": "Initial nonnegativity propagates forward under isolation; the hypothesis is stated rather than postulated for all times.",
+      "stated_condition": "h_isolated : Vol16.IsIsolated history"
+    },
+    {
+      "name": "entropy_derivative",
+      "file": "Vol21_ArrowOfTime.lean",
+      "disposition": "conditional",
+      "note": "A nonnegative rate on an interval gives monotone entropy; both the interval order and the rate hypothesis are stated.",
+      "stated_condition": "h_rate : ∀ t, 0 ≤ EntropyRate history t"
+    },
+    {
+      "name": "entropy_rate_nonneg",
+      "file": "Vol21_ArrowOfTime.lean",
+      "disposition": "conditional",
+      "note": "Zero flux at a time makes the rate nonnegative; the pointwise hypothesis is stated.",
+      "stated_condition": "h : Vol16.EntropyFlux history t = 0"
+    },
+    {
+      "name": "no_entanglement_no_bridge",
+      "file": "Vol22_EREqualsEPR.lean",
+      "disposition": "conditional",
+      "note": "No entanglement implies no bridge, using nonnegativity of the model information and the zero-distance lemma; the sign hypothesis is stated.",
+      "stated_condition": "h_no_ent : MutualInformation A B ≤ 0"
+    },
+    {
+      "name": "bridge_decoherence_normalized",
+      "file": "Vol23_MeasurementProblem.lean",
+      "disposition": "carried",
+      "note": "Composition of placeholder facts: `Trace` is the constant 1, so normalization is definitional on the placeholder layer.",
+      "source": "Trace"
+    },
+    {
+      "name": "bridge_decoherence_phi_nonneg",
+      "file": "Vol23_MeasurementProblem.lean",
+      "disposition": "witness",
+      "note": "Φ ≥ 0 for the (placeholder-identity) decohered region: the content is the QRegion fact.",
+      "witness": "bridge_overlapDensity_nonneg"
+    },
+    {
+      "name": "bridge_decoherence_preserves_normalization",
+      "file": "Vol23_MeasurementProblem.lean",
+      "disposition": "carried",
+      "note": "`Decohere` is the identity on `DensityMatrix` in the placeholder layer, so preservation is rfl; the docstring states the physical claim is modelled, not derived.",
+      "source": "Decohere"
+    },
+    {
+      "name": "bridge_decoherence_suppresses",
+      "file": "Vol23_MeasurementProblem.lean",
+      "disposition": "carried",
+      "note": "`OffDiagonal` is the constant 0 in the placeholder layer, so the suppression inequality is |0| ≤ |0|; no decoherence dynamics is established.",
+      "source": "OffDiagonal"
+    },
+    {
+      "name": "bridge_decoherence_trace_preserving",
+      "file": "Vol23_MeasurementProblem.lean",
+      "disposition": "carried",
+      "note": "Identity `Decohere` and constant `Trace` make the two sides identical (rfl); the parameterized `QubitState.dephase` channel is the layer with content.",
+      "source": "Decohere"
+    },
+    {
+      "name": "complete_decoherence_vanishes",
+      "file": "Vol23_MeasurementProblem.lean",
+      "disposition": "witness",
+      "note": "At suppression λ = 0 the declared `dephase` channel sets c = 0: a concrete instantiation of the parameterized channel, with its side conditions discharged.",
+      "witness": "dephase"
+    },
+    {
+      "name": "dephase_coherence_decay",
+      "file": "Vol23_MeasurementProblem.lean",
+      "disposition": "conditional",
+      "note": "|c′| ≤ |c| for λ ∈ [0, 1] in the parameterized dephasing channel; the interval hypotheses are stated.",
+      "stated_condition": "hlam0 : 0 ≤ lam"
+    },
+    {
+      "name": "bridge_vol25_entropy_nonneg",
+      "file": "Vol25_BlackHoleInformation.lean",
+      "disposition": "witness",
+      "note": "Entropy nonnegativity restated for the black-hole-information layer; content is the QRegion fact.",
+      "witness": "bridge_vonNeumannEntropy_nonneg"
+    },
+    {
+      "name": "entropy_zero_iff",
+      "file": "Vol25_BlackHoleInformation.lean",
+      "disposition": "witness",
+      "note": "The zeros of the two marginals coincide because joint purity plus the difference bound force equal marginals (derived, not assumed); `positiveMarginalWitness` shows the non-degenerate case (marginals 1, pure joint) — entropy data only, not a density matrix.",
+      "witness": "positiveMarginalWitness"
+    },
+    {
+      "name": "bridge_vol26_metric_self_zero",
+      "file": "Vol26_NetworkTheory.lean",
+      "disposition": "witness",
+      "note": "Ω-metric reflexivity restated for the network layer; content is the QRegion fact (distinct instances such as `halfQRegion ≠ unitQRegion` supply separation).",
+      "witness": "bridge_qregion_self_distance_zero"
+    },
+    {
+      "name": "cortical_flux_asymmetry_pos",
+      "file": "Vol27_Consciousness.lean",
+      "disposition": "witness",
+      "note": "2.0 − 1.5 = 0.5 > 0 on the declared integrated-system witness (Φ = 0.8): a concrete non-degenerate instance.",
+      "witness": "corticalComplex"
+    },
+    {
+      "name": "bridge_vol28_entropy_nonneg",
+      "file": "Vol28_EvolutionaryAlgorithms.lean",
+      "disposition": "witness",
+      "note": "Entropy nonnegativity restated for the evolutionary-algorithms layer.",
+      "witness": "bridge_vonNeumannEntropy_nonneg"
+    },
+    {
+      "name": "bridge_vol28_metric_self_zero",
+      "file": "Vol28_EvolutionaryAlgorithms.lean",
+      "disposition": "witness",
+      "note": "Ω-metric reflexivity restated for the population-distance layer.",
+      "witness": "bridge_qregion_self_distance_zero"
+    },
+    {
+      "name": "bridge_vol29_entropy_bounded",
+      "file": "Vol29_EcosystemDynamics.lean",
+      "disposition": "renamed",
+      "note": "The legacy name `ecosystem_entropy_bound` was retired for the honest `bridge_` convention; the content is the QRegion bound S ≤ π (`bridge_vonNeumannEntropy_le_pi`).",
+      "previous_name": "ecosystem_entropy_bound",
+      "renamed_to": "bridge_vol29_entropy_bounded"
+    },
+    {
+      "name": "bridge_vol29_metric_self_zero",
+      "file": "Vol29_EcosystemDynamics.lean",
+      "disposition": "renamed",
+      "note": "The legacy name `ecosystem_from_omega` was retired (it claimed an ecosystem derivation from Ω); the content is the model's self-distance identity.",
+      "previous_name": "ecosystem_from_omega",
+      "renamed_to": "bridge_vol29_metric_self_zero"
+    },
+    {
+      "name": "bridge_vol30_metric_nonneg",
+      "file": "Vol30_PlanetarySystems.lean",
+      "disposition": "witness",
+      "note": "Distance nonnegativity restated for the planetary layer; content is the QRegion fact.",
+      "witness": "bridge_distance_nonneg"
+    },
+    {
+      "name": "bridge_vol30_metric_self_zero",
+      "file": "Vol30_PlanetarySystems.lean",
+      "disposition": "witness",
+      "note": "Reflexivity restated for the planetary layer.",
+      "witness": "bridge_qregion_self_distance_zero"
+    },
+    {
+      "name": "kepler_period_squared",
+      "file": "Vol30_PlanetarySystems.lean",
+      "disposition": "conditional",
+      "note": "T² = (4π²/μ)a³ for the period formula, conditional on a > 0 and μ > 0 (division by μ).",
+      "stated_condition": "hmu : 0 < mu"
+    },
+    {
+      "name": "orbital_period_pos",
+      "file": "Vol30_PlanetarySystems.lean",
+      "disposition": "conditional",
+      "note": "T(a) > 0 for positive semi-major axis; the hypothesis makes the square root's argument positive.",
+      "stated_condition": "ha : 0 < a"
+    },
+    {
+      "name": "orbital_period_sq_nonneg",
+      "file": "Vol30_PlanetarySystems.lean",
+      "disposition": "witness",
+      "note": "T(a)² ≥ 0 for the declared sqrt formula: a square is nonnegative for every radius.",
+      "witness": "OrbitalPeriod"
+    },
+    {
+      "name": "orbital_period_strictMonoOn",
+      "file": "Vol30_PlanetarySystems.lean",
+      "disposition": "witness",
+      "note": "T is strictly increasing on [0, ∞): genuine square-root monotonicity for the declared formula.",
+      "witness": "OrbitalPeriod"
+    },
+    {
+      "name": "orbital_period_zero",
+      "file": "Vol30_PlanetarySystems.lean",
+      "disposition": "witness",
+      "note": "T(0) = 0 for the declared formula: the zero-radius case, no hypotheses.",
+      "witness": "OrbitalPeriod"
+    },
+    {
+      "name": "orbital_period_zero_iff",
+      "file": "Vol30_PlanetarySystems.lean",
+      "disposition": "conditional",
+      "note": "On the physical domain T(a) = 0 ↔ a = 0 (a < 0 is outside it, since sqrt of a negative is 0); the domain hypothesis is stated.",
+      "stated_condition": "ha : 0 ≤ a"
+    },
+    {
+      "name": "bridge_vol31_metric_self_zero",
+      "file": "Vol31_GameTheory.lean",
+      "disposition": "renamed",
+      "note": "The legacy name `nash_from_phi` claimed a Nash-equilibrium derivation; it was retired for the `bridge_` convention, and the content is the model's self-distance identity.",
+      "previous_name": "nash_from_phi",
+      "renamed_to": "bridge_vol31_metric_self_zero"
+    },
+    {
+      "name": "bridge_vol32_entropy_nonneg",
+      "file": "Vol32_Cybernetics.lean",
+      "disposition": "renamed",
+      "note": "Legacy name `control_loop_entropy` retired; content is the QRegion entropy fact.",
+      "previous_name": "control_loop_entropy",
+      "renamed_to": "bridge_vol32_entropy_nonneg"
+    },
+    {
+      "name": "bridge_vol32_metric_nonneg",
+      "file": "Vol32_Cybernetics.lean",
+      "disposition": "renamed",
+      "note": "Legacy name `feedback_stability` retired (a stability claim the identity cannot support); content is distance nonnegativity.",
+      "previous_name": "feedback_stability",
+      "renamed_to": "bridge_vol32_metric_nonneg"
+    },
+    {
+      "name": "unit_gain_not_decay",
+      "file": "Vol32_Cybernetics.lean",
+      "disposition": "conditional",
+      "note": "A counterexample theorem: unit gain (g = 1) does not decay to 0, so the old non-strict bound is not a decay statement; the nonzero-initial hypothesis is stated.",
+      "stated_condition": "hi : initial ≠ 0"
+    },
+    {
+      "name": "bridge_vol33_entropy_nonneg",
+      "file": "Vol33_AGI.lean",
+      "disposition": "witness",
+      "note": "Entropy nonnegativity restated for the AGI agent-state layer.",
+      "witness": "bridge_vonNeumannEntropy_nonneg"
+    },
+    {
+      "name": "bridge_vol33_metric_nonneg",
+      "file": "Vol33_AGI.lean",
+      "disposition": "witness",
+      "note": "Distance nonnegativity restated for agent-state distances.",
+      "witness": "bridge_distance_nonneg"
+    },
+    {
+      "name": "bridge_vol34_metric_self_zero",
+      "file": "Vol34_QuantumComputing.lean",
+      "disposition": "witness",
+      "note": "Reflexivity restated for the circuit-depth-distance layer.",
+      "witness": "bridge_qregion_self_distance_zero"
+    },
+    {
+      "name": "quantum_computing_from_omega",
+      "file": "Vol34_QuantumComputing.lean",
+      "disposition": "carried",
+      "note": "Content is H†H = I for the two-element gate algebra (`HadamardGate := QGate.H`); the docstring says the legacy name is kept for the protocol, and no quantum-computing construction is established.",
+      "source": "HadamardGate"
+    },
+    {
+      "name": "bridge_vol35_entropy_nonneg",
+      "file": "Vol35_TheoryOfComputation.lean",
+      "disposition": "renamed",
+      "note": "Legacy name retired for the bridge convention; content is the QRegion entropy fact.",
+      "previous_name": "computation_entropy_nonneg",
+      "renamed_to": "bridge_vol35_entropy_nonneg"
+    },
+    {
+      "name": "bridge_vol35_metric_self_zero",
+      "file": "Vol35_TheoryOfComputation.lean",
+      "disposition": "renamed",
+      "note": "Legacy name `computation_from_omega` retired; content is the self-distance identity.",
+      "previous_name": "computation_from_omega",
+      "renamed_to": "bridge_vol35_metric_self_zero"
+    },
+    {
+      "name": "bridge_vol36_entropy_bounded",
+      "file": "Vol36_ToposTheory.lean",
+      "disposition": "renamed",
+      "note": "Legacy name `topos_entropy_bound` retired; content is the QRegion bound S ≤ π.",
+      "previous_name": "topos_entropy_bound",
+      "renamed_to": "bridge_vol36_entropy_bounded"
+    },
+    {
+      "name": "bridge_vol37_entropy_nonneg",
+      "file": "Vol37_Morphogenesis.lean",
+      "disposition": "renamed",
+      "note": "Legacy name retired; content is the QRegion entropy fact.",
+      "previous_name": "morphogenesis_entropy_nonneg",
+      "renamed_to": "bridge_vol37_entropy_nonneg"
+    },
+    {
+      "name": "bridge_vol37_metric_self_zero",
+      "file": "Vol37_Morphogenesis.lean",
+      "disposition": "renamed",
+      "note": "Legacy name retired; content is the self-distance identity.",
+      "previous_name": "morphogenesis_from_omega",
+      "renamed_to": "bridge_vol37_metric_self_zero"
+    },
+    {
+      "name": "turing_instability",
+      "file": "Vol37_Morphogenesis.lean",
+      "disposition": "conditional",
+      "note": "Linear-stability criterion (drive plus discriminant imply a negative-dispersion wavenumber, evaluated at k² = P/2Q) for the stated two-species model; the docstring says textbook algebra, not a PDE derivation.",
+      "stated_condition": "hDrive : 0 < S.Du * S.d + S.Dv * S.a"
+    },
+    {
+      "name": "turing_instability_ratio",
+      "file": "Vol37_Morphogenesis.lean",
+      "disposition": "carried",
+      "note": "The diffusivities are the constants 1 and 2, so the 'ratio' is 2/1 > 1; the file's own scope note says a bare diffusivity ratio is NOT a Turing instability proof (the hypothesis is discharged by the constant).",
+      "source": "InhibitorDiffusion"
+    },
+    {
+      "name": "bridge_vol38_entropy_nonneg",
+      "file": "Vol38_Economics.lean",
+      "disposition": "witness",
+      "note": "Entropy nonnegativity restated for the economics layer.",
+      "witness": "bridge_vonNeumannEntropy_nonneg"
+    },
+    {
+      "name": "bridge_vol39_entropy_nonneg",
+      "file": "Vol39_SocietalNetworks.lean",
+      "disposition": "witness",
+      "note": "Entropy nonnegativity restated for the societal-network layer.",
+      "witness": "bridge_vonNeumannEntropy_nonneg"
+    },
+    {
+      "name": "bridge_vol39_metric_self_zero",
+      "file": "Vol39_SocietalNetworks.lean",
+      "disposition": "witness",
+      "note": "Reflexivity restated for the network-distance layer.",
+      "witness": "bridge_qregion_self_distance_zero"
+    },
+    {
+      "name": "bridge_vol40_entropy_bounded",
+      "file": "Vol40_FermiParadox.lean",
+      "disposition": "witness",
+      "note": "The S ≤ π bound restated for the Fermi-paradox horizon layer.",
+      "witness": "bridge_vonNeumannEntropy_le_pi"
+    },
+    {
+      "name": "bridge_vol40_metric_nonneg",
+      "file": "Vol40_FermiParadox.lean",
+      "disposition": "witness",
+      "note": "Distance nonnegativity restated for interstellar distances.",
+      "witness": "bridge_distance_nonneg"
+    },
+    {
+      "name": "bridge_vol41_metric_self_zero",
+      "file": "Vol41_PostBiologicalEvolution.lean",
+      "disposition": "witness",
+      "note": "Reflexivity restated for the post-biological-evolution layer.",
+      "witness": "bridge_qregion_self_distance_zero"
+    },
+    {
+      "name": "bridge_vol42_entropy_nonneg",
+      "file": "Vol42_StellarEngineering.lean",
+      "disposition": "witness",
+      "note": "Entropy nonnegativity restated for the stellar-thermodynamics layer.",
+      "witness": "bridge_vonNeumannEntropy_nonneg"
+    },
+    {
+      "name": "dyson_sphere_witness",
+      "file": "Vol42_StellarEngineering.lean",
+      "disposition": "witness",
+      "note": "The type is inhabited by the single-shell swarm (1 shell, 1 star); the point is that the structure's constraints are satisfiable, not that a swarm exists.",
+      "witness": "DysonSphere"
+    },
+    {
+      "name": "luminosity_conservation",
+      "file": "Vol42_StellarEngineering.lean",
+      "disposition": "witness",
+      "note": "captured + residual = lum because residual is defined as lum·(1 − frac) and captured as lum·frac: ring algebra on the two definitions, no hypotheses.",
+      "witness": "capturedLuminosity"
+    },
+    {
+      "name": "bridge_vol43_entropy_bounded",
+      "file": "Vol43_GalacticEcosystems.lean",
+      "disposition": "witness",
+      "note": "The S ≤ π bound restated for the galactic-horizon layer.",
+      "witness": "bridge_vonNeumannEntropy_le_pi"
+    },
+    {
+      "name": "bridge_vol43_metric_nonneg",
+      "file": "Vol43_GalacticEcosystems.lean",
+      "disposition": "witness",
+      "note": "Distance nonnegativity restated for the galactic layer.",
+      "witness": "bridge_distance_nonneg"
+    },
+    {
+      "name": "galactic_network_witness",
+      "file": "Vol43_GalacticEcosystems.lean",
+      "disposition": "witness",
+      "note": "Inhabited by the empty network (0 stars): the symmetry and irreflexivity constraints are satisfiable, and the statement claims inhabitation only.",
+      "witness": "GalacticNetwork"
+    },
+    {
+      "name": "bridge_vol44_metric_self_zero",
+      "file": "Vol44_UniversalExpansion.lean",
+      "disposition": "renamed",
+      "note": "Legacy name `expansion_distance_self` retired; content is the model's self-distance identity.",
+      "previous_name": "expansion_distance_self",
+      "renamed_to": "bridge_vol44_metric_self_zero"
+    },
+    {
+      "name": "entropy_antitone",
+      "file": "Vol44_UniversalExpansion.lean",
+      "disposition": "conditional",
+      "note": "S = 3π/(GΛ) is decreasing in Λ at fixed G; the order hypothesis is stated.",
+      "stated_condition": "hΛ : S₁.Lambda < S₂.Lambda"
+    },
+    {
+      "name": "entropy_formula",
+      "file": "Vol44_UniversalExpansion.lean",
+      "disposition": "witness",
+      "note": "The scaling law S = 3π/(GΛ) is derived from A = 4πr², r² = 3/Λ and S = A/4G; `unitDeSitter` (G = Λ = 1, S = 3π) is the declared benchmark instance.",
+      "witness": "unitDeSitter"
+    },
+    {
+      "name": "entropy_pos",
+      "file": "Vol44_UniversalExpansion.lean",
+      "disposition": "witness",
+      "note": "Positivity of the entropy for positive Λ and G; the declared unit benchmark realizes it with the explicit value 3π.",
+      "witness": "unitDeSitter"
+    },
+    {
+      "name": "unitDeSitter_entropy",
+      "file": "Vol44_UniversalExpansion.lean",
+      "disposition": "witness",
+      "note": "S = 3π on the unit benchmark: the concrete value pinning the scaling law.",
+      "witness": "unitDeSitter"
+    },
+    {
+      "name": "bridge_vol45_entropy_nonneg",
+      "file": "Vol45_MultiverseTheory.lean",
+      "disposition": "witness",
+      "note": "Entropy nonnegativity restated for the branch-entropy layer.",
+      "witness": "bridge_vonNeumannEntropy_nonneg"
+    },
+    {
+      "name": "bridge_vol45_metric_nonneg",
+      "file": "Vol45_MultiverseTheory.lean",
+      "disposition": "witness",
+      "note": "Distance nonnegativity restated for branch distances.",
+      "witness": "bridge_distance_nonneg"
+    },
+    {
+      "name": "multiverse_ensemble_witness",
+      "file": "Vol45_MultiverseTheory.lean",
+      "disposition": "witness",
+      "note": "Inhabited by the root branch (`Branch.root`): the statement claims inhabitation only.",
+      "witness": "MultiverseEnsemble"
+    },
+    {
+      "name": "bridge_vol46_metric_self_zero",
+      "file": "Vol46_SimulationHypothesis.lean",
+      "disposition": "witness",
+      "note": "Reflexivity restated for the simulation-hypothesis layer.",
+      "witness": "bridge_qregion_self_distance_zero"
+    },
+    {
+      "name": "bridge_vol47_entropy_bounded",
+      "file": "Vol47_TranscendentArchitectures.lean",
+      "disposition": "witness",
+      "note": "The S ≤ π bound restated for the civilizational-horizon layer.",
+      "witness": "bridge_vonNeumannEntropy_le_pi"
+    },
+    {
+      "name": "bridge_vol47_entropy_nonneg",
+      "file": "Vol47_TranscendentArchitectures.lean",
+      "disposition": "witness",
+      "note": "Entropy nonnegativity restated for civilizational entropy budgets.",
+      "witness": "bridge_vonNeumannEntropy_nonneg"
+    },
+    {
+      "name": "bridge_vol47_metric_nonneg",
+      "file": "Vol47_TranscendentArchitectures.lean",
+      "disposition": "witness",
+      "note": "Distance nonnegativity restated for civilizational distances.",
+      "witness": "bridge_distance_nonneg"
+    },
+    {
+      "name": "kardashevPower_pos",
+      "file": "Vol47_TranscendentArchitectures.lean",
+      "disposition": "conditional",
+      "note": "P(K) = P₀·e^(αK) > 0 given P₀ > 0; positivity of the exponential is genuine analysis.",
+      "stated_condition": "hP0 : 0 < P0"
+    },
+    {
+      "name": "kardashevPower_strictMono",
+      "file": "Vol47_TranscendentArchitectures.lean",
+      "disposition": "conditional",
+      "note": "P is strictly increasing in K for a positive growth rate; the growth-rate and order hypotheses are stated.",
+      "stated_condition": "hα : 0 < α"
+    },
+    {
+      "name": "tier_energy_strictly_increases",
+      "file": "Vol47_TranscendentArchitectures.lean",
+      "disposition": "witness",
+      "note": "1e16 < 1e26 < 1e36 < 1e46 on the declared four-tier ladder: finite arithmetic on the definition, so the ladder is genuinely strictly increasing.",
+      "witness": "energyScale"
+    },
+    {
+      "name": "bridge_vol48_metric_self_zero",
+      "file": "Vol48_ExtraDimensions.lean",
+      "disposition": "renamed",
+      "note": "Legacy name `extradim_distance_self` retired; content is the self-distance identity.",
+      "previous_name": "extradim_distance_self",
+      "renamed_to": "bridge_vol48_metric_self_zero"
+    },
+    {
+      "name": "bridge_vol50_entropy_nonneg",
+      "file": "Vol50_UltimateEnsemble.lean",
+      "disposition": "witness",
+      "note": "Entropy nonnegativity restated for the ensemble layer.",
+      "witness": "bridge_vonNeumannEntropy_nonneg"
+    },
+    {
+      "name": "bridge_vol52_metric_self_zero",
+      "file": "Vol52_OmegaPointTheory.lean",
+      "disposition": "witness",
+      "note": "Reflexivity restated for the Omega-Point layer.",
+      "witness": "bridge_qregion_self_distance_zero"
+    },
+    {
+      "name": "omegaTimeMap_lt_horizon",
+      "file": "Vol52_OmegaPointTheory.lean",
+      "disposition": "conditional",
+      "note": "Every finite complexity stage lies strictly before the finite horizon t_Ω > 0; the positivity hypothesis is stated.",
+      "stated_condition": "ht : 0 < t_omega"
+    },
+    {
+      "name": "bridge_vol53_entropy_nonneg",
+      "file": "Vol53_UniversalCompiler.lean",
+      "disposition": "witness",
+      "note": "Entropy nonnegativity restated for the compiler layer.",
+      "witness": "bridge_vonNeumannEntropy_nonneg"
+    },
+    {
+      "name": "bridge_vol54_entropy_nonneg",
+      "file": "Vol54_TheoryOfNothing.lean",
+      "disposition": "renamed",
+      "note": "Legacy name `nothing_entropy_nonneg` retired; content is the QRegion entropy fact.",
+      "previous_name": "nothing_entropy_nonneg",
+      "renamed_to": "bridge_vol54_entropy_nonneg"
+    },
+    {
+      "name": "bridge_vol54_metric_self_zero",
+      "file": "Vol54_TheoryOfNothing.lean",
+      "disposition": "renamed",
+      "note": "Legacy name `nothingboundsall` retired (a universal claim no identity supports); content is the self-distance model fact.",
+      "previous_name": "nothingboundsall",
+      "renamed_to": "bridge_vol54_metric_self_zero"
+    }
+  ]
+}

@@ -29,7 +29,7 @@ the things a kernel cannot check.
 > | Declarations | ~460 theorems | 1,448 — 928 theorems, 407 defs, 76 structures, 19 abbrevs, 14 inductives, 4 instances |
 > | Comment-free code lines | — | 7,492 |
 > | Kernel-audit targets | 155 | 260 |
-> | Tooling tests | 35 | 80 |
+> | Tooling tests | 35 | 103 |
 > | Vacuity / axiom-name / `Unit`-stub ratchets | several non-zero (see C1, H2, H3, Medium) | all zero |
 > | Kernel status | green in CI | green on `main` (run 38119532226) and on PR #83 (run 38234115307) |
 >
@@ -42,11 +42,14 @@ the things a kernel cannot check.
 > a different parametrisation of the same idea.
 >
 > **What this note is not:** it is bookkeeping, not a re-audit. The manual
-> per-declaration review that would confirm every High and Medium finding is closed has
-> not been repeated. That work is Phase 6 of
-> [`docs/research/CLAIM_TIGHTENING_ROADMAP.md`](../docs/research/CLAIM_TIGHTENING_ROADMAP.md),
-> which remains **planned**, and a passing ratchet is not a semantic non-vacuity
-> certificate.
+> per-declaration review is Phase 6 of
+> [`docs/research/CLAIM_TIGHTENING_ROADMAP.md`](../docs/research/CLAIM_TIGHTENING_ROADMAP.md);
+> it was recorded on 2026-10-12 as one gated row per physics-sounding volume declaration in
+> [`statement_audit.json`](statement_audit.json) — 73 `witness`, 43 `conditional`, 14
+> `renamed`, 30 `carried` — each row naming the declaration or hypothesis it rests on. Those
+> rows are judgements with named evidence, not a re-derivation of the findings below: the
+> `carried` rows in particular record statements that are true only from carried data, and a
+> passing ratchet is not a semantic non-vacuity certificate.
 
 ## Executive summary
 
