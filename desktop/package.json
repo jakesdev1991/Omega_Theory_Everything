@@ -11,6 +11,6 @@
     "build:windows": "npm run sync:wallet && tauri build --bundles msi"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "^2.1.0"
+    "@tauri-apps/cli": "^2.12.1"
   }
 }
