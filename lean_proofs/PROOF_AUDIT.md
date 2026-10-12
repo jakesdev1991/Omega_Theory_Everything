@@ -12,7 +12,8 @@ Measured on `main` now: 68 proof modules plus `lakefile.lean`, 1,448
 declarations (928 theorems, 407 defs, 76 structures, 19 abbrevs, 14 inductives,
 4 instances), 260 selected kernel-audit targets, 107 Python/tooling tests, and
 all eight `audit_vacuity` ratchets plus the alias baseline at zero. The pinned
-build and the kernel gate are green on `main` (CI run 38119532226) and on PR #83
+build and the kernel gate are green on `main` (CI run 38119532226; after PR #83 was merged
+as `a764f34`, run 38255776907) and on PR #83
 (run 38251369698, which is also the first run of the Phase 6 statement-audit step). The fourteenth pass (Phase 5 exit gate: comment-parity and
 text-mirror tooling, documented in `README.md`) changed no declaration, and
 neither did the fifteenth (the cited-name check, now a gate in Lean CI) or the
@@ -29,7 +30,8 @@ disposition and recording the retired name as `previous_name`, which the gate no
 checks on every row. The pass and its parity/mirror updates are green on PR #83 (Lean CI
 run 38254475070: `lake build ToE`, the 260-target kernel audit — including the renamed
 `OmegaProtocol.Vol09.bridge_entanglement_entropy_eq_bh_entropy` — the cited-name gate and
-the statement-audit step). `check_statement_audit.py` gates the rows for shape
+the statement-audit step). PR #83 is merged into `main` as merge commit `a764f34`, whose
+push runs re-ran everything green (Lean CI run 38255776907, CI run 38255777137). `check_statement_audit.py` gates the rows for shape
 and existence — a witness or source must be a declaration, a quoted condition
 must occur in the statement, a retired name must survive nowhere. The rows are
 judgements, not proofs: the per-module findings below are their evidence, and
