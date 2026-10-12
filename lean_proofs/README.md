@@ -18,7 +18,7 @@ unexpected axioms — are green on `main`
 ([Lean CI run 38119532226](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/38119532226),
 the merge of PR #79) and were re-confirmed on
 [PR #83](https://github.com/jakesdev1991/Omega_Theory_Everything/pull/83)
-(run 38234115307). Reproducible locally without a toolchain: 103 Python/tooling
+(run 38251369698). Reproducible locally without a toolchain: 103 Python/tooling
 tests, `audit_axioms --max 0` → 0, all eight `audit_vacuity` ratchets and the
 alias baseline at 0, the comment-parity gate across 69 files, 68
 byte-identical `txt_proofs/` mirrors, and the Phase 6 statement audit — one row
@@ -709,7 +709,8 @@ added, removed, or restated**: the code projection of the corpus is unchanged.
   record it is.
 
 Verified: green on PR #83 (Lean CI run 38234115307), including `lake build ToE`
-and the 260-declaration kernel-axiom gate.
+and the 260-declaration kernel-axiom gate; the head of the branch re-ran
+everything green at run 38251369698, adding the Phase 6 statement-audit step.
 
 ### Fifteenth pass: the cited-name check becomes a gate (tooling, no proof content changed)
 
@@ -836,3 +837,9 @@ and the two files added are a checker, an audit record, and its tests.
   constants), and the tracial-model KMS rows, among others — and each of those
   notes says what is carried and by which declaration instead of implying a
   derivation.
+- **Verified in CI.** Green on PR #83 at
+  [Lean CI run 38251369698](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/38251369698)
+  — the new `Gate - statement audit of the physics volumes` step passes next to
+  `lake build ToE`, the cited-name gate and the 260-declaration kernel audit
+  ([CI run 38251369679](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/38251369679)
+  for the pytest side).
