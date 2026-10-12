@@ -51,6 +51,13 @@ jobs:
           fi
           echo "Clean: no sorry/trivial stubs."
           python3 audit_axioms.py --max 0
+          # Phase 5 parity: a comment/docstring-only edit must leave every
+          # declaration byte-identical, and the plain-text mirrors must track
+          # the Lean sources. Both are baseline ratchets; a deliberate code
+          # change needs `check_declaration_parity.py --update` and
+          # `sync_txt_mirrors.py --write` in the same commit.
+          python3 check_declaration_parity.py
+          python3 sync_txt_mirrors.py
           # Honesty ratchet: degenerate-model tautologies may only exist under
           # the `bridge_*` naming convention, `Nonempty Unit` stubs and
           # `Unit`-typed volume definitions may only decrease, and no
@@ -80,6 +87,80 @@ jobs:
           build-args: "ToE"
           test: false
           lint: false
+
+      # Ratchet for qualified names used in the corpus: `check_mathlib_names.py`
+      # indexes every declaration in mathlib and in the toolchain's own core
+      # sources and reports repository names that exist in neither. It needs
+      # those pinned sources, so -- like `lake build` -- it is CI-only and
+      # deliberately absent from the offline consistency gate.
+      #
+      # `if: always()` is deliberate: the check reads sources, not oleans, so it
+      # does not need a successful compile, and a compile failure is exactly
+      # when a list of suspect names is worth having. Both trees must be real;
+      # the checker exits 2 rather than reporting a clean run on an empty index.
+      - name: Gate - cited names exist in the pinned mathlib/Lean sources
+        if: always()
+        working-directory: lean_proofs
+        run: |
+          set -e
+          # The mathlib checkout is found, not assumed: the requirement is named
+          # `mathlib4` in lakefile.lean and lands in the manifest's packages dir.
+          # A renamed requirement must not quietly turn this gate off, so the
+          # fallback search looks for the checkout that actually holds Mathlib/.
+          mathlib=""
+          for candidate in .lake/packages/mathlib4 .lake/packages/mathlib; do
+            if [ -d "$candidate/Mathlib" ]; then mathlib="$candidate"; break; fi
+          done
+          if [ -z "$mathlib" ]; then
+            mathlib="$(find .lake/packages -maxdepth 2 -type d -name Mathlib 2>/dev/null | head -n1)"
+            mathlib="${mathlib%/Mathlib}"
+          fi
+          if [ -z "$mathlib" ] || [ ! -d "$mathlib/Mathlib" ]; then
+            echo "::error::pinned mathlib sources are missing under $PWD/.lake/packages"
+            echo "::error::they are fetched by the Lean build step above, so this also happens when an earlier step failed"
+            # Annotations are readable through the API even where the raw log is
+            # not, so the listing needed to fix a rename is an annotation too.
+            echo "::error::entries under .lake/packages: $(ls .lake/packages 2>/dev/null | tr '\n' ' ')"
+            exit 1
+          fi
+          # lean-action puts elan on PATH; fall back to its install dirs so the
+          # step does not depend on that detail.
+          for bin in "${ELAN_HOME:-$HOME/.elan}/bin" "$HOME/.elan/bin"; do
+            if [ -x "$bin/lean" ]; then export PATH="$bin:$PATH"; break; fi
+          done
+          prefix="$(lean --print-prefix 2>/dev/null)" || prefix=""
+          if [ -z "$prefix" ]; then
+            echo "::error::cannot locate the pinned toolchain ('lean --print-prefix' failed)"
+            exit 1
+          fi
+          # The pinned construction installs its core sources to <prefix>/src/lean
+          # (src/CMakeLists.txt, `install(... DESTINATION src/lean)`), so the
+          # location is derived, not guessed; print the prefix when it drifts.
+          lean_src="$prefix/src/lean"
+          if [ ! -d "$lean_src/Init" ]; then
+            echo "::error::Lean core sources not found at $lean_src"
+            echo "::error::entries under $prefix: $(ls "$prefix" 2>/dev/null | tr '\n' ' ')"
+            echo "::error::entries under $prefix/src: $(ls "$prefix/src" 2>/dev/null | tr '\n' ' ')"
+            exit 1
+          fi
+          echo "mathlib: $mathlib; Lean core: $lean_src"
+          python3 check_mathlib_names.py --mathlib "$mathlib" --lean "$lean_src" --repo . --max 0
+
+      # Phase 6 statement-level audit: every theorem/lemma in `Vol*.lean` whose
+      # name carries a lexicon word must have a row in `statement_audit.json`
+      # (witness / conditional / renamed / carried), and the number of `carried`
+      # rows is ratcheted by the file's own `carried_cap`. The check is lexical
+      # and runs offline too (it is a command in research/consistency_gate.py);
+      # the *judgements* are only as strong as this job, whose build compiles
+      # every witness and source a row names. `if: always()` is deliberate: a
+      # compile failure is exactly when an unreadable or incomplete audit should
+      # still be reported rather than hidden.
+      - name: Gate - statement audit of the physics volumes
+        if: always()
+        working-directory: lean_proofs
+        run: |
+          set -e
+          python3 check_statement_audit.py --repo .
 
       - name: Audit transitive kernel axioms of key declarations
         working-directory: lean_proofs

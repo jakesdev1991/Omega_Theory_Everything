@@ -230,7 +230,20 @@ python research/verify_derivations.py
 python -m pytest tests/test_verify_derivations.py -q
 python research/verify_covariant.py
 python research/verify_tfim.py
+python research/check_latex_citations.py
+python research/check_latex_structure.py
+python research/consistency_gate.py
 ```
+
+`check_latex_citations.py` verifies that each LaTeX volume's status box points
+at a Lean module that exists and cites declarations that exist, so the volumes
+cannot drift away from the code they describe. `check_latex_structure.py`
+checks brace balance, environment nesting and math delimiters in the same
+files, since no TeX toolchain is available here to compile them. `consistency_gate.py` runs every
+check above in one command and reports which ones passed, failed or were
+skipped; the Lean build, the kernel audit and `lean_proofs/check_mathlib_names.py`
+(the cited-name check against the pinned mathlib and Lean sources) are CI-only
+and it says so.
 
 The Lean source and CI audit are documented in
 [`lean_proofs/README.md`](lean_proofs/README.md) and

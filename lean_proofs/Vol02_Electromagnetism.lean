@@ -178,9 +178,11 @@ theorem inhomogeneous_maxwell (S : SourcedField) :
     d S.starF = S.starJ :=
   S.law_dual_maxwell
 
-/-- Full Maxwell sector: the homogeneous equation is *derived* from `d² = 0`;
-    the inhomogeneous one is the model law of the sourced configuration. -/
-theorem maxwells_equations (S : SourcedField) :
+/-- Full Maxwell sector *of a sourced configuration*: the homogeneous equation
+    is *derived* from `d² = 0`; the inhomogeneous one is the model law of the
+    sourced configuration.  Renamed from `maxwells_equations` in the Phase 6
+    rename pass, because only one of the two conjuncts is derived. -/
+theorem maxwell_equations_of_sourced_field (S : SourcedField) :
     d (d S.A) = 0 ∧ d S.starF = S.starJ :=
   ⟨d_squared_zero S.A S.smooth_A, inhomogeneous_maxwell S⟩
 
@@ -193,8 +195,10 @@ theorem maxwells_equations (S : SourcedField) :
     result; the content is the definitional restatement below. -/
 noncomputable def PhotonMass : ℝ := 0
 
-/-- Definitional restatement of the masslessness postulate above. -/
-theorem photon_massless : PhotonMass = 0 := rfl
+/-- Definitional restatement of the masslessness postulate above.  Renamed from
+    `photon_massless` in the Phase 6 rename pass: the old name read as a derived
+    result, and the statement is `PhotonMass := 0` unfolded by `rfl`. -/
+theorem photonMass_eq_zero : PhotonMass = 0 := rfl
 
 noncomputable def FineStructureConstant : ℝ := 1 / 137.035999
 theorem fine_structure_positive : FineStructureConstant > 0 := by

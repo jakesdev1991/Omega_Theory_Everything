@@ -69,9 +69,12 @@ theorem gate_inverses_exist (g : QuantumGate) :
   · exact ⟨QGate.I, rfl⟩
   · exact ⟨QGate.H, rfl⟩
 
-/-- COROLLARY bridge for `OmegaProtocol.lean` (legacy name kept): restates
-    Hadamard unitarity at protocol level. -/
-theorem quantum_computing_from_omega :
+/-- Restatement of `hadamard_unitary` (H†H = I in the two-element gate
+    algebra).  The statement carries the gate definition
+    (`HadamardGate := QGate.H`), not a construction of quantum computing from Ω,
+    which is why it was renamed from `quantum_computing_from_omega` in the
+    Phase 6 rename pass. -/
+theorem hadamard_unitary_restated :
     GateCompose (GateAdjoint HadamardGate) HadamardGate = GateIdentity :=
   hadamard_unitary
 

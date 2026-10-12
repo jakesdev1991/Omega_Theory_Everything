@@ -1,0 +1,350 @@
+{
+  "files": {
+    "APPA_Context_Branching.lean": {
+      "code_lines": 111,
+      "declarations": 23,
+      "sha256": "e69c88b6a28b420d34d06276066707773ae30b2844539f4329a1476735ea8e29"
+    },
+    "CBwK_Budget_Pacer.lean": {
+      "code_lines": 193,
+      "declarations": 35,
+      "sha256": "80c0283f63b61a1c4502003f9a28b979584bab29c1b368553b998411008d1dc5"
+    },
+    "DynamicCODScale.lean": {
+      "code_lines": 86,
+      "declarations": 16,
+      "sha256": "30c5da25b1aa0681c68a6d7143b923cdcd2c5797082e911de0fed2deb32a847a"
+    },
+    "DynamicPlanckScale.lean": {
+      "code_lines": 87,
+      "declarations": 13,
+      "sha256": "6555bafbbf064963cdabd6daacd291f0a37fa4cf5940b01fc536afb7cad5d831"
+    },
+    "InformationPhysics.lean": {
+      "code_lines": 243,
+      "declarations": 45,
+      "sha256": "b7297b4a71a5d1e8ce20364a41fe8d1fc749cfcd7257d427233a6a4c8d176334"
+    },
+    "LogCorrelationMetric.lean": {
+      "code_lines": 42,
+      "declarations": 13,
+      "sha256": "2d3f27e4e96c73a579b02a9a5cf41418252c2957c9bb46ab6ca01f2945af5c4a"
+    },
+    "OmegaAxioms.lean": {
+      "code_lines": 658,
+      "declarations": 140,
+      "sha256": "f8bcbecebfaa59461185e1d6cf61d679a2f0b73dc99124728637277af0b8276f"
+    },
+    "OmegaDimensionalHierarchy.lean": {
+      "code_lines": 4,
+      "declarations": 0,
+      "sha256": "65dba4ead6c6ae28aff7f4dd241b9b369d402e17f6012e171466f172de363f42"
+    },
+    "OmegaProtocol.lean": {
+      "code_lines": 433,
+      "declarations": 126,
+      "sha256": "7c8d294b7e2fce5f0dee49090ac6e68f8077b02af9d34da9fb720869550dac1d"
+    },
+    "OmegaUnifiedFoundation.lean": {
+      "code_lines": 162,
+      "declarations": 17,
+      "sha256": "baf0b922da1acee854ba3e59bb839d88bed1e03f6fb4ca0e8d47eccc7fda2e72"
+    },
+    "ProofRegression.lean": {
+      "code_lines": 538,
+      "declarations": 4,
+      "sha256": "42ff317ff59c356df0d7f5d3b7c093c2cba147a54be9eb8cd5e208b4610e1af9"
+    },
+    "RadialDilation.lean": {
+      "code_lines": 174,
+      "declarations": 27,
+      "sha256": "0cd186fc2f0eb4e2b622ac418b580e6cb2912da6bf8a4bbd188745a434eeff20"
+    },
+    "RadialMetric.lean": {
+      "code_lines": 121,
+      "declarations": 17,
+      "sha256": "0e64f4bdd216ba27513ba9458de166a666980d29b229f44c04ec621adece3449"
+    },
+    "ToE.lean": {
+      "code_lines": 67,
+      "declarations": 0,
+      "sha256": "512fa86540469fbde3d6f6204aa22b03fb08f987db2a4dc876316ade07935eab"
+    },
+    "Vol01_ClassicalMechanics.lean": {
+      "code_lines": 194,
+      "declarations": 43,
+      "sha256": "9f18cf75280a9781efd93fca919510db245dcdd24ef4273b950fac121e6f6b62"
+    },
+    "Vol02_Electromagnetism.lean": {
+      "code_lines": 82,
+      "declarations": 21,
+      "sha256": "947e83849d50e4d84399da23952df008c6977a95009bfeaed9956d2f9145616a"
+    },
+    "Vol03_Thermodynamics.lean": {
+      "code_lines": 237,
+      "declarations": 41,
+      "sha256": "1a7398d0f599beb85c3844c5c80e6e7ee90b38cf838562293917294cc1210d77"
+    },
+    "Vol04_QuantumMechanics.lean": {
+      "code_lines": 186,
+      "declarations": 31,
+      "sha256": "05bb3f0107ebbd087595cf95c59d19f3a76aa06dcdbecb9a66a7a3ce54058efe"
+    },
+    "Vol05_GeneralRelativity.lean": {
+      "code_lines": 138,
+      "declarations": 24,
+      "sha256": "6baca31c5068f2784a6baf7bedd6e9b91ad5dc0f26e92c5c7668c5793823e70f"
+    },
+    "Vol06_QuantumFieldTheory.lean": {
+      "code_lines": 78,
+      "declarations": 25,
+      "sha256": "80031e6862771dd2fcf53ee2a0387c8bba683d9631bb9d2074eb2f927f9f8bc4"
+    },
+    "Vol07_Cosmology.lean": {
+      "code_lines": 122,
+      "declarations": 22,
+      "sha256": "f198507be47c2424d6c4b870f297877bab4ff36d52453292f91f0e0e3358d1c1"
+    },
+    "Vol08_BlackHoleThermodynamics.lean": {
+      "code_lines": 94,
+      "declarations": 23,
+      "sha256": "177bebd129fe534bc6894ba8725330d392bfb9f319af7b0ff8bbc2b803bf3e42"
+    },
+    "Vol09_HolographicPrinciple.lean": {
+      "code_lines": 109,
+      "declarations": 29,
+      "sha256": "3c111ac33fe9d42a411be56d45d4eeb3ed3a6b3ad9b3f37f48de7038fb90c58a"
+    },
+    "Vol10_StandardModel.lean": {
+      "code_lines": 58,
+      "declarations": 13,
+      "sha256": "c57f3b886e545037ffd75674c4b18b1b1ac94805d0a02592f034d4ea0489ec87"
+    },
+    "Vol11_CondensedMatter.lean": {
+      "code_lines": 117,
+      "declarations": 24,
+      "sha256": "f9840d5becf5400651f96d9cafc88421ceca55b16dab09c05899ed525e0bac8d"
+    },
+    "Vol12_QuantumInformation.lean": {
+      "code_lines": 76,
+      "declarations": 19,
+      "sha256": "b93ff1639a49cfbc06d8aac3f8f50797bbe3a0fb8899b834403e01ba7ea01f18"
+    },
+    "Vol13_QuantumGravity.lean": {
+      "code_lines": 85,
+      "declarations": 19,
+      "sha256": "8a8774fd398bf2a158b4c9b6332223134dfda2351d36507e5d8de1ffdbd9d4af"
+    },
+    "Vol14_DarkSector.lean": {
+      "code_lines": 59,
+      "declarations": 15,
+      "sha256": "d5362d3745b43168f84a2919d8fcbfef2c563b7560dc629edb287d4295fadf67"
+    },
+    "Vol15_EarlyUniverse.lean": {
+      "code_lines": 55,
+      "declarations": 10,
+      "sha256": "001313f070c9418cff9a5617ace632032b0ad0c63016e0f8fcf8ee1e973a378b"
+    },
+    "Vol16_NonEquilibriumThermodynamics.lean": {
+      "code_lines": 70,
+      "declarations": 20,
+      "sha256": "1e9451234c49c65289cbee2317a6f585fa7aba90987f6964132b30a5363f48da"
+    },
+    "Vol17_FluidDynamics.lean": {
+      "code_lines": 51,
+      "declarations": 12,
+      "sha256": "01e3d48dae31ac2cbbfb34e6da0ca387b456f548cc8d1c5b3576513bd5e7e7a2"
+    },
+    "Vol18_StatisticalMechanics.lean": {
+      "code_lines": 39,
+      "declarations": 8,
+      "sha256": "17c8915440c32a93945cdcbe35df0cc1cac360217dfad6e5084a4759e3364a5f"
+    },
+    "Vol19_ComplexSystems.lean": {
+      "code_lines": 39,
+      "declarations": 12,
+      "sha256": "e4a454b19302e3ea5192fa4a302f96744b746a0adfe38074a17e8063a276a873"
+    },
+    "Vol20_ChaosTheory.lean": {
+      "code_lines": 47,
+      "declarations": 11,
+      "sha256": "db0e2c100f0b85b1921836c56404bd6e64101e8ed265eaaa9cd61a139a7ba3d7"
+    },
+    "Vol21_ArrowOfTime.lean": {
+      "code_lines": 32,
+      "declarations": 9,
+      "sha256": "138cbd81f609e60313ffb39fc2859da0d57ae7fc03b0632e52d97de05b651498"
+    },
+    "Vol22_EREqualsEPR.lean": {
+      "code_lines": 68,
+      "declarations": 12,
+      "sha256": "6d34f48acea81911566a883bd5d38f2a3e6e8045beb205b3cdd4191d5e8fe4aa"
+    },
+    "Vol23_MeasurementProblem.lean": {
+      "code_lines": 98,
+      "declarations": 23,
+      "sha256": "d7859c8c1f8b02174a2699893b899e7cddeb062a64f9fba26cc99e3d4b1ea835"
+    },
+    "Vol24_NonLocality.lean": {
+      "code_lines": 104,
+      "declarations": 13,
+      "sha256": "c0a928123078295c586268a767a5c5d24a576394cd6db3db956a0b5dc2d7a9a5"
+    },
+    "Vol25_BlackHoleInformation.lean": {
+      "code_lines": 47,
+      "declarations": 10,
+      "sha256": "e47d569d4d450d0401d3d5fa67f2b516ed5c065d550ef551758387a9e44dc264"
+    },
+    "Vol26_NetworkTheory.lean": {
+      "code_lines": 69,
+      "declarations": 19,
+      "sha256": "f322978bc2d84ae784b3e33bddf33878880b43d1f69df375150aa3818a0388dd"
+    },
+    "Vol27_Consciousness.lean": {
+      "code_lines": 60,
+      "declarations": 15,
+      "sha256": "7218f080756ccf4383a793674eb5395d696d85195a4780521cfd3701e3cb1e60"
+    },
+    "Vol28_EvolutionaryAlgorithms.lean": {
+      "code_lines": 48,
+      "declarations": 12,
+      "sha256": "bde25792fe7813ac943364d97a94d6aae43d6996ea1bb57cc1b7025fb336b6ff"
+    },
+    "Vol29_EcosystemDynamics.lean": {
+      "code_lines": 69,
+      "declarations": 9,
+      "sha256": "c8a73cf1d3a78acd03ab598fd64f72f0c48e1a07bff88e07e51e8d83a5fbe06d"
+    },
+    "Vol30_PlanetarySystems.lean": {
+      "code_lines": 78,
+      "declarations": 15,
+      "sha256": "a27d9bd66f14d4e363f10918987fae4af90915f4f8e7bd94a564a89f3869273c"
+    },
+    "Vol31_GameTheory.lean": {
+      "code_lines": 67,
+      "declarations": 13,
+      "sha256": "a09e355442dfd9552be81fb0e49eaf1108a3944a469e66e624dd86bdd6bc37e6"
+    },
+    "Vol32_Cybernetics.lean": {
+      "code_lines": 42,
+      "declarations": 9,
+      "sha256": "8fbeb111b7620062ec0ba2fbbdecd535a871d1e639d9040e89f73831c0d0eedc"
+    },
+    "Vol33_AGI.lean": {
+      "code_lines": 88,
+      "declarations": 17,
+      "sha256": "1b9335a63c7ab09cfdc1ffd64c451d6aad89c0846f7395c21018b8b4d122d9c8"
+    },
+    "Vol34_QuantumComputing.lean": {
+      "code_lines": 158,
+      "declarations": 37,
+      "sha256": "16fe8c8ff8b31594f8cc743a56d076bc1f422d30845cb4953e18fde09c8e583f"
+    },
+    "Vol35_TheoryOfComputation.lean": {
+      "code_lines": 111,
+      "declarations": 20,
+      "sha256": "05b57ef3fd29f1dacf3af369bd37a3361c331f56c397c20acc96e9ae5f853cc7"
+    },
+    "Vol36_ToposTheory.lean": {
+      "code_lines": 284,
+      "declarations": 47,
+      "sha256": "ddcfde47847f1d867e58e5d017fe51e04e2bae7843b0d129b09c582d26339816"
+    },
+    "Vol37_Morphogenesis.lean": {
+      "code_lines": 89,
+      "declarations": 21,
+      "sha256": "f48543236b76848f89f5c81404fbff9953d19a00d412138f7933da0779f27809"
+    },
+    "Vol38_Economics.lean": {
+      "code_lines": 90,
+      "declarations": 19,
+      "sha256": "5158a1f034d350e7fbe516eaccef8cb8cc856edfb2e6f3d359942aebaffa2585"
+    },
+    "Vol39_SocietalNetworks.lean": {
+      "code_lines": 44,
+      "declarations": 15,
+      "sha256": "0c76ea2c30586ee41bd593d0f274259195c1ee8a109304f508617c2f414f4575"
+    },
+    "Vol40_FermiParadox.lean": {
+      "code_lines": 75,
+      "declarations": 19,
+      "sha256": "54a41390fe644a0ddec401d2a76d4207377fae5eece993c2acb4a216de29a9c3"
+    },
+    "Vol41_PostBiologicalEvolution.lean": {
+      "code_lines": 66,
+      "declarations": 15,
+      "sha256": "da8b7fd23b72fbdcc9cf65886a4746ea7f0126c4fc2847e3a8ceaecffac5543a"
+    },
+    "Vol42_StellarEngineering.lean": {
+      "code_lines": 62,
+      "declarations": 16,
+      "sha256": "8155284b58b4765591d5cfbf2b001b80fe8b6c796c190bf62f6c18d251cd0bf8"
+    },
+    "Vol43_GalacticEcosystems.lean": {
+      "code_lines": 59,
+      "declarations": 14,
+      "sha256": "4bf03dace50b262f691b06829d2180f50dced85b6cdef1b09456bc22551bac07"
+    },
+    "Vol44_UniversalExpansion.lean": {
+      "code_lines": 55,
+      "declarations": 13,
+      "sha256": "c5133d9569cc00fc45c15ea94981e6b94af6c32da0c1aeafb8819cb7c98a9f98"
+    },
+    "Vol45_MultiverseTheory.lean": {
+      "code_lines": 66,
+      "declarations": 16,
+      "sha256": "f2e6aca7ff45bec3e053f922f993586a3ede12d5c80d8dd4a9366e56969bf936"
+    },
+    "Vol46_SimulationHypothesis.lean": {
+      "code_lines": 89,
+      "declarations": 19,
+      "sha256": "44f705386b029f63e7c725eed3fb4d9c1d1c63b902c920221c0ff5f9f6a60695"
+    },
+    "Vol47_TranscendentArchitectures.lean": {
+      "code_lines": 51,
+      "declarations": 13,
+      "sha256": "54d8c6bbe36b41da28d2482824d615dc8aa97b67b8abd24272a2c4b0458301f9"
+    },
+    "Vol48_ExtraDimensions.lean": {
+      "code_lines": 51,
+      "declarations": 10,
+      "sha256": "3b8c71e263ed2bc3147104af5009df1ceede304cd305c86c8164c35bd1a43c8f"
+    },
+    "Vol49_QuantumReferenceFrames.lean": {
+      "code_lines": 46,
+      "declarations": 12,
+      "sha256": "bfbc1dda997d0377db36ecc26f33d0b64c10839b4fa3336a9a1c43f31ebf66da"
+    },
+    "Vol50_UltimateEnsemble.lean": {
+      "code_lines": 28,
+      "declarations": 7,
+      "sha256": "9428dc3c1ca99dfed82df58c194ed85e4a0ade48053dbc14676f58138b0e8b08"
+    },
+    "Vol51_ClosedTimelikeCurves.lean": {
+      "code_lines": 57,
+      "declarations": 11,
+      "sha256": "087e94cc11323fa306fe424deecbe77a339e6a67addb507bfa4cf7b72ac004f1"
+    },
+    "Vol52_OmegaPointTheory.lean": {
+      "code_lines": 56,
+      "declarations": 13,
+      "sha256": "077be76051888c6afa4881d1ca7ef36ea2a440119b0a346e3d4b4062fd0d89f6"
+    },
+    "Vol53_UniversalCompiler.lean": {
+      "code_lines": 126,
+      "declarations": 28,
+      "sha256": "cfd2274262869b6ff79bdd93f43a537f5f11ab67e1def97d06a0dc834a78fd4b"
+    },
+    "Vol54_TheoryOfNothing.lean": {
+      "code_lines": 27,
+      "declarations": 9,
+      "sha256": "d1980386920266028639c9bceea72f0fd0f2aeb90b0f8f2ca52e53a7d215d75e"
+    },
+    "lakefile.lean": {
+      "code_lines": 77,
+      "declarations": 0,
+      "sha256": "6d4875d95c38bdf7368ab8a3aee60c87f11d35766fecf5f7ee882857e82aefa4"
+    }
+  },
+  "version": 1
+}

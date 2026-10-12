@@ -32,15 +32,25 @@ noncomputable def Geometry : QFIMGeometry :=
 -- CORE PHYSICAL CLAIMS & POSTULATES
 -- ============================================================
 
-/-- MODEL CLAIM: The Spacetime Metric g_μν is exactly the Quantum Fisher Information Metric (QFIM)
-    This is the central claim of the Omega Protocol for gravity. -/
-theorem metric_is_qfim (x y : Geometry.spacetime) :
+-- The `zeroCurvature_*` declarations below restate this instance's carried law
+-- fields (and their consequences) at the deliberately degenerate zero-curvature
+-- instance.  They were renamed from unqualified physics names in the Phase 6
+-- rename pass (2026-10-12) so that a reader cannot take them for derivations;
+-- `real_conservation_of_energy_momentum` is the hypothesis-carrying companion.
+
+/-- MODEL CLAIM restated at the zero-curvature instance: the metric equals the
+    QFIM.  Both sides are 0 by definition here, so this unfolds the carried law
+    field `law_metric_is_qfim`; it is not a derivation of the identification.
+    Renamed from `metric_is_qfim` in the Phase 6 rename pass. -/
+theorem zeroCurvature_metric_eq_qfim (x y : Geometry.spacetime) :
   Geometry.metric x y = QFIM (state_at x) (tangent_at x) (tangent_at y) :=
   Geometry.law_metric_is_qfim x y
 
-/-- MODEL CLAIM: Einstein Field Equations
-    G_μν = 8πG T_μν -/
-theorem einstein_field_equations (x y : Geometry.spacetime) :
+/-- MODEL CLAIM restated at the zero-curvature instance: G_μν = 8πG T_μν, with
+    both sides 0 here.  This unfolds the carried law field
+    `law_einstein_equations`; it is not a derivation of the field equations.
+    Renamed from `einstein_field_equations` in the Phase 6 rename pass. -/
+theorem zeroCurvature_einstein_field_equations (x y : Geometry.spacetime) :
   Geometry.einstein_tensor x y = 8 * Real.pi * NewtonG * Geometry.stress_energy x y :=
   Geometry.law_einstein_equations x y
 
@@ -48,10 +58,11 @@ theorem einstein_field_equations (x y : Geometry.spacetime) :
 -- GEOMETRIC IDENTITIES (Mathematical Truths)
 -- ============================================================
 
-/-- MODEL CLAIM: The Bianchi Identity ∇_μ G^μν = 0
-    This is a mathematical theorem in differential geometry.
-    Modeled here until Mathlib's Riemannian geometry is complete. -/
-theorem bianchi_identity (ν : Geometry.spacetime) :
+/-- MODEL CLAIM restated at the zero-curvature instance: ∇_μ G^μν = 0 for the
+    zero Einstein tensor.  The general identity is carried as the law field
+    `law_bianchi_identity`; this declaration checks its zero-curvature case.
+    Renamed from `bianchi_identity` in the Phase 6 rename pass. -/
+theorem zeroCurvature_bianchi_identity (ν : Geometry.spacetime) :
   CovariantDivergence Geometry.einstein_tensor ν = 0 :=
   Geometry.law_bianchi_identity ν
 
@@ -62,17 +73,20 @@ theorem covariant_divergence_smul {spacetime : Type*} (c : ℝ) (T : spacetime �
   simp [CovariantDivergence]
 
 -- ============================================================
--- THEOREM 1: CONSERVATION OF ENERGY-MOMENTUM (machine-checked)
+-- CONSERVATION OF ENERGY-MOMENTUM AT THE ZERO-CURVATURE INSTANCE
 -- ∇_μ T^μν = 0
 -- Proof: Apply covariant divergence to both sides of EFE.
 -- The LHS vanishes by the Bianchi identity, forcing the RHS to vanish.
 -- Since 8πG ≠ 0, ∇_μ T^μν must be 0.
+-- The chain is real, but both tensors are 0 at this instance, so the name is
+-- qualified: renamed from `conservation_of_energy_momentum` in the Phase 6
+-- rename pass.
 -- ============================================================
 
 theorem NewtonG_pos : NewtonG > 0 := by
   norm_num [NewtonG]
 
-theorem conservation_of_energy_momentum (ν : Geometry.spacetime) :
+theorem zeroCurvature_conservation_of_energy_momentum (ν : Geometry.spacetime) :
   CovariantDivergence Geometry.stress_energy ν = 0 := by
   have h_efe : Geometry.einstein_tensor = fun x y => (8 * Real.pi * NewtonG) * Geometry.stress_energy x y := by
     funext x y
@@ -80,7 +94,7 @@ theorem conservation_of_energy_momentum (ν : Geometry.spacetime) :
   have h_div : CovariantDivergence Geometry.einstein_tensor ν =
                CovariantDivergence (fun x y => (8 * Real.pi * NewtonG) * Geometry.stress_energy x y) ν := by
     rw [h_efe]
-  rw [bianchi_identity ν] at h_div
+  rw [zeroCurvature_bianchi_identity ν] at h_div
   rw [covariant_divergence_smul (8 * Real.pi * NewtonG)] at h_div
   have h_const_neq_zero : 8 * Real.pi * NewtonG ≠ 0 := by
     have h1 : (8 : ℝ) > 0 := by norm_num
@@ -95,14 +109,21 @@ theorem conservation_of_energy_momentum (ν : Geometry.spacetime) :
 -- COSMOLOGY CONNECTIONS
 -- ============================================================
 
-/-- MODEL CLAIM: The Cosmological Constant -/
-theorem cosmological_constant :
+/-- MODEL CLAIM restated at the zero-curvature instance: there is Λ with
+    G + Λg = 8πG T (Λ = 0 here), the instance's carried law field
+    `law_cosmological_constant`.  Renamed from `cosmological_constant` in the
+    Phase 6 rename pass. -/
+theorem zeroCurvature_cosmological_constant :
   ∃ (Λ : ℝ), ∀ (x y : Geometry.spacetime),
   Geometry.einstein_tensor x y + Λ * Geometry.metric x y = 8 * Real.pi * NewtonG * Geometry.stress_energy x y :=
   Geometry.law_cosmological_constant
 
 noncomputable def EMStressEnergy : Geometry.spacetime → Geometry.spacetime → ℝ := Geometry.stress_energy
-theorem em_sources_gravity : Geometry.stress_energy = EMStressEnergy := rfl
+/-- Definitional alias at the zero-curvature instance: `EMStressEnergy` is
+    defined as the instance's `stress_energy` (0 here), so no coupling between
+    electromagnetism and gravity is established.  Renamed from
+    `em_sources_gravity` in the Phase 6 rename pass. -/
+theorem zeroCurvature_stress_energy_eq_em_stress_energy : Geometry.stress_energy = EMStressEnergy := rfl
 
 -- ============================================================
 -- CURVED LORENTZIAN GEOMETRY & SCHWARZSCHILD CURVATURE

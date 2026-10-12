@@ -4,7 +4,7 @@
 ## A cautious reader's guide to the Omega v4.0 ideas
 
 **Jacob See**
-**Status:** revised 2026-10-11
+**Status:** revised 2026-10-12
 **Companions:** [`Omega_Theory_v4.0_Technical.md`](Omega_Theory_v4.0_Technical.md),
 [`Omega_Theory_v4.0_Radial_Metric.md`](Omega_Theory_v4.0_Radial_Metric.md),
 [`docs/research/QREGION_MARKOV_MODEL.md`](docs/research/QREGION_MARKOV_MODEL.md),
@@ -61,8 +61,12 @@ d=-\ell_P\ln K.
 
 This is a conditional statement about a kernel and a chain. It does not say
 that pairwise mutual information itself multiplies. In the explicit classical
-Markov benchmark, it does not: the mutual information at two links is not the
-square of the one-link mutual information. The entangled Ising benchmark also
+Markov benchmark it does not: at every nonzero link strength in that model the
+two-link mutual information differs from the square of the one-link value, and
+the two agree only in the limit of zero correlation (machine-checked by
+`research/verify_derivations.py`, which scales the difference by the fourth
+power of the link strength so the comparison is stable as the link goes to
+zero). The entangled Ising benchmark also
 does not assume a multiplicative QMI kernel; it fits an effective decay rate
 to a finite set of two-point correlations instead. And if the chosen kernel is
 zero, its negative logarithm is infinite.
@@ -105,8 +109,10 @@ nonconstant static black-hole profile used by that metric dictionary.
 
 A third candidate makes \(\Phi\) a gravitational scalar coupled to spacetime
 curvature through a scalar--Gauss--Bonnet term. The constant \(\Phi=0\) branch
-is exactly GR; a linear static calculation finds a possible zero-mode onset
-near \(\eta/M^2=0.72561\). This is not yet a nonlinear, stable black-hole
+reduces to GR under the same vacuum conditions, a hand derivation from that
+action; a linear static calculation finds a possible zero-mode onset near
+\(\eta/M^2=0.725613\pm10^{-6}\), the value two independent numerical methods
+agree on (the \(0.725609\) of a truncated run is not it). This is not yet a nonlinear, stable black-hole
 solution or a derivation from quantum information. It is the provisional
 working branch for the next consistency pass, because it permits a curvature
 source while retaining a GR branch; it does not settle the fundamental ontology.
@@ -147,7 +153,18 @@ projects. They do not validate the physics.
 - Some mathematical statements in the Lean corpus are kernel-checked under
   their formal assumptions. The proof audit records important limitations,
   including model degeneracy and the gap between a theorem and its physical
-  interpretation.
+  interpretation; the adversarial audit is the harsher of the two records, and
+  its executive summary is the pre-remediation scoreboard, kept as history.
+- The identities quoted in the core notes are re-derived by code, not only
+  asserted: twelve checks in `research/verify_derivations.py` (the Schwarzschild
+  dictionary, the required correlation-decay rate, the golden-ratio bound, the
+  Markov and Gauss--Bonnet numbers used above), four in
+  `research/verify_covariant.py`, two in `research/verify_tfim.py`, and a
+  citation check that every LaTeX volume names declarations that exist
+  (`research/check_latex_citations.py`). One command runs all of them:
+  `python research/consistency_gate.py`. Not every number this guide quotes is
+  inside that set -- the two-qubit bound \(2\ln2\) is standard, not repo
+  content -- so "checked" here means the check named beside it, no more.
 - The radial-metric code checks algebraic and numerical identities for
   specified candidate metrics. It identifies the correlation-decay rate that
   would reproduce Schwarzschild, but does not derive that rate from Q-regions.
@@ -189,4 +206,5 @@ python -m pytest tests/test_quantum_ising_chain.py -q
 python research/gauss_bonnet_scalarization.py
 python -m pytest tests/test_gauss_bonnet_scalarization.py -q
 python Sim7_Radial_Metric.py --no-plots
+python research/consistency_gate.py   # every local check, one command
 ```

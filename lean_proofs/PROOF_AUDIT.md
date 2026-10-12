@@ -6,6 +6,35 @@ The full pinned Lean build and the selected transitive kernel-axiom audit have
 now **passed in GitHub CI**. This does not certify physical interpretations or
 semantic non-vacuity. Earlier pass-status notes below are historical.
 
+**Status note, added 2026-10-12.** This document is the record of the pass
+carried out on 2026-09-26; the scope line above describes that day, not today.
+Measured on `main` now: 68 proof modules plus `lakefile.lean`, 1,448
+declarations (928 theorems, 407 defs, 76 structures, 19 abbrevs, 14 inductives,
+4 instances), 260 selected kernel-audit targets, 107 Python/tooling tests, and
+all eight `audit_vacuity` ratchets plus the alias baseline at zero. The pinned
+build and the kernel gate are green on `main` (CI run 38119532226) and on PR #83
+(run 38251369698, which is also the first run of the Phase 6 statement-audit step). The fourteenth pass (Phase 5 exit gate: comment-parity and
+text-mirror tooling, documented in `README.md`) changed no declaration, and
+neither did the fifteenth (the cited-name check, now a gate in Lean CI) or the
+sixteenth (the statement audit below). This note is bookkeeping, not a re-audit.
+
+**Phase 6, the per-declaration statement review, was recorded on 2026-10-12** in
+`statement_audit.json`: one row for each of the 161 theorems/lemmas in `Vol*.lean`
+whose name carries a lexicon word (163 rows in all), with the dispositions 73
+`witness`, 43 `conditional`, 14 `renamed` and 33 `carried` (the last count
+ratcheted by the file's own `carried_cap`). The rename pass that followed renamed
+sixteen declarations whose names asserted results the statements do not contain —
+the six `zeroCurvature_*` Vol05 restatements among them — keeping each row's
+disposition and recording the retired name as `previous_name`, which the gate now
+checks on every row. The pass and its parity/mirror updates are green on PR #83 (Lean CI
+run 38254475070: `lake build ToE`, the 260-target kernel audit — including the renamed
+`OmegaProtocol.Vol09.bridge_entanglement_entropy_eq_bh_entropy` — the cited-name gate and
+the statement-audit step). `check_statement_audit.py` gates the rows for shape
+and existence — a witness or source must be a declaration, a quoted condition
+must occur in the statement, a retired name must survive nowhere. The rows are
+judgements, not proofs: the per-module findings below are their evidence, and
+CI's `lake build ToE` is what makes a named witness more than a string.
+
 ## Main finding and logical next step
 
 The most important distinction is **correct proof of a weak model** versus
@@ -725,5 +754,6 @@ sourced-Maxwell carrier) were fixed by the follow-up commits; Lean CI is **green
      `two_hop_walk_symm`, `branchMeasure_split`, `hostOps_strict_growth`,
      `kardashevPower_strictMono`, `no_surjective_subset_indexing`,
      `relaxIter_converges`, `omegaTimeMap_lt_horizon`).
-   - **Kernel inventory:** expanded from 226 to **262** declarations in
-     `kernel_audit_targets.json`.
+   - **Kernel inventory:** expanded from 226 to **260** declarations in
+     `kernel_audit_targets.json` (recounted on 2026-10-12; the pass note
+     originally said 262).

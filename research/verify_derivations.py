@@ -240,6 +240,122 @@ def check_horizon_locations() -> CheckResult:
     )
 
 
+def check_disformal_bound_depends_on_phidot() -> CheckResult:
+    """Radial note section 8 caveat: the causality bound constrains Phi_dot only.
+
+    Model, exactly as Sim3 section 2.1 states it: the disformed metric
+    ``g~ = C(Phi) g + D(Phi) dPhi (x) dPhi`` with ``C = exp(-2 Phi)`` and
+    ``D = beta lP(Phi)^2 = beta (1 - Phi^2)``, on flat spacetime in spherical
+    coordinates, signature ``(-,+,+,+)``, with ``Phi = Phi(t, r)``. Domain:
+    ``|Phi| < 1``, ``beta > 0``.
+
+    Claims checked:
+
+    1. the disformed ``(t, r)`` block has determinant
+       ``C (D PhiDot^2 - C - D PhiPrime^2)``, so it stays Lorentzian iff
+       ``D PhiDot^2 < C + D PhiPrime^2`` — a condition on the time derivative,
+       never an upper bound on the gradient;
+    2. at ``PhiPrime = 0`` that is exactly ``|PhiDot| < sqrt(C/D)``, the closed
+       form ``exp(-Phi)/(sqrt(beta) sqrt(1 - Phi^2))`` printed by Sim3. With a
+       nonzero gradient the exact condition is ``|PhiDot| < sqrt(C/D + PhiPrime^2)``,
+       so the published bound is the gradient-free case: sufficient for every
+       profile, and *conservative* rather than tight when ``PhiPrime != 0``;
+    3. ``g~_rr = C + D PhiPrime^2 > 0`` and ``g~_tt = -C < 0`` for every
+       gradient, so a static profile cannot threaten the signature — the note's
+       caveat, now machine-checked rather than hand-checked;
+    4. the bound's minimum on ``(-1, 1)`` is at ``Phi*`` with value
+       ``exp(-Phi*)/sqrt(beta Phi*)``, matching the note's ``0.6856/sqrt(beta)``.
+    """
+    phi, beta, phi_dot, phi_prime = sp.symbols("Phi beta PhiDot PhiPrime", real=True)
+    c_sym = sp.exp(-2 * phi)
+    d_sym = beta * (1 - phi**2)
+    block = sp.Matrix(
+        [
+            [-c_sym + d_sym * phi_dot**2, d_sym * phi_dot * phi_prime],
+            [d_sym * phi_dot * phi_prime, c_sym + d_sym * phi_prime**2],
+        ]
+    )
+    det_ok = (
+        sp.simplify(
+            block.det() - c_sym * (d_sym * phi_dot**2 - c_sym - d_sym * phi_prime**2)
+        )
+        == 0
+    )
+
+    # (1) Lorentzian (one negative eigenvalue) iff D PhiDot^2 < C + D PhiPrime^2.
+    rng = np.random.default_rng(20261012)
+    samples = 200_000
+    phi_s = rng.uniform(-0.99, 0.99, samples)
+    beta_s = rng.choice([0.05, 0.5, 1.0], samples)
+    dot_s = rng.uniform(-3.0, 3.0, samples)
+    prime_s = rng.uniform(-3.0, 3.0, samples)
+    c_s = np.exp(-2 * phi_s)
+    d_s = beta_s * (1 - phi_s**2)
+    gtt = -c_s + d_s * dot_s**2
+    grr = c_s + d_s * prime_s**2
+    gtr = d_s * dot_s * prime_s
+    lorentzian = (gtt * grr - gtr**2) < 0
+    equivalence = bool(np.all(lorentzian == (d_s * dot_s**2 < c_s + d_s * prime_s**2)))
+
+    # (2) the printed closed form is sqrt(C/D): square it and compare exactly.
+    printed = sp.exp(-phi) / (sp.sqrt(beta) * sp.sqrt(1 - phi**2))
+    closed_form_ok = sp.simplify(printed**2 - c_sym / d_sym) == 0
+
+    # (2b) sufficiency and non-necessity of the published bound sqrt(C/D).
+    published = np.sqrt(c_s / d_s)
+    exact = np.sqrt(c_s / d_s + prime_s**2)
+    beyond_published = np.abs(dot_s) >= published
+    still_lorentzian = bool(np.any(beyond_published & lorentzian))
+    beyond_exact = dot_s**2 >= c_s / d_s + prime_s**2
+    exact_blocks_everything = bool(np.all(lorentzian[beyond_exact] == False))  # noqa: E712
+    example = int(np.argmax(beyond_published & lorentzian)) if still_lorentzian else 0
+
+    # (3) static profiles at any gradient magnitude, on the model's domain.
+    gradients = np.concatenate([np.linspace(-1e6, 1e6, 10_001), [0.0]])
+    static_ok = True
+    for b in (0.05, 0.5, 1.0):
+        grid = np.linspace(-0.9999, 0.9999, 2_001)
+        cc = np.exp(-2 * grid)
+        dd = b * (1 - grid**2)
+        timelike = bool(np.all(-cc < 0))
+        spacelike = bool(np.all(cc + dd * gradients[:, None] ** 2 > 0))
+        static_ok = static_ok and timelike and spacelike
+
+    # (4) minimum of the bound on (-1, 1), cross-checked against the note.
+    phi_star = (sp.sqrt(5) - 1) / 2
+    bound = sp.exp(-phi) / (sp.sqrt(beta) * sp.sqrt(1 - phi**2))
+    min_exact = float(sp.N(bound.subs({phi: phi_star, beta: 1}), 12))
+    grid = np.linspace(-0.999999, 0.999999, 200_001)
+    numeric_min = float(np.min(np.exp(-grid) / np.sqrt(1 - grid**2)))
+    argmin_phi = float(grid[int(np.argmin(np.exp(-grid) / np.sqrt(1 - grid**2)))])
+    min_ok = (
+        abs(min_exact - numeric_min) < 1e-6
+        and abs(argmin_phi - float(phi_star)) < 1e-4
+        and abs(min_exact - 0.6856) < 5e-4
+    )
+
+    ok = (
+        det_ok
+        and closed_form_ok
+        and equivalence
+        and still_lorentzian
+        and exact_blocks_everything
+        and static_ok
+        and min_ok
+    )
+    return CheckResult(
+        "disformal causality bound: constrains Phi_dot only, static gradients are safe",
+        ok,
+        f"det={det_ok}, closed_form={closed_form_ok}, equivalence={equivalence} "
+        f"({samples} samples), published bound "
+        f"sufficient but not necessary={still_lorentzian} (Phi={phi_s[example]:.3f}, "
+        f"beta={beta_s[example]:.2f}, |Phidot|={abs(dot_s[example]):.3f} vs published "
+        f"{published[example]:.3f} and exact {exact[example]:.3f}), exact bound "
+        f"necessary={exact_blocks_everything}, static={static_ok}, "
+        f"min={min_exact:.6f}/sqrt(beta) at Phi*={min_ok}",
+    )
+
+
 # ---------------------------------------------------------------------------
 # Markov benchmark (docs/research/QREGION_MARKOV_MODEL.md)
 # ---------------------------------------------------------------------------
@@ -297,15 +413,31 @@ def check_markov_mutual_information() -> CheckResult:
     i1 = _i_closed(lam)
     i2 = _i_closed(lam**2)
     not_composing = abs(i2 / np.log(2) - (i1 / np.log(2)) ** 2) > 1e-3
+    # The guide's stronger sentence: at every nonzero link, I_2 != I_1^2. The two
+    # sides agree only at lambda = 0, where both vanish; on a grid to 1e-3 the
+    # difference is far above floating-point noise everywhere else.
+    grid = np.linspace(1e-3, 1.0, 2001)
+
+    def i_vector(lam_n: np.ndarray) -> np.ndarray:
+        # Clip away from the pure-state endpoint, where p*log(p) is 0 * -inf = nan.
+        p = np.clip((1 + lam_n) / 2, 1e-300, 1 - 1e-15)
+        return np.log(2) + p * np.log(p) + (1 - p) * np.log(1 - p)
+
+    # Scale by lambda^4: both sides are O(lambda^4) near 0, so the raw gap shrinks
+    # with the grid spacing while the scaled gap stays near its limit 0.2027.
+    grid_ratio = np.abs(i_vector(grid**2) - i_vector(grid) ** 2) / grid**4
+    composing_nowhere = bool(np.all(grid_ratio > 0.1))
     # derivative dI1/dlambda = atanh(lambda)
     h = 1e-6
     deriv = (_i_closed(0.5 + h) - _i_closed(0.5 - h)) / (2 * h)
     deriv_ok = abs(deriv - np.arctanh(0.5)) < 1e-6
-    ok = max_err < 1e-12 and not_composing and deriv_ok
+    ok = max_err < 1e-12 and not_composing and composing_nowhere and deriv_ok
     return CheckResult(
         "Markov: explicit density-matrix MI equals closed form; MI does not compose; dI/dlambda=atanh",
         ok,
-        f"max_err={max_err:.2e}, I2/ln2={i2 / np.log(2):.6f}, (I1/ln2)^2={(i1 / np.log(2)) ** 2:.6f}, deriv_ok={deriv_ok}",
+        f"max_err={max_err:.2e}, I2/ln2={i2 / np.log(2):.6f}, "
+        f"(I1/ln2)^2={(i1 / np.log(2)) ** 2:.6f}, "
+        f"composing nowhere (min scaled gap {grid_ratio.min():.4f})={composing_nowhere}, deriv_ok={deriv_ok}",
     )
 
 
@@ -464,6 +596,7 @@ CHECKS: list[Callable[[], CheckResult]] = [
     check_conformal_radial_identity,
     check_golden_bottleneck,
     check_horizon_locations,
+    check_disformal_bound_depends_on_phidot,
     check_markov_mutual_information,
     check_markov_kappa_table,
     check_gauss_bonnet_reduction,

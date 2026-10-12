@@ -2,7 +2,7 @@
 
 # Claim and derivation tightening: end-to-end roadmap
 
-**Status date:** 2026-10-11 · **Branch:** `arena/0f3b6b8f-omega-theory-everything`
+**Status date:** 2026-10-12 · **Branch:** `arena/fd09e6cb-omega-theory-everything`
 **Scope:** every claim-bearing surface in the repository, from the core technical notes
 to the 41 LaTeX volumes and the 69 Lean modules. Phases run in the order given; each
 phase has an exit gate that is a command, not an opinion.
@@ -63,11 +63,16 @@ and is left in place.
 | LaTeX coverage | 41 of 54 volumes (missing Vol01–08, Vol36–40, by decision) | `ls latex_docs/Vol*.tex` |
 | Covariant checks (new) | 4 of 4 pass; four negative controls fail as they must | `python research/verify_covariant.py` |
 | TFIM checks (new) | 2 of 2 pass (independent dense ED row; Schwarzschild column) | `python research/verify_tfim.py` |
-| Derivation checks | 11 of 11 pass (unchanged) | `python research/verify_derivations.py` |
-| `ruff check .`, `ruff format --check .` | pass (120 files formatted) | venv, CI versions |
-| `mypy . --ignore-missing-imports` | pass (49 source files) | venv, CI versions |
-| `pytest -q` | 118 passed, 81 subtests passed | venv, CI versions |
-| Lean | Not compiled here (no `lake`). Lean edits are comment and docstring only; `txt_proofs/` copies are byte-identical to the Lean files. | CI only |
+| Derivation checks | 12 of 12 pass (one added by Phase 3 item 6) | `python research/verify_derivations.py` |
+| LaTeX citation gate (new) | 0 errors: 41 volumes cite 41 modules and 5 declarations; 2 documented external exemptions | `python research/check_latex_citations.py` |
+| LaTeX structure gate (new) | 0 findings over 41 volumes: braces, environment nesting, document markers, math delimiters | `python research/check_latex_structure.py` |
+| Consistency gate (new) | 16 passed, 0 failed, 0 skipped (one command runs every local check) | `python research/consistency_gate.py` |
+| Statement audit | **163 rows** for 161 physics-sounding volume declarations (two rows record renamed names the lexicon no longer matches): 73 witness, 43 conditional, 14 renamed, 33 carried (cap 33, ratcheted). The Phase 6 rename pass retired 16 names that asserted results the statements do not contain; each is recorded as a `previous_name` on its row. | `python lean_proofs/check_statement_audit.py` |
+| `ruff check .`, `ruff format --check .` | pass (132 files formatted) | venv, CI versions |
+| `mypy . --ignore-missing-imports` | pass (61 source files) | venv, CI versions |
+| `pytest -q` | 215 passed, 81 subtests passed (needs the full `requirements.txt`: `matplotlib` for the Sim6 tests and `sympy`/`scipy` for the derivation checks) | venv, CI versions |
+| Cited-name check (new) | **0 suspicious names** against the pinned sources — 563,126 mathlib + 292,520 Lean core + 7,429 repository declarations; the previous script reported 205 on the same trees. Four injected typos all detected, clean copy 0. | CI only, `.github/workflows/lean-ci.yml` |
+| Lean | Not compiled here (no `lake`). Apart from the Phase 6 rename pass (declaration names only, code otherwise untouched), Lean edits are comments and docstrings only; all 68 `txt_proofs/` mirrors are byte-identical, and the code-projection parity check covers 69 files / 1,448 declarations. | CI only |
 
 ## 2. The road
 
@@ -84,12 +89,14 @@ and is left in place.
 ### Phase 1 — Core derivation ledger and machine checks · **DONE**
 
 Each displayed identity in the core notes was re-derived. The table in §3 gives the result.
-The eleven checks in `research/verify_derivations.py` cover every "Verified" row. They are
-exact SymPy identities where the algebra is closed-form, and floating-point or independent
-numerical methods where it is not.
+The checks in `research/verify_derivations.py` cover every "Verified" row. They are exact
+SymPy identities where the algebra is closed-form, and floating-point or independent
+numerical methods where it is not. There were eleven at the end of this phase; Phase 3
+item 6 added a twelfth, so the run prints 12 of 12.
 
-**Exit gate (met):** `python research/verify_derivations.py` exits 0 with 11 of 11 passing;
-`tests/test_verify_derivations.py` runs the same checks in `pytest`, so CI enforces them.
+**Exit gate (met):** `python research/verify_derivations.py` exits 0 with every check
+passing (11 of 11 as of this phase, then 12 of 12); `tests/test_verify_derivations.py` runs
+the same checks in `pytest`, so CI enforces them.
 
 ### Phase 2 — Correct the core text · **DONE**
 
@@ -113,7 +120,7 @@ reduction to the \(x\)-ODE.
 **Exit gate (met for the core notes):** every number that the core notes state in §3 is
 either Verified, or is labelled "reported" with the script that prints it.
 
-### Phase 3 — Remaining core-note items · **PARTIAL (items 1–4 done; 5–6 open)**
+### Phase 3 — Remaining core-note items · **DONE (items 1–6)**
 
 These are the statements the checks have not yet reached. Each must become Verified,
 or be relabelled Derived (hand) or Conditional, before the core notes are called final.
@@ -136,8 +143,31 @@ or be relabelled Derived (hand) or Conditional, before the core notes are called
    header.
 5. **Laymans Guide:** the whole document has been read once and is consistent with the
    technical notes. A line-by-line pass against the Verified table is still required.
+   **Done 2026-10-12.** Every quantitative sentence in `Omega_Theory_Laymans_Guide.md`
+   was read against the ledger in §3 and the artifacts behind it. Three were sharpened
+   rather than left standing: the Markov non-composition sentence now says the two-link
+   mutual information differs from the squared one-link value at every nonzero link
+   strength in that model, which needed a new assertion (the scaled difference has a
+   floor of 0.204 on a grid down to 10⁻³, so the claim is not an artifact of the sample
+   link); the scalarization threshold is quoted as 0.725613 ± 10⁻⁶, the value the two
+   numerical methods agree on, with the truncated 0.725609 called out as not it; and the
+   \(\Phi\equiv0\) branch of the Gauss–Bonnet model is now labelled a hand derivation
+   under the stated vacuum conditions, not a machine check. The guide's §8 now lists the
+   checks that exist -- including the citation gate and the one-command gate -- and points
+   at the adversarial audit, with its executive summary marked as the pre-remediation
+   scoreboard. Two claims were verified as already correct: the ℓ_P algebraic properties
+   (`dynamicPlanckCOD_zero`/`_one`/`_strictAntiOn`) and the 2 ln 2 normalization in
+   `research/quantum_ising_chain.py`.
 6. **Radial note §8 and §9:** the claim that the disformal bound constrains \(\dot\Phi\) only
    is hand-checked against the stated bound. Machine-check the bound's dependence on \(\dot\Phi\).
+   **Done** — `check_disformal_bound_depends_on_phidot` in `research/verify_derivations.py`:
+   the disformed \((t,r)\) determinant is \(C(D\dot\Phi^2-C-D\Phi'^2)\), so the signature
+   condition is exactly \(D\dot\Phi^2<C+D\Phi'^2\) (checked against the matrix on 200,000
+   samples across three \(\beta\)); the published bound is that condition at \(\Phi'=0\) and
+   is therefore sufficient but not tight once the gradient is nonzero; \(g_{rr}>0\) at every
+   gradient up to \(10^6\), so static profiles cannot threaten the signature; and the bound's
+   minimum reproduces \(0.6856/\sqrt\beta\) at \(\Phi^*\). Sim3's header now states the general
+   condition rather than the gradient-free one as if it were general.
 
 **Done in this pass.**
 
@@ -154,16 +184,22 @@ or be relabelled Derived (hand) or Conditional, before the core notes are called
   H₀ = 73.50 km/s/Mpc, which the README states is an input. Sim5's header now states the
   `cumsum` uniform-decay assumption. Sim3 writes three PDFs to the working directory on each
   run; these were removed as untracked artifacts.
+- Item 6: `check_disformal_bound_depends_on_phidot` (see the item above). The derivation-check
+  count rises from 11 to 12; `tests/test_verify_derivations.py` pins the new count.
+- Item 5: the line-by-line reading of the guide, described under the item itself.
 
-**Open.** Item 5 (line-by-line pass of the Layman's Guide against the Verified table) and
-item 6 (machine-check of the disformal bound's dependence on \(\dot\Phi\)) are not done.
-The core notes are therefore **not** yet called final.
+**Open.** Nothing in this phase. The core notes are the three documents `claim_scan.py`
+tracks (`Omega_Theory_v4.0_Technical.md`, `Omega_Theory_v4.0_Radial_Metric.md`,
+`Omega_Theory_Laymans_Guide.md`); each number they state either has a check or carries a
+"reported"/"model choice" label, and the line-by-line pass is recorded in item 5 above.
 
 **Exit gate:** `python research/claim_scan.py` shows zero unhedged hits in the core notes,
 apart from the documented false positive (met). Each core-note number has a check or a
-"reported" label (met for items 1–4). Items 5–6 remain (not met).
+"reported" label (met for items 1–6, 2026-10-12). The pass is manual and stays manual:
+a number added to those documents later needs a check or a label, and nothing stops that
+drift automatically.
 
-### Phase 4 — LaTeX volumes · **DONE (option a; 13 volumes absent by decision)**
+### Phase 4 — LaTeX volumes · **DONE (option a; 13 volumes absent by decision; cited-declaration gate added)**
 
 Scope: 41 files, 82 unhedged prose hits. Most are of the form "Volume N proves that …"
 in a layman's summary, and the layman's summaries make claims the Lean statements do not
@@ -186,15 +222,33 @@ counterpart are withdrawn and listed as open items. Known problems exposed by th
 include: Vol10 sets the generation count to 3 by definition; Vol13's "graviton–SM coupling"
 reduces to a zero self-distance; Vol09's bulk reconstruction holds by reflexivity.
 
-**Not done.** A script check that every cited declaration exists (step 2 of this phase). The
-LaTeX sources were not compiled, since no LaTeX toolchain is installed here; they were checked
-for brace balance and unescaped special characters only.
+**Done later (2026-10-12).** The script check that every cited declaration exists:
+`research/check_latex_citations.py`, run by `tests/test_latex_citations.py` under pytest, so
+CI enforces it. It checks that all 41 volumes cite a module that exists, that each volume
+cites its own `VolNN` module, and that every `\texttt{}` identifier is a declaration of the
+corpus -- resolved in the citing volume where possible, otherwise reported. Two names are
+exempt as external, each with a reason and each required to still be cited: `Empty` (Lean
+core) and `HasDerivAt` (Mathlib). A token that is none of module path, identifier, or
+`identifier = value` is an error rather than a silent skip, and the coverage claims in
+`latex_docs/README.md` are compared with the directory. Negative controls were exercised on
+copies: a renamed declaration, a retargeted module, a stale exemption, an unclassified
+token, a missing module, and a drifted README count each exit 1.
+
+**Also scripted (2026-10-12).** The structural hand check is now a gate:
+`research/check_latex_structure.py` checks brace balance (escaped braces are literals),
+`\begin{}`/`\end{}` nesting with every environment closed, exactly one `\documentclass`,
+one `\begin{document}` and one `\end{document}`, balanced `\[`/`\]` display delimiters, and
+an even number of unescaped `$`. All 41 volumes pass, and each rule was shown to fail on a
+mutated copy. It is a floor, not a compile: a missing package or an undefined macro would
+still only surface in a TeX toolchain, which this environment does not have. The citation
+check is lexical too: it does not verify that a cited declaration says what the prose claims.
 
 **Exit gate:** `python research/claim_scan.py` shows zero unhedged `latex_docs` hits (met).
-The declaration-existence script check is still to be added. The `docs` CI job was not run
-here.
+The declaration-existence script check is in place and green (met 2026-10-12), and the
+structural rules are scripted and green over all 41 volumes. Compilation remains unverified
+here, and the `docs` CI job was not run in this environment.
 
-### Phase 5 — Lean headers and text mirrors · **DONE (comments and docstrings only; automated check not yet added)**
+### Phase 5 — Lean headers and text mirrors · **DONE (items 1–3 done; exit gate met except the CI-only half)**
 
 Scope: 21 Lean files carry "REAL formalization", "REAL mathematical formalization", or
 "GENUINE PROOF" labels (36 lines). The text companions in `txt_proofs/` mirror those headers.
@@ -209,37 +263,164 @@ Steps:
    `OmegaAxioms.lean`) is ordinary mathematical wording and was left in place.
 2. Add a check that compares the non-comment declaration lines of every `lean_proofs/*.lean`
    file before and after, so a comment edit cannot change a theorem.
+   **Done** (`lean_proofs/check_declaration_parity.py`, baseline
+   `lean_proofs/declaration_parity.json`). Each file is reduced to a canonical code
+   projection — nested block comments, docstrings and line comments removed, string and
+   character literals kept, blank lines and trailing whitespace dropped — and hashed:
+   69 files, 1,448 declarations, 7,492 code lines. Verified in both directions: appending
+   a comment leaves all 69 digests unchanged (exit 0), while inserting one token inside a
+   proof body fails with `Vol18_StatisticalMechanics.lean: code changed (...)`. CI runs the
+   gate; `--against <ref>` proves a branch is comment-only against any revision.
 3. Regenerate `txt_proofs/` from `lean_proofs/`, as `PROOF_AUDIT.md` describes.
+   **Done** (`lean_proofs/sync_txt_mirrors.py`): the 9 modules that had never been mirrored
+   (`RadialMetric`, `RadialDilation`, `InformationPhysics`, `DynamicPlanckScale`,
+   `DynamicCODScale`, `LogCorrelationMetric`, `ProofRegression`, `CBwK_Budget_Pacer`,
+   `APPA_Context_Branching`) were generated; all 68 mirrors are byte-identical to their
+   sources. Orphans are reported, never deleted.
 
-**Exit gate:** `claim_scan.py` shows zero `label` hits in `lean_proofs/` and `txt_proofs/`;
-the declaration-comparison check passes; `lake build ToE` and the kernel audit pass in Lean
-CI (these cannot be run locally).
+**Exit gate:** `claim_scan.py` shows zero `label` hits in `lean_proofs/` and `txt_proofs/`
+(**met** — 0 files with hits on both surfaces); the declaration-comparison check passes
+(**met** — 69 files unchanged); `lake build ToE` and the kernel audit pass in Lean CI
+(**not runnable from this environment**; green on `main` at CI run 38119532226, the merge
+of PR #79).
 
-### Phase 6 — Statement-level audit of the Lean physics volumes · **PLANNED, CI-ONLY**
+**Also scripted (2026-10-12): the cited-name check.** `docs/PROJECT_STATUS_2026-10-08.md`
+listed `lean_proofs/check_mathlib_names.py` as existing "for the next round" — a lexical
+check that would turn a name typo into an offline finding instead of a CI build that stops
+one dependency layer at a time. The next round is now done. The checker indexes every
+declaration in the pinned Mathlib4 checkout plus the Lean core sources and reports qualified
+names used by the corpus that exist in neither. The indexer was rebuilt for recall, because
+every miss is a false "suspicious" name and a ratchet over false positives is pressure to
+raise it: it now registers declarations behind attribute blocks that span lines, constructors
+of `inductive`/`structure`/`class` together with the names Lean generates for them
+(`X.rec`, `X.injEq`, `X.noConfusion`, ...), structure fields, the
+`nonrec`/`public`/`expose` modifiers, same-line `| ctor`, and the `to_additive`/`to_dual`
+twins of all of the above; `end <section>` no longer pops the enclosing namespace.
+
+**Result on the pinned sources:** 563,126 mathlib + 292,520 Lean core + 7,429 repository
+declarations indexed, **0 suspicious names** (the previous script reported 205 on the same
+trees). Negative control: a copy of the tree with four injected typos (`Real.sqrtt`,
+`Finset.sum_range_succs`, `RadialMetric.chainLenght`, `Set.mem_Ioi.mpq`) reports all four.
+The check exits 2 rather than reporting a clean run when a tree yields no declarations, and
+`--max N` is the ratchet. It needs the pinned sources, so — like `lake build` — it is
+CI-only: it cannot join the consistency gate, which names it as one of the three checks it
+cannot run. Lean CI runs it after the build with `if: always()`, finding the trees by
+derivation rather than assumption (the mathlib checkout under `.lake/packages/` — the
+requirement is named `mathlib4`, so the step searches for the checkout that holds
+`Mathlib/` instead of trusting one directory name; core sources at
+`<lean --print-prefix>/src/lean`, the destination the pinned `src/CMakeLists.txt` installs
+to). 13 new tests (80 in `lean_proofs/`, all `unittest`).
+
+The gate's first CI run failed on the one thing that had only been assumed: the fixture here
+had used the directory name `mathlib`, and the requirement is named `mathlib4`, so the
+workflow's hardcoded path did not exist in CI. It exited 1 rather than passing hollow — the
+honest failure — and the step now searches for the checkout that holds `Mathlib/`. The
+fixture was then rebuilt to the CI layout so a smoke test can fail the same way again.
+
+### Phase 6 — Statement-level audit of the Lean physics volumes · **DONE (audit and gate added 2026-10-12)**
 
 `PROOF_AUDIT.md` lists the existing findings: degenerate models, parameterized stubs, and
 conditional lemmas. Phase 6 goes through each physics volume and decides, per theorem,
 whether the name overstates the statement, whether the hypotheses are satisfiable, and
-whether a non-degenerate witness exists. Each result is recorded in the audit file. This
-cannot be done without a Lean toolchain, so it runs in CI or on a machine with `lake`.
+whether a non-degenerate witness exists. Each result is recorded in the audit file.
 
 **Exit gate:** every physics-volume theorem with a physical-sounding name has a row in the
 audit with one of: non-degenerate witness, conditional with stated hypothesis, or renamed.
 
-### Phase 7 — Consistency gate and review · **PLANNED**
+**Implemented.** `lean_proofs/statement_audit.json` carries one row for each of the **161**
+theorems/lemmas in `Vol*.lean` whose name carries a word from a documented lexicon (163 rows
+in all: two record renamed declarations whose new names the lexicon does not match)
+(`lean_proofs/check_statement_audit.py`). A row states a disposition, an honest note, and
+the evidence that disposition needs:
 
-A single command runs every check in the repository:
+* **witness** (73 rows) — names a declared, non-degenerate object or instance that the
+  statement is about, or that realizes (or refutes) its setting;
+* **conditional** (43 rows) — quotes the hypothesis the statement carries in its own
+  signature, checked to occur verbatim in the collapsed statement;
+* **renamed** (14 rows) — records a name retired for the `bridge_*` convention, with the
+  retired name checked to survive nowhere in the corpus once comments are masked (the
+  renames were made by earlier passes; this phase performed none);
+* **carried** (33 rows) — records a statement that is true only from data the model
+  carries: a structure field, a postulate, a placeholder or constant definition, a
+  definitional restatement, or a degenerate instance. It names the declaration that
+  carries the data, and no non-degenerate witness exists for it.
+
+The fourth disposition is a deliberate addition to the sketch above, and it is stricter,
+not looser: against this corpus the three-way split has no honest place for
+`theorem photon_massless : PhotonMass = 0 := rfl`, for `|0| ≤ |0|` in the placeholder
+layer, or for a structure field returned unchanged — those rows would have had to name a
+"witness" for a degenerate instance, which is exactly the misreport this phase exists to
+stop. The count of `carried` rows is ratcheted by a `carried_cap` field in the audit file
+(30, the measured count when the audit landed): a new `carried` row fails the gate until the
+cap is raised in a visible diff, and fixing a row means lowering the cap in the same commit.
+Rows whose name still read as a legacy label (`photon_massless`, `metric_is_qfim`,
+`quantum_computing_from_omega`, `turing_instability_ratio`, ...) recorded the mismatch in
+their note instead of renaming the declaration — and the rename pass that followed did the
+renaming, described below.
+
+**The rename pass (2026-10-12).** Sixteen declarations whose *name* asserted a result the
+statement does not contain were renamed to names that state the content: the six
+`zeroCurvature_*` restatements in Vol05 (`metric_is_qfim`, `einstein_field_equations`,
+`bianchi_identity`, `cosmological_constant`, `conservation_of_energy_momentum`,
+`em_sources_gravity`), the Vol02 postulate and Maxwell pair (`photonMass_eq_zero`,
+`maxwell_equations_of_sourced_field`), the two definitional gauge-group equalities
+(`GaugeSymmetry_eq_product`, `SM_Gauge_Group_eq_product`), the placeholder optical identity
+(`placeholder_optical_expansion`), the Vol09 definitional entropy bridge
+(`bridge_entanglement_entropy_eq_bh_entropy`), the two legacy-constant Vol14 rows
+(`legacy_density_constants_sum_eq_one`, `legacy_density_constants_dark_energy_eq`), the Vol34
+gate restatement (`hadamard_unitary_restated`) and the Vol37 diffusivity ratio
+(`diffusion_ratio_gt_one_of_activator_pos`). This is the one pass in the report that changes
+code: it ships `check_declaration_parity.py --update`, the re-synced `txt_proofs/` mirrors,
+the updated `ProofRegression.lean` reference and kernel-audit target, and the
+`OmegaProtocol.lean` re-exports under the same names. The gate grew with it — `previous_name`
+is now validated on *any* row (a renamed declaration keeps the disposition of its statement
+and still records what it was called), with identifier-boundary matching, so
+`zeroCurvature_bianchi_identity` does not count as a surviving `bianchi_identity` while a
+kept law field such as `law_metric_is_qfim` is a different name. The three renamed
+declarations the lexicon never matched (`einstein_field_equations`, `bianchi_identity`,
+`maxwells_equations`) now have rows, so the audit grew 160 → 163 rows and `carried_cap`
+30 → 33: a coverage expansion in one visible diff, with no existing row reclassified. Four
+new tests (27 in the file, 107 in `lean_proofs/`) cover the per-row retirement check, the
+boundary match, a `previous_name` equal to the row's own name, and the shipped audit's
+rename records.
+
+The gate is lexical and runs offline: `python3 check_statement_audit.py` in `lean_proofs/`
+(also a command in `research/consistency_gate.py`) fails on a missing row, a malformed row,
+a witness or source that is not a declaration, a `stated_condition` that does not occur, a
+`previous_name` that survives, or a `carried` count above the cap, and exits 2 rather than
+passing when the audit is unreadable. What it cannot do is decide whether a judgement is
+*right*: that half is CI's `lake build ToE`, which compiles every witness and source a row
+names. 23 new tests (103 in `lean_proofs/`, all `unittest`), one negative control per
+disposition, plus a test that the shipped audit covers the shipped corpus. The audit itself
+added, removed and renamed no Lean declaration; the rename pass that followed it renamed
+sixteen, as recorded above.
+
+### Phase 7 — Consistency gate and review · **DONE (gate added 2026-10-12; the review step is human)**
+
+A single command runs every check the repository can run without the Lean toolchain:
 
 ```bash
-python research/verify_derivations.py
-python research/claim_scan.py
-python -m pytest -v
-ruff check . && ruff format --check . && mypy . --ignore-missing-imports
+python research/consistency_gate.py          # add --quick to skip the pytest suite
 ```
 
-Then a reviewer reads the `claim_scan.py --list` output and the Verified table in §3, and
-confirms that every status in §3 matches the evidence. The pull request is opened only
-after this step.
+It runs, in order: the three derivation-check scripts, the two LaTeX gates (citation and
+structure), the claim scanner, the Lean sorry/trivial grep, the axiom audit, the eight vacuity
+ratchets plus the alias baseline, the declaration-parity gate, the text-mirror gate, the
+statement audit of the physics volumes, the pytest suite, and
+`ruff check` / `ruff format --check` / `mypy` when those tools are on `PATH`
+(a missing tool is reported as skipped, never as a pass). It reports one line per command and
+the tail of any failure, and exits non-zero if anything failed. It states in its own summary
+that three checks are CI-only here — `lake build ToE`, the kernel audit, and the cited-name
+check, all of which need the pinned Lean sources — so a green run is not read as more than it
+is.
+
+Negative control: on a copy of the tree with one theorem appended to
+`Vol18_StatisticalMechanics.lean`, the gate exits 1 and four commands fail -- the vacuity
+ratchets, declaration parity, the text mirrors and the pytest suite.
+
+Still human, and not claimed by the gate: a reviewer reads the `claim_scan.py --list` output
+and the Verified table in §3 and confirms that every status matches the evidence. The gate
+says a list of commands exited 0; it does not read the diff.
 
 ---
 
@@ -271,6 +452,7 @@ after this step.
 | 22 | Uniform correlation decay in Sim5 (`cumsum`) | Code fact | Verified by reading `Sim5_Emergent_Gravity.py` L74–75; now stated in the module header | — |
 | 23 | Schwarzschild-required trend opposite to Markov and Ising decay rates | Reported | Reproduced; tests check the sign; Schwarzschild column and one dense-ED row now checked | `tests/test_quantum_ising_chain.py`, `tests/test_qregion_markov.py`, `research/verify_tfim.py` |
 | 24 | \(H_0=73.5\) in the depletion simulation | Calibration input | Not a prediction; re-run done (Phase 3 item 4), reproduces 73.50 by construction | `sim6_v14_depletion.py` |
+| 25 | Disformal causality bound constrains \(\dot\Phi\) only; static profiles safe (Radial §8) | Derived | **Verified** for the model as stated (\(C=e^{-2\Phi}\), \(D=\beta(1-\Phi^2)\), flat background): the Lorentzian condition is \(D\dot\Phi^2<C+D\Phi'^2\), the printed bound \(e^{-\Phi}/(\sqrt\beta\sqrt{1-\Phi^2})\) is its \(\Phi'=0\) case (sufficient, and conservative when \(\Phi'\neq0\)), and \(g_{rr}=C+D\Phi'^2>0\) at every gradient. Not a claim about any other \(C\), \(D\), or background. | `check_disformal_bound_depends_on_phidot` |
 
 ---
 
@@ -295,7 +477,9 @@ These decisions gate later phases. The roadmap does not assume an answer.
 
 ## 5. What this roadmap cannot do from this environment
 
-- Build or check Lean. Kernel truth for the Lean corpus comes from GitHub CI only.
+- Build or check Lean. Kernel truth for the Lean corpus comes from GitHub CI only. The same
+  applies to the cited-name check, which needs the pinned mathlib and Lean core sources; the
+  consistency gate lists it with `lake build ToE` and the kernel audit as checks it cannot run.
 - Run deployments, or any external empirical comparison. The empirical-test gate in
   `COVARIANT_COMPLETION_AND_TEST_GATE.md` §5 stays closed until its six items are frozen.
 - Establish that the physical model is correct. Every "Verified" row means the stated

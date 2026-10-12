@@ -157,12 +157,22 @@ python -m pytest tests/test_gauss_bonnet_scalarization.py -q
 python research/verify_derivations.py
 python research/verify_covariant.py
 python research/verify_tfim.py
+python research/check_latex_citations.py
+python research/check_latex_structure.py
 python research/claim_scan.py
+
+# Or run every local check at once (needs the pinned requirements.txt for ruff/mypy)
+python research/consistency_gate.py
 
 # Sim1 and Sim4 are historical manuscripts, not executable scripts; read their status notes in docs/manuscripts/
 
 # Build Lean 4 proofs (requires Lean 4 + Mathlib4)
 cd lean_proofs && lake build
+
+# The cited-name check is CI-only: it needs a pinned mathlib4 checkout and the
+# toolchain's own sources, which no local check here can download.
+#   python3 lean_proofs/check_mathlib_names.py \
+#       --mathlib <mathlib4> --lean <lean-prefix>/src/lean --max 0
 ```
 
 ## Development

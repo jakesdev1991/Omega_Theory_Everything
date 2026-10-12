@@ -87,8 +87,10 @@ theorem ryu_takayanagi (bh : BHGeometry) :
 
 /-- Consistency bridge: `EntanglementEntropy` and `BHEntropy` denote the same
     Bekenstein-Hawking expression in the concrete model, so the identity is
-    definitional (`dsimp`).  NOT a derivation of the holographic dictionary. -/
-theorem bridge_bh_entropy_is_holographic (bh : BHGeometry) :
+    definitional (`dsimp`).  NOT a derivation of the holographic dictionary,
+    which is why it was renamed from `bridge_bh_entropy_is_holographic` in the
+    Phase 6 rename pass. -/
+theorem bridge_entanglement_entropy_eq_bh_entropy (bh : BHGeometry) :
   EntanglementEntropy bh = BHEntropy bh := by
   dsimp [EntanglementEntropy, BHEntropy, MinimalSurfaceArea]
 
