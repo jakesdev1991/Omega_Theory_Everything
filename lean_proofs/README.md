@@ -18,7 +18,8 @@ unexpected axioms — are green on `main`
 ([Lean CI run 38119532226](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/38119532226),
 the merge of PR #79) and were re-confirmed on
 [PR #83](https://github.com/jakesdev1991/Omega_Theory_Everything/pull/83)
-(run 38251369698). Reproducible locally without a toolchain: 107 Python/tooling
+(runs 38251369698 and, at the head with the rename pass, 38254475070). Reproducible
+locally without a toolchain: 107 Python/tooling
 tests, `audit_axioms --max 0` → 0, all eight `audit_vacuity` ratchets and the
 alias baseline at 0, the comment-parity gate across 69 files, 68
 byte-identical `txt_proofs/` mirrors, and the Phase 6 statement audit — 163 rows
@@ -905,6 +906,9 @@ same commit.
   at 163 rows (33 carried, cap 33, 30 retirement records), mirrors and parity in sync, all
   eight `audit_vacuity` ratchets and the alias baseline at 0, the cited-name check 0
   suspicious names against the pinned trees, `ruff`/`mypy` clean, the consistency gate
-  16/16. The push that carries this pass re-runs Lean CI (`lake build ToE`, the kernel
-  audit, the cited-name gate and the statement-audit step); the run URLs are recorded in
-  the follow-up docs commit once those runs are green.
+  16/16. Verified in CI at the pass's commit `9dd2379`: Lean CI
+  [run 38254475070](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/38254475070)
+  — `lake build ToE` compiling every renamed declaration, the kernel audit over its 260
+  targets (including the renamed `OmegaProtocol.Vol09.bridge_entanglement_entropy_eq_bh_entropy`),
+  the cited-name gate and the statement-audit step — and CI
+  [run 38254475046](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/38254475046).

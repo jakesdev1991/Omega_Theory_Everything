@@ -26,7 +26,10 @@ ratcheted by the file's own `carried_cap`). The rename pass that followed rename
 sixteen declarations whose names asserted results the statements do not contain —
 the six `zeroCurvature_*` Vol05 restatements among them — keeping each row's
 disposition and recording the retired name as `previous_name`, which the gate now
-checks on every row. `check_statement_audit.py` gates the rows for shape
+checks on every row. The pass and its parity/mirror updates are green on PR #83 (Lean CI
+run 38254475070: `lake build ToE`, the 260-target kernel audit — including the renamed
+`OmegaProtocol.Vol09.bridge_entanglement_entropy_eq_bh_entropy` — the cited-name gate and
+the statement-audit step). `check_statement_audit.py` gates the rows for shape
 and existence — a witness or source must be a declaration, a quoted condition
 must occur in the statement, a retired name must survive nowhere. The rows are
 judgements, not proofs: the per-module findings below are their evidence, and

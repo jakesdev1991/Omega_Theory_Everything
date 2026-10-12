@@ -31,7 +31,7 @@ the things a kernel cannot check.
 > | Kernel-audit targets | 155 | 260 |
 > | Tooling tests | 35 | 107 |
 > | Vacuity / axiom-name / `Unit`-stub ratchets | several non-zero (see C1, H2, H3, Medium) | all zero |
-> | Kernel status | green in CI | green on `main` (run 38119532226) and on PR #83 (run 38251369698) |
+> | Kernel status | green in CI | green on `main` (run 38119532226) and on PR #83 (run 38254475070) |
 >
 > The three "must fix or retire" files were each addressed: the 96 `*_Stmt` propositions
 > in `OmegaUnifiedFoundation.lean` are gone (only the comment recording their retirement
