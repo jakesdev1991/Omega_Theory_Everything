@@ -9,12 +9,12 @@
   },
   "lexicon": "The candidate census is lexical: a theorem/lemma counts when one of the words in its name (split on _, ., camelCase) is a PHYSICS_TOKENS word in check_statement_audit.py. The lexicon is a floor, not a ceiling.",
   "reviewed": "2026-10-12",
-  "carried_cap": 33,
+  "carried_cap": 47,
   "counts": {
-    "witness": 73,
-    "conditional": 43,
+    "witness": 122,
+    "conditional": 61,
     "renamed": 14,
-    "carried": 33
+    "carried": 47
   },
   "rows": [
     {
@@ -46,6 +46,14 @@
       "stated_condition": "hV : ∀ x, HasDerivAt V (V' x) x"
     },
     {
+      "name": "constant_commutator_eval_at_zero",
+      "file": "Vol01_ClassicalMechanics.lean",
+      "disposition": "carried",
+      "note": "In the constant-evaluation helper `lim_h_to_0 f := f 0`, evaluating the constant family `fun _ => commutator A B` returns `{A, B}` by rfl; the non-constant Weyl scaling correspondence is `weyl_commutator_quotient_eq_poisson`. Renamed from `commutator_limit`.",
+      "source": "lim_h_to_0",
+      "previous_name": "commutator_limit"
+    },
+    {
       "name": "energy_deriv_zero",
       "file": "Vol01_ClassicalMechanics.lean",
       "disposition": "conditional",
@@ -60,11 +68,60 @@
       "stated_condition": "hF : HasDerivAt (fun s => m * v s) F t"
     },
     {
+      "name": "linear_map_scales_omega",
+      "file": "Vol01_ClassicalMechanics.lean",
+      "disposition": "witness",
+      "note": "A 2×2 linear map scales the planar symplectic 2-form `omega` by its determinant `ad - bc`: polynomial identity on the concrete bilinear form.",
+      "witness": "omega"
+    },
+    {
       "name": "mass_emergence",
       "file": "Vol01_ClassicalMechanics.lean",
       "disposition": "witness",
       "note": "The 'mass' is the declared state-norm-squared invariant ‖ρ‖², and the theorem states its nonnegativity as an existential. Strict positivity on nonzero states is `modular_spectrum_pos_of_ne_zero`; no emergence dynamics is claimed.",
       "witness": "RepresentationTheoryModularGroup"
+    },
+    {
+      "name": "omega_add_left",
+      "file": "Vol01_ClassicalMechanics.lean",
+      "disposition": "witness",
+      "note": "Left additivity of the planar symplectic 2-form `omega X Y = X.1 * Y.2 - X.2 * Y.1`; ring algebra on the concrete definition.",
+      "witness": "omega"
+    },
+    {
+      "name": "omega_antisymm",
+      "file": "Vol01_ClassicalMechanics.lean",
+      "disposition": "witness",
+      "note": "Alternating sign `omega X Y = -omega Y X` of the declared planar symplectic 2-form.",
+      "witness": "omega"
+    },
+    {
+      "name": "omega_coordinates",
+      "file": "Vol01_ClassicalMechanics.lean",
+      "disposition": "witness",
+      "note": "Pairing with the canonical basis vectors `(0, 1)` and `(1, 0)` recovers `(X.1, -X.2)`, establishing coordinate recovery for `omega`.",
+      "witness": "omega"
+    },
+    {
+      "name": "omega_nondegenerate",
+      "file": "Vol01_ClassicalMechanics.lean",
+      "disposition": "conditional",
+      "note": "Non-degeneracy of the planar symplectic form: if `omega X Y = 0` for all `Y`, evaluating at the basis vectors forces `X = 0`.",
+      "stated_condition": "h : ∀ Y, omega X Y = 0"
+    },
+    {
+      "name": "omega_self",
+      "file": "Vol01_ClassicalMechanics.lean",
+      "disposition": "witness",
+      "note": "Self-pairing `omega X X = 0` of the planar symplectic 2-form.",
+      "witness": "omega"
+    },
+    {
+      "name": "omega_smul_left",
+      "file": "Vol01_ClassicalMechanics.lean",
+      "disposition": "witness",
+      "note": "Left scalar homogeneity of the planar symplectic 2-form `omega`.",
+      "witness": "omega"
     },
     {
       "name": "poisson_antisymm",
@@ -377,12 +434,94 @@
       "previous_name": "standard_model_gauge_group"
     },
     {
+      "name": "diracOperator_eq_smul",
+      "file": "Vol06_QuantumFieldTheory.lean",
+      "disposition": "carried",
+      "note": "`DiracOperator ψ` is defined as `(DiracMass : ℂ) * ψ` with `DiracMass := 0`, so this is a definitional unfolding (rfl) and not a differential spinor equation. Renamed from `dirac_equation`.",
+      "source": "DiracOperator",
+      "previous_name": "dirac_equation"
+    },
+    {
+      "name": "local_nets_isotony",
+      "file": "Vol06_QuantumFieldTheory.lean",
+      "disposition": "conditional",
+      "note": "Interval inclusion `subset_region O₁ O₂` (`O₂.x_min ≤ O₁.x_min ∧ O₁.x_max ≤ O₂.x_max`) implies `LocalNet O₁ ⊆ LocalNet O₂` for the interval-supported operator family `LocalNet`.",
+      "stated_condition": "h : subset_region O₁ O₂"
+    },
+    {
+      "name": "local_nets_microcausality",
+      "file": "Vol06_QuantumFieldTheory.lean",
+      "disposition": "carried",
+      "note": "On the 1D commutative carrier `OmegaAlgebra`, operator multiplication is commutative everywhere (`omegaAlgebra_commutative`); actual interval disjointness under spacelike separation is `local_nets_spacelike_disjoint`.",
+      "source": "omegaAlgebra_commutative"
+    },
+    {
+      "name": "local_nets_spacelike_disjoint",
+      "file": "Vol06_QuantumFieldTheory.lean",
+      "disposition": "conditional",
+      "note": "Under `spacelike_separated O₁ O₂`, any support coordinates `x₁ ∈ [O₁.x_min, O₁.x_max]` and `x₂ ∈ [O₂.x_min, O₂.x_max]` are strictly distinct (`x₁ ≠ x₂`).",
+      "stated_condition": "h : spacelike_separated O₁ O₂"
+    },
+    {
+      "name": "nested_microcausality",
+      "file": "Vol06_QuantumFieldTheory.lean",
+      "disposition": "carried",
+      "note": "Composes `spacelike_hereditary` (genuine interval disjointness) with `local_nets_microcausality`, whose commutation conclusion is carried by the commutativity of `OmegaAlgebra`.",
+      "source": "omegaAlgebra_commutative"
+    },
+    {
       "name": "placeholder_optical_expansion",
       "file": "Vol06_QuantumFieldTheory.lean",
       "disposition": "carried",
-      "note": "In the placeholder layer `SMatrix := 1` and `TMatrix := 0`, so the expansion is 1 = 1 by simp; the file keeps a separate hypothesis-carrying `optical_theorem` wrapper, and no optical theorem is derived. Renamed from `optical_expansion` in the Phase 6 rename pass: the new name names the placeholder layer that makes it true.",
+      "note": "In the placeholder layer `SMatrix := 1` and `TMatrix := 0`, so the expansion is 1 = 1 by simp; the file keeps a separate hypothesis-carrying `placeholder_optical_theorem` wrapper, and no optical theorem is derived. Renamed from `optical_expansion` in the Phase 6 rename pass: the new name names the placeholder layer that makes it true.",
       "source": "SMatrix",
       "previous_name": "optical_expansion"
+    },
+    {
+      "name": "placeholder_optical_theorem",
+      "file": "Vol06_QuantumFieldTheory.lean",
+      "disposition": "carried",
+      "note": "Hypothesis-carrying wrapper around `placeholder_optical_expansion` at the same placeholder layer (`SMatrix := 1`, `TMatrix := 0`). Renamed from `optical_theorem`.",
+      "source": "placeholder_optical_expansion",
+      "previous_name": "optical_theorem"
+    },
+    {
+      "name": "regionA_B_spacelike",
+      "file": "Vol06_QuantumFieldTheory.lean",
+      "disposition": "witness",
+      "note": "Concrete disjoint intervals `regionA = [0, 1]` and `regionB = [2, 3]` witness `spacelike_separated regionA regionB`.",
+      "witness": "regionA"
+    },
+    {
+      "name": "spacelike_hereditary",
+      "file": "Vol06_QuantumFieldTheory.lean",
+      "disposition": "conditional",
+      "note": "Sub-intervals of spacelike-separated intervals remain spacelike-separated (`subset_region O₁ O₂ ∧ subset_region O₃ O₄ ∧ spacelike_separated O₂ O₄ → spacelike_separated O₁ O₃`).",
+      "stated_condition": "h24 : spacelike_separated O₂ O₄"
+    },
+    {
+      "name": "constantScale_critical_density",
+      "file": "Vol07_Cosmology.lean",
+      "disposition": "carried",
+      "note": "In the constant-scale-factor layer both `EnergyDensity` and `CriticalDensity` evaluate to 0; the parameterized non-degenerate equivalence is `FLRWUniverse.flat_friedmann_critical_density_eq`. Renamed from `criticaldensity`.",
+      "source": "ScaleFactor",
+      "previous_name": "criticaldensity"
+    },
+    {
+      "name": "constantScale_friedmann_equation",
+      "file": "Vol07_Cosmology.lean",
+      "disposition": "carried",
+      "note": "In the constant-scale-factor layer (`ScaleFactor _ := 1`, `TimeDerivative _ _ := 0`, `EnergyDensity _ := 0`), both sides of the first Friedmann equation are 0 by simp. Renamed from `friedmannequations`.",
+      "source": "ScaleFactor",
+      "previous_name": "friedmannequations"
+    },
+    {
+      "name": "cosmological_redshift_ratio",
+      "file": "Vol07_Cosmology.lean",
+      "disposition": "witness",
+      "note": "Ring rearrangement `1 + Redshift t_emit t_obs = ScaleFactor t_obs / ScaleFactor t_emit` of the `Redshift` definition; positivity under expansion is `FLRWUniverse.redshift_positive_of_expansion`. Renamed from `cosmologicalredshift`.",
+      "witness": "Redshift",
+      "previous_name": "cosmologicalredshift"
     },
     {
       "name": "criticalDensity_pos",
@@ -404,6 +543,38 @@
       "disposition": "conditional",
       "note": "z = a_obs/a_emit − 1 > 0 whenever the scale factor grows, with both factors positive as stated.",
       "stated_condition": "h_exp : a_emit < a_obs"
+    },
+    {
+      "name": "bekenstein_hawking_entropy_def",
+      "file": "Vol08_BlackHoleThermodynamics.lean",
+      "disposition": "carried",
+      "note": "Definitional unfolding (rfl) of `BHEntropy bh := bh.horizonArea / (4 * NewtonG)`. Renamed from `bekensteinhawkingentropy`.",
+      "source": "BHEntropy",
+      "previous_name": "bekensteinhawkingentropy"
+    },
+    {
+      "name": "bekenstein_hawking_entropy_pos",
+      "file": "Vol08_BlackHoleThermodynamics.lean",
+      "disposition": "witness",
+      "note": "`0 < BHEntropy bh` from `bh.area_pos` and `0 < NewtonG`, realized concretely by `standardSchwarzschild` (where `BHEntropy = 4π`). Renamed from `bhentropy_pos`.",
+      "witness": "standardSchwarzschild",
+      "previous_name": "bhentropy_pos"
+    },
+    {
+      "name": "hawking_temperature_def",
+      "file": "Vol08_BlackHoleThermodynamics.lean",
+      "disposition": "carried",
+      "note": "Definitional unfolding (rfl) of `HawkingTemperature bh := bh.surfaceGravity / (2 * Real.pi)`. Renamed from `hawkingtemperature`.",
+      "source": "HawkingTemperature",
+      "previous_name": "hawkingtemperature"
+    },
+    {
+      "name": "hawking_temperature_pos",
+      "file": "Vol08_BlackHoleThermodynamics.lean",
+      "disposition": "witness",
+      "note": "`0 < HawkingTemperature bh` from `bh.gravity_pos` and `0 < 2π`, realized concretely by `standardSchwarzschild` (where `T_H = 1/(8π)`). Renamed from `hawkingtemperature_pos`.",
+      "witness": "standardSchwarzschild",
+      "previous_name": "hawkingtemperature_pos"
     },
     {
       "name": "kms_beta_hawking",
@@ -434,6 +605,34 @@
       "witness": "standardSchwarzschild"
     },
     {
+      "name": "bell_correlation_det",
+      "file": "Vol09_HolographicPrinciple.lean",
+      "disposition": "witness",
+      "note": "Explicit determinant `c₀₀ c₁₁ - c₀₁ c₁₀ = 1` on the declared two-qubit `bellState` witness.",
+      "witness": "bellState"
+    },
+    {
+      "name": "bell_entangled",
+      "file": "Vol09_HolographicPrinciple.lean",
+      "disposition": "witness",
+      "note": "The declared `bellState` is non-separable (`Entangled bellState`), proved from its nonvanishing correlation determinant.",
+      "witness": "bellState"
+    },
+    {
+      "name": "bell_er_bridge",
+      "file": "Vol09_HolographicPrinciple.lean",
+      "disposition": "witness",
+      "note": "The declared `bellState` satisfies `EinsteinRosenBridge bellState` (`correlationDet ≠ 0`).",
+      "witness": "bellState"
+    },
+    {
+      "name": "bell_er_epr",
+      "file": "Vol09_HolographicPrinciple.lean",
+      "disposition": "witness",
+      "note": "Joint realization of `EinsteinRosenBridge` and `EPR_Entanglement` on the concrete `bellState` witness.",
+      "witness": "bellState"
+    },
+    {
       "name": "bridge_entanglement_entropy_eq_bh_entropy",
       "file": "Vol09_HolographicPrinciple.lean",
       "disposition": "carried",
@@ -442,11 +641,34 @@
       "previous_name": "bridge_bh_entropy_is_holographic"
     },
     {
+      "name": "bulkFields_eq_boundaryFields_map",
+      "file": "Vol09_HolographicPrinciple.lean",
+      "disposition": "carried",
+      "note": "`BulkFields p` is defined as `BoundaryFields (boundary_map p)` in the zero-field layer, so this is a definitional unfolding (rfl), not HKLL bulk reconstruction. Renamed from `bulk_reconstruction`.",
+      "source": "BulkFields",
+      "previous_name": "bulk_reconstruction"
+    },
+    {
+      "name": "entanglementEntropy_eq_minimalSurfaceArea_div",
+      "file": "Vol09_HolographicPrinciple.lean",
+      "disposition": "carried",
+      "note": "`EntanglementEntropy bh` is defined as `MinimalSurfaceArea bh / (4 * NewtonG)`, so this is a definitional unfolding (rfl), not a derivation of the Ryu-Takayanagi formula. Renamed from `ryu_takayanagi`.",
+      "source": "EntanglementEntropy",
+      "previous_name": "ryu_takayanagi"
+    },
+    {
       "name": "er_epr_bridge_entails_entanglement",
       "file": "Vol09_HolographicPrinciple.lean",
       "disposition": "conditional",
       "note": "The sound direction of the ER=EPR dictionary in the two-qubit separability model, conditional on the bridge predicate; the converse is `product_of_correlation_det_zero` / `er_epr_iff`.",
       "stated_condition": "h : EinsteinRosenBridge ψ"
+    },
+    {
+      "name": "er_epr_iff",
+      "file": "Vol09_HolographicPrinciple.lean",
+      "disposition": "witness",
+      "note": "In the 2×2 two-qubit amplitude model, `EinsteinRosenBridge ψ ↔ EPR_Entanglement ψ` (nonzero determinant iff non-factorizable), realized by `bellState` and `productZeroState`.",
+      "witness": "bellState"
     },
     {
       "name": "SM_Gauge_Group_eq_product",
@@ -457,11 +679,166 @@
       "previous_name": "gauge_symmetry"
     },
     {
+      "name": "higgs_bounded_below",
+      "file": "Vol10_StandardModel.lean",
+      "disposition": "witness",
+      "note": "`HiggsPotential φ = (φ² - v²)² ≥ 0` by `sq_nonneg` for every real amplitude `φ`.",
+      "witness": "HiggsPotential"
+    },
+    {
+      "name": "higgs_global_minimizers",
+      "file": "Vol10_StandardModel.lean",
+      "disposition": "witness",
+      "note": "Global minimizers of the real quartic potential `HiggsPotential` are exactly `±VacuumExpectationValue`.",
+      "witness": "HiggsPotential"
+    },
+    {
       "name": "higgs_vacuum_minimum",
       "file": "Vol10_StandardModel.lean",
       "disposition": "carried",
       "note": "V(φ) = (φ² − v²)² with v := 1, so V(v) = 0 is ring arithmetic on the definition; uniqueness of the minimizer needs a domain restriction (`higgs_zero_iff_nonneg`).",
       "source": "HiggsPotential"
+    },
+    {
+      "name": "higgs_zero_iff",
+      "file": "Vol10_StandardModel.lean",
+      "disposition": "witness",
+      "note": "`HiggsPotential φ = 0 ↔ φ = v ∨ φ = -v` on the signed scalar amplitude model.",
+      "witness": "HiggsPotential"
+    },
+    {
+      "name": "higgs_zero_iff_nonneg",
+      "file": "Vol10_StandardModel.lean",
+      "disposition": "conditional",
+      "note": "Under the domain restriction `0 ≤ φ`, the unique zero of `HiggsPotential` is `φ = VacuumExpectationValue`.",
+      "stated_condition": "hφ : 0 ≤ φ"
+    },
+    {
+      "name": "numberOfGenerations_eq_three",
+      "file": "Vol10_StandardModel.lean",
+      "disposition": "carried",
+      "note": "Definitional restatement (rfl) of the stipulated constant `NumberOfGenerations := 3`; no generation count is derived. Renamed from `fermiongenerations`.",
+      "source": "NumberOfGenerations",
+      "previous_name": "fermiongenerations"
+    },
+    {
+      "name": "chern_number_quantized",
+      "file": "Vol11_CondensedMatter.lean",
+      "disposition": "witness",
+      "note": "Integrality of `b.chernNumber` for `ChernBand` (whose `chernIndex : ℤ` is a structure field), realized by `haldaneBand` (`C = 1`).",
+      "witness": "haldaneBand"
+    },
+    {
+      "name": "chern_number_quantized_legacy",
+      "file": "Vol11_CondensedMatter.lean",
+      "disposition": "carried",
+      "note": "In the legacy zero-Chern layer (`ChernNumber := 0`), integrality is witnessed by `0 : ℤ`.",
+      "source": "ChernNumber"
+    },
+    {
+      "name": "haldane_chern_number",
+      "file": "Vol11_CondensedMatter.lean",
+      "disposition": "witness",
+      "note": "`haldaneBand.chernNumber = 1` on the concrete `C = 1` Chern-band benchmark.",
+      "witness": "haldaneBand"
+    },
+    {
+      "name": "haldane_hall_conductance",
+      "file": "Vol11_CondensedMatter.lean",
+      "disposition": "witness",
+      "note": "`haldaneBand.hallConductance e h = e² / h` on the concrete `C = 1` benchmark.",
+      "witness": "haldaneBand"
+    },
+    {
+      "name": "hall_conductance_quantized",
+      "file": "Vol11_CondensedMatter.lean",
+      "disposition": "witness",
+      "note": "Hall conductance is an integer multiple of `e² / h` for any `ChernBand`, realized with `n = 1` by `haldaneBand`.",
+      "witness": "haldaneBand"
+    },
+    {
+      "name": "hall_conductance_quantized_legacy",
+      "file": "Vol11_CondensedMatter.lean",
+      "disposition": "carried",
+      "note": "In the legacy zero-Chern layer (`ChernNumber := 0`), `HallConductance e h = 0 * (e² / h)`.",
+      "source": "ChernNumber"
+    },
+    {
+      "name": "landau_completed_square",
+      "file": "Vol11_CondensedMatter.lean",
+      "disposition": "conditional",
+      "note": "Completing the square on `LandauFreeEnergy a b T Tc m` under a strictly positive quartic coefficient `0 < b`.",
+      "stated_condition": "hb : 0 < b"
+    },
+    {
+      "name": "landau_critical_point_bounded",
+      "file": "Vol11_CondensedMatter.lean",
+      "disposition": "conditional",
+      "note": "At `T = Tc`, `LandauFreeEnergy a b Tc Tc m ≥ 0` whenever `b ≥ 0`.",
+      "stated_condition": "hb : b ≥ 0"
+    },
+    {
+      "name": "landau_critical_point_min",
+      "file": "Vol11_CondensedMatter.lean",
+      "disposition": "witness",
+      "note": "`LandauFreeEnergy a b Tc Tc 0 = 0` by polynomial evaluation at `m = 0`.",
+      "witness": "LandauFreeEnergy"
+    },
+    {
+      "name": "landau_critical_zero_iff",
+      "file": "Vol11_CondensedMatter.lean",
+      "disposition": "conditional",
+      "note": "At criticality `T = Tc` with `0 < b`, `LandauFreeEnergy a b Tc Tc m = 0 ↔ m = 0`.",
+      "stated_condition": "hb : 0 < b"
+    },
+    {
+      "name": "landau_flat_at_zero_quartic",
+      "file": "Vol11_CondensedMatter.lean",
+      "disposition": "witness",
+      "note": "Boundary counterexample: at `b = 0` and `T = Tc`, `LandauFreeEnergy a 0 Tc Tc m = 0` for all `m`, showing `b > 0` is needed for uniqueness.",
+      "witness": "LandauFreeEnergy"
+    },
+    {
+      "name": "landau_global_lower_bound",
+      "file": "Vol11_CondensedMatter.lean",
+      "disposition": "conditional",
+      "note": "Global lower bound `-(a(T - Tc))² / (4b) ≤ LandauFreeEnergy a b T Tc m` for `0 < b`.",
+      "stated_condition": "hb : 0 < b"
+    },
+    {
+      "name": "landau_lower_bound_attained",
+      "file": "Vol11_CondensedMatter.lean",
+      "disposition": "conditional",
+      "note": "When `0 < b` and `a * (T - Tc) ≤ 0`, both signed square-root branches attain the global lower bound.",
+      "stated_condition": "hA : a * (T - Tc) ≤ 0"
+    },
+    {
+      "name": "landau_lower_bound_eq_iff",
+      "file": "Vol11_CondensedMatter.lean",
+      "disposition": "conditional",
+      "note": "Equality with the completed-square lower bound holds iff `m² = -a(T - Tc) / (2b)`, conditional on `0 < b`.",
+      "stated_condition": "hb : 0 < b"
+    },
+    {
+      "name": "landau_minimizer_iff",
+      "file": "Vol11_CondensedMatter.lean",
+      "disposition": "conditional",
+      "note": "Complete characterization of global minimizers of `LandauFreeEnergy` in the ordered regime `a * (T - Tc) ≤ 0`, `0 < b`.",
+      "stated_condition": "hA : a * (T - Tc) ≤ 0"
+    },
+    {
+      "name": "bellPair_capacity",
+      "file": "Vol12_QuantumInformation.lean",
+      "disposition": "witness",
+      "note": "`bellPairSystem.capacity = 2 * Real.log 2` on the declared 2-qubit Bell-pair benchmark.",
+      "witness": "bellPairSystem"
+    },
+    {
+      "name": "bellPair_strictly_below_capacity",
+      "file": "Vol12_QuantumInformation.lean",
+      "disposition": "witness",
+      "note": "Single-subsystem entropy `ln 2` is strictly below the 2-qubit capacity `2 ln 2` on `bellPairSystem`.",
+      "witness": "bellPairSystem"
     },
     {
       "name": "bellPair_subsystem_entropy",
@@ -489,7 +866,22 @@
       "file": "Vol13_QuantumGravity.lean",
       "disposition": "witness",
       "note": "Vol13's coupling fact `SM_Interaction g s` reduces to the model's self-distance identity; the wrapper certifies naming coherence, not a physical graviton coupling.",
-      "witness": "graviton_sm_coupling"
+      "witness": "sm_interaction_of_self_distance_zero"
+    },
+    {
+      "name": "sm_interaction_of_self_distance_zero",
+      "file": "Vol13_QuantumGravity.lean",
+      "disposition": "witness",
+      "note": "`SM_Interaction` is defined as `∀ R, d R R = 0`, so it holds by `bridge_qregion_self_distance_zero`; no physical graviton coupling is derived. Renamed from `graviton_sm_coupling`.",
+      "witness": "bridge_qregion_self_distance_zero",
+      "previous_name": "graviton_sm_coupling"
+    },
+    {
+      "name": "wheeler_dewitt_balance",
+      "file": "Vol13_QuantumGravity.lean",
+      "disposition": "conditional",
+      "note": "If `(H_m + H_g) Ψ = 0` on a state `Ψ`, then `H_m Ψ = -H_g Ψ`: additive-group algebra with the constraint stated as an explicit hypothesis.",
+      "stated_condition": "h : (H_m + H_g) Ψ = 0"
     },
     {
       "name": "dark_energy_eq",
@@ -533,6 +925,13 @@
       "file": "Vol14_DarkSector.lean",
       "disposition": "witness",
       "note": "Ω_m + Ω_DE = 1 for the derived matter fraction; realized concretely by `standardLCDM`.",
+      "witness": "standardLCDM"
+    },
+    {
+      "name": "omegaMatter_nonneg",
+      "file": "Vol14_DarkSector.lean",
+      "disposition": "witness",
+      "note": "`0 ≤ b.omegaMatter` (`Ω_b + Ω_dm ≥ 0`) on any `CosmicDensityBudget`, realized with `0.31` by `standardLCDM`.",
       "witness": "standardLCDM"
     },
     {
@@ -613,6 +1012,13 @@
       "stated_condition": "h : ∀ t, FlowDivergence flow t = 0"
     },
     {
+      "name": "partitionFunction2_pos",
+      "file": "Vol18_StatisticalMechanics.lean",
+      "disposition": "witness",
+      "note": "`0 < PartitionFunction2 beta E1 E2` (`e^(-βE₁) + e^(-βE₂) > 0`) for all real `beta, E1, E2` by `Real.exp_pos`.",
+      "witness": "PartitionFunction2"
+    },
+    {
       "name": "disordered_macroEntropy",
       "file": "Vol19_ComplexSystems.lean",
       "disposition": "witness",
@@ -660,6 +1066,13 @@
       "disposition": "conditional",
       "note": "Zero flux at a time makes the rate nonnegative; the pointwise hypothesis is stated.",
       "stated_condition": "h : Vol16.EntropyFlux history t = 0"
+    },
+    {
+      "name": "er_epr_correspondence",
+      "file": "Vol22_EREqualsEPR.lean",
+      "disposition": "witness",
+      "note": "`MutualInformation A B > 0 ↔ ThroatArea A B > 0` in the non-degenerate Q-region model, proved from `distance_pos_iff_mutualInformation_pos`.",
+      "witness": "distance_pos_iff_mutualInformation_pos"
     },
     {
       "name": "no_entanglement_no_bridge",
@@ -718,6 +1131,48 @@
       "stated_condition": "hlam0 : 0 ≤ lam"
     },
     {
+      "name": "bell_violation",
+      "file": "Vol24_NonLocality.lean",
+      "disposition": "witness",
+      "note": "`TsirelsonBound > ClassicalCHSHBound` (`2√2 > 2`), proved from `Real.sqrt 2 > 1`.",
+      "witness": "TsirelsonBound"
+    },
+    {
+      "name": "chsh_factorization",
+      "file": "Vol24_NonLocality.lean",
+      "disposition": "witness",
+      "note": "Ring identity `ab + ab' + a'b - a'b' = a(b + b') + a'(b - b')` underlying the local-hidden-variable CHSH bound.",
+      "witness": "chshParameter"
+    },
+    {
+      "name": "chsh_violation_magnitude",
+      "file": "Vol24_NonLocality.lean",
+      "disposition": "witness",
+      "note": "`TsirelsonBound - ClassicalCHSHBound > 0` (`2√2 - 2 > 0`).",
+      "witness": "TsirelsonBound"
+    },
+    {
+      "name": "singlet_chsh_attains_tsirelson",
+      "file": "Vol24_NonLocality.lean",
+      "disposition": "witness",
+      "note": "The declared `singletBellSystem` correlator tuple `(√2/2, √2/2, √2/2, -√2/2)` attains `chshParameter = 2√2`.",
+      "witness": "singletBellSystem"
+    },
+    {
+      "name": "singlet_violates_classical_bound",
+      "file": "Vol24_NonLocality.lean",
+      "disposition": "witness",
+      "note": "`singletBellSystem.chshParameter > ClassicalCHSHBound` (`2√2 > 2`).",
+      "witness": "singletBellSystem"
+    },
+    {
+      "name": "tsirelson_bound_pos",
+      "file": "Vol24_NonLocality.lean",
+      "disposition": "witness",
+      "note": "`0 < TsirelsonBound` (`2√2 > 0`).",
+      "witness": "TsirelsonBound"
+    },
+    {
       "name": "bridge_vol25_entropy_nonneg",
       "file": "Vol25_BlackHoleInformation.lean",
       "disposition": "witness",
@@ -737,6 +1192,14 @@
       "disposition": "witness",
       "note": "Ω-metric reflexivity restated for the network layer; content is the QRegion fact (distinct instances such as `halfQRegion ≠ unitQRegion` supply separation).",
       "witness": "bridge_qregion_self_distance_zero"
+    },
+    {
+      "name": "handshaking_lemma_restated",
+      "file": "Vol26_NetworkTheory.lean",
+      "disposition": "witness",
+      "note": "Restates `handshaking_lemma` (`DegreeSum G = 2 * NumEdges G`) for finite simple graphs, realized by `twoVertexEdge`; no derivation from Ω is established. Renamed from `network_from_omega`.",
+      "witness": "twoVertexEdge",
+      "previous_name": "network_from_omega"
     },
     {
       "name": "cortical_flux_asymmetry_pos",
@@ -840,6 +1303,14 @@
       "renamed_to": "bridge_vol31_metric_self_zero"
     },
     {
+      "name": "defect_dominates_p1_restated",
+      "file": "Vol31_GameTheory.lean",
+      "disposition": "witness",
+      "note": "Restates `defect_dominates_p1` on the stipulated Prisoner's Dilemma payoff table `Payoff1`; no derivation from Ω is established. Renamed from `gametheory_from_omega`.",
+      "witness": "Payoff1",
+      "previous_name": "gametheory_from_omega"
+    },
+    {
       "name": "bridge_vol32_entropy_nonneg",
       "file": "Vol32_Cybernetics.lean",
       "disposition": "renamed",
@@ -854,6 +1325,14 @@
       "note": "Legacy name `feedback_stability` retired (a stability claim the identity cannot support); content is distance nonnegativity.",
       "previous_name": "feedback_stability",
       "renamed_to": "bridge_vol32_metric_nonneg"
+    },
+    {
+      "name": "feedback_convergence_restated",
+      "file": "Vol32_Cybernetics.lean",
+      "disposition": "conditional",
+      "note": "Restates the one-step power inequality `g^(n+1) ≤ g^n` under `0 ≤ g` and `g ≤ 1`; no derivation from Ω is established. Renamed from `cybernetics_from_omega`.",
+      "stated_condition": "hg1 : g ≤ 1",
+      "previous_name": "cybernetics_from_omega"
     },
     {
       "name": "unit_gain_not_decay",
@@ -908,6 +1387,14 @@
       "renamed_to": "bridge_vol35_metric_self_zero"
     },
     {
+      "name": "boolean_excluded_middle_restated",
+      "file": "Vol36_ToposTheory.lean",
+      "disposition": "witness",
+      "note": "Restates `boolean_excluded_middle` (classical `em`); no topos-theoretic derivation from Ω is established. Renamed from `topos_from_omega`.",
+      "witness": "boolean_excluded_middle",
+      "previous_name": "topos_from_omega"
+    },
+    {
       "name": "bridge_vol36_entropy_bounded",
       "file": "Vol36_ToposTheory.lean",
       "disposition": "renamed",
@@ -954,6 +1441,14 @@
       "witness": "bridge_vonNeumannEntropy_nonneg"
     },
     {
+      "name": "equilibrium_excess_demand_zero_restated",
+      "file": "Vol38_Economics.lean",
+      "disposition": "witness",
+      "note": "Restates `equilibrium_excess_demand_zero` for the linear market at `equilibrium_price`; no derivation from Ω is established. Renamed from `economics_from_omega`.",
+      "witness": "equilibrium_price",
+      "previous_name": "economics_from_omega"
+    },
+    {
       "name": "bridge_vol39_entropy_nonneg",
       "file": "Vol39_SocietalNetworks.lean",
       "disposition": "witness",
@@ -966,6 +1461,14 @@
       "disposition": "witness",
       "note": "Reflexivity restated for the network-distance layer.",
       "witness": "bridge_qregion_self_distance_zero"
+    },
+    {
+      "name": "min_connections_restated",
+      "file": "Vol39_SocietalNetworks.lean",
+      "disposition": "conditional",
+      "note": "Restates `min_connections` (`NumNodes G ≤ 2 * NumConnections G`) under `NoIsolatedVertices G`; no sociological derivation from Ω is established. Renamed from `society_from_omega`.",
+      "stated_condition": "h : NoIsolatedVertices G",
+      "previous_name": "society_from_omega"
     },
     {
       "name": "bridge_vol40_entropy_bounded",
@@ -1145,11 +1648,67 @@
       "renamed_to": "bridge_vol48_metric_self_zero"
     },
     {
+      "name": "frame_change_nontrivial",
+      "file": "Vol49_QuantumReferenceFrames.lean",
+      "disposition": "witness",
+      "note": "Transforming `unitState` from `positiveFrame` (`1`) to `negativeFrame` (`-1`) negates the state (`-unitState`), witnessing nontrivial frame transformations.",
+      "witness": "positiveFrame"
+    },
+    {
+      "name": "frame_compose",
+      "file": "Vol49_QuantumReferenceFrames.lean",
+      "disposition": "witness",
+      "note": "Cocycle composition law `FrameTransform A C = FrameTransform B C ∘L FrameTransform A B` for unit-phase reference frames.",
+      "witness": "FrameTransform"
+    },
+    {
+      "name": "frame_identity",
+      "file": "Vol49_QuantumReferenceFrames.lean",
+      "disposition": "witness",
+      "note": "Self-transformation `FrameTransform A A = id` for any unit-phase reference frame.",
+      "witness": "FrameTransform"
+    },
+    {
+      "name": "frame_phase_ne_zero",
+      "file": "Vol49_QuantumReferenceFrames.lean",
+      "disposition": "witness",
+      "note": "Every `A : ReferenceFrame` (`‖z‖ = 1`) has nonzero phase `A.1 ≠ 0`, realized by `positiveFrame`.",
+      "witness": "positiveFrame"
+    },
+    {
+      "name": "frame_preserves_norm",
+      "file": "Vol49_QuantumReferenceFrames.lean",
+      "disposition": "witness",
+      "note": "Unit-phase frame transformations are isometric (`‖FrameTransform A B ψ‖ = ‖ψ‖`).",
+      "witness": "FrameTransform"
+    },
+    {
+      "name": "frame_round_trip",
+      "file": "Vol49_QuantumReferenceFrames.lean",
+      "disposition": "witness",
+      "note": "`FrameTransform B A (FrameTransform A B ψ) = ψ`: changing frame `A → B → A` is the identity.",
+      "witness": "FrameTransform"
+    },
+    {
+      "name": "frame_self_identity",
+      "file": "Vol49_QuantumReferenceFrames.lean",
+      "disposition": "witness",
+      "note": "Pointwise evaluation `FrameTransform A A ψ = ψ` of `frame_identity`.",
+      "witness": "FrameTransform"
+    },
+    {
       "name": "bridge_vol50_entropy_nonneg",
       "file": "Vol50_UltimateEnsemble.lean",
       "disposition": "witness",
       "note": "Entropy nonnegativity restated for the ensemble layer.",
       "witness": "bridge_vonNeumannEntropy_nonneg"
+    },
+    {
+      "name": "novikov_consistency",
+      "file": "Vol51_ClosedTimelikeCurves.lean",
+      "disposition": "conditional",
+      "note": "If a history `h` satisfies `IsConsistent h` (`TimeLoopOperator h = h`), applying `TimeLoopOperator` again leaves it fixed.",
+      "stated_condition": "hc : IsConsistent h"
     },
     {
       "name": "bridge_vol52_metric_self_zero",
@@ -1159,11 +1718,39 @@
       "witness": "bridge_qregion_self_distance_zero"
     },
     {
+      "name": "omegaTimeMap_gap",
+      "file": "Vol52_OmegaPointTheory.lean",
+      "disposition": "witness",
+      "note": "Exact proper-time gap `t_Ω - omegaTimeMap t_Ω n = t_Ω * (1/2)^n` by ring algebra on the conformal rescaling definition.",
+      "witness": "omegaTimeMap"
+    },
+    {
       "name": "omegaTimeMap_lt_horizon",
       "file": "Vol52_OmegaPointTheory.lean",
       "disposition": "conditional",
       "note": "Every finite complexity stage lies strictly before the finite horizon t_Ω > 0; the positivity hypothesis is stated.",
       "stated_condition": "ht : 0 < t_omega"
+    },
+    {
+      "name": "omegaTimeMap_strict_step",
+      "file": "Vol52_OmegaPointTheory.lean",
+      "disposition": "conditional",
+      "note": "Proper time `omegaTimeMap t_omega n` increases strictly with stage `n` whenever `0 < t_omega`.",
+      "stated_condition": "ht : 0 < t_omega"
+    },
+    {
+      "name": "omega_chain_strict",
+      "file": "Vol52_OmegaPointTheory.lean",
+      "disposition": "conditional",
+      "note": "Any chain witnessing `∀ n, (chain n).complexity = n` is strictly increasing in the `precedes` order.",
+      "stated_condition": "h : ∀ n, (chain n).complexity = n"
+    },
+    {
+      "name": "omega_point_exists",
+      "file": "Vol52_OmegaPointTheory.lean",
+      "disposition": "witness",
+      "note": "The ascending-chain predicate `OmegaPoint` is inhabited by the identity complexity chain `fun n => ⟨n⟩`.",
+      "witness": "OmegaPoint"
     },
     {
       "name": "bridge_vol53_entropy_nonneg",

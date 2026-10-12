@@ -234,6 +234,22 @@ class SourceAuditTests(unittest.TestCase):
         )
         self.assertEqual(decorative_hypotheses(self.root), [])
 
+    def test_custom_prop_predicate_and_shared_binder_decorative_hypotheses(self):
+        self.source(
+            "def subset_region (O₁ O₂ : ℕ) : Prop := O₁ ≤ O₂\n"
+            "theorem unused_pred (O₁ O₂ : ℕ) (h : subset_region O₁ O₂) : O₁ = O₁ := by\n"
+            "  rfl\n"
+            "theorem shared_unused (x : ℝ) (h1 h2 : 0 ≤ x) : 0 ≤ x := by\n"
+            "  exact h1\n"
+        )
+        self.assertEqual(
+            decorative_hypotheses(self.root),
+            [
+                "Vol01_Test.lean: unused_pred [h : subset_region O₁ O₂]",
+                "Vol01_Test.lean: shared_unused [h2 : 0 ≤ x]",
+            ],
+        )
+
     def test_trivially_true_hypotheses_are_flagged(self):
         self.source(
             "theorem zero_bound (h : (0 : ℝ) ≤ 0) : d R R = 0 := by rfl\n"

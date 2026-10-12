@@ -60,8 +60,9 @@ theorem degree_sum_lower_bound (G : Graph) (k : ℕ)
   calc k * G.vertexCount = ∑ _v : Fin G.vertexCount, k := by simp [Nat.mul_comm]
     _ ≤ DegreeSum G := Finset.sum_le_sum fun v _ => h v
 
-/-- Legacy export name for the finite combinatorial identity only. -/
-theorem network_from_omega (G : Graph) : DegreeSum G = 2 * NumEdges G :=
+/-- Restatement of `handshaking_lemma` for the finite combinatorial graph; no
+    construction from Ω is established.  Renamed from `network_from_omega`. -/
+theorem handshaking_lemma_restated (G : Graph) : DegreeSum G = 2 * NumEdges G :=
   handshaking_lemma G
 
 theorem network_degree_nonneg (G : Graph) : DegreeSum G ≥ 0 := Nat.zero_le _

@@ -44,8 +44,9 @@ theorem min_connections_rounded (G : SocialNetwork) (h : NoIsolatedVertices G) :
   have hbound := min_connections G h
   omega
 
-/-- Legacy export name for a conditional counting bound, not a social law. -/
-theorem society_from_omega (G : SocialNetwork) (h : NoIsolatedVertices G) :
+/-- Restatement of `min_connections` under the conditional degree bound; no
+    sociological law from Ω is established.  Renamed from `society_from_omega`. -/
+theorem min_connections_restated (G : SocialNetwork) (h : NoIsolatedVertices G) :
     NumNodes G ≤ 2 * NumConnections G := min_connections G h
 
 theorem twoVertexEdge_no_isolated : NoIsolatedVertices Vol26.twoVertexEdge := by

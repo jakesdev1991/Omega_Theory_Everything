@@ -340,6 +340,34 @@ class ShippedAuditTests(unittest.TestCase):
         self.assertEqual(
             retired["maxwells_equations"], "maxwell_equations_of_sourced_field"
         )
+        self.assertEqual(
+            retired["commutator_limit"], "constant_commutator_eval_at_zero"
+        )
+        self.assertEqual(retired["dirac_equation"], "diracOperator_eq_smul")
+        self.assertEqual(retired["optical_theorem"], "placeholder_optical_theorem")
+        self.assertEqual(
+            retired["friedmannequations"], "constantScale_friedmann_equation"
+        )
+        self.assertEqual(
+            retired["bulk_reconstruction"], "bulkFields_eq_boundaryFields_map"
+        )
+        self.assertEqual(
+            retired["ryu_takayanagi"],
+            "entanglementEntropy_eq_minimalSurfaceArea_div",
+        )
+        self.assertEqual(retired["fermiongenerations"], "numberOfGenerations_eq_three")
+        self.assertEqual(
+            retired["graviton_sm_coupling"], "sm_interaction_of_self_distance_zero"
+        )
+
+    def test_every_volume_is_represented_in_the_shipped_audit(self) -> None:
+        rows = json.loads((ROOT / "statement_audit.json").read_text(encoding="utf-8"))[
+            "rows"
+        ]
+        covered = {row["file"] for row in rows}
+        volumes = {path.name for path in ROOT.glob("Vol*.lean")}
+        self.assertEqual(len(volumes), 54)
+        self.assertEqual(covered, volumes)
 
     def test_the_repository_audit_covers_the_repository_corpus(self) -> None:
         out = io.StringIO()

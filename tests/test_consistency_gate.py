@@ -41,6 +41,10 @@ def test_gate_covers_every_check_script() -> None:
         "vacuity ratchets",
         "declaration parity",
         "text mirrors",
+        "statement audit",
+        "cpp pacer suite",
+        "omni-bridge cpp suite",
+        "ai-governor suite",
         "pytest suite",
     ):
         assert expected in names

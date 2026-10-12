@@ -287,14 +287,14 @@ theorem global_state_dynamics (t : Vol07.CosmologicalTime) :
   - (4 * Real.pi * NewtonG / 3) * (Vol07.EnergyDensity t + 3 * Vol07.Pressure t) + Vol07.CosmologicalConstant / 3 :=
   Vol07.global_state_dynamics t
 
-theorem friedmann_equations (t : Vol07.CosmologicalTime) :
+theorem constantScale_friedmann_equation (t : Vol07.CosmologicalTime) :
   (Vol07.HubbleParameter t)^2 =
   8 * Real.pi * NewtonG / 3 * Vol07.EnergyDensity t - Vol07.SpatialCurvatureK / Vol07.ScaleFactor t ^ 2 + Vol07.CosmologicalConstant / 3 := by
-  exact Vol07.friedmannequations t
+  exact Vol07.constantScale_friedmann_equation t
 
-theorem cosmological_redshift (t_emit t_obs : Vol07.CosmologicalTime) :
+theorem cosmological_redshift_ratio (t_emit t_obs : Vol07.CosmologicalTime) :
   1 + Vol07.Redshift t_emit t_obs = Vol07.ScaleFactor t_obs / Vol07.ScaleFactor t_emit := by
-  exact Vol07.cosmologicalredshift t_emit t_obs
+  exact Vol07.cosmological_redshift_ratio t_emit t_obs
 
 /-- Consistency bridge (VOL07): `CriticalDensity` is *defined* as
     `3 H²/(8πG)` in the flat Friedmann model, so the identity is `rfl`. -/
@@ -359,8 +359,8 @@ theorem bridge_vol09_metric_self_zero (R : QRegion) : d R R = 0 := by
 theorem higgs_mechanism (phi_mag : ℝ) : Vol10.HiggsPotential phi_mag ≥ 0 := by
   exact Vol10.higgs_bounded_below phi_mag
 
-theorem fermion_generations : Vol10.NumberOfGenerations = 3 := by
-  exact Vol10.fermiongenerations
+theorem numberOfGenerations_eq_three : Vol10.NumberOfGenerations = 3 := by
+  exact Vol10.numberOfGenerations_eq_three
 
 -- Vol 11: Condensed Matter
 theorem condensed_matter_emergence (a b Tc : ℝ) : Vol11.LandauFreeEnergy a b Tc Tc 0 = 0 := by
@@ -756,7 +756,7 @@ theorem bridge_cross_v04_v06_entropy_nonneg (R : QRegion) : vonNeumannEntropy R 
 theorem cross_vol05_vol07_flrw (t : Vol07.CosmologicalTime) :
   (Vol07.HubbleParameter t)^2 =
   8 * Real.pi * NewtonG / 3 * Vol07.EnergyDensity t - Vol07.SpatialCurvatureK / Vol07.ScaleFactor t ^ 2 + Vol07.CosmologicalConstant / 3 := by
-  exact Vol07.friedmannequations t
+  exact Vol07.constantScale_friedmann_equation t
 
 /-- Consistency bridge (cross-volume consistency): the mutual information is nonnegative.
     Proven against the concrete Q-region model fixed in `OmegaAxioms.lean`;

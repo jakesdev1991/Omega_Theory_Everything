@@ -13,7 +13,7 @@ limitations, and compiler-validation results.
 
 **Integrated CI status (2026-10-12):** the thirteenth pass (PR #77) and the
 claim-tightening passes (PR #78, PR #79) are merged into `main`. `lake build ToE`
-and the transitive kernel-axiom gate — **260** selected declarations, zero
+and the transitive kernel-axiom gate — **262** selected declarations, zero
 unexpected axioms — are green on `main`
 ([Lean CI run 38119532226](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/38119532226),
 the merge of PR #79), were re-confirmed on
@@ -23,14 +23,16 @@ on `main` at the merge commit of PR #83, `a764f34`
 ([Lean CI run 38255776907](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/38255776907),
 [CI run 38255777137](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/38255777137)).
 Reproducible
-locally without a toolchain: 107 Python/tooling
+locally without a toolchain: 109 Python/tooling
 tests, `audit_axioms --max 0` → 0, all eight `audit_vacuity` ratchets and the
-alias baseline at 0, the comment-parity gate across 69 files, 68
-byte-identical `txt_proofs/` mirrors, and the Phase 6 statement audit — 163 rows
-for the 161 physics-sounding volume declarations, with the 33 `carried` rows
-capped by the audit file's own ratchet and the 16 names the rename pass retired
-recorded as `previous_name` on their rows. Lean/mathlib remain pinned to
-v4.32.0.
+alias baseline at 0 (including custom `: Prop` predicate and shared-binder decorative-hypothesis detection),
+the comment-parity gate across 69 files (1,449 declarations, 7,506 code lines), 68
+byte-identical `txt_proofs/` mirrors, and the Phase 6 statement audit — 244 rows
+covering all 233 physics-sounding volume declarations across all 54/54 volumes
+(122 `witness`, 61 `conditional`, 14 `renamed`, 47 `carried`), with the 47 `carried` rows
+capped by the audit file's own ratchet and the 50 retired names (14 `bridge_*` renames + 36
+first/second rename-pass retirements) recorded as `previous_name` on their rows. Lean/mathlib
+remain pinned to v4.32.0.
 Kernel acceptance cannot be reproduced here: the toolchain and the mathlib olean
 cache are served from release-asset hosts that are unreachable in this
 environment, so `lake build` is CI-only. The same is true of the cited-name

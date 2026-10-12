@@ -148,15 +148,18 @@ end Graviton
 def SM_Interaction (_g : Graviton) (_s : Vol10.SM_Gauge_Group) : Prop :=
   ∀ (R : QRegion), d R R = 0
 
-/-- Coupling is the self-distance invariant of the concrete model. -/
-theorem graviton_sm_coupling : ∀ (g : Graviton) (s : Vol10.SM_Gauge_Group), SM_Interaction g s := by
+/-- `SM_Interaction` is defined as `∀ R, d R R = 0`, so it holds by the
+    concrete model's self-distance identity (`bridge_qregion_self_distance_zero`);
+    no physical graviton-Standard-Model coupling is derived.  Renamed from
+    `graviton_sm_coupling`. -/
+theorem sm_interaction_of_self_distance_zero : ∀ (g : Graviton) (s : Vol10.SM_Gauge_Group), SM_Interaction g s := by
   intro g s R
   exact bridge_qregion_self_distance_zero R
 
 /-- Consistency bridge (VOL13): the Omega-metric `d` is reflexive (`d R R = 0`). -/
 theorem bridge_vol13_metric_self_zero (g : Graviton) (s : Vol10.SM_Gauge_Group) (R : QRegion) :
   d R R = 0 := by
-  have h := graviton_sm_coupling g s
+  have h := sm_interaction_of_self_distance_zero g s
   exact h R
 
 /-- Consistency bridge (VOL13): the von Neumann entropy is nonnegative. -/

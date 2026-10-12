@@ -441,7 +441,7 @@ open OmegaProtocol
 example : Vol08.standardSchwarzschild.mass = 1 := rfl
 
 example : 0 < Vol08.HawkingTemperature Vol08.standardSchwarzschild :=
-  Vol08.hawkingtemperature_pos Vol08.standardSchwarzschild
+  Vol08.hawking_temperature_pos Vol08.standardSchwarzschild
 
 example : Vol08.BHEntropy Vol08.standardSchwarzschild = 4 * Real.pi :=
   Vol08.standardSchwarzschild_entropy
@@ -473,6 +473,16 @@ example (M : Vol13.MiniSuperspace) :
 
 example : Vol06.spacelike_separated Vol06.regionA Vol06.regionB :=
   Vol06.regionA_B_spacelike
+
+example (O₁ O₂ : Vol06.SpacetimeRegion) (h : Vol06.subset_region O₁ O₂) :
+    Vol06.LocalNet O₁ ⊆ Vol06.LocalNet O₂ :=
+  Vol06.local_nets_isotony O₁ O₂ h
+
+example (x₁ x₂ : ℝ) (hx₁ : Vol06.regionA.x_min ≤ x₁ ∧ x₁ ≤ Vol06.regionA.x_max)
+    (hx₂ : Vol06.regionB.x_min ≤ x₂ ∧ x₂ ≤ Vol06.regionB.x_max) :
+    x₁ ≠ x₂ :=
+  Vol06.local_nets_spacelike_disjoint Vol06.regionA Vol06.regionB
+    Vol06.regionA_B_spacelike x₁ x₂ hx₁ hx₂
 
 example (h12 : Vol06.subset_region Vol06.regionA Vol06.regionA)
     (h34 : Vol06.subset_region Vol06.regionB Vol06.regionB)

@@ -39,8 +39,9 @@ theorem nash_equilibrium_defect :
   (Payoff2 Strategy.Defect Strategy.Defect ≥ Payoff2 Strategy.Defect Strategy.Cooperate) := by
   constructor <;> simp [Payoff1, Payoff2]
 
-/-- Legacy export name for dominance in the stipulated payoff table. -/
-theorem gametheory_from_omega (s2 : Strategy) :
+/-- Restatement of `defect_dominates_p1` on the stipulated payoff table; no
+    derivation from Ω is established.  Renamed from `gametheory_from_omega`. -/
+theorem defect_dominates_p1_restated (s2 : Strategy) :
   Payoff1 Strategy.Defect s2 ≥ Payoff1 Strategy.Cooperate s2 := by
   exact defect_dominates_p1 s2
 

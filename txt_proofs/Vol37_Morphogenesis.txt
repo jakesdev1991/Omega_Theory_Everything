@@ -134,8 +134,7 @@ theorem turing_instability (S : ReactionSystem)
 /-- The diffusion drive is positive iff the inhibitor/activator
     diffusivity ratio exceeds the reaction threshold `(-d)/a`.
     This is the precise form of "the inhibitor must diffuse faster". -/
-theorem drive_iff_ratio (S : ReactionSystem) (ha : 0 < S.a)
-    (hd : S.d < 0) :
+theorem drive_iff_ratio (S : ReactionSystem) (ha : 0 < S.a) :
     0 < S.Du * S.d + S.Dv * S.a ↔ S.Dv / S.Du > (-S.d) / S.a := by
   rw [gt_iff_lt, div_lt_div_iff₀ ha S.Du_pos]
   constructor <;> intro h <;> linarith

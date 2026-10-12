@@ -238,7 +238,24 @@ def split_signature(statement: str) -> tuple[str, str]:
     return statement, ""
 
 
-def hypothesis_binders(statement: str) -> list[tuple[str, str]]:
+def prop_predicates(root: Path) -> set[str]:
+    """Names of corpus `def` / `abbrev` declarations with result type `Prop`."""
+    pattern = re.compile(
+        r"^[ \t]*(?:@\[[^\]]*\]\s*)*(?:private\s+|protected\s+|noncomputable\s+)*"
+        r"(?:def|abbrev)\s+(" + IDENTIFIER + r")\b[^\n]*?:\s*Prop\b",
+        re.M,
+    )
+    preds: set[str] = set()
+    for path in lean_sources(root):
+        text = mask_comments_and_strings(path.read_text(encoding="utf-8"))
+        for match in pattern.finditer(text):
+            preds.add(match.group(1))
+    return preds
+
+
+def hypothesis_binders(
+    statement: str, prop_names: set[str] | None = None
+) -> list[tuple[str, str]]:
     """Return (name, type) for each proposition-like `(name : type)` binder.
 
     Only the signature and the leading hypothesis chain are scanned: a
@@ -250,10 +267,16 @@ def hypothesis_binders(statement: str) -> list[tuple[str, str]]:
     signature, body = split_signature(statement)
     chain = top_level_split(strip_forall(body), "→")
     hypothesis_part = "→".join(chain[:-1])
-    return find_binders(signature) + find_binders(hypothesis_part)
+    return find_binders(signature, prop_names=prop_names) + find_binders(
+        hypothesis_part, prop_names=prop_names
+    )
 
 
-def find_binders(text: str, require_prop: bool = True) -> list[tuple[str, str]]:
+def find_binders(
+    text: str,
+    require_prop: bool = True,
+    prop_names: set[str] | None = None,
+) -> list[tuple[str, str]]:
     """Return (name, type) for `(name : type)` binders in text.
 
     With `require_prop` (default) only proposition-like types are returned."""
@@ -285,8 +308,14 @@ def find_binders(text: str, require_prop: bool = True) -> list[tuple[str, str]]:
                 names = inner[:cut].strip()
                 type_text = inner[cut + 1 :].strip()
                 if re.fullmatch(IDENTIFIER + r"(?:\s+" + IDENTIFIER + r")*", names):
-                    if not require_prop or PROP_LIKE.search(type_text):
-                        found.append((names.split()[0], type_text))
+                    is_prop = bool(PROP_LIKE.search(type_text)) or bool(
+                        prop_names
+                        and any(re.search(_word(p), type_text) for p in prop_names)
+                    )
+                    if not require_prop or is_prop:
+                        for name in names.split():
+                            if not name.startswith("_"):
+                                found.append((name, type_text))
             index = close + 1
         else:
             index += 1
@@ -379,12 +408,13 @@ def audit(root: Path) -> tuple[list[str], list[str], list[str]]:
 def decorative_hypotheses(root: Path) -> list[str]:
     """Hypotheses that constrain nothing: unused in statement and proof alike."""
     findings: list[str] = []
+    preds = prop_predicates(root)
     for path in lean_sources(root):
         text = mask_comments_and_strings(path.read_text(encoding="utf-8"))
         for name, statement, body in theorem_blocks(text):
             if not body.strip() or HYPOTHESIS_CONSUMING.search(body):
                 continue
-            for hyp_name, hyp_type in hypothesis_binders(statement):
+            for hyp_name, hyp_type in hypothesis_binders(statement, prop_names=preds):
                 pattern = re.compile(_word(hyp_name))
                 if len(pattern.findall(statement)) > 1:
                     continue
@@ -400,10 +430,11 @@ def decorative_hypotheses(root: Path) -> list[str]:
 def trivially_true_hypotheses(root: Path) -> list[str]:
     """Hypotheses whose type is a closed truth carry no information."""
     findings: list[str] = []
+    preds = prop_predicates(root)
     for path in lean_sources(root):
         text = mask_comments_and_strings(path.read_text(encoding="utf-8"))
         for name, statement, _ in theorem_blocks(text):
-            for hyp_name, hyp_type in hypothesis_binders(statement):
+            for hyp_name, hyp_type in hypothesis_binders(statement, prop_names=preds):
                 if trivially_true_prop(hyp_type):
                     flat = re.sub(r"\s+", " ", hyp_type)[:70]
                     findings.append(

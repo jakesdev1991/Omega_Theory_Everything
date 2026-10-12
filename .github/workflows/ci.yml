@@ -304,13 +304,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       # The governor is the Proof-of-Useful-Work trainer for the Lucifer
-      # framework. It had no build command anywhere in the repository and was in
-      # no CI job, so nothing verified that it compiles. It needs OpenSSL headers
-      # for the SHA-256 receipt digest; the runner image does not always ship
-      # libssl-dev, so install it explicitly.
-      - name: Install OpenSSL headers
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq libssl-dev
-
+      # framework. Its FIPS 180-4 SHA-256 receipt digest and NIST test-vector
+      # self-check are implemented directly in omega_governor.hpp with zero
+      # external library dependencies.
       # build.sh runs a strict -Wall -Wextra -Werror build and then a 300-step
       # governed + baseline smoke run, requiring receipts from both.
       - name: Build and smoke-run the governor

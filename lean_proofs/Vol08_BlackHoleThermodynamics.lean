@@ -53,10 +53,12 @@ def ElectricPotential (bh : BHGeometry) : ℝ := bh.electricPotential
 noncomputable def HawkingTemperature (bh : BHGeometry) : ℝ :=
   bh.surfaceGravity / (2 * Real.pi)
 
-theorem hawkingtemperature (bh : BHGeometry) :
+/-- Definitional unfolding (`rfl`) of `HawkingTemperature`; renamed from
+    `hawkingtemperature`. -/
+theorem hawking_temperature_def (bh : BHGeometry) :
   HawkingTemperature bh = bh.surfaceGravity / (2 * Real.pi) := rfl
 
-theorem hawkingtemperature_pos (bh : BHGeometry) :
+theorem hawking_temperature_pos (bh : BHGeometry) :
   0 < HawkingTemperature bh := by
   dsimp [HawkingTemperature]
   have hpi : 0 < 2 * Real.pi := by positivity
@@ -67,10 +69,12 @@ theorem hawkingtemperature_pos (bh : BHGeometry) :
 noncomputable def BHEntropy (bh : BHGeometry) : ℝ :=
   bh.horizonArea / (4 * NewtonG)
 
-theorem bekensteinhawkingentropy (bh : BHGeometry) :
+/-- Definitional unfolding (`rfl`) of `BHEntropy`; renamed from
+    `bekensteinhawkingentropy`. -/
+theorem bekenstein_hawking_entropy_def (bh : BHGeometry) :
   BHEntropy bh = bh.horizonArea / (4 * NewtonG) := rfl
 
-theorem bhentropy_pos (bh : BHGeometry) :
+theorem bekenstein_hawking_entropy_pos (bh : BHGeometry) :
   0 < BHEntropy bh := by
   dsimp [BHEntropy]
   have hG : 0 < 4 * NewtonG := by
@@ -163,7 +167,7 @@ theorem kms_beta_hawking (bh : BHGeometry) :
     (2 * Real.pi / bh.surfaceGravity) * HawkingTemperature bh = 1 := by
   have hκ : bh.surfaceGravity ≠ 0 := ne_of_gt bh.gravity_pos
   have hπ : (2 * Real.pi : ℝ) ≠ 0 := ne_of_gt (by positivity)
-  rw [hawkingtemperature bh, div_mul_div_comm,
+  rw [hawking_temperature_def bh, div_mul_div_comm,
     mul_comm (2 * Real.pi) bh.surfaceGravity]
   exact div_self (mul_ne_zero hκ hπ)
 

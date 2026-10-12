@@ -8,27 +8,32 @@ semantic non-vacuity. Earlier pass-status notes below are historical.
 
 **Status note, added 2026-10-12.** This document is the record of the pass
 carried out on 2026-09-26; the scope line above describes that day, not today.
-Measured on `main` now: 68 proof modules plus `lakefile.lean`, 1,448
-declarations (928 theorems, 407 defs, 76 structures, 19 abbrevs, 14 inductives,
-4 instances), 260 selected kernel-audit targets, 107 Python/tooling tests, and
-all eight `audit_vacuity` ratchets plus the alias baseline at zero. The pinned
+Measured on the branch now: 68 proof modules plus `lakefile.lean`, 1,449
+declarations (929 theorems, 407 defs, 76 structures, 19 abbrevs, 14 inductives,
+4 instances), 7,506 comment-free code lines, 262 selected kernel-audit targets,
+109 Python/tooling tests, and
+all eight `audit_vacuity` ratchets plus the alias baseline at zero (including
+corpus-declared `: Prop` predicate and shared-binder decorative-hypothesis detection). The pinned
 build and the kernel gate are green on `main` (CI run 38119532226; after PR #83 was merged
 as `a764f34`, run 38255776907) and on PR #83
 (run 38251369698, which is also the first run of the Phase 6 statement-audit step). The fourteenth pass (Phase 5 exit gate: comment-parity and
 text-mirror tooling, documented in `README.md`) changed no declaration, and
 neither did the fifteenth (the cited-name check, now a gate in Lean CI) or the
-sixteenth (the statement audit below). This note is bookkeeping, not a re-audit.
+sixteenth (the initial statement audit below). This note is bookkeeping, not a re-audit.
 
 **Phase 6, the per-declaration statement review, was recorded on 2026-10-12** in
-`statement_audit.json`: one row for each of the 161 theorems/lemmas in `Vol*.lean`
-whose name carries a lexicon word (163 rows in all), with the dispositions 73
-`witness`, 43 `conditional`, 14 `renamed` and 33 `carried` (the last count
-ratcheted by the file's own `carried_cap`). The rename pass that followed renamed
-sixteen declarations whose names asserted results the statements do not contain —
-the six `zeroCurvature_*` Vol05 restatements among them — keeping each row's
-disposition and recording the retired name as `previous_name`, which the gate now
-checks on every row. The pass and its parity/mirror updates are green on PR #83 (Lean CI
-run 38254475070: `lake build ToE`, the 260-target kernel audit — including the renamed
+`statement_audit.json`: one row for each of the 233 theorems/lemmas in `Vol*.lean`
+whose name carries a lexicon word (244 rows in all across all 54/54 volumes), with the dispositions 122
+`witness`, 61 `conditional`, 14 `renamed` and 47 `carried` (the last count
+ratcheted by the file's own `carried_cap`). Two rename passes renamed
+36 declarations in total whose names asserted results the statements do not contain —
+the six `zeroCurvature_*` Vol05 restatements, the constant-scale Vol07 equations, the
+definitional Vol08/Vol09/Vol10/Vol13 equations, and the six `*_from_omega` restatements in
+Vol26/Vol31/Vol32/Vol36/Vol38/Vol39 among them — keeping each row's
+disposition and recording the retired name as `previous_name` (50 retired names in total
+including the 14 `bridge_*` rows), which the gate now
+checks on every row. The first pass and its parity/mirror updates are green on PR #83 (Lean CI
+run 38254475070: `lake build ToE`, the kernel audit — including the renamed
 `OmegaProtocol.Vol09.bridge_entanglement_entropy_eq_bh_entropy` — the cited-name gate and
 the statement-audit step). PR #83 is merged into `main` as merge commit `a764f34`, whose
 push runs re-ran everything green (Lean CI run 38255776907, CI run 38255777137). `check_statement_audit.py` gates the rows for shape

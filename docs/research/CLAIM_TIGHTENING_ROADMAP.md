@@ -267,7 +267,7 @@ Steps:
    `lean_proofs/declaration_parity.json`). Each file is reduced to a canonical code
    projection — nested block comments, docstrings and line comments removed, string and
    character literals kept, blank lines and trailing whitespace dropped — and hashed:
-   69 files, 1,448 declarations, 7,492 code lines. Verified in both directions: appending
+   69 files, 1,449 declarations, 7,506 code lines. Verified in both directions: appending
    a comment leaves all 69 digests unchanged (exit 0), while inserting one token inside a
    proof body fails with `Vol18_StatisticalMechanics.lean: code changed (...)`. CI runs the
    gate; `--against <ref>` proves a branch is comment-only against any revision.
@@ -395,6 +395,52 @@ disposition, plus a test that the shipped audit covers the shipped corpus. The a
 added, removed and renamed no Lean declaration; the rename pass that followed it renamed
 sixteen, as recorded above.
 
+**Second rename pass, decorative-hypothesis upgrade, and 54/54 volume coverage (2026-10-12).**
+Follow-up audit closed the remaining statement-audit and static-vacuity gaps:
+
+1. **Decorative-hypothesis detector upgrade (`lean_proofs/audit_vacuity.py`).** `hypothesis_binders`
+   previously checked only `Prop`/inequality/equality binder types and single-identifier binder
+   groups, missing hypotheses typed by corpus-declared `: Prop` predicates (such as
+   `subset_region` or `spacelike_separated`) and shared binders `(a b : T)`. Expanding
+   `prop_predicates(root)` and splitting multi-name binders surfaced four real findings across
+   the 69-file corpus, all remediated:
+   - `Vol01.least_action_strict`: removed the unused boundary hypothesis `(hN : η N = 0)`
+     (already unnecessary once the sum positive-ness uses `h1 : η 1 ≠ 0`) and replaced
+     `by linarith` with `sub_eq_zero.mp hs`.
+   - `Vol06.LocalNet` & `Vol06.local_nets_isotony`: replaced the region-independent singleton
+     `LocalNet O := {0}` with interval-supported scalar operators
+     `{ A | ∃ x : ℝ, O.x_min ≤ x ∧ x ≤ O.x_max ∧ (A : Operator) = (x : ℂ) • (1 : Operator) }`,
+     so `local_nets_isotony` genuinely uses `h : subset_region O₁ O₂` (`le_trans h.1 hmin` and
+     `le_trans hmax h.2`); added `local_nets_spacelike_disjoint` proving disjoint support
+     coordinates under `spacelike_separated`, and marked `_h` on `local_nets_microcausality`
+     (where commutation comes from `omegaAlgebra_commutative`).
+   - `Vol37.drive_iff_ratio`: removed the unused hypothesis `(hd : S.d < 0)` (only `0 < S.a`
+     is used by `div_gt_one_iff`).
+2. **Second rename pass (20 declarations).** Renamed the remaining over-named volume theorems
+   whose names overstated their statements: `commutator_limit` →
+   `constant_commutator_eval_at_zero` (Vol01), `dirac_equation` → `diracOperator_eq_smul` and
+   `optical_theorem` → `placeholder_optical_theorem` (Vol06), `friedmannequations` →
+   `constantScale_friedmann_equation`, `cosmologicalredshift` → `cosmological_redshift_ratio`,
+   and `criticaldensity` → `constantScale_critical_density` (Vol07), `hawkingtemperature` →
+   `hawking_temperature_def`, `hawkingtemperature_pos` → `hawking_temperature_pos`,
+   `bekensteinhawkingentropy` → `bekenstein_hawking_entropy_def`, and `bhentropy_pos` →
+   `bekenstein_hawking_entropy_pos` (Vol08), `bulk_reconstruction` →
+   `bulkFields_eq_boundaryFields_map` and `ryu_takayanagi` →
+   `entanglementEntropy_eq_minimalSurfaceArea_div` (Vol09), `fermiongenerations` →
+   `numberOfGenerations_eq_three` (Vol10), `graviton_sm_coupling` →
+   `sm_interaction_of_self_distance_zero` (Vol13), and the six `*_from_omega` restatements in
+   Vol26 (`handshaking_lemma_restated`), Vol31 (`defect_dominates_p1_restated`), Vol32
+   (`feedback_convergence_restated`), Vol36 (`boolean_excluded_middle_restated`), Vol38
+   (`equilibrium_excess_demand_zero_restated`), and Vol39 (`min_connections_restated`).
+3. **Full 54/54 volume lexicon coverage (`statement_audit.json`).** Expanded `PHYSICS_TOKENS`
+   from 94 to 117 tokens (adding domain tokens including `dirac`, `optical`, `commutator`,
+   `isotony`, `microcausality`, `spacelike`, `graviton`, `wheeler`, `dewitt`, `chern`, `hall`,
+   `haldane`, `landau`, `higgs`, `ryu`, `takayanagi`, `epr`, `tsirelson`, `chsh`, `bell`,
+   `singlet`, `partition`, `frame`, `novikov`, `omega`). All **54/54** volumes are now
+   represented across **244** rows (covering all 233 lexicon candidates plus 11 extra renamed
+   rows): **122 `witness`**, **61 `conditional`**, **14 `renamed`**, and **47 `carried`**
+   (`carried_cap: 47`), with **50** retired names recorded under `previous_name`.
+
 ### Phase 7 — Consistency gate and review · **DONE (gate added 2026-10-12; the review step is human)**
 
 A single command runs every check the repository can run without the Lean toolchain:
@@ -406,7 +452,10 @@ python research/consistency_gate.py          # add --quick to skip the pytest su
 It runs, in order: the three derivation-check scripts, the two LaTeX gates (citation and
 structure), the claim scanner, the Lean sorry/trivial grep, the axiom audit, the eight vacuity
 ratchets plus the alias baseline, the declaration-parity gate, the text-mirror gate, the
-statement audit of the physics volumes, the pytest suite, and
+statement audit of the physics volumes, the three C++23 verification suites (`cpp/build.sh --quick`,
+`omni-bridge/cpp/build.sh --quick`, and `ai-governor/build.sh`, which now includes a self-contained
+FIPS 180-4 SHA-256 implementation and NIST test-vector check with zero external library dependencies),
+the pytest suite, and
 `ruff check` / `ruff format --check` / `mypy` when those tools are on `PATH`
 (a missing tool is reported as skipped, never as a pass). It reports one line per command and
 the tail of any failure, and exits non-zero if anything failed. It states in its own summary

@@ -42,10 +42,11 @@ def Pressure (_ : CosmologicalTime) : ℝ := 0
 -- THE FRIEDMANN EQUATIONS
 -- ============================================================
 
-/-- MODEL CLAIM: First Friedmann Equation
-    Derived from the Einstein Field Equations for an FLRW metric.
-    H² = (8πG/3)ρ - k/a² + Λ/3 -/
-theorem friedmannequations (t : CosmologicalTime) :
+/-- First Friedmann equation in the constant-scale-factor model
+    (`ScaleFactor _ := 1`, `TimeDerivative _ _ := 0`, `EnergyDensity _ := 0`,
+    `SpatialCurvatureK := 0`, `CosmologicalConstant := 0`), where both sides
+    evaluate to 0 by `simp`.  Renamed from `friedmannequations`. -/
+theorem constantScale_friedmann_equation (t : CosmologicalTime) :
   (HubbleParameter t)^2 = (8 * Real.pi * NewtonG / 3) * EnergyDensity t - SpatialCurvatureK / (ScaleFactor t)^2 + CosmologicalConstant / 3 := by
   simp [HubbleParameter, TimeDerivative, ScaleFactor, EnergyDensity,
     SpatialCurvatureK, CosmologicalConstant]
@@ -64,7 +65,9 @@ theorem global_state_dynamics (t : CosmologicalTime) :
 noncomputable def Redshift (t_emit t_obs : CosmologicalTime) : ℝ :=
   ScaleFactor t_obs / ScaleFactor t_emit - 1
 
-theorem cosmologicalredshift (t_emit t_obs : CosmologicalTime) :
+/-- Ring rearrangement of the redshift definition: `1 + z = a(t_obs) / a(t_emit)`.
+    Renamed from `cosmologicalredshift`. -/
+theorem cosmological_redshift_ratio (t_emit t_obs : CosmologicalTime) :
   1 + Redshift t_emit t_obs = ScaleFactor t_obs / ScaleFactor t_emit := by
   dsimp [Redshift]
   ring
@@ -83,12 +86,16 @@ noncomputable def CriticalDensity (t : CosmologicalTime) : ℝ :=
 theorem NewtonG_pos : NewtonG > 0 := by
   norm_num [NewtonG]
 
-theorem criticaldensity (t : CosmologicalTime) 
+/-- Critical-density equality in the constant-scale-factor model (`EnergyDensity`
+    and `CriticalDensity` both evaluate to 0); the parameterized equivalence is
+    `FLRWUniverse.flat_friedmann_critical_density_eq`.  Renamed from
+    `criticaldensity`. -/
+theorem constantScale_critical_density (t : CosmologicalTime) 
   (h_flat : SpatialCurvatureK = 0) 
   (h_lambda : CosmologicalConstant = 0) :
   EnergyDensity t = CriticalDensity t := by
   -- Start with the First Friedmann Equation
-  have h_friedmann := friedmannequations t
+  have h_friedmann := constantScale_friedmann_equation t
   -- Apply the flatness and zero-lambda conditions
   rw [h_flat, h_lambda] at h_friedmann
   -- Simplify the equation: H² = (8πG/3)ρ - 0/a² + 0/3

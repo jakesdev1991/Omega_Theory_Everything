@@ -51,9 +51,10 @@ noncomputable def BoundaryFields (_ : CFTBoundary) : ↥OmegaAlgebra := 0
 noncomputable def BulkFields (p : AdSSpacetime) : ↥OmegaAlgebra := 
   BoundaryFields (boundary_map p)
 
-/-- THEOREM: Bulk Reconstruction (HKLL)
-    Bulk fields are definitionally boundary fields pulled back. -/
-theorem bulk_reconstruction (p : AdSSpacetime) :
+/-- Definitional unfolding (`rfl`) of `BulkFields`: in the zero-field layer
+    `BulkFields p` is defined as `BoundaryFields (boundary_map p)`.  Renamed
+    from `bulk_reconstruction`. -/
+theorem bulkFields_eq_boundaryFields_map (p : AdSSpacetime) :
   BulkFields p = BoundaryFields (boundary_map p) := rfl
 
 -- ============================================================
@@ -74,7 +75,9 @@ def MinimalSurfaceArea (bh : BHGeometry) : ℝ := bh.horizonArea
 noncomputable def EntanglementEntropy (bh : BHGeometry) : ℝ := 
   MinimalSurfaceArea bh / (4 * NewtonG)
 
-theorem ryu_takayanagi (bh : BHGeometry) :
+/-- Definitional unfolding (`rfl`) of `EntanglementEntropy`; renamed from
+    `ryu_takayanagi`. -/
+theorem entanglementEntropy_eq_minimalSurfaceArea_div (bh : BHGeometry) :
   EntanglementEntropy bh = MinimalSurfaceArea bh / (4 * NewtonG) := rfl
 
 -- ============================================================

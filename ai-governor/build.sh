@@ -4,10 +4,9 @@
 #
 # Build and smoke-run the AI governor (Proof-of-Useful-Work trainer).
 #
-# Until this script existed there was no way to build the governor anywhere:
-# the repository contained no build command for it, it is in no CI job, and it
-# needs OpenSSL (libcrypto) for the SHA-256 receipt digest.  CI installs
-# libssl-dev for this script; on Debian/Ubuntu that is `apt-get install libssl-dev`.
+# Zero external dependencies: FIPS 180-4 SHA-256 for work-receipt digests is
+# implemented in-header (`include/omega/omega_governor.hpp`), matching
+# `omni-bridge/cpp/omni_bridge_core.hpp`.
 #
 # Usage: ./build.sh [--quick]
 #   default : strict build, then a 300-step governed+baseline run (seconds)
@@ -20,18 +19,9 @@ cd "$SCRIPT_DIR"
 CXX=${CXX:-g++}
 STD=${STD:--std=c++23}
 OUT=${OUT:-/tmp/omega_governor_train}
-# Link flags for libcrypto; overridable for hosts without the dev symlink
-# (e.g. LDLIBS="-l:libcrypto.so.3").
-LDLIBS=${LDLIBS:--lcrypto}
+LDLIBS=${LDLIBS:-}
 QUICK=0
 [ "${1:-}" = "--quick" ] && QUICK=1
-
-if ! echo '#include <openssl/sha.h>
-int main(){ unsigned char md[SHA256_DIGEST_LENGTH]; SHA256(nullptr,0,md); return 0; }' | "$CXX" -x c++ - $LDLIBS -o /dev/null 2>/dev/null; then
-  echo "!! OpenSSL headers (openssl/sha.h) and/or libcrypto are missing." >&2
-  echo "!! Install libssl-dev (Debian/Ubuntu) and re-run." >&2
-  exit 2
-fi
 
 echo "=== strict build (-Wall -Wextra -Werror -O2) ==="
 "$CXX" $STD -O2 -Wall -Wextra -Werror -Iinclude governor_train.cpp $LDLIBS -o "$OUT"

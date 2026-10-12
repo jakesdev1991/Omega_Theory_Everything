@@ -28,13 +28,9 @@ open OmegaProtocol
 theorem boolean_excluded_middle (a : Prop) [Decidable a] : a ∨ ¬a :=
   em a
 
-/-- COROLLARY: Topos Theory from Omega Protocol
-    Subobjects = Q-Regions (0D)
-    Morphisms = Φ (1D)
-    Categorical distance = Ω-Metric (2D)
-    Computation = Informational Viscosity (3D)
-    Logic = RCOD Asymmetry (4D) -/
-theorem topos_from_omega (a : Prop) [Decidable a] : a ∨ ¬a := by
+/-- Restatement of `boolean_excluded_middle` (classical `em`); no topos-theoretic
+    derivation from Ω is established.  Renamed from `topos_from_omega`. -/
+theorem boolean_excluded_middle_restated (a : Prop) [Decidable a] : a ∨ ¬a := by
   exact em a
 
 /-- Consistency bridge (VOL36): the von Neumann entropy satisfies the bound `S ≤ π`.

@@ -20,8 +20,9 @@ theorem feedback_convergence (g : ℝ) (hg0 : 0 ≤ g) (hg1 : g ≤ 1) (n : ℕ)
   g ^ (n + 1) ≤ g ^ n := by
   exact pow_le_pow_of_le_one hg0 hg1 (Nat.le_succ n)
 
-/-- Legacy export name for the scalar power inequality. -/
-theorem cybernetics_from_omega (g : ℝ) (hg0 : 0 ≤ g) (hg1 : g ≤ 1) (n : ℕ) :
+/-- Restatement of `feedback_convergence` for the scalar power inequality; no
+    derivation from Ω is established.  Renamed from `cybernetics_from_omega`. -/
+theorem feedback_convergence_restated (g : ℝ) (hg0 : 0 ≤ g) (hg1 : g ≤ 1) (n : ℕ) :
   g ^ (n + 1) ≤ g ^ n := by
   exact feedback_convergence g hg0 hg1 n
 

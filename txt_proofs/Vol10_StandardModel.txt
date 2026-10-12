@@ -34,8 +34,9 @@ theorem SM_Gauge_Group_eq_product : SM_Gauge_Group = (SU3 × SU2 × U1) := rfl
 
 def NumberOfGenerations : ℕ := 3
 
-/-- Restates the chosen generation-count parameter; no physical count is derived. -/
-theorem fermiongenerations : NumberOfGenerations = 3 := rfl
+/-- Restates (`rfl`) the chosen generation-count parameter `NumberOfGenerations := 3`;
+    no physical count is derived.  Renamed from `fermiongenerations`. -/
+theorem numberOfGenerations_eq_three : NumberOfGenerations = 3 := rfl
 
 -- ============================================================
 -- SCALAR QUARTIC POTENTIAL

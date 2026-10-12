@@ -112,8 +112,9 @@ theorem excess_demand_sign (market : LinearMarket) (p : ℝ) :
     have h := excessDemand_strictAnti market hp
     rwa [equilibrium_excess_demand_zero] at h
 
-/-- Legacy export name; only a consequence of the linear-market definitions. -/
-theorem economics_from_omega (market : LinearMarket) :
+/-- Restatement of `equilibrium_excess_demand_zero` for the linear market; no
+    derivation from Ω is established.  Renamed from `economics_from_omega`. -/
+theorem equilibrium_excess_demand_zero_restated (market : LinearMarket) :
     ExcessDemand market (equilibrium_price market) = 0 :=
   equilibrium_excess_demand_zero market
 

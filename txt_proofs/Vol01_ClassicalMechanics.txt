@@ -18,14 +18,11 @@ import OmegaUnifiedFoundation
      minimizes the discretized action among all paths with the same
      endpoints.
 
-  Explicit physical postulates of the Omega framework (axioms, clearly
-  labelled — NOT theorems):
-  * commutator_limit : lim_{ℏ→0} (i/ℏ)[A,B] = {A,B}
-  * modular_spectrum_nonneg : the modular generator has non-negative
-    spectrum, so emergent masses are non-negative.
-
-  NOTE: written against Mathlib; not yet machine-checked in this repo's
-  CI (no Lean toolchain available when written).
+  6. Canonical Weyl commutator scaling: `(i / ℏ)[q, p] = {q, p}` for every
+     `ℏ ≠ 0` (`weyl_commutator_quotient_eq_poisson`), together with the
+     legacy constant-evaluation helper `constant_commutator_eval_at_zero`
+     (renamed from `commutator_limit`) and non-negativity of emergent mass
+     under a non-negative modular spectrum (`modular_spectrum_nonneg`).
 -/
 
 namespace OmegaProtocol.Vol01
@@ -177,9 +174,11 @@ theorem weyl_commutator_quotient_eq_poisson (A B : Observable) (ℏ : ℝ) (hℏ
   · dsimp [scaleObservable, weylCommutator, poisson_bracket]
     field_simp
 
-/-- The normalized commutator `commutator A B` coincides with the classical
-    Poisson bracket `{A, B}` on affine observables. -/
-theorem commutator_limit (A B : Observable) :
+/-- In the constant-observable helper `lim_h_to_0 f := f 0`, evaluating the
+    constant family `fun _ => commutator A B` returns `{A, B}` by `rfl`; the
+    non-constant Weyl scaling correspondence is
+    `weyl_commutator_quotient_eq_poisson`.  Renamed from `commutator_limit`. -/
+theorem constant_commutator_eval_at_zero (A B : Observable) :
     lim_h_to_0 (fun _ => commutator A B) = poisson_bracket A B :=
   rfl
 
@@ -322,10 +321,11 @@ theorem galilean_boost_acceleration (x : ℝ → ℝ) (u : ℝ) (t : ℝ)
     simpa [mul_one] using ((hasDerivAt_id t).const_mul u)
   exact hx.add hu
 
-/-- A stationary free-particle action has no nonzero endpoint-fixed
-    perturbation with zero discrete kinetic energy. -/
+/-- A perturbation anchored at the initial endpoint (`η 0 = 0`) with zero
+    discrete velocity on every step in `range N` vanishes identically on
+    `{0, …, N}`. -/
 theorem least_action_strict (N : ℕ) (η : ℕ → ℝ)
-    (h0 : η 0 = 0) (hN : η N = 0)
+    (h0 : η 0 = 0)
     (hzero : ∀ i ∈ range N, η (i + 1) - η i = 0) :
     ∀ i ≤ N, η i = 0 := by
   intro i hi
@@ -333,7 +333,7 @@ theorem least_action_strict (N : ℕ) (η : ℕ → ℝ)
   | zero => exact h0
   | succ i ih =>
     have hs := hzero i (by exact mem_range.mpr (Nat.lt_of_succ_le hi))
-    have : η (i + 1) = η i := by linarith
+    have : η (i + 1) = η i := sub_eq_zero.mp hs
     rw [this]
     exact ih (Nat.le_of_lt (Nat.lt_of_succ_le hi))
 

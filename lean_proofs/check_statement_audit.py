@@ -96,15 +96,18 @@ PHYSICS_TOKENS = frozenset(
     entropy energy temperature thermal heat mass force momentum pressure density
     expansion contraction curvature horizon redshift luminosity power flux charge
     current potential orbit period decay relaxation diffusion instability
-    viscosity dissipation oscillation harmonic radiation wave spacetime causal
-    lightcone geodesic
+    viscosity dissipation oscillation harmonic radiation wave spacetime spacelike
+    causal lightcone geodesic
     # relativity, quantum theory, thermodynamics, information
     quantum photon gauge vacuum planck hawking bekenstein kardashev dyson
     gravitational gravity schwarzschild kretschmann ricci friedmann flrw
     desitter cosmological cosmology cosmic inflation inflaton singularity
     hamiltonian schrodinger robertson poisson weyl symplectic lagrangian
     kms gibbs boltzmann carnot clausius landauer thermodynamic decoherence
-    entanglement decoherent qubit spin magnetic electric
+    entanglement decoherent qubit spin magnetic electric dirac optical
+    commutator isotony microcausality graviton wheeler dewitt chern hall
+    haldane landau higgs ryu takayanagi epr tsirelson chsh bell singlet
+    partition frame novikov omega
     # structure of the physical world and the disciplines in the volume titles
     universe multiverse brane compactification boson fermion atom nuclear
     stellar galactic metric
@@ -311,6 +314,9 @@ def validate(
     """Return (problems, candidates without a row)."""
     problems: list[str] = []
     by_name: dict[str, Declaration] = {decl.name: decl for decl in corpus_decls}
+    by_file_name: dict[tuple[str, str], Declaration] = {
+        (decl.file, decl.name): decl for decl in corpus_decls
+    }
     seen: set[str] = set()
     for row in rows:
         name = row.get("name")
@@ -334,7 +340,7 @@ def validate(
                 f"{label}: disposition {disposition!r} is not one of {DISPOSITIONS}"
             )
             continue
-        decl = by_name.get(name)
+        decl = by_file_name.get((str(row.get("file")), name)) or by_name.get(name)
         if decl is None:
             problems.append(f"{label}: no such declaration in the corpus")
             continue

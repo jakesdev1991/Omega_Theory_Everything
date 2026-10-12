@@ -43,7 +43,7 @@
     "OmegaProtocol.lean": {
       "code_lines": 433,
       "declarations": 126,
-      "sha256": "7c8d294b7e2fce5f0dee49090ac6e68f8077b02af9d34da9fb720869550dac1d"
+      "sha256": "a6f37c10f94e83b0950e6aebf10037278e898632ba974d4b6d46a52660448a3a"
     },
     "OmegaUnifiedFoundation.lean": {
       "code_lines": 162,
@@ -51,9 +51,9 @@
       "sha256": "baf0b922da1acee854ba3e59bb839d88bed1e03f6fb4ca0e8d47eccc7fda2e72"
     },
     "ProofRegression.lean": {
-      "code_lines": 538,
+      "code_lines": 546,
       "declarations": 4,
-      "sha256": "42ff317ff59c356df0d7f5d3b7c093c2cba147a54be9eb8cd5e208b4610e1af9"
+      "sha256": "cdec57776b36f527313766dbf3d6c51f1291e5d7246817cbd1085ab030996974"
     },
     "RadialDilation.lean": {
       "code_lines": 174,
@@ -73,7 +73,7 @@
     "Vol01_ClassicalMechanics.lean": {
       "code_lines": 194,
       "declarations": 43,
-      "sha256": "9f18cf75280a9781efd93fca919510db245dcdd24ef4273b950fac121e6f6b62"
+      "sha256": "91a48625b61f8ad15bc85e5ad95310ebfb463f305bcc1e688fdc094f78744369"
     },
     "Vol02_Electromagnetism.lean": {
       "code_lines": 82,
@@ -96,29 +96,29 @@
       "sha256": "6baca31c5068f2784a6baf7bedd6e9b91ad5dc0f26e92c5c7668c5793823e70f"
     },
     "Vol06_QuantumFieldTheory.lean": {
-      "code_lines": 78,
-      "declarations": 25,
-      "sha256": "80031e6862771dd2fcf53ee2a0387c8bba683d9631bb9d2074eb2f927f9f8bc4"
+      "code_lines": 85,
+      "declarations": 26,
+      "sha256": "c7fa00ca34d000e528d5597e8dc544409e85e1590513180bd08748eca0be9378"
     },
     "Vol07_Cosmology.lean": {
       "code_lines": 122,
       "declarations": 22,
-      "sha256": "f198507be47c2424d6c4b870f297877bab4ff36d52453292f91f0e0e3358d1c1"
+      "sha256": "97c968aca9e0e4e5a51cf75769ea3343c86a5ebaefb1a79ed6e6a43ff99291f2"
     },
     "Vol08_BlackHoleThermodynamics.lean": {
       "code_lines": 94,
       "declarations": 23,
-      "sha256": "177bebd129fe534bc6894ba8725330d392bfb9f319af7b0ff8bbc2b803bf3e42"
+      "sha256": "02a5d60e71e199fc00f48017f460ee58c425f9d68418ab9d128473c95b4d27ad"
     },
     "Vol09_HolographicPrinciple.lean": {
       "code_lines": 109,
       "declarations": 29,
-      "sha256": "3c111ac33fe9d42a411be56d45d4eeb3ed3a6b3ad9b3f37f48de7038fb90c58a"
+      "sha256": "364ab988ad667a47812386ce95e80e521e970c815729946cfbeb348f827757e4"
     },
     "Vol10_StandardModel.lean": {
       "code_lines": 58,
       "declarations": 13,
-      "sha256": "c57f3b886e545037ffd75674c4b18b1b1ac94805d0a02592f034d4ea0489ec87"
+      "sha256": "bece021b4fcd38383ad885279f080feb7bcce71dfb290d3c3a6e7027a555ecb6"
     },
     "Vol11_CondensedMatter.lean": {
       "code_lines": 117,
@@ -133,7 +133,7 @@
     "Vol13_QuantumGravity.lean": {
       "code_lines": 85,
       "declarations": 19,
-      "sha256": "8a8774fd398bf2a158b4c9b6332223134dfda2351d36507e5d8de1ffdbd9d4af"
+      "sha256": "60f801c7b966cf51f987f63612d37c4d2251bd52009d40fec2739b8acabde286"
     },
     "Vol14_DarkSector.lean": {
       "code_lines": 59,
@@ -198,7 +198,7 @@
     "Vol26_NetworkTheory.lean": {
       "code_lines": 69,
       "declarations": 19,
-      "sha256": "f322978bc2d84ae784b3e33bddf33878880b43d1f69df375150aa3818a0388dd"
+      "sha256": "c37b33cfd4297a09667a5eac4281b576afe21896c8042775583be7464720d43c"
     },
     "Vol27_Consciousness.lean": {
       "code_lines": 60,
@@ -223,12 +223,12 @@
     "Vol31_GameTheory.lean": {
       "code_lines": 67,
       "declarations": 13,
-      "sha256": "a09e355442dfd9552be81fb0e49eaf1108a3944a469e66e624dd86bdd6bc37e6"
+      "sha256": "65c9123f5b874db1d4e2c00c750211ca8135ac95b31d494d0e922dab87120d4d"
     },
     "Vol32_Cybernetics.lean": {
       "code_lines": 42,
       "declarations": 9,
-      "sha256": "8fbeb111b7620062ec0ba2fbbdecd535a871d1e639d9040e89f73831c0d0eedc"
+      "sha256": "0019fe9a58b0b5934dddb4b503dfb39bd11ddb009a73762cdd9103afc64ed650"
     },
     "Vol33_AGI.lean": {
       "code_lines": 88,
@@ -248,22 +248,22 @@
     "Vol36_ToposTheory.lean": {
       "code_lines": 284,
       "declarations": 47,
-      "sha256": "ddcfde47847f1d867e58e5d017fe51e04e2bae7843b0d129b09c582d26339816"
+      "sha256": "ac91fc77600b51acab344097676835a4d58e53a5ce341a95bee60f21410d1992"
     },
     "Vol37_Morphogenesis.lean": {
-      "code_lines": 89,
+      "code_lines": 88,
       "declarations": 21,
-      "sha256": "f48543236b76848f89f5c81404fbff9953d19a00d412138f7933da0779f27809"
+      "sha256": "4a4b3d9a30232dc18d5b43f692a3c9ec9888b547deb33e4294faef0e2d77bf1b"
     },
     "Vol38_Economics.lean": {
       "code_lines": 90,
       "declarations": 19,
-      "sha256": "5158a1f034d350e7fbe516eaccef8cb8cc856edfb2e6f3d359942aebaffa2585"
+      "sha256": "d45f9c07fa2c38515733d924f684532f6daca1872fead8ac794963e3ea85639c"
     },
     "Vol39_SocietalNetworks.lean": {
       "code_lines": 44,
       "declarations": 15,
-      "sha256": "0c76ea2c30586ee41bd593d0f274259195c1ee8a109304f508617c2f414f4575"
+      "sha256": "4fe5c81e8841492e1e9681af07485b7ea2080f346afae350e49bc6e1d81e27c9"
     },
     "Vol40_FermiParadox.lean": {
       "code_lines": 75,
