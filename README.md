@@ -157,6 +157,7 @@ python -m pytest tests/test_gauss_bonnet_scalarization.py -q
 python research/verify_derivations.py
 python research/verify_covariant.py
 python research/verify_tfim.py
+python research/check_latex_citations.py
 python research/claim_scan.py
 
 # Sim1 and Sim4 are historical manuscripts, not executable scripts; read their status notes in docs/manuscripts/

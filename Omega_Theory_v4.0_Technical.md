@@ -230,7 +230,12 @@ python research/verify_derivations.py
 python -m pytest tests/test_verify_derivations.py -q
 python research/verify_covariant.py
 python research/verify_tfim.py
+python research/check_latex_citations.py
 ```
+
+`check_latex_citations.py` verifies that each LaTeX volume's status box points
+at a Lean module that exists and cites declarations that exist, so the volumes
+cannot drift away from the code they describe.
 
 The Lean source and CI audit are documented in
 [`lean_proofs/README.md`](lean_proofs/README.md) and

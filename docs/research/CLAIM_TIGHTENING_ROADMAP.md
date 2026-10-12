@@ -64,9 +64,10 @@ and is left in place.
 | Covariant checks (new) | 4 of 4 pass; four negative controls fail as they must | `python research/verify_covariant.py` |
 | TFIM checks (new) | 2 of 2 pass (independent dense ED row; Schwarzschild column) | `python research/verify_tfim.py` |
 | Derivation checks | 12 of 12 pass (one added by Phase 3 item 6) | `python research/verify_derivations.py` |
-| `ruff check .`, `ruff format --check .` | pass (120 files formatted) | venv, CI versions |
-| `mypy . --ignore-missing-imports` | pass (49 source files) | venv, CI versions |
-| `pytest -q` | 138 passed, 81 subtests passed (needs the full `requirements.txt`: `matplotlib` for the Sim6 tests and `sympy`/`scipy` for the derivation checks) | venv, CI versions |
+| LaTeX citation gate (new) | 0 errors: 41 volumes cite 41 modules and 5 declarations; 2 documented external exemptions | `python research/check_latex_citations.py` |
+| `ruff check .`, `ruff format --check .` | pass (125 files formatted) | venv, CI versions |
+| `mypy . --ignore-missing-imports` | pass (54 source files) | venv, CI versions |
+| `pytest -q` | 151 passed, 81 subtests passed (needs the full `requirements.txt`: `matplotlib` for the Sim6 tests and `sympy`/`scipy` for the derivation checks) | venv, CI versions |
 | Lean | Not compiled here (no `lake`). Lean edits are comment and docstring only; all 68 `txt_proofs/` mirrors are byte-identical, and the code-projection parity check covers 69 files / 1,448 declarations. | CI only |
 
 ## 2. The road
@@ -174,7 +175,7 @@ done. The core notes are therefore **not** yet called final.
 apart from the documented false positive (met). Each core-note number has a check or a
 "reported" label (met for items 1–4 and 6). Item 5 remains (not met).
 
-### Phase 4 — LaTeX volumes · **DONE (option a; 13 volumes absent by decision)**
+### Phase 4 — LaTeX volumes · **DONE (option a; 13 volumes absent by decision; cited-declaration gate added)**
 
 Scope: 41 files, 82 unhedged prose hits. Most are of the form "Volume N proves that …"
 in a layman's summary, and the layman's summaries make claims the Lean statements do not
@@ -197,13 +198,25 @@ counterpart are withdrawn and listed as open items. Known problems exposed by th
 include: Vol10 sets the generation count to 3 by definition; Vol13's "graviton–SM coupling"
 reduces to a zero self-distance; Vol09's bulk reconstruction holds by reflexivity.
 
-**Not done.** A script check that every cited declaration exists (step 2 of this phase). The
-LaTeX sources were not compiled, since no LaTeX toolchain is installed here; they were checked
-for brace balance and unescaped special characters only.
+**Done later (2026-10-12).** The script check that every cited declaration exists:
+`research/check_latex_citations.py`, run by `tests/test_latex_citations.py` under pytest, so
+CI enforces it. It checks that all 41 volumes cite a module that exists, that each volume
+cites its own `VolNN` module, and that every `\texttt{}` identifier is a declaration of the
+corpus -- resolved in the citing volume where possible, otherwise reported. Two names are
+exempt as external, each with a reason and each required to still be cited: `Empty` (Lean
+core) and `HasDerivAt` (Mathlib). A token that is none of module path, identifier, or
+`identifier = value` is an error rather than a silent skip, and the coverage claims in
+`latex_docs/README.md` are compared with the directory. Negative controls were exercised on
+copies: a renamed declaration, a retargeted module, a stale exemption, an unclassified
+token, a missing module, and a drifted README count each exit 1.
+
+**Not done.** The LaTeX sources were not compiled, since no LaTeX toolchain is installed
+here; they were checked for brace balance and unescaped special characters only. The check
+is lexical: it does not verify that the cited declaration says what the prose claims.
 
 **Exit gate:** `python research/claim_scan.py` shows zero unhedged `latex_docs` hits (met).
-The declaration-existence script check is still to be added. The `docs` CI job was not run
-here.
+The declaration-existence script check is in place and green (met 2026-10-12). The `docs` CI
+job was not run here.
 
 ### Phase 5 — Lean headers and text mirrors · **DONE (items 1–3 done; exit gate met except the CI-only half)**
 
@@ -258,10 +271,17 @@ A single command runs every check in the repository:
 
 ```bash
 python research/verify_derivations.py
+python research/verify_covariant.py
+python research/verify_tfim.py
+python research/check_latex_citations.py
 python research/claim_scan.py
 python -m pytest -v
 ruff check . && ruff format --check . && mypy . --ignore-missing-imports
 ```
+
+(The three check scripts that predate this list -- `verify_covariant.py`,
+`verify_tfim.py` and `check_latex_citations.py` -- are run by `pytest -v` as well, so the
+list is a convenience for a human reviewer, not the enforcement path.)
 
 Then a reviewer reads the `claim_scan.py --list` output and the Verified table in §3, and
 confirms that every status in §3 matches the evidence. The pull request is opened only
