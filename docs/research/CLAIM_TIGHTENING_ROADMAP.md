@@ -67,7 +67,7 @@ and is left in place.
 | `ruff check .`, `ruff format --check .` | pass (120 files formatted) | venv, CI versions |
 | `mypy . --ignore-missing-imports` | pass (49 source files) | venv, CI versions |
 | `pytest -q` | 118 passed, 81 subtests passed | venv, CI versions |
-| Lean | Not compiled here (no `lake`). Lean edits are comment and docstring only; `txt_proofs/` copies are byte-identical to the Lean files. | CI only |
+| Lean | Not compiled here (no `lake`). Lean edits are comment and docstring only; all 68 `txt_proofs/` mirrors are byte-identical, and the code-projection parity check covers 69 files / 1,448 declarations. | CI only |
 
 ## 2. The road
 
@@ -194,7 +194,7 @@ for brace balance and unescaped special characters only.
 The declaration-existence script check is still to be added. The `docs` CI job was not run
 here.
 
-### Phase 5 — Lean headers and text mirrors · **DONE (comments and docstrings only; automated check not yet added)**
+### Phase 5 — Lean headers and text mirrors · **DONE (items 1–3 done; exit gate met except the CI-only half)**
 
 Scope: 21 Lean files carry "REAL formalization", "REAL mathematical formalization", or
 "GENUINE PROOF" labels (36 lines). The text companions in `txt_proofs/` mirror those headers.
@@ -209,11 +209,26 @@ Steps:
    `OmegaAxioms.lean`) is ordinary mathematical wording and was left in place.
 2. Add a check that compares the non-comment declaration lines of every `lean_proofs/*.lean`
    file before and after, so a comment edit cannot change a theorem.
+   **Done** (`lean_proofs/check_declaration_parity.py`, baseline
+   `lean_proofs/declaration_parity.json`). Each file is reduced to a canonical code
+   projection — nested block comments, docstrings and line comments removed, string and
+   character literals kept, blank lines and trailing whitespace dropped — and hashed:
+   69 files, 1,448 declarations, 7,492 code lines. Verified in both directions: appending
+   a comment leaves all 69 digests unchanged (exit 0), while inserting one token inside a
+   proof body fails with `Vol18_StatisticalMechanics.lean: code changed (...)`. CI runs the
+   gate; `--against <ref>` proves a branch is comment-only against any revision.
 3. Regenerate `txt_proofs/` from `lean_proofs/`, as `PROOF_AUDIT.md` describes.
+   **Done** (`lean_proofs/sync_txt_mirrors.py`): the 9 modules that had never been mirrored
+   (`RadialMetric`, `RadialDilation`, `InformationPhysics`, `DynamicPlanckScale`,
+   `DynamicCODScale`, `LogCorrelationMetric`, `ProofRegression`, `CBwK_Budget_Pacer`,
+   `APPA_Context_Branching`) were generated; all 68 mirrors are byte-identical to their
+   sources. Orphans are reported, never deleted.
 
-**Exit gate:** `claim_scan.py` shows zero `label` hits in `lean_proofs/` and `txt_proofs/`;
-the declaration-comparison check passes; `lake build ToE` and the kernel audit pass in Lean
-CI (these cannot be run locally).
+**Exit gate:** `claim_scan.py` shows zero `label` hits in `lean_proofs/` and `txt_proofs/`
+(**met** — 0 files with hits on both surfaces); the declaration-comparison check passes
+(**met** — 69 files unchanged); `lake build ToE` and the kernel audit pass in Lean CI
+(**not runnable from this environment**; green on `main` at CI run 38119532226, the merge
+of PR #79).
 
 ### Phase 6 — Statement-level audit of the Lean physics volumes · **PLANNED, CI-ONLY**
 

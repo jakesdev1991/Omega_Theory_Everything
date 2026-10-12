@@ -51,6 +51,13 @@ jobs:
           fi
           echo "Clean: no sorry/trivial stubs."
           python3 audit_axioms.py --max 0
+          # Phase 5 parity: a comment/docstring-only edit must leave every
+          # declaration byte-identical, and the plain-text mirrors must track
+          # the Lean sources. Both are baseline ratchets; a deliberate code
+          # change needs `check_declaration_parity.py --update` and
+          # `sync_txt_mirrors.py --write` in the same commit.
+          python3 check_declaration_parity.py
+          python3 sync_txt_mirrors.py
           # Honesty ratchet: degenerate-model tautologies may only exist under
           # the `bridge_*` naming convention, `Nonempty Unit` stubs and
           # `Unit`-typed volume definitions may only decrease, and no

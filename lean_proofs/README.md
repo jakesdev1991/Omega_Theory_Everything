@@ -163,7 +163,34 @@ This corpus is maintained under an explicit honesty policy, enforced in CI:
    and Unit-valued type definitions (including parameterized types) inside the
    volumes are tracked by
    `audit_vacuity.py` and ratcheted so they can only decrease.
-5. **No axiom-*named* declarations.** The corpus contains zero Lean `axiom`
+5. **Comment edits cannot change a theorem.** The label-replacement pass
+   (roadmap Phase 5) touched comments and docstrings only.
+   `check_declaration_parity.py` reduces every `.lean` file to a canonical
+   *code projection* — nested block comments, docstrings and line comments
+   removed, string and character literals kept, blank lines and trailing
+   whitespace dropped — and hashes it into `declaration_parity.json`. A
+   comment-only edit leaves every digest untouched; a change to a name,
+   statement, or proof body fails the gate until the baseline is regenerated:
+
+   ```bash
+   python3 check_declaration_parity.py            # gate (CI)
+   python3 check_declaration_parity.py --update   # after a deliberate code change
+   python3 check_declaration_parity.py --against main   # prove a branch is comment-only
+   ```
+
+   It is a lexical check, not a kernel check: it cannot see semantic
+   equivalence, so two spellings of one proof give two digests.
+6. **Plain-text mirrors track the sources.** `txt_proofs/` is generated, not
+   hand-edited:
+
+   ```bash
+   python3 sync_txt_mirrors.py          # gate (CI)
+   python3 sync_txt_mirrors.py --write  # regenerate after editing a module
+   ```
+
+   Every module except `lakefile.lean` has a byte-identical companion; orphans
+   are reported but never deleted.
+7. **No axiom-*named* declarations.** The corpus contains zero Lean `axiom`
    primitives, so a theorem or field *named* `axiom_*`/`*_axiom` misrepresents
    its content. `audit_vacuity.py --max-axiom-names 0` (CI) rejects such
    names; model laws carried as structure data are named `law_*` with an
