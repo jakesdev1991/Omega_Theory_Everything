@@ -16,9 +16,13 @@ claim-tightening passes (PR #78, PR #79) are merged into `main`. `lake build ToE
 and the transitive kernel-axiom gate — **260** selected declarations, zero
 unexpected axioms — are green on `main`
 ([Lean CI run 38119532226](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/38119532226),
-the merge of PR #79) and were re-confirmed on
+the merge of PR #79), were re-confirmed on
 [PR #83](https://github.com/jakesdev1991/Omega_Theory_Everything/pull/83)
-(runs 38251369698 and, at the head with the rename pass, 38254475070). Reproducible
+(runs 38251369698 and, at the head with the rename pass, 38254475070), and are now green
+on `main` at the merge commit of PR #83, `a764f34`
+([Lean CI run 38255776907](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/38255776907),
+[CI run 38255777137](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/38255777137)).
+Reproducible
 locally without a toolchain: 107 Python/tooling
 tests, `audit_axioms --max 0` → 0, all eight `audit_vacuity` ratchets and the
 alias baseline at 0, the comment-parity gate across 69 files, 68
@@ -853,7 +857,9 @@ and the two files added are a checker, an audit record, and its tests.
   — the new `Gate - statement audit of the physics volumes` step passes next to
   `lake build ToE`, the cited-name gate and the 260-declaration kernel audit
   ([CI run 38251369679](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/38251369679)
-  for the pytest side).
+  for the pytest side). The merge into `main` (`a764f34`) re-ran both green
+  ([Lean CI 38255776907](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/38255776907),
+  [CI 38255777137](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/38255777137)).
 
 ### Seventeenth pass: the Phase 6 rename pass (names qualified, code changed)
 
@@ -912,3 +918,6 @@ same commit.
   targets (including the renamed `OmegaProtocol.Vol09.bridge_entanglement_entropy_eq_bh_entropy`),
   the cited-name gate and the statement-audit step — and CI
   [run 38254475046](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/38254475046).
+  PR #83 was then merged into `main` as merge commit `a764f34`, and `main`'s own push runs
+  are green too ([Lean CI 38255776907](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/38255776907),
+  [CI 38255777137](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/38255777137)).
