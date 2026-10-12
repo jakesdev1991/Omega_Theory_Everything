@@ -2,7 +2,7 @@
 
 # Adversarial Audit: Lean 4 Proof Corpus
 
-**Date:** 2026-09-26 · **Scope:** all 67 `.lean` files in `lean_proofs/` (~460 theorems)
+**Date:** 2026-09-26 · **Scope at the time:** all 67 `.lean` files in `lean_proofs/` (~460 theorems)
 **Auditor stance:** adversarial — assume every name, docstring, and header is guilty until proven innocent.
 **Method:** full read of every volume file + core modules + audit scripts; static pattern scans;
 cross-file consistency checks; ground truth = pinned CI (`lake build ToE`, grep gate,
@@ -12,6 +12,41 @@ hosts blocked), so this audit is static analysis only. It does **not** second-gu
 kernel: every proof term was accepted by Lean CI and is therefore valid. All findings
 below are about **statement strength, naming honesty, vacuity, and modeling coherence** —
 the things a kernel cannot check.
+
+> **Status note — added 2026-10-12. The body of this audit is unchanged and remains a
+> record of what was found on 2026-09-26.**
+>
+> The executive summary below is the **pre-remediation** scoreboard. It describes the
+> corpus as it stood that day, not as it stands now. Remediation is logged in the
+> appendices: [R.1–R.8](#appendix-r-p0-remediation-log-2026-09-26) (P0/P1, 2026-09-26),
+> [R.11](#r11-eleventh-pass-the-four-degenerate-model-stacks-redesigned) and
+> [R.12–R.13](#r12r13-twelfth-and-thirteenth-passes-non-trivial-qregion-zero-unit-types-corpus-wide-non-tracial-22-kms-unitary-gate-matrices-subobject-classifier-and-verified-stack-compiler)
+> (passes 12–13). Measured again on `main` today:
+>
+> | Measure | Audit date (2026-09-26) | Today (2026-10-12) |
+> |---|---|---|
+> | `.lean` files in `lean_proofs/` | 67 | 69 (68 proof modules + `lakefile.lean`) |
+> | Declarations | ~460 theorems | 1,448 — 928 theorems, 407 defs, 76 structures, 19 abbrevs, 14 inductives, 4 instances |
+> | Comment-free code lines | — | 7,492 |
+> | Kernel-audit targets | 155 | 260 |
+> | Tooling tests | 35 | 66 |
+> | Vacuity / axiom-name / `Unit`-stub ratchets | several non-zero (see C1, H2, H3, Medium) | all zero |
+> | Kernel status | green in CI | green on `main` (run 38119532226) and on PR #83 (run 38234115307) |
+>
+> The three "must fix or retire" files were each addressed: the 96 `*_Stmt` propositions
+> in `OmegaUnifiedFoundation.lean` are gone (only the comment recording their retirement
+> remains), `Vol30_PlanetarySystems.lean` is rebuilt on `KeplerSystem` with positive
+> gravitational constant and central mass plus explicit radius hypotheses, and the two
+> Planck profiles are reconciled by declaring the COD profile canonical
+> (`canonicalCODEnv`, `planckFactor`) while `DynamicPlanckScale` is documented in-file as
+> a different parametrisation of the same idea.
+>
+> **What this note is not:** it is bookkeeping, not a re-audit. The manual
+> per-declaration review that would confirm every High and Medium finding is closed has
+> not been repeated. That work is Phase 6 of
+> [`docs/research/CLAIM_TIGHTENING_ROADMAP.md`](../docs/research/CLAIM_TIGHTENING_ROADMAP.md),
+> which remains **planned**, and a passing ratchet is not a semantic non-vacuity
+> certificate.
 
 ## Executive summary
 
@@ -489,4 +524,5 @@ ToE` plus the 173-declaration kernel gate are **green in Lean CI on
     (`Vol53_UniversalCompiler.lean`: `evalExpr_subst`, `compile_correct`), and
     closed all remaining "Next:" items in `Vol40`–`Vol43`, `Vol45`–`Vol47`,
     and `Vol50`–`Vol52`.
-  - Expanded `kernel_audit_targets.json` to **262** declarations.
+  - Expanded `kernel_audit_targets.json` to **260** declarations (counted on
+    2026-10-12; an earlier draft of this line said 262).

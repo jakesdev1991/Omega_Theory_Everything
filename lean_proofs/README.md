@@ -11,16 +11,23 @@ vacuous in its chosen model.
 See [PROOF_AUDIT.md](PROOF_AUDIT.md) for the source-review inventory, outstanding
 limitations, and compiler-validation results.
 
-**Integrated CI status (2026-09-26):** the seventh pass was validated by
-[Lean CI run 36270581122](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/36270581122)
-(PR #47): full `lake build ToE`, all **142** then-selected kernel-audit
-declarations resolving with zero unexpected axioms. The eighth pass
-(P1 remediation: `*_axiom` renames, vacuous-hypothesis retirements,
-naming-convention gate; 155 selected declarations) is queued for the same CI on
-its own PR. Main's retired alias exports remain retired (baseline zero), and
-`RadialDilation` is included. Lean/mathlib remain pinned to v4.32.0. Earlier
-pass-status notes below are historical; no PR merge into main has been performed
-for the seventh or eighth pass.
+**Integrated CI status (2026-10-12):** the thirteenth pass (PR #77) and the
+claim-tightening passes (PR #78, PR #79) are merged into `main`. `lake build ToE`
+and the transitive kernel-axiom gate — **260** selected declarations, zero
+unexpected axioms — are green on `main`
+([Lean CI run 38119532226](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/38119532226),
+the merge of PR #79) and were re-confirmed on
+[PR #83](https://github.com/jakesdev1991/Omega_Theory_Everything/pull/83)
+(run 38234115307). Reproducible locally without a toolchain: 66 Python/tooling
+tests, `audit_axioms --max 0` → 0, all eight `audit_vacuity` ratchets and the
+alias baseline at 0, the comment-parity gate across 69 files, and 68
+byte-identical `txt_proofs/` mirrors. Lean/mathlib remain pinned to v4.32.0.
+Kernel acceptance cannot be reproduced here: the toolchain and the mathlib olean
+cache are served from release-asset hosts that are unreachable in this
+environment, so `lake build` is CI-only. The
+[adversarial audit](ADVERSARIAL_AUDIT.md) is dated 2026-09-26; its executive
+summary is a pre-remediation record, and its status note carries the counts
+above. Earlier pass-status notes below are historical.
 
 ## Structure
 
@@ -615,5 +622,35 @@ the 173-declaration transitive-axiom gate, all job steps success).
     Cantor diagonalization (`Vol50`), arbitrary finite-state relaxation
     convergence (`Vol51`), and conformal finite-horizon time compression
     (`Vol52`).
-  - **Kernel inventory:** **262** declarations in `kernel_audit_targets.json`,
-    47 Python audit tests, all 9 static/vacuity ratchets at 0.
+  - **Kernel inventory:** **260** declarations in `kernel_audit_targets.json`
+    (recounted on 2026-10-12; the pass note originally said 262), 47 Python
+    audit tests, all 8 static/vacuity ratchets plus the alias baseline at 0.
+
+### Fourteenth pass: the Phase 5 exit gate (tooling, no proof content changed)
+
+The label-replacement pass above edited comments and docstrings only, and said
+so without a machine check behind it. This pass supplies the check and closes
+the rest of Phase 5 of the claim-tightening roadmap. **No declaration was
+added, removed, or restated**: the code projection of the corpus is unchanged.
+
+- **`check_declaration_parity.py`** reduces every `.lean` file to a canonical
+  code projection and hashes it into `declaration_parity.json` (69 files, 1,448
+  declarations, 7,492 comment-free code lines). Appending a comment leaves all
+  69 digests untouched; one inserted token inside a proof body fails the gate
+  with the file and its line-count delta. `--against <ref>` proves a branch is
+  comment-only against any revision. Deliberate code changes need `--update` in
+  the same commit.
+- **`sync_txt_mirrors.py`** makes `txt_proofs/` generated rather than
+  hand-edited. Nine modules that had no mirror at all (`RadialMetric`,
+  `RadialDilation`, `InformationPhysics`, `DynamicPlanckScale`,
+  `DynamicCODScale`, `LogCorrelationMetric`, `ProofRegression`,
+  `CBwK_Budget_Pacer`, `APPA_Context_Branching`) were added; all 68 mirrors are
+  byte-identical to their sources. Orphans are reported, never deleted.
+- 19 new regression tests (66 total), and both gates wired into Lean CI.
+- Documentation drift corrected: the stale "Integrated CI status" paragraph
+  above, the `262` → `260` kernel-target count, and a status note added to
+  `ADVERSARIAL_AUDIT.md` marking its executive summary as the pre-remediation
+  record it is.
+
+Verified: green on PR #83 (Lean CI run 38234115307), including `lake build ToE`
+and the 260-declaration kernel-axiom gate.
