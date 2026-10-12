@@ -83,6 +83,12 @@ def gate_commands(python: str) -> list[GateCommand]:
             "every declaration cited by a volume exists",
         ),
         GateCommand(
+            "LaTeX structure",
+            (python, "research/check_latex_structure.py"),
+            ".",
+            "braces, environment nesting and math delimiters in the volumes",
+        ),
+        GateCommand(
             "claim scan",
             (python, "research/claim_scan.py"),
             ".",

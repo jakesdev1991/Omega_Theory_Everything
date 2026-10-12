@@ -65,10 +65,11 @@ and is left in place.
 | TFIM checks (new) | 2 of 2 pass (independent dense ED row; Schwarzschild column) | `python research/verify_tfim.py` |
 | Derivation checks | 12 of 12 pass (one added by Phase 3 item 6) | `python research/verify_derivations.py` |
 | LaTeX citation gate (new) | 0 errors: 41 volumes cite 41 modules and 5 declarations; 2 documented external exemptions | `python research/check_latex_citations.py` |
-| Consistency gate (new) | 14 passed, 0 failed, 0 skipped (one command runs every local check) | `python research/consistency_gate.py` |
-| `ruff check .`, `ruff format --check .` | pass (127 files formatted) | venv, CI versions |
-| `mypy . --ignore-missing-imports` | pass (56 source files) | venv, CI versions |
-| `pytest -q` | 160 passed, 81 subtests passed (needs the full `requirements.txt`: `matplotlib` for the Sim6 tests and `sympy`/`scipy` for the derivation checks) | venv, CI versions |
+| LaTeX structure gate (new) | 0 findings over 41 volumes: braces, environment nesting, document markers, math delimiters | `python research/check_latex_structure.py` |
+| Consistency gate (new) | 15 passed, 0 failed, 0 skipped (one command runs every local check) | `python research/consistency_gate.py` |
+| `ruff check .`, `ruff format --check .` | pass (129 files formatted) | venv, CI versions |
+| `mypy . --ignore-missing-imports` | pass (58 source files) | venv, CI versions |
+| `pytest -q` | 174 passed, 81 subtests passed (needs the full `requirements.txt`: `matplotlib` for the Sim6 tests and `sympy`/`scipy` for the derivation checks) | venv, CI versions |
 | Lean | Not compiled here (no `lake`). Lean edits are comment and docstring only; all 68 `txt_proofs/` mirrors are byte-identical, and the code-projection parity check covers 69 files / 1,448 declarations. | CI only |
 
 ## 2. The road
@@ -231,13 +232,19 @@ core) and `HasDerivAt` (Mathlib). A token that is none of module path, identifie
 copies: a renamed declaration, a retargeted module, a stale exemption, an unclassified
 token, a missing module, and a drifted README count each exit 1.
 
-**Not done.** The LaTeX sources were not compiled, since no LaTeX toolchain is installed
-here; they were checked for brace balance and unescaped special characters only. The check
-is lexical: it does not verify that the cited declaration says what the prose claims.
+**Also scripted (2026-10-12).** The structural hand check is now a gate:
+`research/check_latex_structure.py` checks brace balance (escaped braces are literals),
+`\begin{}`/`\end{}` nesting with every environment closed, exactly one `\documentclass`,
+one `\begin{document}` and one `\end{document}`, balanced `\[`/`\]` display delimiters, and
+an even number of unescaped `$`. All 41 volumes pass, and each rule was shown to fail on a
+mutated copy. It is a floor, not a compile: a missing package or an undefined macro would
+still only surface in a TeX toolchain, which this environment does not have. The citation
+check is lexical too: it does not verify that a cited declaration says what the prose claims.
 
 **Exit gate:** `python research/claim_scan.py` shows zero unhedged `latex_docs` hits (met).
-The declaration-existence script check is in place and green (met 2026-10-12). The `docs` CI
-job was not run here.
+The declaration-existence script check is in place and green (met 2026-10-12), and the
+structural rules are scripted and green over all 41 volumes. Compilation remains unverified
+here, and the `docs` CI job was not run in this environment.
 
 ### Phase 5 — Lean headers and text mirrors · **DONE (items 1–3 done; exit gate met except the CI-only half)**
 

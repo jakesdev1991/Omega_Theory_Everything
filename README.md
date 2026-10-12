@@ -158,6 +158,7 @@ python research/verify_derivations.py
 python research/verify_covariant.py
 python research/verify_tfim.py
 python research/check_latex_citations.py
+python research/check_latex_structure.py
 python research/claim_scan.py
 
 # Or run every local check at once (needs the pinned requirements.txt for ruff/mypy)
