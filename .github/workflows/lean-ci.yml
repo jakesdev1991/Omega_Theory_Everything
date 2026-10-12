@@ -103,10 +103,24 @@ jobs:
         working-directory: lean_proofs
         run: |
           set -e
-          mathlib=.lake/packages/mathlib
-          if [ ! -d "$mathlib/Mathlib" ]; then
-            echo "::error::pinned mathlib sources are missing at $PWD/$mathlib"
+          # The mathlib checkout is found, not assumed: the requirement is named
+          # `mathlib4` in lakefile.lean and lands in the manifest's packages dir.
+          # A renamed requirement must not quietly turn this gate off, so the
+          # fallback search looks for the checkout that actually holds Mathlib/.
+          mathlib=""
+          for candidate in .lake/packages/mathlib4 .lake/packages/mathlib; do
+            if [ -d "$candidate/Mathlib" ]; then mathlib="$candidate"; break; fi
+          done
+          if [ -z "$mathlib" ]; then
+            mathlib="$(find .lake/packages -maxdepth 2 -type d -name Mathlib 2>/dev/null | head -n1)"
+            mathlib="${mathlib%/Mathlib}"
+          fi
+          if [ -z "$mathlib" ] || [ ! -d "$mathlib/Mathlib" ]; then
+            echo "::error::pinned mathlib sources are missing under $PWD/.lake/packages"
             echo "::error::they are fetched by the Lean build step above, so this also happens when an earlier step failed"
+            # Annotations are readable through the API even where the raw log is
+            # not, so the listing needed to fix a rename is an annotation too.
+            echo "::error::entries under .lake/packages: $(ls .lake/packages 2>/dev/null | tr '\n' ' ')"
             exit 1
           fi
           # lean-action puts elan on PATH; fall back to its install dirs so the
@@ -125,7 +139,8 @@ jobs:
           lean_src="$prefix/src/lean"
           if [ ! -d "$lean_src/Init" ]; then
             echo "::error::Lean core sources not found at $lean_src"
-            find "$prefix" -maxdepth 3 -type d | head -40
+            echo "::error::entries under $prefix: $(ls "$prefix" 2>/dev/null | tr '\n' ' ')"
+            echo "::error::entries under $prefix/src: $(ls "$prefix/src" 2>/dev/null | tr '\n' ' ')"
             exit 1
           fi
           echo "mathlib: $mathlib; Lean core: $lean_src"

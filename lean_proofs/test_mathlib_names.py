@@ -158,6 +158,17 @@ class IndexTreeTests(TreeTestCase):
             qualified, _ = index_tree(root)
         self.assertIn("foo", qualified)
 
+    def test_dependency_checkouts_are_not_part_of_the_corpus(self) -> None:
+        """In CI the repository tree contains the whole mathlib copy."""
+        nested = self.repo / ".lake" / "packages" / "mathlib4" / "Mathlib"
+        nested.mkdir(parents=True)
+        (nested / "Big.lean").write_text(
+            "theorem dependency_theorem : True := trivial\n", encoding="utf-8"
+        )
+        qualified, _ = index_tree(self.repo)
+        self.assertNotIn("dependency_theorem", qualified)
+        self.assertIn("Local.plain", qualified)
+
     def test_strings_and_comments_are_masked(self) -> None:
         repo = self.tmp / "masked"
         repo.mkdir()

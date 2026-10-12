@@ -218,6 +218,14 @@ def index_tree(root: pathlib.Path) -> tuple[set[str], set[str]]:
     qualified: set[str] = set()
     bare: set[str] = set()
     for path in root.rglob("*.lean"):
+        # Dependency checkouts and VCS metadata are not part of the corpus. In
+        # CI the repository tree holds `.lake/packages/mathlib4/`, the whole
+        # mathlib copy, which is already indexed as an authority of its own.
+        if (
+            ".lake" in path.relative_to(root).parts
+            or ".git" in path.relative_to(root).parts
+        ):
+            continue
         # Namespace and section scopes are tracked per file so `theorem mem_top`
         # inside `namespace StarSubalgebra` is registered as
         # `StarSubalgebra.mem_top`, and so that `end bij` closing a *section*

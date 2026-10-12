@@ -69,7 +69,7 @@ and is left in place.
 | Consistency gate (new) | 15 passed, 0 failed, 0 skipped (one command runs every local check) | `python research/consistency_gate.py` |
 | `ruff check .`, `ruff format --check .` | pass (129 files formatted) | venv, CI versions |
 | `mypy . --ignore-missing-imports` | pass (58 source files) | venv, CI versions |
-| `pytest -q` | 187 passed, 81 subtests passed (needs the full `requirements.txt`: `matplotlib` for the Sim6 tests and `sympy`/`scipy` for the derivation checks) | venv, CI versions |
+| `pytest -q` | 188 passed, 81 subtests passed (needs the full `requirements.txt`: `matplotlib` for the Sim6 tests and `sympy`/`scipy` for the derivation checks) | venv, CI versions |
 | Cited-name check (new) | **0 suspicious names** against the pinned sources — 563,126 mathlib + 292,520 Lean core + 7,429 repository declarations; the previous script reported 205 on the same trees. Four injected typos all detected, clean copy 0. | CI only, `.github/workflows/lean-ci.yml` |
 | Lean | Not compiled here (no `lake`). Lean edits are comment and docstring only; all 68 `txt_proofs/` mirrors are byte-identical, and the code-projection parity check covers 69 files / 1,448 declarations. | CI only |
 
@@ -304,9 +304,17 @@ The check exits 2 rather than reporting a clean run when a tree yields no declar
 `--max N` is the ratchet. It needs the pinned sources, so — like `lake build` — it is
 CI-only: it cannot join the consistency gate, which names it as one of the three checks it
 cannot run. Lean CI runs it after the build with `if: always()`, finding the trees by
-derivation rather than assumption (mathlib at `.lake/packages/mathlib`, core sources at
+derivation rather than assumption (the mathlib checkout under `.lake/packages/` — the
+requirement is named `mathlib4`, so the step searches for the checkout that holds
+`Mathlib/` instead of trusting one directory name; core sources at
 `<lean --print-prefix>/src/lean`, the destination the pinned `src/CMakeLists.txt` installs
-to). 13 new tests (79 in `lean_proofs/`, all `unittest`).
+to). 13 new tests (80 in `lean_proofs/`, all `unittest`).
+
+The gate's first CI run failed on the one thing that had only been assumed: the fixture here
+had used the directory name `mathlib`, and the requirement is named `mathlib4`, so the
+workflow's hardcoded path did not exist in CI. It exited 1 rather than passing hollow — the
+honest failure — and the step now searches for the checkout that holds `Mathlib/`. The
+fixture was then rebuilt to the CI layout so a smoke test can fail the same way again.
 
 ### Phase 6 — Statement-level audit of the Lean physics volumes · **PLANNED, CI-ONLY**
 

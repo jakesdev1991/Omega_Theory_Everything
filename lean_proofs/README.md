@@ -18,7 +18,7 @@ unexpected axioms — are green on `main`
 ([Lean CI run 38119532226](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/38119532226),
 the merge of PR #79) and were re-confirmed on
 [PR #83](https://github.com/jakesdev1991/Omega_Theory_Everything/pull/83)
-(run 38234115307). Reproducible locally without a toolchain: 79 Python/tooling
+(run 38234115307). Reproducible locally without a toolchain: 80 Python/tooling
 tests, `audit_axioms --max 0` → 0, all eight `audit_vacuity` ratchets and the
 alias baseline at 0, the comment-parity gate across 69 files, and 68
 byte-identical `txt_proofs/` mirrors. Lean/mathlib remain pinned to v4.32.0.
@@ -704,15 +704,25 @@ declaration was added, removed, or restated.**
 - **A hollow pass is an error, not a result.** Exit status 2 when any tree —
   mathlib, core, or the repository itself, so a wrong `--repo` counts too —
   yields no declarations, instead of reporting a clean run from an empty index.
-- **13 new regression tests** (79 total in this directory, all `unittest` so
-  the CI audit step does not need pytest).
+- **13 new regression tests** (80 total in this directory, all `unittest` so
+  the CI audit step does not need pytest). One pins that a `.lake/` dependency
+  checkout inside the repository tree is not scanned as corpus.
 - **Wired into Lean CI** after the build, with `if: always()` so a compile
   failure still produces a suspect list. The trees are located by derivation,
-  not assumption: mathlib at `.lake/packages/mathlib`, core sources at
-  `<lean --print-prefix>/src/lean` — the location the pinned `src/CMakeLists.txt`
-  installs to (`install(... DESTINATION src/lean)`). Four scenarios were
-  exercised against the real sources before pushing: sources present (exit 0,
-  0 suspicious), missing mathlib, unexpected toolchain layout, and no toolchain
-  on `PATH` (each exits 1 with an actionable message).
+  not assumption: the mathlib checkout under `.lake/packages/`, and the core
+  sources at `<lean --print-prefix>/src/lean` — the location the pinned
+  `src/CMakeLists.txt` installs to (`install(... DESTINATION src/lean)`).
+- **The first CI run of the gate failed, and the failure was the useful kind.**
+  The local fixtures had used the directory name `mathlib`, which is what the
+  checkout is called on disk here, while the requirement is named `mathlib4`
+  in `lakefile.lean` and the manifest — so CI's `.lake/packages/mathlib4` did
+  not match, and the step exited 1 instead of passing hollow. The step now
+  finds the checkout that holds `Mathlib/` (explicit candidates, then a search)
+  rather than trusting one name, and the local fixture was rebuilt to mirror
+  the CI layout (`.lake/packages/mathlib4`) so it can fail the same way again.
+  Five branches are exercised: sources present (exit 0, 0 suspicious), the
+  renamed requirement found by the search, missing mathlib, unexpected
+  toolchain layout, and no toolchain on `PATH` (each of the last three exits 1
+  with an actionable message).
 - The offline consistency gate states plainly that this check is one of the
   three it cannot run (with `lake build ToE` and the kernel audit).
