@@ -238,7 +238,9 @@ build, and the production-only audit pass after the update. The new controls are
   source-and-lockfile dependency inventory, deliberately not misrepresented as a complete license
   review or production SBOM;
 - [`../tools/audit_npm_production.mjs`](../tools/audit_npm_production.mjs): CI-enforced high/critical
-  production dependency auditing across every npm workspace; and
+  production dependency auditing across every npm workspace;
+- a Python resolver advisory gate, Dependabot coverage validation (including the desktop Tauri
+  Cargo project), and a time-bounded ratchet for the one known development-only npm advisory;
 - full SHA pinning for every remote GitHub Action, ratcheted by the workflow-policy test.
 
 These controls advance technical release discipline. They do **not** clear the ledger's still

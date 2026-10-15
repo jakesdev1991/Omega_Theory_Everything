@@ -2,9 +2,10 @@
 # SPDX-License-Identifier: LicenseRef-Omega-ReadOnly
 version: 2
 
-# One entry per dependency manifest in the repository. Keep this list in sync
-# with `git ls-files | grep -E 'package\.json$|pyproject\.toml$|Cargo\.toml$'`;
-# a manifest with no entry here is a manifest whose updates nobody is told about.
+# One entry per top-level dependency project in the repository. The checked
+# `tools/check_dependabot_coverage.py` derives this coverage from committed
+# manifests and lockfiles so a new project cannot quietly become a maintenance
+# blind spot.
 updates:
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -66,6 +67,13 @@ updates:
   # Tauri wrapper for the desktop wallet installers.
   - package-ecosystem: "npm"
     directory: "/desktop"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
+  # The desktop wrapper also has an independent Tauri/Rust dependency graph.
+  - package-ecosystem: "cargo"
+    directory: "/desktop/src-tauri"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10

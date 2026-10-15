@@ -40,6 +40,12 @@ jobs:
           pip install -U pip
           pip install -r requirements.txt
       
+      - name: Audit Python dependency resolution
+        # Runtime requirements use ranges, so this is a fresh resolver-based
+        # advisory check rather than a claim of a fully pinned Python lockfile.
+        # --strict also fails if a resolved dependency cannot be audited.
+        run: pip-audit -r requirements.txt --strict
+
       - name: Ruff lint
         run: ruff check .
       
@@ -192,6 +198,12 @@ jobs:
         # runtime risk.
         run: node tools/audit_npm_production.mjs
 
+      - name: Ratchet reviewed npm development dependency exceptions
+        # This full-tree audit permits only the explicit, time-bounded exception
+        # in docs/security/. A new advisory, changed path, expiration, or stale
+        # exception fails rather than becoming an invisible baseline.
+        run: node tools/audit_npm_development.mjs
+
   mobile-node:
     name: Mobile Node Tests (NIP-90 daemon)
     runs-on: ubuntu-24.04
@@ -298,6 +310,13 @@ jobs:
         run: |
           python -m pip install -U pip
           python -m pip install -e ./mcp
+          python -m pip install pip-audit==2.10.1
+
+      - name: Audit MCP hub dependency resolution
+        # mcp/ has its own Python >=3.12 project and version ranges. Audit it
+        # under the same interpreter that runs the hub rather than assuming the
+        # root Python 3.11 requirements audit covers this environment.
+        run: pip-audit mcp --strict
 
       # smoke_test.py imports the server, lists all 22 tools, checks the five
       # plane state attributes, and does a real stdio JSON-RPC round trip

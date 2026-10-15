@@ -93,10 +93,14 @@
       "owner_role": "release engineering owner",
       "evidence": [
         "tools/audit_npm_production.mjs",
+        "tools/audit_npm_development.mjs",
+        "tools/check_dependabot_coverage.py",
+        "docs/security/npm-development-audit-exceptions.json",
         "docs/SOFTWARE_SUPPLY_CHAIN.md",
+        ".github/dependabot.yml",
         ".github/workflows/ci.yml"
       ],
-      "next_action": "Keep the CI audit at zero high/critical production findings; investigate advisories before merging a dependency update and separately track development-only findings.",
+      "next_action": "Keep production audit findings at zero; review the Python resolver audit, Dependabot coverage, and time-bounded development-tooling exception before merging dependency updates. Replace or remove an exception when upstream fixes it.",
       "last_reviewed": "2026-10-15"
     },
     {

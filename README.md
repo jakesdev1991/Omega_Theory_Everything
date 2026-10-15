@@ -161,14 +161,19 @@ python research/check_latex_citations.py
 python research/check_latex_structure.py
 python research/claim_scan.py
 
-# Or run every local check at once (needs the pinned requirements.txt for ruff/mypy)
+# Or run every local check at once (needs requirements.txt for ruff/mypy/pip-audit)
 python research/consistency_gate.py
 
 # Validate the public launch-control ledger and generated dependency inventory.
 # A valid ledger is deliberately not launch approval; --require mainnet exits non-zero today.
 python launch/check_readiness.py --validate
 python tools/generate_dependency_inventory.py --check
+python tools/check_dependabot_coverage.py
+pip-audit -r requirements.txt --strict
+# MCP declares Python >=3.12; run this with that interpreter/environment.
+pip-audit mcp --strict
 node tools/audit_npm_production.mjs
+node tools/audit_npm_development.mjs
 
 # Sim1 and Sim4 are historical manuscripts, not executable scripts; read their status notes in docs/manuscripts/
 

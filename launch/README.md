@@ -42,4 +42,5 @@ and other confidential evidence in an access-controlled system.
   ledger provides a short, machine-validated control plane for its release blockers.
 
 See [`../docs/SOFTWARE_SUPPLY_CHAIN.md`](../docs/SOFTWARE_SUPPLY_CHAIN.md) for the dependency
-inventory and production npm advisory control.
+inventory, production and bounded development npm advisory controls, Python resolver audit, and
+Dependabot coverage check.

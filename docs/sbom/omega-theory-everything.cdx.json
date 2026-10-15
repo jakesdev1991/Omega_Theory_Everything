@@ -36957,6 +36957,23 @@
       "version": "9.1.1"
     },
     {
+      "bom-ref": "python:requirements.txt:19:pip-audit@2.10.1",
+      "name": "pip-audit",
+      "properties": [
+        {
+          "name": "omega:source",
+          "value": "requirements.txt"
+        },
+        {
+          "name": "omega:version-specifier",
+          "value": "==2.10.1"
+        }
+      ],
+      "purl": "pkg:pypi/pip-audit@2.10.1",
+      "type": "library",
+      "version": "2.10.1"
+    },
+    {
       "bom-ref": "python:requirements.txt:3:numpy@unresolved",
       "name": "numpy",
       "properties": [
@@ -37092,7 +37109,7 @@
       "properties": [
         {
           "name": "omega:input-sha256",
-          "value": "94ab57a5aa732108b9fe53103060e001273df98e7b302bf1e4289955e91ed586"
+          "value": "ea03c90ddf26391e59e3138188e2c9ec4b8862d31dc76ff5325278181ee04468"
         },
         {
           "name": "omega:inventory-scope",
@@ -37104,7 +37121,7 @@
         },
         {
           "name": "omega:component-count",
-          "value": "1337"
+          "value": "1338"
         }
       ],
       "type": "application",
@@ -37121,7 +37138,7 @@
       ]
     }
   },
-  "serialNumber": "urn:uuid:0ef7b905-e9ea-59f9-b098-5e3daa621e0f",
+  "serialNumber": "urn:uuid:502fccfb-adbd-5a11-8fec-96c4d497bea4",
   "specVersion": "1.5",
   "version": 1
 }
