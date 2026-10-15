@@ -223,3 +223,24 @@ success should be depth and decision quality—not more scope: one scientificall
 modeling pass, one deliberately bounded testnet drill if desired, and one focused pass over
 legal/security/maintenance ownership. Until those gates move, the honest status remains:
 **green code and useful prototypes; open science; no value-bearing launch.**
+
+## Follow-up: launch-readiness controls added on 2026-10-15
+
+A post-inventory production dependency audit found high-severity runtime advisories in the web
+lockfile. The web stack was updated to `next`/`eslint-config-next` 16.4.1, with patched
+transitive `sharp` and `source-map-js` entries; typecheck, 33 web tests, the 54-route production
+build, and the production-only audit pass after the update. The new controls are:
+
+- [`../launch/readiness-gates.json`](../launch/readiness-gates.json) plus
+  [`../launch/check_readiness.py`](../launch/check_readiness.py): a validated, fail-closed public
+  ledger separating the public manuscript, valueless testnet, and mainnet scopes;
+- [`sbom/omega-theory-everything.cdx.json`](sbom/omega-theory-everything.cdx.json): a reproducible
+  source-and-lockfile dependency inventory, deliberately not misrepresented as a complete license
+  review or production SBOM;
+- [`../tools/audit_npm_production.mjs`](../tools/audit_npm_production.mjs): CI-enforced high/critical
+  production dependency auditing across every npm workspace; and
+- full SHA pinning for every remote GitHub Action, ratcheted by the workflow-policy test.
+
+These controls advance technical release discipline. They do **not** clear the ledger's still
+blocked provenance, alert-visibility, independent-review, operations, testnet, legal, or C.A.R.E.
+mainnet gates.

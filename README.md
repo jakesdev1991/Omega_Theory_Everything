@@ -164,6 +164,12 @@ python research/claim_scan.py
 # Or run every local check at once (needs the pinned requirements.txt for ruff/mypy)
 python research/consistency_gate.py
 
+# Validate the public launch-control ledger and generated dependency inventory.
+# A valid ledger is deliberately not launch approval; --require mainnet exits non-zero today.
+python launch/check_readiness.py --validate
+python tools/generate_dependency_inventory.py --check
+node tools/audit_npm_production.mjs
+
 # Sim1 and Sim4 are historical manuscripts, not executable scripts; read their status notes in docs/manuscripts/
 
 # Build Lean 4 proofs (requires Lean 4 + Mathlib4)

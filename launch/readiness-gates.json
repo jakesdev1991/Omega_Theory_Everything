@@ -1,0 +1,250 @@
+{
+  "schema_version": 1,
+  "status_date": "2026-10-15",
+  "scope_note": "This public ledger records release-control status, not legal advice, an audit opinion, a deployment approval, or confidential evidence. A complete gate means only that the stated repository-level condition has documented evidence; it never substitutes for the independent review named by another gate.",
+  "scopes": {
+    "public-manuscript": "The already-public CC BY 4.0 manuscript and its honest access/attribution posture. This scope does not imply ownership clearance for unreviewed third-party material or a commercial release.",
+    "testnet-pilot": "A deliberately valueless, reversible Sepolia/Devnet/Testnet drill. This scope excludes mainnet keys, real-value issuance, and public financial claims.",
+    "mainnet": "Any value-bearing or production launch. Every scoped gate must be complete before this scope can be reported ready."
+  },
+  "gates": [
+    {
+      "id": "public_manuscript_access",
+      "title": "Public manuscript access is non-exclusive and clearly licensed",
+      "scopes": [
+        "public-manuscript"
+      ],
+      "status": "complete",
+      "risk": "low",
+      "owner_role": "release owner",
+      "evidence": [
+        "web/public/book/full-book.md",
+        "web/public/book/LICENSE.md",
+        "launch/novel_day_one_plan.md"
+      ],
+      "next_action": "Keep the CC BY notice, attribution guidance, and optional-proof limitation adjacent to every public distribution.",
+      "last_reviewed": "2026-10-15"
+    },
+    {
+      "id": "provenance_and_rights_review",
+      "title": "Rights, contributor authority, and third-party-material provenance are reviewed",
+      "scopes": [
+        "public-manuscript",
+        "testnet-pilot",
+        "mainnet"
+      ],
+      "status": "blocked",
+      "risk": "high",
+      "owner_role": "rights holder with qualified counsel",
+      "evidence": [
+        "docs/PROVENANCE.md",
+        "launch/novel_day_one_plan.md"
+      ],
+      "blocker": "The repository records unresolved authorship/assignment, third-party-material, dependency-license, and historical-disclosure questions. The existing public grant does not clear rights the licensor does not control.",
+      "next_action": "Maintain an access-controlled evidence register; review contributors, source material, permissions, and the public-history record before any commercial or value-bearing expansion.",
+      "last_reviewed": "2026-10-15"
+    },
+    {
+      "id": "source_inventory_and_license_review",
+      "title": "Source-and-lockfile inventory exists and license/SBOM review is completed",
+      "scopes": [
+        "testnet-pilot",
+        "mainnet"
+      ],
+      "status": "in_progress",
+      "risk": "high",
+      "owner_role": "security and legal review owners",
+      "evidence": [
+        "docs/sbom/omega-theory-everything.cdx.json",
+        "docs/SOFTWARE_SUPPLY_CHAIN.md",
+        "docs/PROVENANCE.md"
+      ],
+      "blocker": "The generated inventory identifies declared and lockfile dependencies, but it is not a full SBOM, license determination, operating-system inventory, or third-party-content clearance.",
+      "next_action": "Review component licenses and notices, add system/build dependencies and deployed artifacts, record decisions with evidence, and obtain permissions or replacements for any unacceptable material.",
+      "last_reviewed": "2026-10-15"
+    },
+    {
+      "id": "security_visibility",
+      "title": "Continuous vulnerability and code/secret-scanning visibility is enabled and owned",
+      "scopes": [
+        "testnet-pilot",
+        "mainnet"
+      ],
+      "status": "blocked",
+      "risk": "high",
+      "owner_role": "repository administrator and security owner",
+      "evidence": [
+        "docs/SOFTWARE_SUPPLY_CHAIN.md",
+        ".github/workflows/ci.yml"
+      ],
+      "blocker": "The 2026-10-15 GitHub API check reported Dependabot alerts disabled; this workspace could not read code-scanning or secret-scanning alert state. A green workflow scan is useful but is not a reviewed alert queue.",
+      "next_action": "Enable Dependabot alerts, verify Code Scanning and Secret Scanning access/retention, assign a reviewer and response SLA, and record the first reviewed alert export outside the public repository.",
+      "last_reviewed": "2026-10-15"
+    },
+    {
+      "id": "production_dependency_audit",
+      "title": "Production npm dependency advisories are checked from committed lockfiles",
+      "scopes": [
+        "testnet-pilot",
+        "mainnet"
+      ],
+      "status": "complete",
+      "risk": "medium",
+      "owner_role": "release engineering owner",
+      "evidence": [
+        "tools/audit_npm_production.mjs",
+        "docs/SOFTWARE_SUPPLY_CHAIN.md",
+        ".github/workflows/ci.yml"
+      ],
+      "next_action": "Keep the CI audit at zero high/critical production findings; investigate advisories before merging a dependency update and separately track development-only findings.",
+      "last_reviewed": "2026-10-15"
+    },
+    {
+      "id": "independent_security_review",
+      "title": "Independent security, privacy, and safeguarding review is complete for the selected scope",
+      "scopes": [
+        "testnet-pilot",
+        "mainnet"
+      ],
+      "status": "blocked",
+      "risk": "critical",
+      "owner_role": "independent qualified reviewers",
+      "evidence": [
+        "docs/care-architecture-v2.md",
+        "evm/THREAT_MODEL.md",
+        "launch/novel_day_one_plan.md"
+      ],
+      "blocker": "No independent EVM/Solana/AMITY/security/privacy review or public testnet deployment review is recorded.",
+      "next_action": "Define the exact pilot scope and threat model, select independent reviewers, publish a remediation process, and close findings before expanding the pilot.",
+      "last_reviewed": "2026-10-15"
+    },
+    {
+      "id": "evm_sepolia_drill",
+      "title": "Valueless $OMEGA Sepolia deployment and post-deploy drill are recorded",
+      "scopes": [
+        "testnet-pilot",
+        "mainnet"
+      ],
+      "status": "blocked",
+      "risk": "high",
+      "owner_role": "EVM pilot operator",
+      "evidence": [
+        "evm/README.md",
+        "evm/scripts/preflight-sepolia.js",
+        "evm/scripts/deploy-sepolia.js"
+      ],
+      "blocker": "No Sepolia deployment manifest is present; the repository intentionally makes local deployment manifests ignored and does not claim an on-chain pilot.",
+      "next_action": "Use a fresh Sepolia-only deployer and named pilot treasury/guardian, complete the non-broadcasting preflight, deploy only valueless tOMEGA, archive public manifest/transaction evidence outside Git, then run the documented drill.",
+      "last_reviewed": "2026-10-15"
+    },
+    {
+      "id": "twc_devnet_drill",
+      "title": "Valueless TWC Devnet mint, metadata verification, and drill are recorded",
+      "scopes": [
+        "testnet-pilot",
+        "mainnet"
+      ],
+      "status": "blocked",
+      "risk": "high",
+      "owner_role": "Solana pilot operator",
+      "evidence": [
+        "solana/README.md",
+        "solana/scripts/deploy-devnet.mjs",
+        "solana/scripts/verify-devnet.mjs"
+      ],
+      "blocker": "No Devnet mint or deployment manifest is present.",
+      "next_action": "Authorize a Devnet-only signer and treasury, freeze the metadata URI/hash, complete preflight and an independent verification drill, and retain public manifest/transaction evidence outside Git.",
+      "last_reviewed": "2026-10-15"
+    },
+    {
+      "id": "amity_testnet_infrastructure",
+      "title": "AMITY testnet infrastructure and a valueless Taproot Asset are independently verifiable",
+      "scopes": [
+        "testnet-pilot",
+        "mainnet"
+      ],
+      "status": "blocked",
+      "risk": "high",
+      "owner_role": "AMITY infrastructure operator",
+      "evidence": [
+        "amity/README.md",
+        "amity/scripts/preflight-testnet.mjs",
+        "launch/novel_day_one_plan.md"
+      ],
+      "blocker": "The repository contains a configuration/preflight scaffold only; no litd/tapd service, channels, Universe endpoint, or Taproot Asset is recorded.",
+      "next_action": "Build testnet infrastructure under an operations runbook, issue only a valueless test asset, publish a verification endpoint, and independently exercise holder verification before considering any broader use.",
+      "last_reviewed": "2026-10-15"
+    },
+    {
+      "id": "operator_incident_ownership",
+      "title": "Named operational ownership, support, incident response, and rollback evidence exist",
+      "scopes": [
+        "testnet-pilot",
+        "mainnet"
+      ],
+      "status": "blocked",
+      "risk": "high",
+      "owner_role": "operations and safeguarding owner",
+      "evidence": [
+        "launch/novel_day_one_plan.md",
+        "deploy/README.md",
+        "docs/care-architecture-v2.md"
+      ],
+      "blocker": "The repository has technical runbook material but no access-controlled owner roster, support rota, incident contacts, rollback exercise record, or evidence-retention register.",
+      "next_action": "Create and rehearse a private operations/incident runbook with named accountable roles, escalation boundaries, reversible testnet procedures, and evidence-retention rules.",
+      "last_reviewed": "2026-10-15"
+    },
+    {
+      "id": "mainnet_venue_decision",
+      "title": "The $OMEGA mainnet venue and separate mainnet specification are approved",
+      "scopes": [
+        "mainnet"
+      ],
+      "status": "decision_required",
+      "risk": "high",
+      "owner_role": "protocol owner with legal and security reviewers",
+      "evidence": [
+        "launch/novel_day_one_plan.md",
+        "docs/TRADEMARKS.md"
+      ],
+      "blocker": "Ethereum L1 versus an EVM L2 remains intentionally undecided; Sepolia is a pilot network and cannot determine a value-bearing deployment path.",
+      "next_action": "Select a venue only after documenting security, cost, governance, compliance, bridge/custody, and user-support consequences in a separate mainnet specification.",
+      "last_reviewed": "2026-10-15"
+    },
+    {
+      "id": "legal_and_compliance_review",
+      "title": "Token, consumer, privacy, trademark, and communications review is complete",
+      "scopes": [
+        "mainnet"
+      ],
+      "status": "blocked",
+      "risk": "critical",
+      "owner_role": "qualified counsel and compliance owner",
+      "evidence": [
+        "docs/TRADEMARKS.md",
+        "docs/LICENSING.md",
+        "launch/novel_day_one_plan.md"
+      ],
+      "blocker": "No jurisdiction-specific trademark clearance, securities/consumer/privacy review, distribution decision, or legal approval is recorded.",
+      "next_action": "Obtain qualified jurisdiction- and product-specific advice; freeze approved claims, terms, disclosures, support procedures, and distribution controls before any value-bearing communications or deployment.",
+      "last_reviewed": "2026-10-15"
+    },
+    {
+      "id": "care_mainnet_safety",
+      "title": "C.A.R.E. mainnet safety gate is evidenced",
+      "scopes": [
+        "mainnet"
+      ],
+      "status": "blocked",
+      "risk": "critical",
+      "owner_role": "governance, safeguarding, and independent-review owners",
+      "evidence": [
+        "docs/care-architecture-v2.md",
+        "docs/care-policy-v2.json"
+      ],
+      "blocker": "The documented C.A.R.E. mainnet prerequisites\u2014usable social application, voluntary pilots, stress tests, appeal evidence, reserve simulations, opt-in bounded resource use, and independent review\u2014are not evidenced as complete.",
+      "next_action": "Treat every numbered condition in the C.A.R.E. mainnet gate as a separately evidenced, independently reviewed release criterion; keep all rails valueless until then.",
+      "last_reviewed": "2026-10-15"
+    }
+  ]
+}

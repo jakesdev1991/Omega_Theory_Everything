@@ -11,6 +11,8 @@ It runs, in order:
   `verify_covariant.py`, `verify_tfim.py`) and the two LaTeX gates
   (`check_latex_citations.py`, `check_latex_structure.py`);
 * the claim scanner;
+* the public launch-readiness ledger and generated source-and-lockfile dependency
+  inventory;
 * the Lean-side static gates in `lean_proofs/`: the sorry/trivial grep, the
   axiom audit, the vacuity ratchets, the declaration-parity gate, the
   text-mirror gate and the statement audit of the physics volumes;
@@ -96,6 +98,18 @@ def gate_commands(python: str) -> list[GateCommand]:
             (python, "research/claim_scan.py"),
             ".",
             "unhedged claim language in the notes, volumes and proofs",
+        ),
+        GateCommand(
+            "launch readiness ledger",
+            (python, "launch/check_readiness.py", "--validate"),
+            ".",
+            "public evidence ledger is structurally valid and fails closed for bad references",
+        ),
+        GateCommand(
+            "dependency inventory",
+            (python, "tools/generate_dependency_inventory.py", "--check"),
+            ".",
+            "committed source-and-lockfile inventory matches supported inputs",
         ),
         GateCommand(
             "Lean sorry/trivial grep",

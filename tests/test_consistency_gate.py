@@ -37,6 +37,8 @@ def test_gate_covers_every_check_script() -> None:
         "LaTeX citations",
         "LaTeX structure",
         "claim scan",
+        "launch readiness ledger",
+        "dependency inventory",
         "axiom audit",
         "vacuity ratchets",
         "declaration parity",

@@ -34,7 +34,7 @@ jobs:
           node-version: '22'
 
       - name: Set up Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable as of 2026-10-15
 
       - name: Install Linux webview dependencies
         if: startsWith(matrix.platform, 'ubuntu')
