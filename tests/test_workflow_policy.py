@@ -16,6 +16,7 @@ CORE_ACTIONS = re.compile(
     r"@([^\s#]+)",
     re.MULTILINE,
 )
+ALL_ACTIONS = re.compile(r"^\s*(?:-\s*)?uses:\s*([^\s#]+)", re.MULTILINE)
 
 
 def test_workflows_do_not_use_the_implicit_ubuntu_latest_image() -> None:
@@ -49,4 +50,33 @@ def test_core_github_actions_are_pinned_to_full_commit_shas() -> None:
     ]
     assert not invalid_refs, (
         f"Core GitHub Actions must use immutable full SHAs: {invalid_refs}"
+    )
+
+
+def test_every_third_party_github_action_is_pinned_to_a_full_commit_sha() -> None:
+    """Tags such as @v1/@stable can move after review; pin every remote action."""
+    action_references: list[str] = []
+    for workflow in WORKFLOWS:
+        action_references.extend(
+            ALL_ACTIONS.findall(workflow.read_text(encoding="utf-8"))
+        )
+
+    assert action_references, "expected at least one GitHub Action reference"
+    invalid_refs: list[str] = []
+    for action_reference in action_references:
+        # Local and Docker actions follow different pinning models. The shipped
+        # workflows currently use only remote actions, but retain explicit
+        # handling so this check stays intelligible if either is introduced.
+        if action_reference.startswith(("./", "docker://")):
+            continue
+        if "@" not in action_reference:
+            invalid_refs.append(action_reference)
+            continue
+        _action, reference = action_reference.rsplit("@", maxsplit=1)
+        if re.fullmatch(r"[0-9a-f]{40}", reference) is None:
+            invalid_refs.append(action_reference)
+
+    assert not invalid_refs, (
+        "Every third-party GitHub Action must use an immutable full SHA: "
+        f"{invalid_refs}"
     )

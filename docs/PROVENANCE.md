@@ -26,12 +26,20 @@ The scope map is an intent; it does not establish that the rights holder owns ev
 
 ## Audit status and open items
 
+A reproducible **source-and-lockfile inventory** is now committed at
+[`sbom/omega-theory-everything.cdx.json`](sbom/omega-theory-everything.cdx.json) and generated
+by [`../tools/generate_dependency_inventory.py`](../tools/generate_dependency_inventory.py).
+It captures the supported manifests, committed npm lockfiles, Lean pins, GitHub Actions, and the
+vendored ethers bundle. It is deliberately not represented as a complete SBOM, license decision,
+or third-party-content review; its scope and limits are in
+[`SOFTWARE_SUPPLY_CHAIN.md`](SOFTWARE_SUPPLY_CHAIN.md).
+
 The following checks remain outstanding unless separately documented with evidence:
 
 - Recover and review the full GitHub commit/PR/release history and identify the first public date for each protected work or important technical disclosure.
 - Review all contributors, employment/contractor obligations, joint authorship, assignments, and authority to relicense. Confirm the rights holder's legal identity and ownership for each asset.
 - Identify copied/adapted text, figures, diagrams, datasets, code, generated content, fonts, icons, and other third-party material. Record source, author, license, required attribution, and whether redistribution is permitted.
-- Produce a dependency inventory/SBOM and review license notices for Python, Lean/Mathlib, Rust, and any future browser/runtime dependencies.
+- Extend the source-and-lockfile inventory into a complete deployment SBOM, including system/build/runtime dependencies and artifacts, and review license notices for Python, Lean/Mathlib, Rust, browser/runtime, and vendored dependencies.
 - Confirm that all science files marked MIT are eligible for that grant; obtain written consent for any contribution not owned by the rights holder.
 - Confirm product materials intended for royalty-bearing licensing are not subject to employer, contractor, co-author, or prior-license restrictions.
 

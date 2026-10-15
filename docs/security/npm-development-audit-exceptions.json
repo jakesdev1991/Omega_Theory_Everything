@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "status_date": "2026-10-15",
+  "exceptions": [
+    {
+      "id": "web-eslint-braces-ghsa-vfj7-8cjw-p6xm",
+      "workspace": "web",
+      "advisory": "GHSA-vfj7-8cjw-p6xm",
+      "advisory_package": "braces",
+      "severity": "high",
+      "affected_packages": [
+        "@next/eslint-plugin-next",
+        "braces",
+        "eslint-config-next",
+        "fast-glob",
+        "micromatch"
+      ],
+      "expected_via": {
+        "@next/eslint-plugin-next": [
+          "fast-glob"
+        ],
+        "braces": [
+          "braces"
+        ],
+        "eslint-config-next": [
+          "@next/eslint-plugin-next"
+        ],
+        "fast-glob": [
+          "micromatch"
+        ],
+        "micromatch": [
+          "braces"
+        ]
+      },
+      "root_dev_dependency": "eslint-config-next",
+      "review_by": "2026-11-15",
+      "owner_role": "release engineering owner",
+      "reason": "The affected chain is reachable through the web lint configuration only. npm offers an incompatible downgrade as its automated fix; the current supported Next ESLint plugin still resolves braces 3.0.3.",
+      "evidence": [
+        "docs/SOFTWARE_SUPPLY_CHAIN.md",
+        "web/package.json",
+        "web/package-lock.json"
+      ]
+    }
+  ]
+}

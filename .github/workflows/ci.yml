@@ -40,6 +40,12 @@ jobs:
           pip install -U pip
           pip install -r requirements.txt
       
+      - name: Audit Python dependency resolution
+        # Runtime requirements use ranges, so this is a fresh resolver-based
+        # advisory check rather than a claim of a fully pinned Python lockfile.
+        # --strict also fails if a resolved dependency cannot be audited.
+        run: pip-audit -r requirements.txt --strict
+
       - name: Ruff lint
         run: ruff check .
       
@@ -81,10 +87,10 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Set up Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable as of 2026-10-15
 
       - name: Cache Rust build
-        uses: Swatinem/rust-cache@v2
+        uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
         with:
           workspaces: rust
 
@@ -183,6 +189,20 @@ jobs:
       - name: Production build
         working-directory: web
         run: npm run build
+
+      - name: Audit production npm dependencies across all workspaces
+        # This reads only committed package locks and exits non-zero on
+        # high/critical runtime findings. It intentionally excludes dev-only
+        # packages; their residual findings are documented and reviewed under
+        # docs/SOFTWARE_SUPPLY_CHAIN.md rather than misreported as production
+        # runtime risk.
+        run: node tools/audit_npm_production.mjs
+
+      - name: Ratchet reviewed npm development dependency exceptions
+        # This full-tree audit permits only the explicit, time-bounded exception
+        # in docs/security/. A new advisory, changed path, expiration, or stale
+        # exception fails rather than becoming an invisible baseline.
+        run: node tools/audit_npm_development.mjs
 
   mobile-node:
     name: Mobile Node Tests (NIP-90 daemon)
@@ -290,6 +310,13 @@ jobs:
         run: |
           python -m pip install -U pip
           python -m pip install -e ./mcp
+          python -m pip install pip-audit==2.10.1
+
+      - name: Audit MCP hub dependency resolution
+        # mcp/ has its own Python >=3.12 project and version ranges. Audit it
+        # under the same interpreter that runs the hub rather than assuming the
+        # root Python 3.11 requirements audit covers this environment.
+        run: pip-audit mcp --strict
 
       # smoke_test.py imports the server, lists all 22 tools, checks the five
       # plane state attributes, and does a real stdio JSON-RPC round trip
@@ -368,9 +395,9 @@ jobs:
           fetch-depth: 0
 
       - name: Run Trivy vulnerability scanner
-        # Pinned to a tag, not @master: a floating ref on a security job is a
-        # supply-chain risk (any upstream push lands here unreviewed).
-        uses: aquasecurity/trivy-action@v0.36.0
+        # Pinned to an audited full commit SHA, not @master or a movable tag:
+        # a floating ref on a security job is a supply-chain risk.
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           scan-type: 'fs'
           scan-ref: '.'
@@ -383,7 +410,7 @@ jobs:
           ${{ !cancelled() && hashFiles('trivy-results.sarif') != '' &&
               (github.event_name != 'pull_request' ||
                github.event.pull_request.head.repo.full_name == github.repository) }}
-        uses: github/codeql-action/upload-sarif@v4
+        uses: github/codeql-action/upload-sarif@24c54180a607b1449ed407dd24f251e4e9147c8d # v4 as of 2026-10-15
         with:
           sarif_file: 'trivy-results.sarif'
           category: trivy
@@ -391,8 +418,8 @@ jobs:
       - name: Check for secrets
         # Run regardless of whether the SARIF upload succeeded.
         if: ${{ !cancelled() }}
-        # Pinned to a tag, not @main — see the note on trivy-action above.
-        uses: trufflesecurity/trufflehog@v3.97.9
+        # Pinned to an audited full SHA, not @main — see the note on trivy-action above.
+        uses: trufflesecurity/trufflehog@4dd8831c5f12599465d4d45c3c447b4018a34c85 # v3.97.9
         with:
           # No explicit base/head: the action derives the range from the event
           # (push: before..after, pull_request: base..head, schedule and
@@ -419,4 +446,4 @@ jobs:
         run: test -f README.md
       
       - name: Validate markdown links
-        uses: gaurav-nelson/github-action-markdown-link-check@v1
+        uses: gaurav-nelson/github-action-markdown-link-check@5c5dfc0ac2e225883c0e5f03a85311ec2830d368 # v1
