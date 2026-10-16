@@ -2,13 +2,14 @@
   "name": "@omega/evm-testnet",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "description": "Sepolia-only, valueless $OMEGA governance and novel-gate pilot contracts.",
   "license": "UNLICENSED",
   "engines": {
     "node": ">=22.0.0"
   },
   "scripts": {
-    "clean": "rimraf artifacts cache coverage typechain-types",
+    "clean": "rimraf artifacts cache coverage typechain-types types",
     "compile": "hardhat compile",
     "size": "node scripts/check-contract-size.js",
     "test": "hardhat test",
@@ -23,10 +24,13 @@
     "@openzeppelin/contracts": "5.6.1"
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "5.0.0",
+    "@nomicfoundation/hardhat-toolbox-mocha-ethers": "4.0.0",
     "dotenv": "16.6.1",
-    "hardhat": "2.29.1",
+    "hardhat": "3.20.0",
     "rimraf": "6.0.1",
     "solc": "0.8.26"
+  },
+  "overrides": {
+    "tmp": "0.2.7"
   }
 }

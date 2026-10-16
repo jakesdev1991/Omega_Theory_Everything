@@ -18,7 +18,9 @@ The blueprint is intentionally explicit about what is hypothetical, what require
 
 The expanded whitepaper set is in [`whitepapers/`](whitepapers/): $OMEGA, legacy TOKAMAK domain research (not the Solana token identity), C.A.R.E./AMITY, and Lucifer–Hermes Omni-Bridge Prime.
 
-The Omega MCP Hub — a sovereign MCP (Model Context Protocol) server exposing 22 tools across the sov/use/care/amity/omega planes over stdio JSON-RPC — is in [`mcp/`](mcp/) (see [`mcp/README_MCP_HUB.md`](mcp/README_MCP_HUB.md); its smoke-test evidence is committed alongside it).
+For a graphical map of the public website, document publishing, wallet distribution, and separate MCP runtime — including the distinction between the three public currency rails and five MCP planes — see [`docs/ecosystem-map.md`](docs/ecosystem-map.md).
+
+The Omega MCP Hub — a Python MCP server with 22 tools across five internal planes plus house/audit tools, using stdio or Streamable HTTP — is in [`mcp/`](mcp/). It is an in-memory prototype with no real chain, keys, or value (see [`mcp/README_MCP_HUB.md`](mcp/README_MCP_HUB.md)).
 
 The Omni-Bridge control-boundary implementation — the Hermes ⇄ Lucifer decision layer (APPA capability algebra, human-governed capabilities, hash-chained evidence ledger, T0–T5 sandbox tier selection), header-only C++23 with its acceptance suite — is in [`omni-bridge/`](omni-bridge/); implementation status, test evidence, and documented deviations are in [`omni-bridge/README.md`](omni-bridge/README.md). The CBwK shadow-price pacer (Lucifer–Hermes routing governor) is in [`cpp/`](cpp/).
 
@@ -118,7 +120,7 @@ Omega_Theory_Everything/
 ├── rcod/                     # RCOD optimizer governor (research prototype + benchmark)
 ├── cpp/                      # CBwK shadow-price pacer (Lucifer–Hermes routing governor, C++23)
 ├── omni-bridge/              # Omni-Bridge control boundary (Hermes ⇄ Lucifer), C++23 + host audit kit
-├── mcp/                      # Omega MCP Hub server (sov/use/care/amity/omega planes, stdio JSON-RPC)
+├── mcp/                      # Omega MCP Hub prototype (five planes, stdio / Streamable HTTP)
 ├── evm/                      # Sepolia-only, valueless tOMEGA governance + gate pilot
 ├── solana/                   # Devnet-only, valueless tTWC SPL mint issuer + verifier
 ├── amity/                    # Testnet-only AMITY Taproot Assets operator scaffold

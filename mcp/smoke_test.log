@@ -1,5 +1,7 @@
 === ASYNC CHECKS ===
+cli_http_settings_ok=True
 tool_count=22
+tool_descriptions_match_manifest=True
 tools=sov_mint,sov_burn,sov_transfer,sov_snapshot,use_issue,use_revoke,use_snapshot,care_submit,care_attest,care_appeal,care_snapshot,amity_entitle,amity_transfer,amity_snapshot,omega_mint,omega_lock,omega_proposal,omega_vote,omega_snapshot,ledger,events_since,full_event_log
 plane.sov_balances=True
 plane.use_receipts=True
@@ -7,8 +9,15 @@ plane.care_claims=True
 plane.amity_balances=True
 plane.omega_balances=True
 ledger_ok=true planes=['amity', 'care', 'event_count', 'next_version', 'omega', 'sov', 'use']
+negative_transfer_rejected=True
+insufficient_transfer_rejected_without_mutation=True
+care_attest_events=2 final=True duplicate_verifier_rejected=True
+amity_entitlement_guard=True
+
+=== STREAMABLE HTTP BIND ===
+http_bind_ok=true host=127.0.0.1 port=43671
 
 === ASYNC STDIO ROUNDTRIP ===
 roundtrip_ok server=omega-hub tool=ledger ok=true planes=[amity,care,event_count,next_version,omega,sov,use] event_count=0
 
-SMOKE TEST PASSED: 22 tools, five planes, ledger roundtrip over stdio
+SMOKE TEST PASSED: documented tools, HTTP bind, CARE invariants, stdio roundtrip

@@ -5,13 +5,15 @@ name = "omega-wallet-desktop"
 version = "0.1.0"
 description = "Tauri v2 wrapper packaging the synced Omega wallet GUI as a native app."
 edition = "2021"
-rust-version = "1.77"
+rust-version = "1.77.2"
 
 [build-dependencies]
-tauri-build = { version = "2", features = [] }
+# Match the patched Tauri 2.11 line; Tauri 2.12 raises the MSRV to Rust 1.90.
+tauri-build = { version = "=2.6.3", features = [] }
 
 [dependencies]
-tauri = { version = "2", features = [] }
+# 2.11.6 is outside the current Tauri advisory ranges while retaining MSRV 1.77.2.
+tauri = { version = "=2.11.6", features = [] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 

@@ -16,3 +16,4 @@ sympy>=1.12  # optional: exact checks in Sim7_Radial_Metric.py
 ruff==0.16.10
 mypy==2.4.0
 pytest==9.1.1
+pip-audit==2.10.1

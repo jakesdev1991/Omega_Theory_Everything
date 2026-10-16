@@ -5,6 +5,7 @@
 import { Section } from "@/components/Section";
 import { TokenShowcase } from "@/components/TokenShowcase";
 import { CallToAction } from "@/components/CallToAction";
+import { MCP_TOOL_GROUPS } from "@/lib/mcp-tools";
 
 export default function McpPage() {
   return (
@@ -37,7 +38,7 @@ export default function McpPage() {
               lineHeight: 1.1,
             }}
           >
-            The operating layer for the tri-token economy.
+            A tool surface for economy operations.
           </h2>
           <p
             style={{
@@ -48,11 +49,11 @@ export default function McpPage() {
               margin: "0 0 40px",
             }}
           >
-            Omega MCP Hub is a FastMCP server with 22 tools operating the
-            C.A.R.E. Economy. It runs the economy: it settles accounts,
-            verifies useful work, executes governance, supports participation, and
-            anchors release-day coordination. Built to be driven by AI agents —
-            and open source, so anyone can extend it.
+            Omega MCP Hub is a Python/FastMCP prototype with 22 tools across
+            five internal planes. Its state is held in memory: it does not connect
+            to a live chain, hold real keys, or represent value. MCP-compatible
+            clients connect directly over stdio or Streamable HTTP. This website
+            documents the hub but does not call it.
           </p>
 
           <div
@@ -127,7 +128,7 @@ export default function McpPage() {
                   lineHeight: 1,
                 }}
               >
-                Stdio + HTTP
+                Stdio + Streamable HTTP
               </div>
               <div style={{ fontSize: "13px", color: "var(--color-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
                 Transport modes
@@ -140,7 +141,7 @@ export default function McpPage() {
       <Section
         eyebrow="Architecture"
         title="How the hub is built"
-        subtitle="Omega MCP Hub is a single FastMCP stdio server, packaged as a Python package, with a manifest for distribution. It is designed to be the operating hub of the C.A.R.E. Economy — and to be extended by anyone who wants to add tools, internal domains, or integrations."
+        subtitle="Omega MCP Hub is a Python FastMCP package with a machine-readable tool manifest. It currently provides an in-memory simulation for prototyping; it is not a deployed economy or a chain-backed service."
       >
         <div
           style={{
@@ -163,8 +164,8 @@ export default function McpPage() {
             },
             {
               label: "Transport",
-              value: "Stdio + HTTP",
-              desc: "Run as a stdio server (for MCP clients) or as an HTTP server (for web and programmatic access). One codebase, two transports.",
+              value: "Stdio + Streamable HTTP",
+              desc: "Use stdio with local MCP clients or Streamable HTTP on loopback. The HTTP server has no built-in authentication; do not expose it to untrusted networks. The website is a separate overview page."
             },
             {
               label: "Package",
@@ -232,8 +233,8 @@ export default function McpPage() {
 
       <Section
         eyebrow="Economy support"
-        title="22 tools supporting three currencies"
-        subtitle="Publicly, the economy is three-currency: $OMEGA on EVM, TWC on Solana, and AMITY on Bitcoin / Lightning / Taproot. Under the hood, the MCP package uses several internal operating domains to serve that economy."
+        title="22 tools across five internal planes"
+        subtitle="The public economy describes three currencies/rails. The MCP prototype organizes simulated accounting, work receipts, care claims, entitlements and governance as five internal planes, plus three house/audit tools."
       >
         <TokenShowcase variant="economy" />
         <div style={{ marginTop: "48px" }}>
@@ -243,20 +244,25 @@ export default function McpPage() {
 
       <Section
         eyebrow="Repository"
-        title="Open source on GitHub"
-        subtitle="Omega MCP Hub is part of the Omega_Theory_Everything repository — the same repo that holds the tri-token economy blueprint, the whitepapers, and the novel. The hub is the operating layer. The repo is the source of truth."
+        title="Published in the repository"
+        subtitle="Omega MCP Hub is in mcp/ alongside the website, whitepapers and public manuscript. This product component is licensed under PolyForm Noncommercial 1.0.0; other repository directories have different terms. Check LICENSE and docs/LICENSING.md before reuse."
       >
         <RepoCard />
         <div style={{ marginTop: "40px" }}>
           <CallToAction label="View on GitHub" href="https://github.com/jakesdev1991/Omega_Theory_Everything" />
           <CallToAction label="Read the economy docs" href="/economy" variant="ghost" />
+          <CallToAction
+            label="Review license scope"
+            href="https://github.com/jakesdev1991/Omega_Theory_Everything/blob/main/docs/LICENSING.md"
+            variant="ghost"
+          />
         </div>
       </Section>
 
       <Section
         eyebrow="Connect"
         title="Run your own hub"
-        subtitle="Spin up Omega MCP Hub locally, connect it to your MCP client, and start operating the C.A.R.E. Economy with AI agents. The server is stdio-first — drop it into any MCP-compatible toolchain."
+        subtitle="Run the in-memory prototype locally and connect it to an MCP-compatible client. The server offers simulated accounting, work receipts, care claims, entitlements and governance; it does not operate a deployed economy."
       >
         <RunCard />
         <div style={{ marginTop: "40px", display: "flex", gap: "14px", flexWrap: "wrap" }}>
@@ -292,7 +298,7 @@ function Hero() {
             marginBottom: "24px",
           }}
         >
-          The Operating Hub
+          The MCP Prototype
         </p>
         <h1
           style={{
@@ -309,7 +315,7 @@ function Hero() {
           Omega MCP Hub.
           <br />
           <span style={{ color: "var(--color-omega)" }}>
-            The economy, operationalized.
+            An in-memory simulation.
           </span>
         </h1>
         <p
@@ -321,9 +327,10 @@ function Hero() {
             margin: "0",
           }}
         >
-          A FastMCP server with 22 tools operating the C.A.R.E. Economy —
-          operated by AI agents, governed by human choice, and open source for
-          anyone to extend.
+          A Python/FastMCP prototype with 22 tools across five internal planes.
+          It stores state in memory and does not connect to a live chain, hold
+          real keys, or represent value. Clients connect directly; this website
+          is an overview, not a runtime integration.
         </p>
       </div>
     </section>
@@ -331,13 +338,7 @@ function Hero() {
 }
 
 function ToolList() {
-  const tools = [
-    { plane: "SOv", tools: ["ledger_snapshot", "settle_position", "resolve_account", "audit_trail"] },
-    { plane: "USE", tools: ["issue_receipt", "verify_work", "receipt_balance", "contribution_ledger"] },
-    { plane: "CARE", tools: ["propose_governance", "cast_vote", "steward_balance", "treasury_view", "council_roster"] },
-    { plane: "AMITY", tools: ["convert_care_to_amity", "amity_balance", "market_quote", "exchange_order"] },
-    { plane: "$OMEGA", tools: ["macro_governance", "omega_supply", "anchor_position", "vote_weight", "release_unlock", "snapshot_epoch"] },
-  ];
+  const tools = MCP_TOOL_GROUPS;
 
   return (
     <div
@@ -487,11 +488,11 @@ function RepoCard() {
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
           {[
-            "mcp/ — Omega MCP Hub server",
-            "whitepapers/ — tri-token economy spec",
-            "tri_token_sovereign_economy_blueprint.md",
-            "app/ — customer-facing site source",
-            "Crucible novel draft",
+            "web/ — Next.js public website",
+            "mcp/ — simulated MCP tool server",
+            "whitepapers/ — economy design papers",
+            "app/ — standalone wallet GUI source",
+            "web/public/book/ — public novel draft",
           ].map((item) => (
             <div
               key={item}
@@ -528,24 +529,15 @@ function RunCard() {
       }}
     >
       <div style={{ color: "var(--color-muted)", marginBottom: "12px" }}>
-        # Clone and run the Omega MCP Hub
+        # From the repository root · Python 3.12+ and uv
       </div>
-      <div>
-        <span style={{ color: "var(--color-omega)" }}>git</span> clone{" "}
-        https://github.com/jakesdev1991/Omega_Theory_Everything.git
-      </div>
-      <div>cd Omega_Theory_Everything</div>
-      <div>cd mcp</div>
-      <div>uv venv /home/jake/.venvs/omwga-mcp</div>
-      <div>source /home/jake/.venvs/omwga-mcp/bin/activate</div>
-      <div>uv pip install -e .</div>
-      <div>python -m omega_mcp --transport stdio</div>
+      <div>uv run --directory mcp python -m omega_mcp</div>
       <div style={{ color: "var(--color-muted)", marginTop: "12px" }}>
-        # Or run as HTTP server
+        # Optional Streamable HTTP transport (loopback by default)
       </div>
-      <div>python -m omega_mcp --transport http --host 0.0.0.0 --port 8000</div>
+      <div>uv run --directory mcp python -m omega_mcp --transport streamable-http --host 127.0.0.1 --port 8029</div>
       <div style={{ color: "var(--color-muted)", marginTop: "12px" }}>
-        # Connect via any MCP client or the website
+        # Configure an MCP client to launch stdio; the website is documentation only
       </div>
     </div>
   );
@@ -571,12 +563,12 @@ function FinalCta() {
             margin: "0 0 14px",
           }}
         >
-          The hub is the economy.
+          Tools for a prototype economy.
         </h2>
         <p style={{ color: "var(--color-muted-strong)", fontSize: "17px", lineHeight: 1.6, margin: "0 0 32px" }}>
-          Omega MCP Hub runs the economy. The novel rewards participation. The
-          website connects everyone. All of it is open source, all of it is here,
-          and all of it is waiting for you to join.
+          The MCP hub is a prototype simulation; the website, documents and
+          wallet are separate surfaces in the same repository. Source and license
+          terms differ by component, so review the repository notices before reuse.
         </p>
         <div style={{ display: "flex", gap: "14px", justifyContent: "center", flexWrap: "wrap" }}>
           <CallToAction label="Run the hub" href="https://github.com/jakesdev1991/Omega_Theory_Everything" />

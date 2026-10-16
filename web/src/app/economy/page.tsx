@@ -568,9 +568,9 @@ function FinalCta() {
         >
           The manuscript is publicly available under CC BY 4.0. The current
           wallet integration demonstrates two optional proof routes; the MCP hub
-          is the operating layer of the C.A.R.E. Economy. The whole design —
-          manifesto, extensive whitepaper, and every subsystem paper — is
-          documented on this site.
+          is a separate in-memory simulation, not a live operating ledger. The
+          whole design — manifesto, extensive whitepaper, and subsystem papers —
+          is documented on this site.
         </p>
         <div
           style={{
@@ -582,7 +582,7 @@ function FinalCta() {
         >
           <CallToAction label="Read Crucible" href="/novel" />
           <CallToAction label="Read the whitepapers" href="/whitepapers" />
-          <CallToAction label="Join the MCP Hub" href="/mcp" />
+          <CallToAction label="See the MCP prototype" href="/mcp" />
         </div>
       </div>
     </section>

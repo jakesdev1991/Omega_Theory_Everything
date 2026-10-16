@@ -1,8 +1,8 @@
 <!-- Copyright (c) 2025-2026 Jacob See. SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0 -->
 # Omega MCP Hub — agent integration wiring
 
-This directory wires the Omega tri-token economy into an MCP server that any MCP client can
-call as a set of tools.
+This directory contains an MCP prototype that exposes simulated Omega tri-token economy
+operations to compatible clients. All balances and claims live only in process memory.
 
 ## What lives here
 
@@ -14,18 +14,18 @@ call as a set of tools.
 
 ## Top-level layout
 
-After this lands, the repo root will carry:
+The current repository layout includes:
 
 ```text
 Omega_Theory_Everything/
-├── mcp/                       # NEW: MCP hub package
+├── mcp/                       # MCP simulation prototype package
 │   ├── omega_mcp/
 │   │   ├── __init__.py
 │   │   └── __main__.py
 │   ├── pyproject.toml
 │   ├── server.json
 │   └── README_MCP_HUB.md
-├── app/                       # existing local social prototype (offline, valueless)
+├── app/                       # standalone wallet GUI source
 ├── lean_proofs/               # Lean 4 formalizations
 ├── whitepapers/               # $OMEGA, TWC, TOKAMAK (historical draft), C.A.R.E./AMITY, Omni-Bridge
 ├── tri_token_sovereign_economy_blueprint.md
@@ -43,6 +43,9 @@ uv pip install --python "$OMEGA_MCP_VENV/bin/python" -e mcp/
 # Run the stdio server
 uv run --directory mcp python -m omega_mcp
 
+# Optional Streamable HTTP on loopback
+uv run --directory mcp python -m omega_mcp --transport streamable-http --host 127.0.0.1 --port 8029
+
 # Build a wheel
 uv build mcp/
 ```
@@ -50,7 +53,8 @@ uv build mcp/
 ## Notes
 
 - The hub deliberately does not touch real keys, real chains, or real value in this form.
-- The event log is the invariant: every tool that changes state emits an append-only event
-  with a version number. Consumers can replay from any version via `events_since`.
-- This is the layer the Lucifer/Hermes agentic stack would call when it needs to reason about
-  the economy in a grounded, auditable way rather than through ad-hoc state in prompts.
+- Every state-changing tool emits a versioned append-only audit event. `events_since` supports
+  inspection, but the payloads are not complete enough to reconstruct every snapshot field; use
+  snapshots as the current-state view.
+- This prototype is a local integration/test surface for an eventual agent stack; it is not an
+  independent verification layer or a production operating service.

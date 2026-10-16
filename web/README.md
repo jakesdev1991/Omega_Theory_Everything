@@ -33,7 +33,8 @@ npm run dev                  # predev syncs the wallet GUI into public/omega-wal
 |---|---|
 | `npm run dev` / `npm run build` | Next dev/build; both run `scripts/sync-wallet.mjs` first |
 | `npm run sync:wallet` | Re-sync the wallet GUI from `../app` into `public/omega-wallet/` |
-| `npm test` | Domain + economy scenario suites (`node:test` via `tsx`) |
+| `npm test` | Domain, economy, Nostr, operator-key, and unlock-proof suites (`node:test` via `tsx`) |
+| `npm run test:wallet` | Browser-wallet security regression tests (`node --test`) |
 | `npm run test:economy` | Just the four-plane scenario suite |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run lint` | Flat-config ESLint (typescript-eslint + react-hooks) |
@@ -44,6 +45,7 @@ npm run dev                  # predev syncs the wallet GUI into public/omega-wal
 |---|---|
 | `/` | Forward-facing landing page |
 | `/economy` | Three-currency economy explainer + cross-plane workbench |
+| `/architecture` | Visual map connecting the site, documents, wallet and independent MCP Hub |
 | `/wallet` | **Wallet GUI hub**: launch the GUI in-browser, live preview, per-file SHA-256 |
 | `/wallet/download` | **Downloads**: offline bundle (ZIP + checksums + launchers), installable PWA, native build status |
 | `/store/terms` | Store Terms of Use & End-User License, and the Publisher Agreement template |
@@ -72,7 +74,7 @@ public/omega-wallet/
 ```
 
 - **Launch**: `/omega-wallet/index.html` (linked from `/wallet` and the nav).
-- **Install**: the generated manifest + service worker make it an installable, offline-capable app.
+- **Install**: the generated manifest + service worker make the static UI installable and cacheable offline; public-RPC balance reads and server-verified proof flows require a network connection.
 - **Download**: `GET /api/wallet/download` builds a deterministic ZIP (same GUI + `run.sh`,
   `run.command`, `run.bat`, `serve.mjs`, `CHECKSUMS.txt`, `LICENSE.txt`, `README.txt`). The ZIP's
   SHA-256 is published by `GET /api/wallet/manifest` and embedded in `CHECKSUMS.txt`, so the hash
@@ -82,6 +84,11 @@ public/omega-wallet/
   artifacts are listed in `desktop/releases.json` (empty today — the download page says so).
 - **Mount-agnostic**: all generated PWA paths are relative, so the same bundle runs from the
   website mount or from any local port/directory.
+- **Privacy behavior**: the encrypted EVM keystore stays in browser storage; the wallet no longer
+  persists signed proofs. A mainnet ETH lookup is opt-in and sends the address to public RPC
+  providers. Opening the optional reader sends the signed statement to this site's API for
+  Sepolia/Devnet checks. The UI sends no blockchain transactions. This is an unaudited prototype;
+  do not use it with valuable assets.
 
 ## App Store (`/store`) and the mobile node
 
@@ -91,10 +98,11 @@ The store is a static frontend over the Nostr backplane managed by
 - Directory: parameterized replaceable events **31990** (NIP-89 handler announcements, preferred)
   and **30017** (NIP-99 listings), published by `NOSTR_STORE_ROOT_NPUB`
   (`mobile-node/publish-directory.mjs` generates them from `algorithms.json`).
-- Execution: **Run** signs a NIP-90 job request (kind 5000–5999, default 5001) with a browser-local
-  operator key; the Termux daemon verifies it against its five-gate policy, executes an allowlisted
-  algorithm in the Debian sandbox, and answers with a job result (request kind + 1000) correlated by
-  `["e", requestId]` / `["p", requester]`.
+- Execution: **Run** signs a NIP-90 job request (kind 5000–5999, default 5001) with an in-memory
+  operator key; the browser does not persist the raw key. Users can explicitly import/export an
+  `nsec`, and should protect any export. The Termux daemon verifies the event against its five-gate
+  policy, executes an allowlisted algorithm in the Debian sandbox, and answers with a job result
+  (request kind + 1000) correlated by `["e", requestId]` / `["p", requester]`.
 - Settlement: **Settle result as TWC work** posts the verified job into the economy ledger as an
   audited work receipt.
 - Demo mode: fixture listings + an in-page responder test the entire flow with zero relays.

@@ -1,11 +1,13 @@
 # Copyright (c) 2025-2026 Jacob See.
 # SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
-"""Smoke test: import the server, list tools, and exercise a couple of tool paths."""
+"""Smoke-test the MCP manifest, state invariants, transports, and stdio tool call."""
 
 from __future__ import annotations
 
 import asyncio
 import json
+import socket
+import subprocess
 import sys
 from pathlib import Path
 
@@ -17,6 +19,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from omega_mcp import OmegaState, mcp
+from omega_mcp.__main__ import build_parser, configure_server
 
 HERE = Path(__file__).resolve().parent
 
@@ -24,10 +27,27 @@ HERE = Path(__file__).resolve().parent
 async def async_checks() -> list[str]:
     out: list[str] = []
 
+    # HTTP flags must reach FastMCP settings, not just argparse.
+    http_args = build_parser().parse_args(
+        ["--transport", "streamable-http", "--host", "127.0.0.1", "--port", "8029"]
+    )
+    configure_server(http_args)
+    http_settings_ok = mcp.settings.host == "127.0.0.1" and mcp.settings.port == 8029
+    out.append(f"cli_http_settings_ok={http_settings_ok}")
+
     # Tool count
     tools = await mcp.list_tools()
-    tool_names = [t.name for t in tools]
+    tool_names = [tool.name for tool in tools]
+    manifest = json.loads((HERE / "server.json").read_text(encoding="utf-8"))
+    manifest_descriptions = {
+        tool["name"]: tool["description"] for tool in manifest["tools"]
+    }
+    runtime_descriptions = {tool.name: tool.description for tool in tools}
+    descriptions_match = runtime_descriptions == manifest_descriptions and all(
+        runtime_descriptions.values()
+    )
     out.append(f"tool_count={len(tool_names)}")
+    out.append(f"tool_descriptions_match_manifest={descriptions_match}")
     out.append(f"tools={','.join(tool_names)}")
 
     # State plane existence
@@ -45,6 +65,92 @@ async def async_checks() -> list[str]:
     # Snapshot smoke
     s = STATE.ledger()
     out.append(f"ledger_ok=true planes={sorted(s.keys())}")
+
+    # Negative amounts must not mint balances by reversing a transfer.
+    STATE.sov_mint("alice", 5, "smoke test")
+    events_before_invalid_transfer = len(STATE.events)
+    try:
+        STATE.sov_transfer("alice", "bob", -1)
+        negative_transfer_rejected = False
+    except ValueError:
+        negative_transfer_rejected = (
+            STATE.sov_balances.get("alice", 0) == 5
+            and STATE.sov_balances.get("bob", 0) == 0
+            and len(STATE.events) == events_before_invalid_transfer
+        )
+    out.append(f"negative_transfer_rejected={negative_transfer_rejected}")
+
+    balances_before_insufficient_transfer = dict(STATE.sov_balances)
+    events_before_insufficient_transfer = len(STATE.events)
+    try:
+        STATE.sov_transfer("unknown-sender", "bob", 1)
+        insufficient_transfer_rejected = False
+    except ValueError:
+        insufficient_transfer_rejected = (
+            dict(STATE.sov_balances) == balances_before_insufficient_transfer
+            and len(STATE.events) == events_before_insufficient_transfer
+        )
+    out.append(
+        "insufficient_transfer_rejected_without_mutation="
+        f"{insufficient_transfer_rejected}"
+    )
+
+    # CARE attestations must be distinct and each accepted mutation emits an event.
+    claim = STATE.care_submit(
+        participant="participant-1",
+        service_category="support",
+        consent_scope="smoke-test",
+        evidence_commitment="commitment-1",
+    )
+    claim_id = claim["claims"][0]["claim_id"]
+    STATE.care_attest(claim_id, "Verifier-1", "first test attestation")
+    try:
+        STATE.care_attest(claim_id, "verifier-1", "duplicate verifier")
+        duplicate_verifier_rejected = False
+    except ValueError:
+        duplicate_verifier_rejected = (
+            len(STATE.care_claims[claim_id]["attestations"]) == 1
+        )
+    STATE.care_attest(claim_id, "verifier-2", "second test attestation")
+    attest_events = [
+        event
+        for event in STATE.events
+        if event["plane"] == "CARE" and event["action"] == "attest"
+    ]
+    final = STATE.care_claims[claim_id]["status"] == "final"
+    out.append(
+        f"care_attest_events={len(attest_events)} final={final} "
+        f"duplicate_verifier_rejected={duplicate_verifier_rejected}"
+    )
+
+    # AMITY issuance requires one final CARE claim and cannot reuse it twice.
+    STATE.amity_entitle(claim_id, "participant-1", 100, "smoke-test-policy")
+    amity_supply_after_issue = STATE.amity_supply
+    events_before_reuse = len(STATE.events)
+    try:
+        STATE.amity_entitle(claim_id, "participant-1", 100, "smoke-test-policy")
+        repeated_entitlement_rejected = False
+    except ValueError:
+        repeated_entitlement_rejected = (
+            STATE.amity_supply == amity_supply_after_issue
+            and len(STATE.events) == events_before_reuse
+        )
+    pending = STATE.care_submit(
+        participant="participant-2",
+        service_category="support",
+        consent_scope="smoke-test",
+        evidence_commitment="commitment-2",
+    )
+    pending_id = pending["claims"][0]["claim_id"]
+    try:
+        STATE.amity_entitle(pending_id, "participant-2", 100, "smoke-test-policy")
+        pending_claim_rejected = False
+    except ValueError:
+        pending_claim_rejected = STATE.amity_supply == amity_supply_after_issue
+    out.append(
+        "amity_entitlement_guard="
+        f"{repeated_entitlement_rejected and pending_claim_rejected}"
+    )
 
     return out
 
@@ -81,6 +187,63 @@ async def _read_until(proc, wanted_id, timeout):
             return message
 
 
+async def run_http_bind_then_stop() -> tuple[bool, str]:
+    """Start the HTTP transport and verify that its requested socket is bound."""
+    with socket.socket() as probe:
+        probe.bind(("127.0.0.1", 0))
+        port = probe.getsockname()[1]
+
+    proc = subprocess.Popen(
+        [
+            sys.executable,
+            "-m",
+            "omega_mcp",
+            "--transport",
+            "streamable-http",
+            "--host",
+            "127.0.0.1",
+            "--port",
+            str(port),
+        ],
+        cwd=HERE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    connected = False
+    failure: str | None = None
+    deadline = asyncio.get_running_loop().time() + 15
+
+    try:
+        while asyncio.get_running_loop().time() < deadline:
+            if proc.poll() is not None:
+                failure = f"HTTP server exited early with status {proc.returncode}"
+                break
+            try:
+                connection = await asyncio.to_thread(
+                    socket.create_connection, ("127.0.0.1", port), timeout=0.5
+                )
+                connection.close()
+                connected = True
+                break
+            except OSError:
+                await asyncio.sleep(0.1)
+        if not connected and failure is None:
+            failure = f"HTTP server did not bind 127.0.0.1:{port} within 15s"
+    finally:
+        if proc.poll() is None:
+            proc.terminate()
+        try:
+            _, stderr = proc.communicate(timeout=5)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+            _, stderr = proc.communicate(timeout=5)
+
+    if connected:
+        return True, f"http_bind_ok=true host=127.0.0.1 port={port}"
+    return False, f"{failure}; stderr={stderr.strip()!r}"
+
+
 async def run_stdio_serve_then_stop() -> tuple[bool, str]:
     """Spin the stdio server for one tool-call round trip and report the result.
 
@@ -94,8 +257,6 @@ async def run_stdio_serve_then_stop() -> tuple[bool, str]:
     that was never answered — and the old criterion ("at least one line came back")
     was satisfied by the initialize response alone.
     """
-    import subprocess
-
     proc = subprocess.Popen(
         [sys.executable, "-m", "omega_mcp"],
         stdin=subprocess.PIPE,
@@ -198,6 +359,10 @@ async def main() -> int:
     for line in checks:
         print(line)
 
+    print("\n=== STREAMABLE HTTP BIND ===")
+    http_bind_ok, http_result = await run_http_bind_then_stop()
+    print(http_result)
+
     print("\n=== ASYNC STDIO ROUNDTRIP ===")
     roundtrip_ok, result = await run_stdio_serve_then_stop()
     print(result)
@@ -207,17 +372,39 @@ async def main() -> int:
     failures: list[str] = []
     if "tool_count=22" not in checks:
         failures.append("expected 22 tools")
+    if "tool_descriptions_match_manifest=True" not in checks:
+        failures.append("runtime tool descriptions do not match the manifest")
+    if "cli_http_settings_ok=True" not in checks:
+        failures.append("HTTP CLI settings were not applied")
+    if "negative_transfer_rejected=True" not in checks:
+        failures.append("negative SOV transfer was not rejected without mutation")
+    if "insufficient_transfer_rejected_without_mutation=True" not in checks:
+        failures.append(
+            "insufficient SOV transfer mutated balances or emitted an event"
+        )
+    if "care_attest_events=2 final=True duplicate_verifier_rejected=True" not in checks:
+        failures.append("CARE attestations were not unique and auditable")
+    if "amity_entitlement_guard=True" not in checks:
+        failures.append(
+            "AMITY entitlement was not guarded by finalized, unused CARE claims"
+        )
     if any(line.endswith("=False") for line in checks if line.startswith("plane.")):
         failures.append("a state plane is missing")
     if not any(line.startswith("ledger_ok=true") for line in checks):
         failures.append("in-process ledger snapshot failed")
+    if not http_bind_ok:
+        failures.append(
+            "Streamable HTTP transport did not bind to the requested host and port"
+        )
     if not roundtrip_ok:
         failures.append("stdio roundtrip failed")
 
     if failures:
         print(f"\nSMOKE TEST FAILED: {'; '.join(failures)}")
         return 1
-    print("\nSMOKE TEST PASSED: 22 tools, five planes, ledger roundtrip over stdio")
+    print(
+        "\nSMOKE TEST PASSED: documented tools, HTTP bind, CARE invariants, stdio roundtrip"
+    )
     return 0
 
 

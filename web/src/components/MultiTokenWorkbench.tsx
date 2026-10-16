@@ -4,11 +4,27 @@
 
 import { useEffect, useState } from "react";
 
+import type {
+  AuditEvent,
+  BalanceCurrency,
+  GovernancePolicyProposal,
+  WorkReceipt,
+} from "@/lib/domain/types";
+
 type PlaneTab = "overview" | "amity" | "twc" | "omega";
+
+interface EconomyStateResponse {
+  ok: boolean;
+  error?: string;
+  balances?: Partial<Record<BalanceCurrency, Record<string, number>>>;
+  recentEvents?: AuditEvent[];
+  receipts?: WorkReceipt[];
+  governance?: GovernancePolicyProposal[];
+}
 
 export function MultiTokenWorkbench() {
   const [activeTab, setActiveTab] = useState<PlaneTab>("overview");
-  const [state, setState] = useState<any>(null);
+  const [state, setState] = useState<EconomyStateResponse | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -26,10 +42,19 @@ export function MultiTokenWorkbench() {
   async function fetchState() {
     try {
       const res = await fetch("/api/economy/state");
-      const data = await res.json();
-      if (data.ok) setState(data);
-    } catch (e) {
-      console.error(e);
+      if (!res.ok) throw new Error(`State request failed (${res.status}).`);
+      const data = (await res.json()) as EconomyStateResponse;
+      if (data.ok) {
+        setState(data);
+      } else {
+        setMessage(data.error ?? "The economy state could not be loaded.");
+      }
+    } catch (error: unknown) {
+      setMessage(
+        error instanceof Error
+          ? `Unable to load economy state: ${error.message}`
+          : "Unable to load economy state.",
+      );
     }
   }
 
@@ -37,7 +62,7 @@ export function MultiTokenWorkbench() {
     fetchState();
   }, []);
 
-  async function callAction(action: string, payload: any) {
+  async function callAction(action: string, payload: Record<string, unknown>) {
     setLoading(true);
     setMessage(null);
     try {
@@ -46,15 +71,17 @@ export function MultiTokenWorkbench() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action, ...payload }),
       });
-      const data = await res.json();
-      if (data.ok) {
+      const data = (await res.json()) as { ok: boolean; error?: string };
+      if (res.ok && data.ok) {
         setMessage(`Action '${action}' succeeded!`);
         await fetchState();
       } else {
-        setMessage(`Action failed: ${data.error}`);
+        setMessage(`Action failed: ${data.error ?? res.statusText ?? "Unknown server error."}`);
       }
-    } catch (err: any) {
-      setMessage(`Error: ${err.message}`);
+    } catch (error: unknown) {
+      setMessage(
+        error instanceof Error ? `Error: ${error.message}` : "An unexpected error occurred.",
+      );
     } finally {
       setLoading(false);
     }
@@ -199,7 +226,7 @@ export function MultiTokenWorkbench() {
                     </tr>
                   </thead>
                   <tbody>
-                    {(state?.recentEvents || []).slice(-6).map((evt: any) => (
+                    {(state?.recentEvents ?? []).slice(-6).map((evt) => (
                       <tr key={evt.eventId}>
                         <td><span className={`plane-tag ${evt.plane.toLowerCase()}`}>{evt.plane}</span></td>
                         <td>{evt.action}</td>
@@ -332,7 +359,7 @@ export function MultiTokenWorkbench() {
               <div className="panel">
                 <h3>Recent Work Receipts</h3>
                 <div className="receipts-list">
-                  {(state?.receipts || []).slice(-4).map((r: any) => (
+                  {(state?.receipts ?? []).slice(-4).map((r) => (
                     <div key={r.workId} className="receipt-card">
                       <div className="receipt-head">
                         <strong>{r.workClass}</strong>
@@ -398,7 +425,7 @@ export function MultiTokenWorkbench() {
               <div className="panel">
                 <h3>Governance Proposals</h3>
                 <div className="proposals-list">
-                  {(state?.governance || []).slice(-3).map((gov: any) => (
+                  {(state?.governance ?? []).slice(-3).map((gov) => (
                     <div key={gov.proposalId} className="gov-card">
                       <div className="gov-head">
                         <strong>{gov.title}</strong>

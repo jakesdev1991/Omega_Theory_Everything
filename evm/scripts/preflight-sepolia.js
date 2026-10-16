@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: LicenseRef-Omega-ReadOnly
 /* eslint-disable no-console */
 
-const hre = require("hardhat");
+import hre from "hardhat";
 
-const { ethers, network } = hre;
+const connection = await hre.network.create();
+const { ethers } = connection;
 const SEPOLIA_CHAIN_ID = 11155111n;
 const NINETY_DAYS = 90 * 24 * 60 * 60;
 
@@ -61,7 +62,7 @@ async function main() {
     );
   }
 
-  const chainId = BigInt(await network.provider.send("eth_chainId"));
+  const chainId = BigInt(await connection.provider.send("eth_chainId"));
   if (chainId !== SEPOLIA_CHAIN_ID) {
     throw new Error(
       `Refusing to continue: expected Sepolia chain ID ${SEPOLIA_CHAIN_ID}, received ${chainId}.`,

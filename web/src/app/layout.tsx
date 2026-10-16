@@ -37,8 +37,8 @@ function Footer() {
     <footer className="border-t border-border/40 py-8 text-sm text-muted">
       <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-6">
         <p>
-          The C.A.R.E. Economy — Call About Resuscitating Everyone. Operated
-          by the open-source Omega MCP Hub.
+          The C.A.R.E. Economy — Call About Resuscitating Everyone. The
+          Omega MCP Hub is a separate in-memory prototype.
         </p>
         <p className="text-xs">
           Crucible: The Satoshi Protocol —{" "}

@@ -73,8 +73,9 @@ function writeStorage(key, value) {
 function deleteStorage(key) {
   try {
     localStorage.removeItem(key);
+    return true;
   } catch {
-    /* noop */
+    return false;
   }
 }
 
@@ -97,10 +98,11 @@ function setStoredValue(primaryKey, value) {
 }
 
 function deleteStoredValue(primaryKey, legacyKey) {
-  deleteStorage(primaryKey);
+  let removed = deleteStorage(primaryKey);
   if (legacyKey) {
-    deleteStorage(legacyKey);
+    removed = deleteStorage(legacyKey) && removed;
   }
+  return removed;
 }
 
 function migrateLegacyStorageKey(primaryKey, legacyKey) {
@@ -117,15 +119,35 @@ function migrateLegacyStorageKey(primaryKey, legacyKey) {
     return;
   }
 
-  writeStorage(primaryKey, legacy);
-  deleteStorage(legacyKey);
+  if (writeStorage(primaryKey, legacy)) {
+    deleteStorage(legacyKey);
+  }
+}
+
+function clearStagedProof() {
+  try {
+    window.sessionStorage?.removeItem("omega.unlock.proof");
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function clearStoredProofs() {
+  const persistentProofsCleared = deleteStoredValue(
+    STORAGE_KEYS.unlockProofs,
+    LEGACY_STORAGE_KEYS.unlockProofs,
+  );
+  return clearStagedProof() && persistentProofsCleared;
 }
 
 function migrateLegacyStorage() {
   migrateLegacyStorageKey(STORAGE_KEYS.evmKeystore, LEGACY_STORAGE_KEYS.evmKeystore);
   migrateLegacyStorageKey(STORAGE_KEYS.evmActiveAddress, LEGACY_STORAGE_KEYS.evmActiveAddress);
   migrateLegacyStorageKey(STORAGE_KEYS.evmAccounts, LEGACY_STORAGE_KEYS.evmAccounts);
-  migrateLegacyStorageKey(STORAGE_KEYS.unlockProofs, LEGACY_STORAGE_KEYS.unlockProofs);
+  // Proofs contain a public address, signature, origin, and timestamp. Keep
+  // them transient: remove old persisted histories instead of migrating them.
+  clearStoredProofs();
   migrateLegacyStorageKey(STORAGE_KEYS.solanaActiveWallet, LEGACY_STORAGE_KEYS.solanaActiveWallet);
 }
 
@@ -134,13 +156,15 @@ function migrateLegacyStorage() {
 /* ------------------------------------------------------------------ */
 
 function strongRandom(bytes) {
+  if (!window.crypto || typeof window.crypto.getRandomValues !== "function") {
+    throw new Error("Secure randomness is unavailable. Open this wallet in a secure browser context and try again.");
+  }
+
   const buffer = new Uint8Array(bytes);
-  if (window.crypto && window.crypto.getRandomValues) {
+  try {
     window.crypto.getRandomValues(buffer);
-  } else {
-    for (let index = 0; index < bytes; index += 1) {
-      buffer[index] = (Math.random() * 256) | 0;
-    }
+  } catch {
+    throw new Error("Secure random generation failed. No wallet was created; try a current browser over HTTPS.");
   }
   return buffer;
 }
@@ -187,13 +211,45 @@ function importPrivateKey(privateKey) {
 /* Encrypted keystore (scrypt, V3 JSON)                                */
 /* ------------------------------------------------------------------ */
 
+function persistWalletRecords(entries) {
+  let previousValues;
+  try {
+    previousValues = entries.map(([key]) => localStorage.getItem(key));
+  } catch {
+    throw new Error("Browser storage is unavailable. The encrypted wallet was not saved.");
+  }
+
+  const writtenKeys = [];
+  try {
+    entries.forEach(([key, value]) => {
+      localStorage.setItem(key, JSON.stringify(value));
+      writtenKeys.push(key);
+    });
+  } catch {
+    // Best-effort rollback prevents a partial keystore/account update from
+    // appearing successful if a quota or browser-storage error interrupts it.
+    for (let index = writtenKeys.length - 1; index >= 0; index -= 1) {
+      const key = writtenKeys[index];
+      const previous = previousValues[index];
+      try {
+        if (previous === null) localStorage.removeItem(key);
+        else localStorage.setItem(key, previous);
+      } catch {
+        /* Report failure below; rollback is best-effort when storage is full. */
+      }
+    }
+    throw new Error("The encrypted wallet could not be saved to browser storage. Check available storage and retry.");
+  }
+}
+
 async function encryptAndSave(account, password, label) {
   const sourceWallet = account.keyonly
     ? new ethers.Wallet(account.privateKey)
     : ethers.HDNodeWallet.fromPhrase(account.mnemonic);
 
+  // Use ethers' default V3 scrypt work factor (N=131072, r=8, p=1).
   const keystore = await sourceWallet.encrypt(password, undefined, {
-    scrypt: { N: 1 << 14, r: 8, p: 1 },
+    scrypt: { N: 1 << 17, r: 8, p: 1 },
   });
 
   const record = {
@@ -204,11 +260,17 @@ async function encryptAndSave(account, password, label) {
     createdAt: Date.now(),
   };
 
-  const accounts = getStoredValue(
+  const storedAccounts = getStoredValue(
     STORAGE_KEYS.evmAccounts,
     LEGACY_STORAGE_KEYS.evmAccounts,
     [],
-  ).filter((entry) => entry.address !== record.address);
+  );
+  if (!Array.isArray(storedAccounts)) {
+    throw new Error("Stored wallet metadata is invalid. Forget the wallet and import it again.");
+  }
+  const accounts = storedAccounts.filter(
+    (entry) => String(entry?.address ?? "").toLowerCase() !== record.address.toLowerCase(),
+  );
 
   accounts.push({
     label: record.label,
@@ -216,9 +278,11 @@ async function encryptAndSave(account, password, label) {
     createdAt: record.createdAt,
   });
 
-  setStoredValue(STORAGE_KEYS.evmAccounts, accounts);
-  setStoredValue(STORAGE_KEYS.evmKeystore, record);
-  setStoredValue(STORAGE_KEYS.evmActiveAddress, record.address);
+  persistWalletRecords([
+    [STORAGE_KEYS.evmKeystore, record],
+    [STORAGE_KEYS.evmAccounts, accounts],
+    [STORAGE_KEYS.evmActiveAddress, record.address],
+  ]);
   return record;
 }
 
@@ -279,9 +343,14 @@ function listAccounts() {
 }
 
 function forgetWallet() {
-  deleteStoredValue(STORAGE_KEYS.evmKeystore, LEGACY_STORAGE_KEYS.evmKeystore);
-  deleteStoredValue(STORAGE_KEYS.evmActiveAddress, LEGACY_STORAGE_KEYS.evmActiveAddress);
-  deleteStoredValue(STORAGE_KEYS.solanaActiveWallet, LEGACY_STORAGE_KEYS.solanaActiveWallet);
+  const removals = [
+    deleteStoredValue(STORAGE_KEYS.evmKeystore, LEGACY_STORAGE_KEYS.evmKeystore),
+    deleteStoredValue(STORAGE_KEYS.evmActiveAddress, LEGACY_STORAGE_KEYS.evmActiveAddress),
+    deleteStoredValue(STORAGE_KEYS.evmAccounts, LEGACY_STORAGE_KEYS.evmAccounts),
+    deleteStoredValue(STORAGE_KEYS.solanaActiveWallet, LEGACY_STORAGE_KEYS.solanaActiveWallet),
+    clearStoredProofs(),
+  ];
+  return removals.every(Boolean);
 }
 
 /* ------------------------------------------------------------------ */
@@ -305,7 +374,9 @@ async function connectMetaMask() {
     throw new Error("No accounts authorized.");
   }
 
-  setStoredValue(STORAGE_KEYS.evmActiveAddress, accounts[0]);
+  if (!setStoredValue(STORAGE_KEYS.evmActiveAddress, accounts[0])) {
+    throw new Error("MetaMask connected, but the account could not be saved in browser storage. Check privacy or storage settings and reconnect.");
+  }
   return accounts[0];
 }
 
@@ -314,12 +385,14 @@ function hasPhantom() {
 }
 
 function saveConnectedPhantomWallet(address) {
-  setStoredValue(STORAGE_KEYS.solanaActiveWallet, {
+  if (!setStoredValue(STORAGE_KEYS.solanaActiveWallet, {
     provider: "phantom",
     address,
     label: "Phantom",
     connectedAt: Date.now(),
-  });
+  })) {
+    throw new Error("Phantom connected, but the account could not be saved in browser storage. Check privacy or storage settings and reconnect.");
+  }
 }
 
 async function connectPhantom() {
@@ -431,6 +504,11 @@ async function signUnlockWithMetaMask() {
     throw new Error("No MetaMask account connected. Connect first.");
   }
 
+  const chainId = await window.ethereum.request({ method: "eth_chainId" });
+  if (String(chainId).toLowerCase() !== "0xaa36a7") {
+    throw new Error("Switch MetaMask to Ethereum Sepolia (chain ID 11155111) before signing this optional proof. No transaction will be sent.");
+  }
+
   const address = accounts[0];
   const message = buildUnlockMessage(
     "OMEGA",
@@ -479,48 +557,6 @@ async function signUnlockWithPhantom() {
   };
 }
 
-function saveProof(proof) {
-  const proofs = getStoredValue(
-    STORAGE_KEYS.unlockProofs,
-    LEGACY_STORAGE_KEYS.unlockProofs,
-    [],
-  );
-  proofs.push({ ...proof, savedAt: Date.now() });
-  setStoredValue(STORAGE_KEYS.unlockProofs, proofs);
-}
-
-function listProofs() {
-  const evmAddress = getStoredValue(
-    STORAGE_KEYS.evmActiveAddress,
-    LEGACY_STORAGE_KEYS.evmActiveAddress,
-    null,
-  );
-  const solanaRecord = getStoredValue(
-    STORAGE_KEYS.solanaActiveWallet,
-    LEGACY_STORAGE_KEYS.solanaActiveWallet,
-    null,
-  );
-  const proofs = getStoredValue(
-    STORAGE_KEYS.unlockProofs,
-    LEGACY_STORAGE_KEYS.unlockProofs,
-    [],
-  );
-
-  const allowedSigners = new Set(
-    [evmAddress, solanaRecord && solanaRecord.address]
-      .filter(Boolean)
-      .map((value) => String(value).toLowerCase()),
-  );
-
-  if (allowedSigners.size === 0) {
-    return [];
-  }
-
-  return proofs.filter(
-    (proof) => proof.signer && allowedSigners.has(String(proof.signer).toLowerCase()),
-  );
-}
-
 /* ------------------------------------------------------------------ */
 /* Public API                                                          */
 /* ------------------------------------------------------------------ */
@@ -546,8 +582,6 @@ const OmegaWallet = {
   signUnlockWithLocal,
   signUnlockWithMetaMask,
   signUnlockWithPhantom,
-  saveProof,
-  listProofs,
   migrateLegacyStorage,
   storage: {
     get: getStoredValue,

@@ -716,7 +716,7 @@ function WalletSection() {
           },
           {
             title: "MCP hub",
-            desc: "Operate your position via the Omega MCP Hub — 22 tools operating the C.A.R.E. Economy, driven by AI agents.",
+            desc: "The Omega MCP Hub is a separate 22-tool in-memory simulation. It does not access wallets, manage live positions, or move value.",
             color: "var(--color-omega)",
           },
         ].map((item) => (
@@ -793,8 +793,8 @@ function FinalCta() {
         </h2>
         <p style={{ color: "var(--color-muted-strong)", fontSize: "17px", lineHeight: 1.6, margin: "0 0 32px" }}>
           Two optional proof demonstrations are wired today: $OMEGA and TWC.
-          Crucible is public under CC BY 4.0; the MCP hub is the operating layer,
-          and the C.A.R.E. Economy is the broader design. Reading and reusing the
+          Crucible is public under CC BY 4.0; the MCP hub is a separate in-memory
+          prototype, not a live account or value-bearing economy. Reading the
           manuscript does not require a token or proof.
         </p>
         <div style={{ display: "flex", gap: "14px", justifyContent: "center", flexWrap: "wrap" }}>

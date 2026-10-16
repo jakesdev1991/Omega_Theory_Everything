@@ -336,8 +336,8 @@ export async function getUnlockRailStatus() {
   };
 }
 
-export async function verifyUnlockProofOnChain(payload: UnlockProofPayload) {
-  const proof = verifyUnlockProof(payload);
+export async function verifyUnlockProofOnChain(payload: UnlockProofPayload, expectedOrigin: string) {
+  const proof = verifyUnlockProof(payload, expectedOrigin);
 
   if (proof.currency === "OMEGA") {
     return verifyOmegaOnChain(proof);

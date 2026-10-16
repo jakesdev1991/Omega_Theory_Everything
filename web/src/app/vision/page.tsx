@@ -553,7 +553,7 @@ function ArcSection() {
           {
             step: "04",
             title: "The build, in the open",
-            body: "A wallet where keys never leave your device. An MCP hub with 22 tools over a replayable ledger. Test consoles, a Nostr app backplane, an agent-governance bridge — all valueless pilots, all public, with the honest table attached.",
+            body: "A local-first wallet and an MCP hub with 22 tools for an in-memory simulation. Test consoles, a Nostr app backplane and an agent-governance bridge are separate prototypes, each with its own status and license notes.",
             color: "var(--color-unlock)",
           },
         ].map((item, i) => (

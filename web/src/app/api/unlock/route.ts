@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const result = await verifyUnlockProofOnChain(body);
+    const result = await verifyUnlockProofOnChain(body, req.nextUrl.origin);
     return NextResponse.json({
       ok: true,
       address: result.address,

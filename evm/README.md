@@ -50,14 +50,15 @@ These are test inputs, not a mainnet tokenomics decision. A mainnet implementati
 
 ## Local verification
 
-Prerequisites: Node.js 22+ and npm. The project pins `solc-js` locally, so compiling does **not** download a compiler during CI or local build.
+Prerequisites: Node.js 22+ and npm. The project uses Hardhat 3.20.0 with the Ethers/Mocha toolbox and native ESM scripts. It pins `solc-js` locally, so compiling does **not** download a compiler during CI or local build.
 
 ```bash
 cd evm
 npm ci
-npm run compile
-npm test
-npm audit --omit=dev
+npm run check
+npm run test:fixture
+npm run preflight:rehearsal
+npm audit
 ```
 
 The test suite covers:

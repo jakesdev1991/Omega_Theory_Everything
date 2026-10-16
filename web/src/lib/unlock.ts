@@ -86,7 +86,16 @@ export function parseUnlockMessage(message: string) {
   const timestamp = parseLabeledLine(lines[5], "Timestamp");
   const readerDemo = parseLabeledLine(lines[6], "Reader demo");
 
-  assert(origin.length > 0, "Origin is required.");
+  let parsedOrigin: URL;
+  try {
+    parsedOrigin = new URL(origin);
+  } catch {
+    throw new Error("Origin must be a canonical HTTP(S) origin.");
+  }
+  assert(
+    (parsedOrigin.protocol === "http:" || parsedOrigin.protocol === "https:") && parsedOrigin.origin === origin,
+    "Origin must be a canonical HTTP(S) origin (scheme and host only).",
+  );
   assert(
     readerDemo === "full chapter view",
     "Reader demo line must equal " + JSON.stringify("full chapter view") + ".",
@@ -137,11 +146,27 @@ function decodeBase64Signature(signature: string) {
   return bytes;
 }
 
-export function verifyUnlockProof({ message, signature }: UnlockProofPayload): VerifiedUnlock {
+export function verifyUnlockProof(
+  { message, signature }: UnlockProofPayload,
+  expectedOrigin?: string,
+): VerifiedUnlock {
   assert(typeof message === "string" && message.trim().length > 0, "message and signature are required.");
   assert(typeof signature === "string" && signature.trim().length > 0, "message and signature are required.");
 
   const parsed = parseUnlockMessage(message);
+  if (expectedOrigin !== undefined) {
+    let expectedUrl: URL;
+    try {
+      expectedUrl = new URL(expectedOrigin);
+    } catch {
+      throw new Error("Expected origin must be a canonical HTTP(S) origin.");
+    }
+    assert(
+      (expectedUrl.protocol === "http:" || expectedUrl.protocol === "https:") && expectedUrl.origin === expectedOrigin,
+      "Expected origin must be a canonical HTTP(S) origin.",
+    );
+    assert(parsed.origin === expectedUrl.origin, "Unlock proof origin does not match this site's origin.");
+  }
 
   if (parsed.currency === "OMEGA") {
     let recovered: string;

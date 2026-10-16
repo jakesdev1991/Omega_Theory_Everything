@@ -10,7 +10,6 @@ import type { Event as NostrEvent } from "nostr-tools";
 import { ECONOMY_NOSTR_KINDS } from "@/lib/nostr";
 import {
   buildJobRequestTemplate,
-  bytesToHex,
   demoIssueLicense,
   demoJobResult,
   demoListings,
@@ -23,6 +22,7 @@ import {
   type AppListing,
   type JobResult,
 } from "@/lib/nostr-store";
+import { LEGACY_OPERATOR_KEY_STORAGE, loadSessionOperatorKey } from "@/lib/operator-key";
 import {
   STORE_TERMS_ID,
   describeDecision,
@@ -34,7 +34,6 @@ import {
   type StoreLicense,
 } from "@/lib/store-license";
 
-const OPERATOR_KEY_STORAGE = "omega.store.operatorKey.v1";
 const TERMS_ACCEPTANCE_STORAGE = "omega.store.acceptedTerms.v1";
 
 interface JobState {
@@ -65,12 +64,17 @@ function decodePubkey(input: string): string | null {
 function decodeSecret(input: string): Uint8Array | null {
   const value = input.trim();
   try {
-    if (value.startsWith("nsec1")) {
+    let secret: Uint8Array;
+    if (value.toLowerCase().startsWith("nsec1")) {
       const decoded = nip19.decode(value);
-      if (decoded.type === "nsec") return decoded.data as Uint8Array;
-      return null;
+      if (decoded.type !== "nsec") return null;
+      secret = decoded.data as Uint8Array;
+    } else {
+      secret = hexToBytes(value);
     }
-    return hexToBytes(value);
+    if (secret.length !== 32) return null;
+    getPublicKey(secret);
+    return secret;
   } catch {
     return null;
   }
@@ -79,6 +83,9 @@ function decodeSecret(input: string): Uint8Array | null {
 export function AppStore() {
   const [relaysInput, setRelaysInput] = useState("wss://nos.lol, wss://relay.damus.io");
   const [rootInput, setRootInput] = useState("");
+  const [operatorSecretInput, setOperatorSecretInput] = useState("");
+  const [operatorSecretDisplay, setOperatorSecretDisplay] = useState("");
+  const [showOperatorSecret, setShowOperatorSecret] = useState(false);
   const [mode, setMode] = useState<"demo" | "live">("demo");
   const [connected, setConnected] = useState(false);
   const [connectError, setConnectError] = useState<string | null>(null);
@@ -87,6 +94,7 @@ export function AppStore() {
   const [paramDrafts, setParamDrafts] = useState<Record<string, string>>({});
   const [operatorNpub, setOperatorNpub] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [legacyKeyWarning, setLegacyKeyWarning] = useState<string | null>(null);
   const [licenses, setLicenses] = useState<StoreLicense[]>([]);
   const [acceptedTerms, setAcceptedTerms] = useState<string | null>(null);
   const [operatorHex, setOperatorHex] = useState<string | null>(null);
@@ -94,6 +102,7 @@ export function AppStore() {
 
   const poolRef = useRef<SimplePool | null>(null);
   const operatorRef = useRef<Uint8Array | null>(null);
+  const operatorKeyInitializedRef = useRef(false);
   const rootHexRef = useRef<string | null>(null);
   const closeSubRef = useRef<{ close: () => void } | null>(null);
   const closeLicenseSubRef = useRef<{ close: () => void } | null>(null);
@@ -107,26 +116,37 @@ export function AppStore() {
     [relaysInput],
   );
 
-  /* Restore or create the operator key (local only, never uploaded). */
+  /* Restore a legacy key once, then keep all operator secrets in memory only. */
   useEffect(() => {
-    let secret: Uint8Array | null = null;
+    if (operatorKeyInitializedRef.current) return;
+    operatorKeyInitializedRef.current = true;
+
+    let storage: Storage | null = null;
     try {
-      const stored = localStorage.getItem(OPERATOR_KEY_STORAGE);
-      if (stored) secret = decodeSecret(stored);
+      storage = window.localStorage;
     } catch {
-      secret = null;
+      storage = null;
     }
-    if (!secret) {
-      secret = generateSecretKey();
-      try {
-        localStorage.setItem(OPERATOR_KEY_STORAGE, bytesToHex(secret));
-      } catch {
-        /* private mode: session-only key */
-      }
-    }
+    const loaded = loadSessionOperatorKey(storage, decodeSecret, generateSecretKey);
+    const secret = loaded.secret;
     operatorRef.current = secret;
     setOperatorNpub(nip19.npubEncode(getPublicKey(secret)));
     setOperatorHex(getPublicKey(secret));
+
+    if (loaded.hadLegacyValue && !loaded.removedLegacyValue) {
+      const warning = `The previous raw key at ${LEGACY_OPERATOR_KEY_STORAGE} could not be removed. Clear that browser-storage entry manually after exporting the identity.`;
+      setLegacyKeyWarning(warning);
+      setNotice(warning);
+    } else if (loaded.restoredLegacyValue) {
+      setNotice("Recovered the previous operator identity for this tab and removed its plaintext localStorage copy. Export the nsec if you want to keep using this identity after closing the tab.");
+    } else if (loaded.hadLegacyValue) {
+      setNotice("Removed an invalid legacy key value and generated a new session-only operator identity.");
+    } else if (!loaded.removedLegacyValue) {
+      setNotice("Browser storage is unavailable. A session-only operator identity was generated and will not be saved.");
+    } else {
+      setNotice("A session-only operator identity was generated. It is not saved; export the nsec if you want to keep it after closing this tab.");
+    }
+
     try {
       setAcceptedTerms(localStorage.getItem(TERMS_ACCEPTANCE_STORAGE));
     } catch {
@@ -186,6 +206,53 @@ export function AppStore() {
   }, [relays]);
 
   useEffect(() => disconnect, [disconnect]);
+
+  function importOperatorSecret() {
+    const secret = decodeSecret(operatorSecretInput);
+    if (!secret) {
+      setConnectError("Enter a valid Nostr nsec or 64-character private-key hex value.");
+      return;
+    }
+
+    disconnect();
+    operatorRef.current = secret;
+    const publicKey = getPublicKey(secret);
+    setOperatorNpub(nip19.npubEncode(publicKey));
+    setOperatorHex(publicKey);
+    setOperatorSecretInput("");
+    setOperatorSecretDisplay("");
+    setShowOperatorSecret(false);
+    setListings([]);
+    setLicenses([]);
+    setJobs({});
+    setConnectError(null);
+    setNotice("Imported operator key is held in page memory only. Export its nsec before leaving if you need this identity later.");
+  }
+
+  function revealOperatorSecret() {
+    if (!operatorRef.current) return;
+    setOperatorSecretDisplay(nip19.nsecEncode(operatorRef.current));
+    setShowOperatorSecret(true);
+    setNotice("The nsec is visible below. Anyone who gets it can impersonate this identity; do not share it.");
+  }
+
+  function hideOperatorSecret() {
+    setOperatorSecretDisplay("");
+    setShowOperatorSecret(false);
+  }
+
+  async function copyOperatorSecret() {
+    if (!operatorRef.current) return;
+    const nsec = nip19.nsecEncode(operatorRef.current);
+    try {
+      await navigator.clipboard.writeText(nsec);
+      setNotice("Operator nsec copied to the clipboard. Anyone with it can impersonate this identity; clear the clipboard after storing it safely.");
+    } catch {
+      setOperatorSecretDisplay(nsec);
+      setShowOperatorSecret(true);
+      setNotice("Clipboard access failed. The nsec is shown below so you can copy it manually; protect it like a password.");
+    }
+  }
 
   async function connect() {
     setConnectError(null);
@@ -432,6 +499,39 @@ export function AppStore() {
               </button>
             ) : null}
           </div>
+          <div className="store-config-row store-key-row">
+            <label className="grow">
+              import operator key for this tab (nsec or 64-character hex)
+              <input
+                type="password"
+                autoComplete="off"
+                spellCheck={false}
+                value={operatorSecretInput}
+                onChange={(event) => setOperatorSecretInput(event.target.value)}
+                placeholder="nsec1…"
+              />
+            </label>
+            <button type="button" className="store-btn" onClick={importOperatorSecret}>
+              Use key for this tab
+            </button>
+            <button type="button" className="store-btn ghost" onClick={() => void copyOperatorSecret()} disabled={!operatorNpub}>
+              Copy nsec
+            </button>
+            <button type="button" className="store-btn ghost" onClick={revealOperatorSecret} disabled={!operatorNpub}>
+              Reveal nsec
+            </button>
+          </div>
+          {showOperatorSecret ? (
+            <div className="store-key-export">
+              <p>Secret Nostr key. Anyone with this value can sign as this identity. Store it offline and hide it when finished.</p>
+              <textarea value={operatorSecretDisplay} readOnly rows={2} spellCheck={false} aria-label="Exported operator nsec" />
+              <button type="button" className="store-btn ghost" onClick={hideOperatorSecret}>Hide secret</button>
+            </div>
+          ) : null}
+          <p className="store-notice">
+            Private keys remain in page memory only. A reload creates a new identity unless you import an exported nsec; exporting or copying exposes the secret.
+          </p>
+          {legacyKeyWarning ? <p className="store-notice store-key-warning" role="alert">{legacyKeyWarning}</p> : null}
           <div className="store-statusline">
             <span className={connected ? "store-pill ok" : "store-pill idle"}>
               {connected ? (mode === "demo" ? "demo connected" : "connected") : "disconnected"}
@@ -585,8 +685,8 @@ export function AppStore() {
       <section className="store-security">
         <h2>Security contract of this storefront</h2>
         <ul>
-          <li>Directory events and job results are signature-verified (<code>verifyEvent</code>) before rendering or correlation; unverifiable events are dropped.</li>
-          <li>Job requests are signed by a local operator key kept in this browser profile only; the page never transmits it.</li>
+          <li>Directory events and job results are signature-verified and their NIP-01 event hashes are recomputed before rendering or correlation; unverifiable events are dropped.</li>
+          <li>The generated or imported operator key is held in page memory only; this app does not persist it. Import/export is explicit, and copying/revealing an nsec exposes the account secret. Signed job requests are public events sent to the selected relays, but the raw secret is not sent.</li>
           <li>The mobile node only executes allowlisted algorithm ids, only for operator pubkeys, with argv arrays and timeouts — relay content is untrusted input, never shell code.</li>
           <li>Results settle into the economy ledger as audited TWC work receipts; the ledger never trusts a relay event as settlement authority on its own.</li>
           <li>Licensed apps: the node re-verifies the attached kind 31335 license (issuer, licensee, app, tier, terms, expiry) and tracks newer revocations live from relays. A missing or revoked license is answered with NIP-90 <code>payment-required</code>, never executed.</li>
@@ -615,6 +715,11 @@ export function AppStore() {
         .store-config-row label { display: flex; flex-direction: column; gap: 6px; color: var(--color-muted); font: 600 10px ui-monospace, monospace; text-transform: uppercase; letter-spacing: .1em; }
         .store-config-row label.grow { flex: 1; min-width: 220px; }
         .store-config-row input, .store-config-row select { border: 1px solid var(--color-border-strong); border-radius: 8px; padding: 9px 12px; background: rgba(0,0,0,0.35); color: var(--color-foreground); font: 12.5px ui-monospace, monospace; width: 100%; }
+        .store-key-row { padding-top: 10px; border-top: 1px solid var(--color-border); }
+        .store-key-export { display: grid; gap: 8px; border: 1px solid var(--color-care); border-radius: 10px; padding: 12px; background: rgba(244,114,182,0.06); }
+        .store-key-export p { margin: 0; color: var(--color-care); font-size: 12px; line-height: 1.5; }
+        .store-key-warning { border: 1px solid var(--color-care); border-radius: 8px; padding: 10px 12px; color: var(--color-care); background: rgba(244,114,182,0.06); }
+        .store-key-export textarea { width: 100%; border: 1px solid var(--color-border-strong); border-radius: 8px; padding: 10px; background: rgba(0,0,0,0.45); color: var(--color-foreground); font: 12px ui-monospace, monospace; resize: vertical; }
         .store-statusline { display: flex; gap: 18px; flex-wrap: wrap; color: var(--color-muted); font: 11.5px ui-monospace, monospace; align-items: center; }
         .store-statusline code { background: rgba(255,255,255,0.06); padding: 1px 5px; border-radius: 4px; }
         .store-notice { margin: 0; color: var(--color-muted-strong); font-size: 12.5px; }

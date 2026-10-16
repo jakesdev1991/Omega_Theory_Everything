@@ -2,11 +2,14 @@
 // SPDX-License-Identifier: LicenseRef-Omega-ReadOnly
 /* eslint-disable no-console */
 
-const fs = require("node:fs");
-const path = require("node:path");
-const hre = require("hardhat");
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import hre from "hardhat";
 
-const { ethers, network } = hre;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const connection = await hre.network.create();
+const { ethers } = connection;
 const SEPOLIA_CHAIN_ID = 11155111n;
 const NINETY_DAYS = 90 * 24 * 60 * 60;
 
@@ -72,7 +75,7 @@ async function main() {
     );
   }
 
-  const chainId = BigInt(await network.provider.send("eth_chainId"));
+  const chainId = BigInt(await connection.provider.send("eth_chainId"));
   if (chainId !== SEPOLIA_CHAIN_ID) {
     throw new Error(
       `Refusing to deploy: expected Sepolia chain ID ${SEPOLIA_CHAIN_ID}, received ${chainId}.`

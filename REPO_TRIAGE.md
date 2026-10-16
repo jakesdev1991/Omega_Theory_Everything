@@ -255,6 +255,8 @@ All three human PRs report `mergeable: CONFLICTING`, `mergeStateStatus: DIRTY`:
 
 Dependabot's 21 PRs are mostly major bumps: `hardhat` 2→3 (#19), `@nomicfoundation/hardhat-toolbox` 5→7 (#23), `pandas` 2→3 (#9), `numpy` →2.5 (#11), `dotenv` 16→18 (#38, #40), plus the `actions/*` majors. They should be triaged in a batch, not left to accumulate.
 
+**Update (2026-10-16):** The EVM toolchain on this Arena working branch has now been migrated and tested with Hardhat 3.20.0 plus `@nomicfoundation/hardhat-toolbox-mocha-ethers` 4.0.0. Do not merge the older Hardhat/toolbox Dependabot PRs without comparing their lockfile and configuration changes; the remaining Dependabot PRs still need independent triage.
+
 ### 12. Launch-blocking decision stated in the README itself
 
 `README.md` calls this out verbatim: *"**Open release decision:** the manuscript the web app

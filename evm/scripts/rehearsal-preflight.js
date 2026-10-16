@@ -22,7 +22,11 @@
  * environment to rehearse with your own values instead.
  */
 
-const { spawnSync } = require("node:child_process");
+import { spawnSync } from "node:child_process";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const rehearsalDefaults = {
   DEPLOYER_PRIVATE_KEY: `0x${"11".repeat(32)}`,
