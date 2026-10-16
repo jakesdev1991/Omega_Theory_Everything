@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://omni-bridge.local/schemas/security-label.schema.json",
+  "title": "SecurityLabel",
+  "description": "Integrity/confidentiality/origin/purpose label carried by every artifact and execution context.",
+  "type": "object",
+  "required": ["integrity", "confidentiality", "origin", "purpose"],
+  "additionalProperties": false,
+  "properties": {
+    "integrity": {
+      "type": "string",
+      "enum": ["UNTRUSTED", "EXTERNAL", "INTERNAL", "TRUSTED"]
+    },
+    "confidentiality": {
+      "type": "string",
+      "enum": ["PUBLIC", "INTERNAL", "SENSITIVE", "SECRET"]
+    },
+    "origin": { "type": "string", "maxLength": 256 },
+    "purpose": { "type": "string", "maxLength": 256 }
+  }
+}

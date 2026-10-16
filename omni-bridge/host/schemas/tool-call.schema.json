@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://omni-bridge.local/schemas/tool-call.schema.json",
+  "title": "OmniToolCall",
+  "description": "Serialized tool invocation crossing the ABI boundary (matches tool_abi.OmniToolCall).",
+  "type": "object",
+  "required": ["tool_name", "version", "arguments", "risk_tier"],
+  "additionalProperties": false,
+  "properties": {
+    "tool_name": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "arguments": { "type": "object", "maxProperties": 128 },
+    "risk_tier": { "type": "integer", "minimum": 0, "maximum": 3 },
+    "idempotency_key": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+    }
+  }
+}

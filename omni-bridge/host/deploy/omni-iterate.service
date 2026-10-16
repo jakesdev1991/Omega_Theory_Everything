@@ -1,0 +1,13 @@
+[Unit]
+Description=Omni-Bridge iterate: build+test+doctor verification cycle
+After=omni-bridge.service
+
+[Service]
+Type=oneshot
+User=jake
+WorkingDirectory=/opt/omni-bridge
+ExecStart=/opt/omni-bridge/source/omni-bridge/scripts/iterate.sh
+StandardOutput=append:/opt/omni-bridge/telemetry/iterate.log
+StandardError=append:/opt/omni-bridge/telemetry/iterate.log
+Nice=10
+IOSchedulingClass=idle

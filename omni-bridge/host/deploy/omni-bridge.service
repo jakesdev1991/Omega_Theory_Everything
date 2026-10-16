@@ -1,0 +1,40 @@
+[Unit]
+Description=Omni-Bridge Control Boundary Daemon
+Documentation=https://github.com/jakesdev1991
+After=network.target
+
+[Service]
+Type=simple
+User=jake
+Group=jake
+WorkingDirectory=/opt/omni-bridge
+EnvironmentFile=/opt/omni-bridge/config/.env
+ExecStart=/opt/omni-bridge/source/omni-bridge/scripts/start_bridge.sh
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+# Hardening (§43): the boundary is a security component — restrict it.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+# AF_INET/AF_INET6 required for the governed generation plane (NIM calls,
+# gated by OMNI_GENERATION_OFF). AF_UNIX remains the control-plane transport.
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+RestrictNamespaces=true
+LockPersonality=true
+# NOTE: MemoryDenyWriteExecute intentionally NOT set — Wasmtime's Cranelift
+# JIT needs W^X pages; tests confirmed sandbox failures under that flag.
+# Wasm containment is enforced by fuel+epoch+limiter inside the sandbox.
+ReadWritePaths=/opt/omni-bridge
+MemoryMax=8G
+CPUQuota=400%
+
+[Install]
+WantedBy=multi-user.target
