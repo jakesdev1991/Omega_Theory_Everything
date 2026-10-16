@@ -4,17 +4,10 @@
   "private": true,
   "license": "SEE LICENSE IN ../LICENSES/PolyForm-Noncommercial-1.0.0.txt",
   "scripts": {
-<<<<<<< ours
     "predev": "node scripts/sync-wallet.mjs && node scripts/sync-docs.mjs && node scripts/sync-ecosystem-map.mjs",
     "dev": "next dev",
     "prebuild": "node scripts/sync-wallet.mjs && node scripts/sync-docs.mjs && node scripts/sync-ecosystem-map.mjs",
     "build": "next build",
-=======
-    "build": "next build",
-    "predev": "node scripts/sync-wallet.mjs && node scripts/sync-docs.mjs",
-    "dev": "next dev",
-    "prebuild": "node scripts/sync-wallet.mjs && node scripts/sync-docs.mjs",
->>>>>>> theirs
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
@@ -23,14 +16,11 @@
     "sync:map": "node scripts/sync-ecosystem-map.mjs",
     "test": "tsx --test src/lib/domain/*.test.ts src/lib/*.test.ts",
     "test:economy": "tsx --test src/lib/domain/scenarios.test.ts",
-<<<<<<< ours
-    "test:wallet": "node --test ../app/wallet.test.cjs"
-=======
+    "test:wallet": "node --test ../app/wallet.test.cjs",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
->>>>>>> theirs
   },
   "dependencies": {
     "@noble/hashes": "^1.4.0",
@@ -53,11 +43,7 @@
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
     "typescript": "^5",
-<<<<<<< ours
-    "typescript-eslint": "8.70.1"
-=======
-    "typescript-eslint": "^8.70.1",
+    "typescript-eslint": "8.70.1",
     "wrangler": "^4.141.0"
->>>>>>> theirs
   }
 }
