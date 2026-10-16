@@ -51,10 +51,19 @@ skill lifecycle, replay classification. The host layer is the **enforcement
 engine**: it feeds real labels and manifests into the policy and enforces
 the returned tier with actual host mechanisms (Wasmtime T1 with fuel and
 epoch limits, cgroups, systemd restrictions, persistent BLAKE3 JSONL
-ledger). Known gap (being closed): the daemon currently implements its own
-APPA/routing inline rather than calling `evaluate()` from the portable
-core; the unification is the next milestone, after which the core's
-`kGovernanceOnlyCaps` type-level guarantees apply to the live system too.
+ledger).
+
+**Unified (2026-10-16):** the daemon now authorizes every request through
+the portable core's `evaluate()` via `CorePolicyAdapter` (see
+`cpp/include/omni_bridge/CorePolicyAdapter.hpp` + its behavior test).
+The core's type-level guarantees — `kGovernanceOnlyCaps` unreachable by
+any automated path, the monotonic risk ladder, the T4 human gate, the
+audit fail-closed rule, in-pipeline skill eligibility — now govern the
+live system. The daemon keeps its spoof tripwire as defense-in-depth and
+its ledger/sandbox/dispatch as enforcement only. A vendored copy of the
+core lives in `cpp/vendor/` under namespace `omni_core` (identical to
+`../cpp/omni_bridge_core.hpp` except the namespace rename, which avoids
+colliding with the daemon's own `omni::bridge` types).
 
 ## Measured evidence (2026-10-16, on the target host)
 

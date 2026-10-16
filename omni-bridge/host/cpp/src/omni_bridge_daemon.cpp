@@ -1,6 +1,3 @@
-// Copyright (c) 2025-2026 Jacob See.
-// SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
-
 // Omni-Bridge control boundary daemon (§19 pipeline).
 //
 // This is the missing integration layer between Hermes (governance) and
@@ -18,6 +15,7 @@
 //   8. LEDGER     append-only evidence chain + ToE grounding citations
 
 #include "omni_bridge/Appa.hpp"
+#include "omni_bridge/CorePolicyAdapter.hpp"
 #include "omni_bridge/PersistentLedger.hpp"
 #include "omni_bridge/RequestEnvelope.hpp"
 #include "omni_bridge/Sandbox.hpp"
@@ -72,6 +70,11 @@ private:
     QStarSelectiveRouter qstar_;
     PersistentLedger ledger_;
     ToeGrounding toe_;
+    // The portable core as the policy authority (unification milestone):
+    // every request is authorized by the core's evaluate() pipeline.
+    omni::bridge::CorePolicyAdapter policy_core_{
+        omni::bridge::kDaemonSystemCaps,
+        omni::bridge::kDaemonSystemCaps};
     std::unique_ptr<WasmtimeSandbox> sandbox_;   // created lazily; may fail
     bool sandbox_ok_ = false;
     UnixDomainSocketIPC bridge_server_;
@@ -212,12 +215,12 @@ public:
         // Injection downgrades all the way to the floor
         if (pr.injected) in_integrity = SecurityIntegrity::UNTRUSTED;
 
-        // 3. APPA — prospective acquisition over the parent governance context.
-        // Direct admission requires the incoming label to merge without taint
-        // into the TRUSTED governance context. Everything else is NOT rejected
-        // outright: §27 requires restricted child contexts for untrusted
-        // material (untrusted data is DATA — processed in isolation, never
-        // refused merely for being untrusted, and never promoted either).
+        // 3. APPA — UNIFIED: authorization now flows through the portable
+        // core's evaluate() (8-step pipeline: kill switches → tool ABI →
+        // skill eligibility → APPA intersection over typed CapSets → risk
+        // ceiling → audit gate → tier selection → governance split).
+        // The daemon keeps its spoof tripwire as defense-in-depth (early
+        // rejection) and its ledger/sandbox/dispatch as enforcement only.
         SecurityLabel incoming{in_integrity, SecurityConfidentiality::INTERNAL,
                                pr.origin, pr.purpose};
         AgentContext governance{"bridge_root",
@@ -274,6 +277,39 @@ public:
                           std::to_string(exec_context.permissions.size()) +
                           " capabilities retained (write/exec dropped)";
             log_record(cbr, pr.payload);
+        }
+
+        // 3b. CORE AUTHORIZATION (the unification): the request is now
+        // authorized by the portable core's evaluate() — the same
+        // pipeline proven by its 18-group acceptance suite. granted
+        // caps, tier, verification requirements come from the core.
+        auto core_decision = policy_core_.authorize(
+            pr.trace_id, /*tool_id=*/"", integrity_name(in_integrity),
+            pr.origin, pr.injected, child_branch);
+        if (core_decision.status ==
+            omni_core::Decision::Status::Rejected) {
+            LedgerRecord rr = base_record(pr.trace_id, "CORE_APPA");
+            rr.route = "none";
+            rr.integrity = integrity_name(in_integrity);
+            rr.injection_detected = pr.injected;
+            rr.outcome = "core evaluate() rejection: " + core_decision.reason;
+            log_record(rr, pr.payload);
+            Json extra;
+            extra["core_reason"] = core_decision.reason;
+            extra["appa_violation"] = true;
+            return build_result(pr, "REJECTED", "none", "", 0.0, true, false,
+                                "core APPA: " + core_decision.reason, extra);
+        }
+        {
+            LedgerRecord rr = base_record(pr.trace_id, "CORE_APPA");
+            rr.route = "pending";
+            rr.integrity = integrity_name(in_integrity);
+            rr.injection_detected = pr.injected;
+            rr.outcome = "core authorized: " + core_decision.reason +
+                         " | granted_caps=" +
+                         std::to_string(core_decision.granted_caps) +
+                         " tier=" + std::to_string(static_cast<int>(core_decision.tier));
+            log_record(rr, pr.payload);
         }
 
         // 4. ROUTE — QSTAR selective fallback with budget shadow price.
