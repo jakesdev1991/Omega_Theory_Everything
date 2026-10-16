@@ -1,17 +1,18 @@
 # Copyright (c) 2025-2026 Jacob See.
 # SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 """
-Omega MCP Hub — sovereign MCP server for the tri-token economy.
+Omega MCP Hub — in-memory simulation prototype for the tri-token economy concepts.
 
 Planes:
-  - SOV  : accounting / settlement ledger (simulated, deterministic)
-  - USE  : proof-of-useful-work contribution receipts (non-transferable by default)
-  - CARE : stewardship / governance (caps, delegation, appeals stored as events)
-  - AMITY: exchange-eligible care representation (wrapped entitlement, compliance-gated)
-  - OMEGA: macro-governance scarce asset (supply curve, lock positions, proposals)
+  - SOV  : simulated balances and accounting events
+  - USE  : simulated non-transferable receipt records
+  - CARE : proposed claims, labeled attestations, and appeals
+  - AMITY: simulated entitlements and balances
+  - OMEGA: simulated balances, locks, proposals, and votes
 
-State is in-memory for the prototype. Every mutation emits an append-only event
-so the ledger is replayable. No real keys, no real chain, no real value.
+Mutations emit versioned audit metadata and snapshots expose current state. Event
+payloads are not a complete replay log. No real keys, chain, services, or value
+are involved; tool actions are not independently verified.
 
 Run (from the repository root):
   uv run --directory mcp python -m omega_mcp
@@ -44,13 +45,19 @@ def _eid() -> str:
     return str(uuid.uuid4())
 
 
+def _require(condition: bool, message: str) -> None:
+    """Enforce simulation invariants even when Python optimization is enabled."""
+    if not condition:
+        raise ValueError(message)
+
+
 # ---------------------------------------------------------------------------
 # Minimal in-memory state
 # ---------------------------------------------------------------------------
 
 
 class OmegaState:
-    """Deterministic, append-only ledger simulation for the prototype."""
+    """Append-only in-memory ledger simulation for the prototype."""
 
     def __init__(self) -> None:
         self.snapshots: dict[str, Snapshot] = {}
@@ -102,14 +109,15 @@ class OmegaState:
     # ---- SOV ----
 
     def sov_mint(self, to: str, amount: int, reason: str) -> Snapshot:
-        assert amount > 0, "amount must be positive"
+        _require(amount > 0, "amount must be positive")
         self.sov_balances[to] += amount
         self.sov_supply += amount
         self.emit("SOV", "mint", {"to": to, "amount": amount, "reason": reason})
         return self.sov_snapshot()
 
     def sov_burn(self, from_address: str, amount: int, reason: str) -> Snapshot:
-        assert self.sov_balances[from_address] >= amount, "insufficient SOV"
+        _require(amount > 0, "amount must be positive")
+        _require(self.sov_balances.get(from_address, 0) >= amount, "insufficient SOV")
         self.sov_balances[from_address] -= amount
         self.sov_supply -= amount
         self.emit(
@@ -118,7 +126,8 @@ class OmegaState:
         return self.sov_snapshot()
 
     def sov_transfer(self, from_address: str, to: str, amount: int) -> Snapshot:
-        assert self.sov_balances[from_address] >= amount, "insufficient SOV"
+        _require(amount > 0, "amount must be positive")
+        _require(self.sov_balances.get(from_address, 0) >= amount, "insufficient SOV")
         self.sov_balances[from_address] -= amount
         self.sov_balances[to] += amount
         self.emit("SOV", "transfer", {"from": from_address, "to": to, "amount": amount})
@@ -141,8 +150,8 @@ class OmegaState:
         evidence_commitment: str,
         attestations: int = 1,
     ) -> Snapshot:
-        assert quantity > 0, "quantity must be positive"
-        assert attestations >= 1, "at least one attestation required"
+        _require(quantity > 0, "quantity must be positive")
+        _require(attestations >= 1, "at least one attestation required")
         receipt_id = _eid()
         receipt: dict[str, Any] = {
             "receipt_id": receipt_id,
@@ -170,8 +179,9 @@ class OmegaState:
 
     def use_revoke(self, receipt_id: str, reason: str) -> Snapshot:
         r = self.use_receipts.get(receipt_id)
-        assert r is not None, "receipt not found"
-        assert not r["revoked"], "already revoked"
+        if r is None:
+            raise ValueError("receipt not found")
+        _require(not r["revoked"], "already revoked")
         r["revoked"] = True
         r["revoked_at"] = _now_iso()
         r["revoked_reason"] = reason
@@ -219,18 +229,46 @@ class OmegaState:
 
     def care_attest(self, claim_id: str, verifier: str, reason: str) -> Snapshot:
         c = self.care_claims.get(claim_id)
-        assert c is not None, "claim not found"
-        assert c["status"] != "final", "claim already final"
-        a = {"verifier": verifier, "reason": reason, "attested_at": _now_iso()}
+        if c is None:
+            raise ValueError("claim not found")
+        _require(c["status"] == "proposed", "claim is not open for attestation")
+        verifier_label = verifier.strip()
+        _require(bool(verifier_label), "verifier is required")
+        normalized_verifier = verifier_label.casefold()
+        _require(
+            all(
+                item["verifier"].casefold() != normalized_verifier
+                for item in c["attestations"]
+            ),
+            "verifier has already attested this claim",
+        )
+        a = {
+            "verifier": verifier_label,
+            "reason": reason,
+            "attested_at": _now_iso(),
+        }
         self.care_attestations[claim_id].append(a)
         c["attestations"].append(a)
         if len(c["attestations"]) >= 2:
             c["status"] = "final"
+        self.emit(
+            "CARE",
+            "attest",
+            {
+                "claim_id": claim_id,
+                "verifier": verifier_label,
+                "attestation_count": len(c["attestations"]),
+                "status": c["status"],
+            },
+        )
         return self.care_snapshot()
 
     def care_appeal(self, claim_id: str, appellant: str, reason: str) -> Snapshot:
         c = self.care_claims.get(claim_id)
-        assert c is not None, "claim not found"
+        if c is None:
+            raise ValueError("claim not found")
+        _require(bool(c["attestations"]), "claim must have at least one attestation")
+        _require(c["status"] != "appealed", "claim is already under appeal")
         appeal_id = _eid()
         app: dict[str, Any] = {
             "appeal_id": appeal_id,
@@ -261,7 +299,18 @@ class OmegaState:
     def amity_entitle(
         self, from_claim_id: str, to: str, amount: int, policy: str
     ) -> Snapshot:
-        assert amount > 0, "amount must be positive"
+        _require(amount > 0, "amount must be positive")
+        claim = self.care_claims.get(from_claim_id)
+        if claim is None:
+            raise ValueError("CARE claim not found")
+        _require(claim["status"] == "final", "CARE claim must be finalized")
+        _require(
+            not any(
+                item["source_claim_id"] == from_claim_id
+                for item in self.amity_entitlements.values()
+            ),
+            "CARE claim has already been converted",
+        )
         eid = _eid()
         entitlement: dict[str, Any] = {
             "entitlement_id": eid,
@@ -288,7 +337,10 @@ class OmegaState:
         return self.amity_snapshot()
 
     def amity_transfer(self, from_address: str, to: str, amount: int) -> Snapshot:
-        assert self.amity_balances[from_address] >= amount, "insufficient AMITY"
+        _require(amount > 0, "amount must be positive")
+        _require(
+            self.amity_balances.get(from_address, 0) >= amount, "insufficient AMITY"
+        )
         self.amity_balances[from_address] -= amount
         self.amity_balances[to] += amount
         self.emit(
@@ -309,7 +361,7 @@ class OmegaState:
     def omega_mint(
         self, to: str, amount: int, reason: str, protocol_version: str = "0.1.0"
     ) -> Snapshot:
-        assert amount > 0, "amount must be positive"
+        _require(amount > 0, "amount must be positive")
         self.omega_balances[to] += amount
         self.omega_supply += amount
         self.emit(
@@ -327,7 +379,9 @@ class OmegaState:
     def omega_lock(
         self, owner: str, amount: int, duration_blocks: int, reason: str
     ) -> Snapshot:
-        assert self.omega_balances[owner] >= amount, "insufficient OMEGA"
+        _require(amount > 0, "amount must be positive")
+        _require(duration_blocks > 0, "duration_blocks must be positive")
+        _require(self.omega_balances.get(owner, 0) >= amount, "insufficient OMEGA")
         self.omega_balances[owner] -= amount
         lock_id = _eid()
         lock: dict[str, Any] = {
@@ -379,9 +433,13 @@ class OmegaState:
     def omega_vote(
         self, proposal_id: str, voter: str, support: bool, weight: int
     ) -> Snapshot:
+        _require(weight > 0, "weight must be positive")
         p = self.omega_proposals.get(proposal_id)
-        assert p is not None, "proposal not found"
-        assert p["status"] not in ("activated", "rejected"), "proposal already resolved"
+        if p is None:
+            raise ValueError("proposal not found")
+        _require(
+            p["status"] not in ("activated", "rejected"), "proposal already resolved"
+        )
         p["status"] = "vote"
         self.omega_votes[proposal_id][voter] = {
             "support": support,
@@ -434,34 +492,34 @@ class OmegaState:
 # ---------------------------------------------------------------------------
 
 TOOL_DESCRIPTIONS = {
-    # SOV
-    "sov_mint": "Mint SOV to an address (simulated). Requires positive amount and a reason.",
-    "sov_burn": "Burn SOV from an address. Fails if balance is insufficient.",
-    "sov_transfer": "Transfer SOV between addresses. Fails if sender balance is insufficient.",
-    "sov_snapshot": "Current SOV balances, supply, and ledger version.",
-    # USE
-    "use_issue": "Issue a proof-of-useful-work receipt. Non-transferable; requires category, quantity, evidence commitment, and at least one attestation.",
-    "use_revoke": "Revoke a USE receipt by ID with a reason. Append-only reversal.",
-    "use_snapshot": "All USE receipts and attestation counts.",
-    # CARE
-    "care_submit": "Submit a Proof-of-Care claim in proposed state.",
-    "care_attest": "Attest a CARE claim. Two independent attestations move it to final.",
-    "care_appeal": "File an appeal on a finalized or attested claim.",
-    "care_snapshot": "CARE claims, attestation counts, and open appeals.",
-    # AMITY
-    "amity_entitle": "Convert a finalized CARE claim into an eligible AMITY entitlement under a published policy. Fails if amount is not positive.",
-    "amity_transfer": "Transfer AMITY between addresses.",
-    "amity_snapshot": "AMITY balances, supply, and entitlements.",
-    # OMEGA
-    "omega_mint": "Mint OMEGA to an address with a reason and protocol version.",
-    "omega_lock": "Lock OMEGA for a duration in blocks; returns a weight used for governance.",
-    "omega_proposal": "Draft a governance proposal with a change set, simulation reference, and rollback plan.",
-    "omega_vote": "Vote on a proposal by voter, support flag, and weight.",
-    "omega_snapshot": "OMEGA balances, supply, locks, and proposals.",
-    # house
-    "ledger": "Full deterministic ledger snapshot across all planes plus event count.",
-    "events_since": "All events after a given version for replay.",
-    "full_event_log": "Complete append-only event log.",
+    # SOV — simulated accounting only
+    "sov_mint": "Add simulated SOV units to an address in this process's in-memory ledger. Requires a positive amount and reason; no real chain or value is involved.",
+    "sov_burn": "Remove simulated SOV units from an address in the in-memory ledger. Requires a positive amount and sufficient balance.",
+    "sov_transfer": "Move simulated SOV units between addresses in the in-memory ledger. Requires a positive amount and sufficient sender balance.",
+    "sov_snapshot": "Inspect current in-memory SOV balances, simulated supply, and version.",
+    # USE — simulated receipts only
+    "use_issue": "Create a simulated, non-transferable proof-of-useful-work receipt. Requires a category, positive quantity, evidence commitment, and at least one claimed attestation.",
+    "use_revoke": "Mark a simulated USE receipt revoked by ID with a reason; the audit event is append-only.",
+    "use_snapshot": "Inspect simulated USE receipts and their claimed attestation counts.",
+    # CARE — simulated claims only
+    "care_submit": "Create a proposed Proof-of-Care claim in memory. This does not verify evidence or grant a real service or benefit.",
+    "care_attest": "Add a simulated CARE attestation. Two distinct verifier labels move the claim to final; this is not cryptographic or independent verification.",
+    "care_appeal": "File an in-memory appeal on a CARE claim with at least one attestation.",
+    "care_snapshot": "Inspect in-memory CARE claims, attestation counts, and open appeals.",
+    # AMITY — simulated entitlements only
+    "amity_entitle": "Create simulated AMITY units from a finalized CARE claim under a policy label. The claim must exist and the amount must be positive; no real value is issued.",
+    "amity_transfer": "Move simulated AMITY units between addresses in memory. Requires a positive amount and sufficient sender balance.",
+    "amity_snapshot": "Inspect in-memory AMITY balances, simulated supply, and entitlements.",
+    # OMEGA — simulated governance only
+    "omega_mint": "Add simulated OMEGA units to an address with a reason and protocol version; no real token is issued.",
+    "omega_lock": "Lock simulated OMEGA units for a positive duration in blocks; returns a prototype governance weight.",
+    "omega_proposal": "Draft an in-memory governance proposal with a change set, simulation reference, and rollback plan.",
+    "omega_vote": "Record a simulated vote on a proposal with voter, support flag, and positive weight.",
+    "omega_snapshot": "Inspect in-memory OMEGA balances, simulated supply, locks, and proposals.",
+    # house — snapshots and audit metadata
+    "ledger": "Current in-memory simulation snapshot across all planes, plus event count and next version.",
+    "events_since": "Versioned audit events after a given version; payloads are not a complete state-replay log.",
+    "full_event_log": "Inspect the append-only audit events emitted by this process; they are not a complete state-replay log.",
 }
 
 
@@ -471,40 +529,53 @@ TOOL_DESCRIPTIONS = {
 
 mcp = FastMCP(
     name="omega-hub",
-    instructions="Sovereign MCP hub for the Omega tri-token economy: SOV, USE, CARE, AMITY, OMEGA planes.",
+    instructions=(
+        "Prototype simulation only. All state is in memory; no real chain, keys, "
+        "services, or value are involved. Tool actions are not independently verified. "
+        "The HTTP transport has no built-in authentication and defaults to loopback; "
+        "do not expose it to untrusted networks."
+    ),
 )
 
 _state = OmegaState()
 
 
+def _documented_tool(function: Any) -> Any:
+    """Register a tool with its shared, explicit MCP description."""
+    return mcp.tool(description=TOOL_DESCRIPTIONS[function.__name__])(function)
+
+
 # ---- SOV tools ----
 
 
-@mcp.tool()
+@_documented_tool
 def sov_mint(to: str, amount: int, reason: str) -> dict[str, Any]:
-    snap = _state.sov_mint(to=to, amount=amount, reason=reason)
-    return {"ok": True, "snapshot": snap}
+    try:
+        snap = _state.sov_mint(to=to, amount=amount, reason=reason)
+        return {"ok": True, "snapshot": snap}
+    except ValueError as exc:
+        return {"ok": False, "error": str(exc)}
 
 
-@mcp.tool()
+@_documented_tool
 def sov_burn(from_address: str, amount: int, reason: str) -> dict[str, Any]:
     try:
         snap = _state.sov_burn(from_address=from_address, amount=amount, reason=reason)
         return {"ok": True, "snapshot": snap}
-    except AssertionError as exc:
+    except ValueError as exc:
         return {"ok": False, "error": str(exc)}
 
 
-@mcp.tool()
+@_documented_tool
 def sov_transfer(from_address: str, to: str, amount: int) -> dict[str, Any]:
     try:
         snap = _state.sov_transfer(from_address=from_address, to=to, amount=amount)
         return {"ok": True, "snapshot": snap}
-    except AssertionError as exc:
+    except ValueError as exc:
         return {"ok": False, "error": str(exc)}
 
 
-@mcp.tool()
+@_documented_tool
 def sov_snapshot() -> dict[str, Any]:
     return {"ok": True, "snapshot": _state.sov_snapshot()}
 
@@ -512,7 +583,7 @@ def sov_snapshot() -> dict[str, Any]:
 # ---- USE tools ----
 
 
-@mcp.tool()
+@_documented_tool
 def use_issue(
     contributor: str,
     work_category: str,
@@ -529,20 +600,20 @@ def use_issue(
             attestations=attestations,
         )
         return {"ok": True, "snapshot": snap}
-    except AssertionError as exc:
+    except ValueError as exc:
         return {"ok": False, "error": str(exc)}
 
 
-@mcp.tool()
+@_documented_tool
 def use_revoke(receipt_id: str, reason: str) -> dict[str, Any]:
     try:
         snap = _state.use_revoke(receipt_id=receipt_id, reason=reason)
         return {"ok": True, "snapshot": snap}
-    except AssertionError as exc:
+    except ValueError as exc:
         return {"ok": False, "error": str(exc)}
 
 
-@mcp.tool()
+@_documented_tool
 def use_snapshot() -> dict[str, Any]:
     return {"ok": True, "snapshot": _state.use_snapshot()}
 
@@ -550,7 +621,7 @@ def use_snapshot() -> dict[str, Any]:
 # ---- CARE tools ----
 
 
-@mcp.tool()
+@_documented_tool
 def care_submit(
     participant: str,
     service_category: str,
@@ -566,25 +637,25 @@ def care_submit(
     return {"ok": True, "snapshot": snap}
 
 
-@mcp.tool()
+@_documented_tool
 def care_attest(claim_id: str, verifier: str, reason: str) -> dict[str, Any]:
     try:
         snap = _state.care_attest(claim_id=claim_id, verifier=verifier, reason=reason)
         return {"ok": True, "snapshot": snap}
-    except AssertionError as exc:
+    except ValueError as exc:
         return {"ok": False, "error": str(exc)}
 
 
-@mcp.tool()
+@_documented_tool
 def care_appeal(claim_id: str, appellant: str, reason: str) -> dict[str, Any]:
     try:
         snap = _state.care_appeal(claim_id=claim_id, appellant=appellant, reason=reason)
         return {"ok": True, "snapshot": snap}
-    except AssertionError as exc:
+    except ValueError as exc:
         return {"ok": False, "error": str(exc)}
 
 
-@mcp.tool()
+@_documented_tool
 def care_snapshot() -> dict[str, Any]:
     return {"ok": True, "snapshot": _state.care_snapshot()}
 
@@ -592,7 +663,7 @@ def care_snapshot() -> dict[str, Any]:
 # ---- AMITY tools ----
 
 
-@mcp.tool()
+@_documented_tool
 def amity_entitle(
     from_claim_id: str, to: str, amount: int, policy: str
 ) -> dict[str, Any]:
@@ -601,20 +672,20 @@ def amity_entitle(
             from_claim_id=from_claim_id, to=to, amount=amount, policy=policy
         )
         return {"ok": True, "snapshot": snap}
-    except AssertionError as exc:
+    except ValueError as exc:
         return {"ok": False, "error": str(exc)}
 
 
-@mcp.tool()
+@_documented_tool
 def amity_transfer(from_address: str, to: str, amount: int) -> dict[str, Any]:
     try:
         snap = _state.amity_transfer(from_address=from_address, to=to, amount=amount)
         return {"ok": True, "snapshot": snap}
-    except AssertionError as exc:
+    except ValueError as exc:
         return {"ok": False, "error": str(exc)}
 
 
-@mcp.tool()
+@_documented_tool
 def amity_snapshot() -> dict[str, Any]:
     return {"ok": True, "snapshot": _state.amity_snapshot()}
 
@@ -622,17 +693,20 @@ def amity_snapshot() -> dict[str, Any]:
 # ---- OMEGA tools ----
 
 
-@mcp.tool()
+@_documented_tool
 def omega_mint(
     to: str, amount: int, reason: str, protocol_version: str = "0.1.0"
 ) -> dict[str, Any]:
-    snap = _state.omega_mint(
-        to=to, amount=amount, reason=reason, protocol_version=protocol_version
-    )
-    return {"ok": True, "snapshot": snap}
+    try:
+        snap = _state.omega_mint(
+            to=to, amount=amount, reason=reason, protocol_version=protocol_version
+        )
+        return {"ok": True, "snapshot": snap}
+    except ValueError as exc:
+        return {"ok": False, "error": str(exc)}
 
 
-@mcp.tool()
+@_documented_tool
 def omega_lock(
     owner: str, amount: int, duration_blocks: int, reason: str
 ) -> dict[str, Any]:
@@ -641,11 +715,11 @@ def omega_lock(
             owner=owner, amount=amount, duration_blocks=duration_blocks, reason=reason
         )
         return {"ok": True, "snapshot": snap}
-    except AssertionError as exc:
+    except ValueError as exc:
         return {"ok": False, "error": str(exc)}
 
 
-@mcp.tool()
+@_documented_tool
 def omega_proposal(
     proposer: str,
     change_set: dict[str, Any],
@@ -661,7 +735,7 @@ def omega_proposal(
     return {"ok": True, "snapshot": snap}
 
 
-@mcp.tool()
+@_documented_tool
 def omega_vote(
     proposal_id: str, voter: str, support: bool, weight: int
 ) -> dict[str, Any]:
@@ -670,11 +744,11 @@ def omega_vote(
             proposal_id=proposal_id, voter=voter, support=support, weight=weight
         )
         return {"ok": True, "snapshot": snap}
-    except AssertionError as exc:
+    except ValueError as exc:
         return {"ok": False, "error": str(exc)}
 
 
-@mcp.tool()
+@_documented_tool
 def omega_snapshot() -> dict[str, Any]:
     return {"ok": True, "snapshot": _state.omega_snapshot()}
 
@@ -682,17 +756,17 @@ def omega_snapshot() -> dict[str, Any]:
 # ---- house tools ----
 
 
-@mcp.tool()
+@_documented_tool
 def ledger() -> dict[str, Any]:
     return {"ok": True, "snapshot": _state.ledger()}
 
 
-@mcp.tool()
+@_documented_tool
 def events_since(version: int) -> dict[str, Any]:
     return {"ok": True, "events": _state.events_since(version)}
 
 
-@mcp.tool()
+@_documented_tool
 def full_event_log() -> dict[str, Any]:
     return {"ok": True, "events": _state.full_event_log()}
 

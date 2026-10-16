@@ -20,6 +20,9 @@ function readStagedProof(): {
 } | null {
   try {
     const raw = sessionStorage.getItem(STORAGE_KEY);
+    // Consume the tab-scoped proof immediately so a reload cannot silently
+    // replay it. A failed verification requires the user to sign again.
+    sessionStorage.removeItem(STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     if (parsed && parsed.message && parsed.signature) return parsed;

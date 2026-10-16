@@ -49,12 +49,53 @@ const els = {
   balTwc: document.getElementById('bal-twc'),
   proofResult: document.getElementById('proof-result'),
   proofJson: document.getElementById('proof-json'),
+  recoveryPanel: document.getElementById('recovery-panel'),
+  recoveryPhrase: document.getElementById('recovery-phrase'),
+  recoveryNotice: document.getElementById('recovery-notice'),
+  unlockPasswordField: document.getElementById('unlock-password-field'),
+  unlockPassword: document.getElementById('unlock-password'),
   networkLabel: document.getElementById('network-label'),
 };
+
+function showRecoveryPhrase(phrase, saveFailed = false) {
+  if (!els.recoveryPanel || !els.recoveryPhrase || !els.recoveryNotice) return;
+  els.recoveryPhrase.value = phrase;
+  els.recoveryNotice.textContent = saveFailed
+    ? 'The wallet was not saved. Write this phrase down offline now; it is the only copy and can be imported later.'
+    : 'Write these 12 words down offline before funding the wallet. This phrase is shown once and is not stored by the app.';
+  els.recoveryPanel.classList.remove('hidden');
+}
+
+function clearRecoveryPhrase() {
+  if (!els.recoveryPhrase || !els.recoveryPanel) return true;
+  const hasPhrase = els.recoveryPhrase.value.length > 0;
+  const backupConfirmed = document.getElementById('backup-confirmed');
+  if (hasPhrase && !backupConfirmed?.checked) {
+    showToast('Write down the recovery phrase offline and confirm the backup before hiding it.');
+    return false;
+  }
+  if (backupConfirmed) backupConfirmed.checked = false;
+  els.recoveryPhrase.value = '';
+  els.recoveryPanel.classList.add('hidden');
+  return true;
+}
+
+function clearProofDisplay() {
+  if (els.proofJson) els.proofJson.value = '';
+  if (els.proofResult) els.proofResult.classList.add('hidden');
+}
+
+function updateUnlockPasswordVisibility(account = wallet.loadActiveAccount()) {
+  const currency = document.getElementById('unlock-currency')?.value;
+  const needed = currency === 'OMEGA' && !!account?.hasKeystore;
+  if (els.unlockPasswordField) els.unlockPasswordField.classList.toggle('hidden', !needed);
+  if (!needed && els.unlockPassword) els.unlockPassword.value = '';
+}
 
 function refreshWalletView() {
   const account = wallet.loadActiveAccount();
   const solana = wallet.loadSolanaAccount();
+  updateUnlockPasswordVisibility(account);
 
   if (!account && !solana) {
     els.setup.classList.remove('hidden');
@@ -71,7 +112,8 @@ function refreshWalletView() {
     els.label.textContent = account.label + (account.hasKeystore ? ' · encrypted local keystore' : ' · connected EVM wallet');
     els.networkLabel.textContent = account.hasKeystore ? 'OMEGA · EVM/Sepolia proof rail · local key' : 'OMEGA · EVM/Sepolia proof rail · MetaMask';
     els.balOmega.textContent = 'Connected';
-    fetchBalance();
+    els.ethBalance.textContent = '—';
+    els.balanceStatus.textContent = 'Not requested — click Refresh to contact a public RPC with this address';
   } else {
     els.address.textContent = 'No OMEGA wallet connected yet';
     els.label.textContent = 'Connect MetaMask or create/import an EVM key to try the optional $OMEGA reader-proof demo.';
@@ -91,6 +133,8 @@ function refreshWalletView() {
     els.balTwc.textContent = 'Not connected';
   }
 }
+
+document.getElementById('unlock-currency')?.addEventListener('change', () => updateUnlockPasswordVisibility());
 
 async function fetchBalance() {
   const account = wallet.loadActiveAccount();
@@ -126,6 +170,13 @@ function passwordCheck(first, second) {
 }
 
 document.getElementById('btn-create')?.addEventListener('click', async () => {
+  if (els.recoveryPhrase?.value && !clearRecoveryPhrase()) {
+    document.getElementById('create-password').value = '';
+    document.getElementById('create-password2').value = '';
+    return;
+  }
+  let account = null;
+  let saved = false;
   try {
     const label = document.getElementById('create-label').value.trim() || 'Omega Wallet';
     const password = passwordCheck(
@@ -134,16 +185,34 @@ document.getElementById('btn-create')?.addEventListener('click', async () => {
     );
 
     showToast('Generating EVM keypair (BIP-39)…');
-    const account = wallet.createLocalWallet();
+    account = wallet.createLocalWallet();
     await wallet.encryptAndSave(account, password, label);
-    showToast(`Wallet created: ${account.address} — WRITE DOWN YOUR MNEMONIC (shown in console once).`);
-    console.info('OMEGA WALLET MNEMONIC (write it down, never share):', account.mnemonic);
-    console.info('OMEGA EVM ADDRESS:', account.address);
+    saved = true;
+    showRecoveryPhrase(account.mnemonic);
+    showToast(`Wallet created: ${account.address}. Write down the recovery phrase now.`);
     refreshWalletView();
   } catch (error) {
+    if (account?.mnemonic) showRecoveryPhrase(account.mnemonic, !saved);
     showToast(`Create failed: ${error.message || error}`);
+  } finally {
+    document.getElementById('create-password').value = '';
+    document.getElementById('create-password2').value = '';
   }
 });
+
+document.getElementById('btn-copy-mnemonic')?.addEventListener('click', async () => {
+  const phrase = els.recoveryPhrase?.value;
+  if (!phrase) return;
+  try {
+    await navigator.clipboard.writeText(phrase);
+    showToast('Recovery phrase copied. Clear it from your clipboard after writing it down.');
+  } catch {
+    els.recoveryPhrase?.select();
+    showToast('Clipboard unavailable. Select and copy the phrase manually, then clear it from the clipboard.');
+  }
+});
+
+document.getElementById('btn-hide-mnemonic')?.addEventListener('click', clearRecoveryPhrase);
 
 document.getElementById('btn-import')?.addEventListener('click', async () => {
   try {
@@ -166,6 +235,9 @@ document.getElementById('btn-import')?.addEventListener('click', async () => {
     refreshWalletView();
   } catch (error) {
     showToast(`Import failed: ${error.message || error}`);
+  } finally {
+    document.getElementById('import-secret').value = '';
+    document.getElementById('import-password').value = '';
   }
 });
 
@@ -196,8 +268,17 @@ document.getElementById('btn-connect-phantom')?.addEventListener('click', async 
 });
 
 document.getElementById('btn-forget')?.addEventListener('click', () => {
-  wallet.forgetWallet();
-  showToast('Wallet forgotten on this device. Your funds remain on-chain.');
+  const storageCleared = wallet.forgetWallet();
+  clearProofDisplay();
+  const recoveryHidden = clearRecoveryPhrase();
+  document.getElementById('import-secret').value = '';
+  document.getElementById('import-password').value = '';
+  const storageMessage = storageCleared
+    ? 'Local account metadata and saved proof data cleared. Browser-wallet approvals remain in the wallet extension.'
+    : 'Some wallet or proof data could not be removed from browser storage. Clear this site’s storage manually.';
+  showToast(recoveryHidden
+    ? storageMessage
+    : `${storageMessage} The recovery phrase remains visible until you confirm it is backed up.`);
   refreshWalletView();
 });
 
@@ -219,9 +300,9 @@ document.getElementById('btn-sign-unlock')?.addEventListener('click', async () =
         throw new Error('No $OMEGA EVM wallet connected.');
       }
       if (account.hasKeystore) {
-        const password = prompt('Enter your keystore password to sign:');
+        const password = els.unlockPassword?.value ?? '';
         if (!password) {
-          return;
+          throw new Error('Enter your keystore password to sign.');
         }
         proof = await wallet.signUnlockWithLocal(password);
       } else {
@@ -229,7 +310,6 @@ document.getElementById('btn-sign-unlock')?.addEventListener('click', async () =
       }
     }
 
-    wallet.saveProof(proof);
     els.proofJson.value = JSON.stringify({
       signer: proof.signer,
       currency: proof.currency,
@@ -241,6 +321,8 @@ document.getElementById('btn-sign-unlock')?.addEventListener('click', async () =
     showToast(`${proof.currency} optional reader proof signed. Verify it at the chapter demo; the public manuscript needs no proof.`);
   } catch (error) {
     showToast(`Signing failed: ${error.message || error}`);
+  } finally {
+    if (els.unlockPassword) els.unlockPassword.value = '';
   }
 });
 
@@ -258,8 +340,13 @@ document.getElementById('btn-copy-proof')?.addEventListener('click', async () =>
 document.getElementById('btn-goto-novel')?.addEventListener('click', (event) => {
   event.preventDefault();
   const proof = els.proofJson.value;
-  sessionStorage.setItem('omega.unlock.proof', proof);
-  showToast('Proof staged. Opening the novel reader…');
+  try {
+    sessionStorage.setItem('omega.unlock.proof', proof);
+  } catch {
+    showToast('Could not stage the proof in this tab. Copy it and retry in a browser that permits session storage.');
+    return;
+  }
+  showToast('Proof staged in this tab only. The reader will send it to this site for optional verification.');
   setTimeout(() => {
     window.location.href = '/novel';
   }, 600);

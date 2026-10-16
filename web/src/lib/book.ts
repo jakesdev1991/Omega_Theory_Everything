@@ -189,6 +189,7 @@ export function loadChapters(): Chapter[] {
     const raw = fs.readFileSync(filePath, "utf-8");
     return parseChapters(raw);
   } catch (err) {
+    // eslint-disable-next-line no-console -- retain server-side diagnostics for missing book data
     console.error("Failed to load book chapters:", err);
     return [];
   }

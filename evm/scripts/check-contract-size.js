@@ -2,8 +2,11 @@
 // SPDX-License-Identifier: LicenseRef-Omega-ReadOnly
 /* eslint-disable no-console */
 
-const fs = require("node:fs");
-const path = require("node:path");
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // EIP-170 limits runtime contract bytecode to 24,576 bytes on Ethereum.
 const MAX_RUNTIME_BYTECODE_SIZE = 24_576;

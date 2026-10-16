@@ -49,7 +49,7 @@ const FEATURES = [
   {
     icon: "📡",
     title: "Live balance reads",
-    body: "On-chain ETH balance reads through public RPCs with automatic failover across five endpoints.",
+    body: "An on-demand Ethereum mainnet ETH balance lookup, triggered only when you press Refresh, with failover across five public RPC endpoints."
   },
   {
     icon: "🖥️",
@@ -59,7 +59,7 @@ const FEATURES = [
   {
     icon: "🔒",
     title: "Local-first privacy",
-    body: "Keystores, proofs, and settings live in local storage. Nothing is uploaded, and the prototype rails are valueless by design.",
+    body: "Encrypted keystores stay in this browser, and proofs are not persisted by the wallet. A manual balance lookup sends the address to public RPC providers; submitting a reader proof sends its signed statement to this site's verifier. No transactions are sent."
   },
 ];
 

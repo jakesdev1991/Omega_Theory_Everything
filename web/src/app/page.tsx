@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Section } from "@/components/Section";
 import { TokenShowcase } from "@/components/TokenShowcase";
 import { CallToAction } from "@/components/CallToAction";
+import { MCP_TOOL_GROUPS } from "@/lib/mcp-tools";
 
 export default function HomePage() {
   return (
@@ -55,11 +56,11 @@ export default function HomePage() {
       </Section>
 
       <Section
-        eyebrow="Open Source"
-        title="Built in the open, for the C.A.R.E. Economy"
-        subtitle="Omega MCP Hub is a FastMCP server with 22 tools operating the five planes of the C.A.R.E. Economy. The website is the public face. The server is the operating hub. Both are open source on GitHub."
+        eyebrow="Repository & MCP"
+        title="Review the tools, status and boundaries"
+        subtitle="The Omega MCP Hub exposes 22 tools across five internal planes in an in-memory prototype. This website is its public overview—not a client of the server. Source and documentation are published in the repository; license terms vary by component."
       >
-        <OpenSourcePreview />
+        <RepositoryPreview />
         <div style={{ marginTop: "48px" }}>
           <CallToAction label="See the MCP Hub" href="/mcp" />
         </div>
@@ -128,7 +129,7 @@ function Hero() {
           <br />
           <span style={{ color: "var(--color-accent)" }}>built on care,</span>
           <br />
-          operated by open-source AI.
+          built for human-governed AI agents.
         </h1>
 
         <p
@@ -146,8 +147,8 @@ function Hero() {
           </strong>
           : Call About Resuscitating Everyone. Care is its base layer, so
           care names the whole. It lets people earn while they learn, enter
-          without judgment, and choose privacy first. The public gateway
-          The current draft of{" "}
+          without judgment, and choose privacy first. The public website is the
+          gateway. The current draft of{" "}
           <em style={{ color: "var(--color-accent-soft)" }}>
             Crucible: The Satoshi Protocol
           </em>{" "}
@@ -168,6 +169,11 @@ function Hero() {
           <CallToAction
             label="Read the Manifesto"
             href="/manifesto"
+            variant="ghost"
+          />
+          <CallToAction
+            label="Open the System Map"
+            href="/architecture"
             variant="ghost"
           />
         </div>
@@ -456,7 +462,7 @@ function WalletAndTesting() {
           tag: "Wallet GUI",
           color: "var(--color-omega)",
           title: "Launch or download the wallet",
-          body: "Real BIP-39 keys, an encrypted local keystore, MetaMask and Phantom bridges, and signed release-day proofs. Installable as an app, or offline from a checksummed bundle.",
+          body: "Real BIP-39 keys, an encrypted local keystore, MetaMask and Phantom bridges, and optional signed reader-proof messages. Installable as an app, or usable offline for local wallet functions from a checksummed bundle.",
           cta: "Open the wallet →",
         },
         {
@@ -693,7 +699,7 @@ function EconomyPrinciples() {
   );
 }
 
-function OpenSourcePreview() {
+function RepositoryPreview() {
   return (
     <div
       style={{
@@ -770,15 +776,9 @@ function OpenSourcePreview() {
           MCP tools by plane
         </div>
         <div style={{ display: "grid", gap: "8px" }}>
-          {[
-            { plane: "SOV", count: 4 },
-            { plane: "USE", count: 4 },
-            { plane: "CARE", count: 5 },
-            { plane: "AMITY", count: 4 },
-            { plane: "$OMEGA", count: 5 },
-          ].map((p) => (
+          {MCP_TOOL_GROUPS.map((group) => (
             <div
-              key={p.plane}
+              key={group.plane}
               style={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -788,14 +788,14 @@ function OpenSourcePreview() {
                 borderBottom: "1px solid var(--color-border)",
               }}
             >
-              <span>{p.plane} plane</span>
+              <span>{group.plane} {group.plane === "HOUSE" ? "tools" : "plane"}</span>
               <span
                 style={{
                   fontFamily: "ui-monospace, monospace",
                   color: "var(--color-foreground)",
                 }}
               >
-                {p.count} tools
+                {group.tools.length} tools
               </span>
             </div>
           ))}

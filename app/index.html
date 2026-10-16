@@ -37,6 +37,8 @@
         </div>
       </header>
 
+      <div class="prototype-notice" role="note"><strong>Prototype disclosure.</strong> Wallet key generation, local keystore encryption, and message signing are active. Contribution, C.A.R.E., governance, and social metrics are illustrative mockups; they do not create or publish records. This GUI sends no blockchain transactions.</div>
+
       <div class="view" id="home-view">
         <section class="hero">
           <div><p class="eyebrow">WORLD CITIZEN ECONOMY · LIVE WALLET</p><h1>Build value.<br /><em>Keep humanity in it.</em></h1><p class="hero-copy">A wallet and social layer for useful work, care, and reality-based research. Every claim is reviewable. Every system is open to correction.</p><div class="hero-actions"><button class="primary" data-view="contribute">Submit a contribution <span>→</span></button><button class="text-btn" data-view="wallet">View wallet</button></div></div>
@@ -67,17 +69,27 @@
           <div class="setup-grid">
             <div class="form-card">
               <h3>Create a new wallet</h3>
-              <p class="fine-print">Generates a real 12-word BIP-39 mnemonic and 0x address (m/44'/60'/0'/0/0). The mnemonic is shown once.</p>
+              <p class="fine-print">Generates a 12-word BIP-39 recovery phrase and an EVM address (m/44'/60'/0'/0/0). The phrase appears once in this page only—never in the browser console.</p>
               <label>Wallet label<input id="create-label" placeholder="My Omega wallet" /></label>
               <label>Encryption password<input id="create-password" type="password" placeholder="Strong password — encrypts your keystore" /></label>
               <label>Confirm password<input id="create-password2" type="password" placeholder="Repeat password" /></label>
               <button class="primary full" id="btn-create">Generate wallet →</button>
+              <div class="recovery-panel hidden" id="recovery-panel" aria-live="polite">
+                <strong>Recovery phrase — do not share</strong>
+                <p class="fine-print" id="recovery-notice"></p>
+                <textarea id="recovery-phrase" readonly rows="3" autocomplete="off" spellcheck="false" aria-label="One-time wallet recovery phrase"></textarea>
+                <label class="recovery-confirm"><input id="backup-confirmed" type="checkbox" /> I wrote this phrase down offline and can recover the wallet.</label>
+                <div class="proof-actions">
+                  <button class="secondary" id="btn-copy-mnemonic" type="button">Copy phrase</button>
+                  <button class="secondary" id="btn-hide-mnemonic" type="button">I backed it up — hide</button>
+                </div>
+              </div>
             </div>
             <div class="form-card">
               <h3>Import existing</h3>
               <p class="fine-print">Restore from a mnemonic or private key. Same encryption, same local storage.</p>
               <label>Secret type<select id="import-type"><option value="mnemonic">Mnemonic (12/24 words)</option><option value="privatekey">Private key</option></select></label>
-              <label>Secret<input id="import-secret" placeholder="word word word ... or 0x..." /></label>
+              <label>Secret<input id="import-secret" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Mnemonic or 0x private key" /></label>
               <label>Encryption password<input id="import-password" type="password" placeholder="Strong password" /></label>
               <button class="primary full" id="btn-import">Import wallet →</button>
             </div>
@@ -109,8 +121,9 @@
           <div class="balance-card">
             <span class="eyebrow">MAINNET ETH</span>
             <div class="big-number" id="eth-balance">—</div>
-            <div class="balance-status" id="balance-status">Not loaded</div>
+            <div class="balance-status" id="balance-status">Not requested</div>
           </div>
+          <p class="fine-print wallet-privacy-note">A balance lookup runs only when you press Refresh. It sends this address to public Ethereum RPC providers, with failover across providers. If you open the optional proof reader, the signed statement is sent to this site for verification. This app does not send transactions.</p>
 
           <div class="wallet-list">
             <div class="wallet-row"><span class="big-token omega-bg">Ω</span><div><strong>$OMEGA</strong><small>EVM / Sepolia proof rail</small></div><b id="bal-omega">—</b><span class="row-note">MetaMask or local keystore</span></div>
@@ -130,9 +143,10 @@
               <option value="OMEGA">$OMEGA — EVM / Sepolia proof rail</option>
               <option value="TWC">TWC — Solana / Devnet proof rail</option>
             </select></label>
+            <label class="hidden" id="unlock-password-field">Keystore password<input id="unlock-password" type="password" autocomplete="current-password" /></label>
             <button class="primary full" id="btn-sign-unlock">Sign optional reader proof →</button>
             <div class="proof-result hidden" id="proof-result">
-              <p class="fine-print">Signed. Save this proof locally or copy it for the website:</p>
+              <p class="fine-print">Signed. The app does not save proofs to local storage. Copy it only if you want to share it; Open the novel stages it once in this tab for optional server verification.</p>
               <textarea id="proof-json" readonly rows="6"></textarea>
               <div class="proof-actions">
                 <button class="secondary" id="btn-copy-proof">Copy proof</button>
@@ -143,13 +157,13 @@
         </section>
       </div>
 
-      <div class="view hidden" id="contribute-view"><div class="page-title"><p class="eyebrow">CONTRIBUTE</p><h1>Turn useful work into a reviewable claim.</h1><p>Choose what you did. The protocol never promises approval; human and technical review comes first.</p></div><div class="contribute-grid"><div class="form-card"><label>Contribution type<select><option>Creator / app development</option><option>Public-good work</option><option>Care and support</option><option>Reality-to-measurement research</option></select></label><label>What did you make or do?<textarea placeholder="Describe the outcome, not just the effort..."></textarea></label><label>Evidence link<input placeholder="https://... or local evidence commitment" /></label><button class="primary full" id="submit-claim">Create reviewable claim <span>→</span></button><p class="fine-print">Claims are signed by your wallet key before review.</p></div><div class="info-card"><span class="feature-icon">✺</span><h3>How review works</h3><ol><li>Declare the work and its outcome</li><li>Attach reproducible evidence</li><li>Independent reviewers check legitimacy</li><li>Appeal or correct before finalization</li></ol></div></div></div>
+      <div class="view hidden" id="contribute-view"><div class="page-title"><p class="eyebrow">CONTRIBUTE</p><h1>Turn useful work into a reviewable claim.</h1><p>Choose what you did. The protocol never promises approval; human and technical review comes first.</p></div><div class="contribute-grid"><div class="form-card"><label>Contribution type<select><option>Creator / app development</option><option>Public-good work</option><option>Care and support</option><option>Reality-to-measurement research</option></select></label><label>What did you make or do?<textarea placeholder="Describe the outcome, not just the effort..."></textarea></label><label>Evidence link<input placeholder="https://... or local evidence commitment" /></label><button class="primary full" id="submit-claim">Create reviewable claim <span>→</span></button><p class="fine-print">Prototype only: this button stages a local toast. It does not create, sign, or publish a claim.</p></div><div class="info-card"><span class="feature-icon">✺</span><h3>How review works</h3><ol><li>Declare the work and its outcome</li><li>Attach reproducible evidence</li><li>Independent reviewers check legitimacy</li><li>Appeal or correct before finalization</li></ol></div></div></div>
 
-      <div class="view hidden" id="care-view"><div class="page-title"><p class="eyebrow">C.A.R.E. · HUMAN GOVERNED</p><h1>Care is a practice, not a score.</h1><p>CARE records protected proofs of service. AMITY is the separate, exchange-eligible representation of approved entitlements.</p></div><div class="care-banner"><span class="care-symbol">♡</span><div><strong>36 protected proofs</strong><p>Your care history is private by default. Nothing here is visible to an exchange.</p></div><button class="secondary">Manage consent</button></div><div class="care-grid"><div class="info-card"><span class="feature-icon">♧</span><h3>Randomized audit panel</h3><p>Claims are routed to a conflict-screened Archangel and independent AI reviewers. No single person or agent team can decide alone.</p><button class="text-btn">See verifier standards →</button></div><div class="info-card"><span class="feature-icon">✦</span><h3>Archangel path</h3><p>Stewardship grows through empathy, repair, and reliable non-judgmental service—not wealth alone.</p><button class="text-btn">View your path →</button></div><div class="info-card"><span class="feature-icon">↺</span><h3>Speak safely</h3><p>Share your own experience without naming others. Support is not adjudication: stories receive care, while factual claims use a separate review path.</p><button class="text-btn">Open support space →</button></div></div></div>
+      <div class="view hidden" id="care-view"><div class="page-title"><p class="eyebrow">C.A.R.E. · HUMAN GOVERNED</p><h1>Care is a practice, not a score.</h1><p>CARE records protected proofs of service. AMITY is the separate, exchange-eligible representation of approved entitlements.</p></div><div class="care-banner"><span class="care-symbol">♡</span><div><strong>Prototype placeholder · no care records stored</strong><p>This screen is illustrative only. It does not collect or protect personal care data.</p></div><button class="secondary" disabled>Consent flow not implemented</button></div><div class="care-grid"><div class="info-card"><span class="feature-icon">♧</span><h3>Randomized audit panel</h3><p>Claims are routed to a conflict-screened Archangel and independent AI reviewers. No single person or agent team can decide alone.</p><button class="text-btn">See verifier standards →</button></div><div class="info-card"><span class="feature-icon">✦</span><h3>Archangel path</h3><p>Stewardship grows through empathy, repair, and reliable non-judgmental service—not wealth alone.</p><button class="text-btn">View your path →</button></div><div class="info-card"><span class="feature-icon">↺</span><h3>Speak safely</h3><p>Share your own experience without naming others. Support is not adjudication: stories receive care, while factual claims use a separate review path.</p><button class="text-btn">Open support space →</button></div></div></div>
 
       <div class="view hidden" id="research-view"><div class="page-title"><p class="eyebrow">TOKAMAK · REALITY TO MEASUREMENT</p><h1>Measure reality. Stay open to correction.</h1><p>TOKAMAK is broader than plasma physics: any reproducible work that breaks a real-world question into numbers, models, and testable predictions may qualify.</p></div><div class="research-cards"><div class="research-card featured"><span class="eyebrow">OPEN CALL</span><h2>What can be measured better?</h2><p>Submit a dataset, model, benchmark, or correction that makes a real-world phenomenon more legible and testable.</p><button class="primary" data-view="contribute">Propose research <span>→</span></button></div><div class="research-card"><div class="metric">72%</div><h3>Reproducible submissions</h3><p>Prototype target for claims with public methods and repeatable outputs.</p></div><div class="research-card"><div class="metric">0.7</div><h3>Research signal threshold</h3><p>Placeholder only—thresholds require domain validation and versioned evidence.</p></div></div></div>
 
-      <div class="view hidden" id="governance-view"><div class="page-title"><p class="eyebrow">GOVERNANCE</p><h1>Humans stay in the loop.</h1><p>Agents recommend. Verifiers review. Governors authorize. Every high-impact action is appealable and auditable.</p></div><div class="governance-card"><div class="gov-step"><span>01</span><div><strong>Agent recommendation</strong><p>Models can route, summarize, and flag missing evidence.</p></div></div><div class="gov-step"><span>02</span><div><strong>Human verification</strong><p>CARE Verifiers and domain reviewers assess legitimacy.</p></div></div><div class="gov-step"><span>03</span><div><strong>Archangel oversight</strong><p>Senior human stewards review high-impact disputes and safety.</p></div></div><div class="gov-step"><span>04</span><div><strong>Deterministic settlement</strong><p>Only authorized protocol rules can finalize a token event.</p></div></div></div></div>
+      <div class="view hidden" id="governance-view"><div class="page-title"><p class="eyebrow">GOVERNANCE</p><h1>Humans stay in the loop.</h1><p>Illustrative governance model only. This build does not implement reviewer roles, appeals, audit logs, or deterministic settlement.</p></div><div class="governance-card"><div class="gov-step"><span>01</span><div><strong>Agent recommendation</strong><p>Models can route, summarize, and flag missing evidence.</p></div></div><div class="gov-step"><span>02</span><div><strong>Human verification</strong><p>CARE Verifiers and domain reviewers assess legitimacy.</p></div></div><div class="gov-step"><span>03</span><div><strong>Archangel oversight</strong><p>Senior human stewards review high-impact disputes and safety.</p></div></div><div class="gov-step"><span>04</span><div><strong>Deterministic settlement</strong><p>Only authorized protocol rules can finalize a token event.</p></div></div></div></div>
       <div class="view hidden" id="settings-view"><div class="page-title"><p class="eyebrow">PRIVACY · LOCAL FIRST</p><h1>You choose what becomes visible.</h1><p>This wallet starts private. More visibility can make collaboration and earning easier, but no one has to reveal more to participate.</p></div><div class="privacy-card"><div class="privacy-level active-level"><div><span class="privacy-code">L0</span><strong>Private local participation</strong><p>Your agent, wallet, prompts, files, and care records stay on your hardware.</p></div><span class="toggle on"></span></div><div class="privacy-level"><div><span class="privacy-code">L1</span><strong>Pseudonymous public handle</strong><p>Show a chosen name without linking it to legal identity.</p></div><span class="toggle"></span></div><div class="privacy-level"><div><span class="privacy-code">L2</span><strong>Contribution visibility</strong><p>Show approved work and aggregate outcomes to collaborators.</p></div><span class="toggle"></span></div><div class="privacy-level"><div><span class="privacy-code">L3</span><strong>Community profile</strong><p>Let people discover your projects and selected capabilities.</p></div><span class="toggle"></span></div><div class="privacy-level"><div><span class="privacy-code">L4</span><strong>Named disclosure</strong><p>Share identity with one named authorized party for a specific purpose.</p></div><span class="toggle"></span></div></div><p class="fine-print privacy-note">Legal and privacy obligations still apply. If the app handles protected health information for a HIPAA-covered organization, additional HIPAA controls are required. If disclosure is legally required, the system should share the minimum necessary information through an audited channel—not your whole node.</p></div>
     </main>
   </div>

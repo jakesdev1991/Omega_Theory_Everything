@@ -2,18 +2,23 @@
 // SPDX-License-Identifier: LicenseRef-Omega-ReadOnly
 /* eslint-disable no-console */
 
-const fs = require("node:fs");
-const path = require("node:path");
-const hre = require("hardhat");
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import hre from "hardhat";
+import { verifyContract } from "@nomicfoundation/hardhat-verify/verify";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const SEPOLIA_CHAIN_ID = 11155111n;
+const connection = await hre.network.create();
 
 async function main() {
   if (!process.env.ETHERSCAN_API_KEY) {
     throw new Error("ETHERSCAN_API_KEY is required for explorer verification.");
   }
 
-  const chainId = BigInt(await hre.network.provider.send("eth_chainId"));
+  const chainId = BigInt(await connection.provider.send("eth_chainId"));
   if (chainId !== SEPOLIA_CHAIN_ID) {
     throw new Error(
       `Refusing to verify: expected Sepolia chain ID ${SEPOLIA_CHAIN_ID}, received ${chainId}.`
@@ -74,11 +79,15 @@ async function main() {
   for (const entry of contracts) {
     console.log(`Verifying ${entry.label} at ${entry.address}…`);
     try {
-      await hre.run("verify:verify", {
-        address: entry.address,
-        constructorArguments: entry.args,
-        contract: entry.contract,
-      });
+      await verifyContract(
+        {
+          address: entry.address,
+          constructorArgs: entry.args,
+          contract: entry.contract,
+          provider: "etherscan",
+        },
+        hre,
+      );
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       if (/already verified|already been verified/i.test(message)) {

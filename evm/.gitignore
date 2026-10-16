@@ -4,6 +4,7 @@ artifacts/
 cache/
 coverage/
 typechain-types/
+types/
 
 # Deployment secrets and run-specific manifests
 .env

@@ -1,0 +1,249 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1440" viewBox="0 0 1800 1440" role="img" aria-labelledby="title description">
+  <title id="title">The C.A.R.E. Economy — website, whitepapers, wallet and MCP system map</title>
+  <desc id="description">A repository-level map of the Next.js website, the whitepaper publishing pipeline, the local-first wallet and its optional testnet proof flow, and the separate simulated Omega MCP Hub. It distinguishes three public economy currencies from five MCP operating planes and notes that the public novel needs no wallet or token.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0a0e16"/>
+      <stop offset="0.55" stop-color="#080b12"/>
+      <stop offset="1" stop-color="#0e111b"/>
+    </linearGradient>
+    <linearGradient id="webGlow" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#122337"/>
+      <stop offset="1" stop-color="#111622"/>
+    </linearGradient>
+    <linearGradient id="paperGlow" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#17182a"/>
+      <stop offset="1" stop-color="#111521"/>
+    </linearGradient>
+    <linearGradient id="walletGlow" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#10231f"/>
+      <stop offset="1" stop-color="#111721"/>
+    </linearGradient>
+    <linearGradient id="mcpGlow" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#282117"/>
+      <stop offset="1" stop-color="#171720"/>
+    </linearGradient>
+    <linearGradient id="footerGlow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#101a26"/>
+      <stop offset="1" stop-color="#15151d"/>
+    </linearGradient>
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.22"/>
+    </filter>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="7" refY="5" orient="auto">
+      <path d="M1 1 L8 5 L1 9" fill="none" stroke="#76baff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arrowPurple" markerWidth="10" markerHeight="10" refX="7" refY="5" orient="auto">
+      <path d="M1 1 L8 5 L1 9" fill="none" stroke="#b4a2ff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arrowMint" markerWidth="10" markerHeight="10" refX="7" refY="5" orient="auto">
+      <path d="M1 1 L8 5 L1 9" fill="none" stroke="#63d8b4" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arrowGold" markerWidth="10" markerHeight="10" refX="7" refY="5" orient="auto">
+      <path d="M1 1 L8 5 L1 9" fill="none" stroke="#f2c56d" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <style>
+      .sans { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      .mono { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
+      .ink { fill: #eff4fb; }
+      .muted { fill: #aab6c7; }
+      .quiet { fill: #7f8da1; }
+      .blue { fill: #8bc8ff; }
+      .purple { fill: #c1b4ff; }
+      .mint { fill: #7ae4c1; }
+      .gold { fill: #ffd57d; }
+      .tiny-label { font-size: 12px; font-weight: 700; letter-spacing: 1.6px; }
+      .panel-label { font-size: 11px; font-weight: 700; letter-spacing: 1.3px; }
+      .body { font-size: 15px; }
+      .small { font-size: 13px; }
+      .micro { font-size: 11px; }
+    </style>
+  </defs>
+
+  <rect width="1800" height="1440" fill="url(#bg)"/>
+  <circle cx="1630" cy="74" r="245" fill="#68b6ff" opacity="0.035"/>
+  <circle cx="155" cy="1330" r="290" fill="#a38bff" opacity="0.03"/>
+  <path d="M0 177 H1800" stroke="#202a39" stroke-width="1"/>
+
+  <!-- Header -->
+  <rect x="72" y="42" width="252" height="29" rx="14.5" fill="#111a27" stroke="#2a3c50"/>
+  <circle cx="91" cy="56.5" r="4" fill="#79bdff"/>
+  <text x="105" y="61" class="mono blue tiny-label">REPOSITORY SYSTEM MAP</text>
+  <rect x="1516" y="42" width="212" height="29" rx="14.5" fill="#151923" stroke="#303444"/>
+  <text x="1622" y="61" text-anchor="middle" class="mono muted micro" font-weight="700" letter-spacing="1">SNAPSHOT · 2026-10-11</text>
+  <text x="72" y="124" class="sans ink" font-size="46" font-weight="650" letter-spacing="-1.4">The C.A.R.E. Economy — system map</text>
+  <text x="75" y="157" class="sans muted" font-size="17">Website, whitepapers, wallet and MCP — how the public surfaces and separate runtimes fit together.</text>
+
+  <!-- Website overview -->
+  <rect x="72" y="194" width="1656" height="198" rx="20" fill="url(#webGlow)" stroke="#29405a" stroke-width="1.2" filter="url(#softShadow)"/>
+  <rect x="72" y="194" width="5" height="198" rx="2.5" fill="#76baff"/>
+  <rect x="99" y="216" width="140" height="25" rx="12.5" fill="#15273a" stroke="#29435e"/>
+  <text x="169" y="233" text-anchor="middle" class="mono blue panel-label">PUBLIC WEBSITE</text>
+  <text x="99" y="279" class="sans ink" font-size="28" font-weight="620">The C.A.R.E. Economy</text>
+  <text x="100" y="305" class="mono blue" font-size="14" font-weight="600">web/ · Next.js</text>
+  <text x="100" y="340" class="sans muted" font-size="14">Public gateway, readers’ site and product entry points.</text>
+  <line x1="490" y1="216" x2="490" y2="369" stroke="#314055"/>
+  <text x="526" y="230" class="mono quiet panel-label">FOCUS ROUTES</text>
+
+  <rect x="526" y="247" width="276" height="66" rx="12" fill="#101925" stroke="#31465c"/>
+  <text x="545" y="274" class="mono blue" font-size="15" font-weight="700">/</text>
+  <text x="545" y="296" class="sans muted small">Home · economy overview</text>
+  <rect x="816" y="247" width="276" height="66" rx="12" fill="#17172a" stroke="#393451"/>
+  <text x="835" y="274" class="mono purple" font-size="15" font-weight="700">/whitepapers</text>
+  <text x="835" y="296" class="sans muted small">Index + on-site readers</text>
+  <rect x="1106" y="247" width="276" height="66" rx="12" fill="#11231f" stroke="#2b4b43"/>
+  <text x="1125" y="274" class="mono mint" font-size="15" font-weight="700">/wallet</text>
+  <text x="1125" y="296" class="sans muted small">Wallet hub + downloads</text>
+  <rect x="1396" y="247" width="296" height="66" rx="12" fill="#252117" stroke="#51452b"/>
+  <text x="1415" y="274" class="mono gold" font-size="15" font-weight="700">/mcp</text>
+  <text x="1415" y="296" class="sans muted small">Hub overview · not its API</text>
+  <text x="526" y="351" class="sans quiet" font-size="12.5">Also in site navigation: Vision · Economy · Manifesto · Store · Testnet · C.A.R.E. · Novel · Invest · Ops</text>
+
+  <!-- Surface connectors: the MCP branch points to its overview page, not a live website-to-server API. -->
+  <path d="M340 392 V422" stroke="#b4a2ff" stroke-width="1.6" opacity="0.75" marker-end="url(#arrowPurple)"/>
+  <path d="M900 392 V422" stroke="#63d8b4" stroke-width="1.6" opacity="0.75" marker-end="url(#arrowMint)"/>
+  <path d="M1460 392 V422" stroke="#f2c56d" stroke-width="1.6" opacity="0.75" marker-end="url(#arrowGold)"/>
+
+  <!-- Whitepapers panel -->
+  <rect x="72" y="432" width="536" height="616" rx="18" fill="#0e131e" stroke="#34334c" stroke-width="1.2" filter="url(#softShadow)"/>
+  <rect x="72" y="432" width="536" height="4" rx="2" fill="#aa98ff"/>
+  <text x="96" y="466" class="mono purple tiny-label">01 / DOCUMENT PUBLISHING</text>
+  <text x="96" y="500" class="sans ink" font-size="25" font-weight="650">Whitepapers &amp; readers</text>
+  <text x="96" y="525" class="sans muted" font-size="14">The specification and design layer, published on-site.</text>
+
+  <rect x="92" y="545" width="496" height="100" rx="12" fill="url(#paperGlow)" stroke="#393750"/>
+  <text x="109" y="567" class="mono purple panel-label">REPOSITORY SOURCES · AUTHORITATIVE</text>
+  <text x="109" y="591" class="mono ink" font-size="13.5">whitepapers/*.md</text>
+  <text x="109" y="611" class="mono muted" font-size="12.5">docs/sovereign_economy_manifesto.md</text>
+  <text x="109" y="630" class="mono muted" font-size="12.5">tri_token_sovereign_economy_blueprint.md</text>
+
+  <path d="M340 647 V662" stroke="#b4a2ff" stroke-width="1.6" marker-end="url(#arrowPurple)"/>
+  <rect x="92" y="670" width="496" height="58" rx="11" fill="#171729" stroke="#393750"/>
+  <text x="109" y="694" class="mono purple" font-size="14" font-weight="700">sync-docs.mjs</text>
+  <text x="109" y="714" class="sans muted" font-size="12.5">Whitelist → generated, ignored web/content/docs/ copies</text>
+
+  <path d="M340 730 V744" stroke="#b4a2ff" stroke-width="1.6" marker-end="url(#arrowPurple)"/>
+  <rect x="92" y="752" width="496" height="110" rx="12" fill="#131825" stroke="#393750"/>
+  <text x="109" y="775" class="mono quiet panel-label">NEXT.JS DOCUMENT READER</text>
+  <text x="109" y="801" class="mono ink" font-size="14">/whitepapers  →  /whitepapers/[slug]</text>
+  <text x="109" y="826" class="sans muted" font-size="12.5">9 entries: 2 manifestos · 6 whitepapers · 1 blueprint</text>
+  <text x="109" y="847" class="sans muted" font-size="11.8">C.A.R.E. · OMEGA · TWC · AMITY · Omni-Bridge · TOKAMAK legacy</text>
+
+  <rect x="92" y="873" width="496" height="118" rx="12" fill="#111620" stroke="#393750" stroke-dasharray="5 4"/>
+  <text x="109" y="896" class="mono purple panel-label">HOW TO READ THESE</text>
+  <text x="109" y="921" class="sans ink" font-size="13">Whitepapers state proposals, rules and system designs.</text>
+  <text x="109" y="943" class="sans muted" font-size="13">Draft maturity varies; a published paper is not proof</text>
+  <text x="109" y="963" class="sans muted" font-size="13">of implementation, scientific validation or deployment.</text>
+  <rect x="92" y="1005" width="239" height="25" rx="12.5" fill="#201d31"/>
+  <text x="211.5" y="1022" text-anchor="middle" class="mono purple micro" font-weight="700" letter-spacing=".5">SOURCE FILES STAY IN THE REPO</text>
+
+  <!-- Wallet panel -->
+  <rect x="632" y="432" width="536" height="616" rx="18" fill="#0e1519" stroke="#2d4b43" stroke-width="1.2" filter="url(#softShadow)"/>
+  <rect x="632" y="432" width="536" height="4" rx="2" fill="#63d8b4"/>
+  <text x="656" y="466" class="mono mint tiny-label">02 / LOCAL-FIRST WALLET</text>
+  <text x="656" y="500" class="sans ink" font-size="25" font-weight="650">Wallet GUI</text>
+  <text x="656" y="525" class="sans muted" font-size="14">A standalone client, distributed through the website.</text>
+
+  <rect x="652" y="545" width="496" height="57" rx="11" fill="url(#walletGlow)" stroke="#315247"/>
+  <text x="669" y="567" class="mono mint panel-label">SINGLE SOURCE OF TRUTH</text>
+  <text x="669" y="589" class="mono ink" font-size="13.5">app/  ·  wallet GUI</text>
+  <path d="M900 604 V617" stroke="#63d8b4" stroke-width="1.6" marker-end="url(#arrowMint)"/>
+  <rect x="652" y="625" width="496" height="57" rx="11" fill="#12211e" stroke="#315247"/>
+  <text x="669" y="648" class="mono mint" font-size="13.5" font-weight="700">sync-wallet.mjs</text>
+  <text x="669" y="669" class="mono muted" font-size="12">app/  →  web/public/omega-wallet/</text>
+
+  <rect x="652" y="694" width="496" height="89" rx="12" fill="#111923" stroke="#315247"/>
+  <text x="669" y="716" class="mono quiet panel-label">WEBSITE DISTRIBUTION</text>
+  <text x="669" y="741" class="mono ink" font-size="12.7">/wallet  →  hub / preview / downloads</text>
+  <text x="669" y="762" class="mono muted" font-size="12.2">/omega-wallet/ · PWA · offline bundle + SHA-256</text>
+  <path d="M900 784 V797" stroke="#63d8b4" stroke-width="1.6" marker-end="url(#arrowMint)"/>
+
+  <rect x="652" y="805" width="496" height="76" rx="12" fill="#101a19" stroke="#315247"/>
+  <text x="669" y="827" class="mono mint panel-label">KEYS STAY ON THE DEVICE</text>
+  <text x="669" y="850" class="sans ink" font-size="12.5">BIP-39 create/import · encrypted local keystore</text>
+  <text x="669" y="870" class="sans muted" font-size="12.5">MetaMask + Phantom bridges · signatures made locally</text>
+
+  <rect x="652" y="893" width="496" height="85" rx="12" fill="#141a1b" stroke="#315247"/>
+  <text x="669" y="915" class="mono mint panel-label">OPTIONAL READER-PROOF DEMO</text>
+  <text x="669" y="938" class="sans ink" font-size="12.5">Signed proof → /api/unlock → verify + testnet read</text>
+  <text x="669" y="960" class="sans muted" font-size="12.5">$OMEGA / Sepolia · TWC / Solana Devnet only</text>
+  <text x="656" y="1010" class="sans muted" font-size="12.5">Public novel needs no token or wallet. AMITY is a separate workstream.</text>
+  <rect x="652" y="1020" width="224" height="22" rx="11" fill="#12231f"/>
+  <text x="764" y="1035" text-anchor="middle" class="mono mint micro" font-weight="700" letter-spacing=".4">PROTOTYPE · VALUELESS PILOTS</text>
+
+  <!-- MCP panel -->
+  <rect x="1192" y="432" width="536" height="616" rx="18" fill="#15130f" stroke="#51452d" stroke-width="1.2" filter="url(#softShadow)"/>
+  <rect x="1192" y="432" width="536" height="4" rx="2" fill="#f2c56d"/>
+  <text x="1216" y="466" class="mono gold tiny-label">03 / AGENT OPERATIONS</text>
+  <text x="1216" y="500" class="sans ink" font-size="25" font-weight="650">Omega MCP Hub</text>
+  <text x="1216" y="525" class="sans muted" font-size="14">An independent tool server for MCP-compatible clients.</text>
+
+  <rect x="1212" y="545" width="496" height="48" rx="10" fill="#201c14" stroke="#51452d"/>
+  <text x="1230" y="575" class="mono gold" font-size="12.5" font-weight="700">SITE /mcp = OVERVIEW PAGE · NOT A HUB API</text>
+
+  <rect x="1212" y="606" width="496" height="47" rx="10" fill="#181814" stroke="#51452d"/>
+  <text x="1460" y="635" text-anchor="middle" class="sans ink" font-size="14" font-weight="600">MCP client / AI agent  ↔  stdio or HTTP</text>
+  <path d="M1460 654 V668" stroke="#f2c56d" stroke-width="1.6" marker-end="url(#arrowGold)"/>
+  <rect x="1212" y="676" width="496" height="70" rx="11" fill="url(#mcpGlow)" stroke="#51452d"/>
+  <text x="1230" y="701" class="mono gold panel-label">mcp/ · PYTHON / FASTMCP</text>
+  <text x="1230" y="729" class="sans ink" font-size="15" font-weight="650">22 tools · one shared prototype state</text>
+
+  <text x="1216" y="772" class="mono quiet panel-label">FIVE INTERNAL OPERATING PLANES</text>
+  <rect x="1212" y="786" width="92" height="44" rx="9" fill="#211e17" stroke="#51452d"/>
+  <text x="1258" y="804" text-anchor="middle" class="mono gold" font-size="13" font-weight="700">SOV</text>
+  <text x="1258" y="820" text-anchor="middle" class="sans muted" font-size="10.5">accounting</text>
+  <rect x="1312" y="786" width="92" height="44" rx="9" fill="#211e17" stroke="#51452d"/>
+  <text x="1358" y="804" text-anchor="middle" class="mono gold" font-size="13" font-weight="700">USE</text>
+  <text x="1358" y="820" text-anchor="middle" class="sans muted" font-size="10.5">work receipts</text>
+  <rect x="1412" y="786" width="92" height="44" rx="9" fill="#211e17" stroke="#51452d"/>
+  <text x="1458" y="804" text-anchor="middle" class="mono gold" font-size="13" font-weight="700">CARE</text>
+  <text x="1458" y="820" text-anchor="middle" class="sans muted" font-size="10.5">stewardship</text>
+  <rect x="1512" y="786" width="92" height="44" rx="9" fill="#211e17" stroke="#51452d"/>
+  <text x="1558" y="804" text-anchor="middle" class="mono gold" font-size="13" font-weight="700">AMITY</text>
+  <text x="1558" y="820" text-anchor="middle" class="sans muted" font-size="10.5">entitlement</text>
+  <rect x="1612" y="786" width="96" height="44" rx="9" fill="#211e17" stroke="#51452d"/>
+  <text x="1660" y="804" text-anchor="middle" class="mono gold" font-size="13" font-weight="700">OMEGA</text>
+  <text x="1660" y="820" text-anchor="middle" class="sans muted" font-size="10.5">governance</text>
+
+  <rect x="1212" y="846" width="496" height="68" rx="11" fill="#171612" stroke="#51452d"/>
+  <text x="1230" y="870" class="mono gold panel-label">IN-MEMORY LEDGER SIMULATION</text>
+  <text x="1230" y="895" class="sans muted" font-size="13">Shared versioned event log + state snapshots</text>
+  <rect x="1212" y="928" width="496" height="47" rx="10" fill="#261813" stroke="#69412e"/>
+  <text x="1460" y="957" text-anchor="middle" class="mono" fill="#ffb48e" font-size="12" font-weight="700" letter-spacing=".45">NO REAL CHAIN · NO REAL KEYS · NO REAL VALUE</text>
+  <text x="1216" y="1005" class="sans muted" font-size="12.5">A compatible client connects to the server directly; the website does not call it.</text>
+  <text x="1216" y="1027" class="mono quiet" font-size="11.5">Source: mcp/README_MCP_HUB.md · mcp/omega_mcp/</text>
+
+  <!-- Public rails versus MCP planes and cross-system boundaries -->
+  <rect x="72" y="1080" width="802" height="244" rx="18" fill="url(#footerGlow)" stroke="#2d3b4c" stroke-width="1.1"/>
+  <text x="96" y="1118" class="mono blue tiny-label">PUBLIC ECONOMY · THREE CURRENCIES / RAILS</text>
+  <rect x="92" y="1140" width="238" height="91" rx="12" fill="#111d2a" stroke="#30475e"/>
+  <text x="110" y="1167" class="mono blue" font-size="16" font-weight="700">$OMEGA</text>
+  <text x="110" y="1191" class="sans ink" font-size="13">EVM · Sepolia pilot</text>
+  <text x="110" y="1212" class="sans quiet" font-size="11.5">Reader-proof rail</text>
+  <rect x="342" y="1140" width="238" height="91" rx="12" fill="#111d2a" stroke="#30475e"/>
+  <text x="360" y="1167" class="mono blue" font-size="16" font-weight="700">TWC</text>
+  <text x="360" y="1191" class="sans ink" font-size="13">Solana · Devnet pilot</text>
+  <text x="360" y="1212" class="sans quiet" font-size="11.5">Reader-proof rail</text>
+  <rect x="592" y="1140" width="262" height="91" rx="12" fill="#111d2a" stroke="#30475e"/>
+  <text x="610" y="1167" class="mono blue" font-size="16" font-weight="700">AMITY</text>
+  <text x="610" y="1191" class="sans ink" font-size="13">Bitcoin / Lightning / Taproot</text>
+  <text x="610" y="1212" class="sans quiet" font-size="11.5">Separate workstream · no reader proof</text>
+  <text x="96" y="1265" class="sans muted" font-size="12.5">These three public rails are not the same thing as the MCP hub’s five internal planes.</text>
+  <text x="96" y="1294" class="mono quiet" font-size="11.5">Pilot rails are test-only / valueless; AMITY remains separate.</text>
+
+  <rect x="898" y="1080" width="830" height="244" rx="18" fill="#11151b" stroke="#333c48" stroke-width="1.1"/>
+  <text x="922" y="1118" class="mono ink tiny-label">BOUNDARIES TO KEEP CLEAR</text>
+  <circle cx="933" cy="1154" r="4" fill="#b4a2ff"/>
+  <text x="949" y="1159" class="sans ink" font-size="13">Papers describe proposed designs; maturity and implementation status differ.</text>
+  <circle cx="933" cy="1191" r="4" fill="#63d8b4"/>
+  <text x="949" y="1196" class="sans ink" font-size="13">Reader proof is optional. The public manuscript stays accessible without a wallet.</text>
+  <circle cx="933" cy="1228" r="4" fill="#f2c56d"/>
+  <text x="949" y="1233" class="sans ink" font-size="13">MCP is a separate in-memory prototype—not the wallet’s backend or a live ledger.</text>
+  <rect x="922" y="1256" width="782" height="47" rx="10" fill="#141a21" stroke="#2c3744"/>
+  <text x="940" y="1276" class="mono muted" font-size="11.7" font-weight="700">SOURCE ANCHORS</text>
+  <text x="940" y="1293" class="mono quiet" font-size="10.8">web/src/lib/docs.ts · web/src/components/WalletHub.tsx · web/src/app/mcp/page.tsx · mcp/README_MCP_HUB.md</text>
+
+  <!-- Footer -->
+  <text x="72" y="1380" class="mono quiet" font-size="11.5">OMEGA THEORY EVERYTHING · SYSTEM MAP · 2026-10-11</text>
+  <text x="1728" y="1380" text-anchor="end" class="sans quiet" font-size="11.5">Status notes reflect the repository at the snapshot date.</text>
+</svg>

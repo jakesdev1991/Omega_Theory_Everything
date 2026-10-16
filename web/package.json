@@ -4,27 +4,25 @@
   "private": true,
   "license": "SEE LICENSE IN ../LICENSES/PolyForm-Noncommercial-1.0.0.txt",
   "scripts": {
-    "predev": "node scripts/sync-wallet.mjs && node scripts/sync-docs.mjs",
+    "predev": "node scripts/sync-wallet.mjs && node scripts/sync-docs.mjs && node scripts/sync-ecosystem-map.mjs",
     "dev": "next dev",
-    "prebuild": "node scripts/sync-wallet.mjs && node scripts/sync-docs.mjs",
+    "prebuild": "node scripts/sync-wallet.mjs && node scripts/sync-docs.mjs && node scripts/sync-ecosystem-map.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "sync:wallet": "node scripts/sync-wallet.mjs",
     "sync:docs": "node scripts/sync-docs.mjs",
+    "sync:map": "node scripts/sync-ecosystem-map.mjs",
     "test": "tsx --test src/lib/domain/*.test.ts src/lib/*.test.ts",
-    "test:economy": "tsx --test src/lib/domain/scenarios.test.ts"
+    "test:economy": "tsx --test src/lib/domain/scenarios.test.ts",
+    "test:wallet": "node --test ../app/wallet.test.cjs"
   },
   "dependencies": {
     "@noble/hashes": "^1.4.0",
-    "@typescript-eslint/eslint-plugin": "^8.70.1",
-    "@typescript-eslint/parser": "^8.70.1",
     "bs58": "^6.0.0",
-    "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^7.1.1",
     "ethers": "^6.17.0",
-    "next": "16.3.6",
+    "next": "16.4.2",
     "nostr-tools": "^2.25.2",
     "react": "19.2.8",
     "react-dom": "19.2.8",
@@ -35,11 +33,11 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.3.6",
+    "eslint": "10.12.0",
+    "eslint-plugin-react-hooks": "7.1.1",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
     "typescript": "^5",
-    "typescript-eslint": "^8.70.1"
+    "typescript-eslint": "8.70.1"
   }
 }

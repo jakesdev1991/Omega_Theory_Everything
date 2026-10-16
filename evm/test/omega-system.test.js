@@ -1,10 +1,12 @@
 // Copyright (c) 2025-2026 Jacob See.
 // SPDX-License-Identifier: LicenseRef-Omega-ReadOnly
 
-const { expect } = require("chai");
-const { ethers } = require("hardhat");
-const { anyValue } = require("@nomicfoundation/hardhat-chai-matchers/withArgs");
-const { mine, time } = require("@nomicfoundation/hardhat-network-helpers");
+import { expect } from "chai";
+import { network } from "hardhat";
+import { anyValue } from "@nomicfoundation/hardhat-ethers-chai-matchers/withArgs";
+
+const { ethers, networkHelpers } = await network.create();
+const { mine, time } = networkHelpers;
 
 const DAY = 24 * 60 * 60;
 const YEAR = 365 * DAY;
@@ -194,7 +196,7 @@ describe("$OMEGA Sepolia pilot contracts", function () {
 
     await (await token.connect(treasury).transfer(bob.address, threshold)).wait();
     await (await gate.connect(guardian).pause()).wait();
-    await expect(gate.connect(bob).claim()).to.be.reverted;
+    await expect(gate.connect(bob).claim()).to.revert(ethers);
     expect(await token.balanceOf(bob.address)).to.equal(threshold);
     await (await gate.connect(guardian).unpause()).wait();
     await expect(gate.connect(bob).claim()).to.emit(gate, "NovelClaimed");
@@ -227,7 +229,7 @@ describe("$OMEGA Sepolia pilot contracts", function () {
       governor,
       "ProposalQueued"
     );
-    await expect(governor.execute(targets, values, calldatas, descriptionHash)).to.be.reverted;
+    await expect(governor.execute(targets, values, calldatas, descriptionHash)).to.revert(ethers);
 
     await time.increase(3601);
     await expect(governor.execute(targets, values, calldatas, descriptionHash)).to.emit(

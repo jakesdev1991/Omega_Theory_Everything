@@ -24,7 +24,7 @@ export const VerifierAdapters = {
   },
 
   // Lean Formalization: Kernel checked distinction
-  leanFormalization: (proposal: WorkProposal, artifactHash: string): AdapterExecutionResult => {
+  leanFormalization: (proposal: WorkProposal, _artifactHash: string): AdapterExecutionResult => {
     // Check if sorry free or axiomatic
     const isSorryFree = !proposal.acceptanceTests.includes("contains_sorry");
     const isKernelChecked = proposal.acceptanceTests.includes("kernel_checked");
@@ -60,7 +60,7 @@ export const VerifierAdapters = {
   },
 
   // Infrastructure & Resources: Signed uptime / proving logs
-  infrastructure: (proposal: WorkProposal, artifactHash: string): AdapterExecutionResult => {
+  infrastructure: (_proposal: WorkProposal, _artifactHash: string): AdapterExecutionResult => {
     return {
       ok: true,
       message: "Device quota receipts verified; uptime attestation valid",
@@ -70,7 +70,7 @@ export const VerifierAdapters = {
   },
 
   // Physics / Simulation: Falsifiable prediction / mathematical model ladder
-  physicsSimulation: (proposal: WorkProposal, artifactHash: string): AdapterExecutionResult => {
+  physicsSimulation: (_proposal: WorkProposal, _artifactHash: string): AdapterExecutionResult => {
     return {
       ok: true,
       message: "Simulation run completed with reproducible parameters and falsifiable prediction data",

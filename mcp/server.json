@@ -2,98 +2,98 @@
   "mcp-version": "1.0.0",
   "name": "omega-hub",
   "version": "0.1.0",
-  "description": "Sovereign MCP hub for the Omega tri-token economy — SOV accounting, USE contribution receipts, CARE stewardship, AMITY exchange entitlements, and OMEGA macro-governance.",
+  "description": "Prototype MCP server for an in-memory Omega tri-token economy simulation; no real chain, keys, services, or value.",
   "publisher": "Jacob M. See",
   "repository": "https://github.com/jakesdev1991/Omega_Theory_Everything",
   "license": "PolyForm-Noncommercial-1.0.0",
   "tools": [
     {
       "name": "sov_mint",
-      "description": "Mint SOV to an address (simulated ledger)."
+      "description": "Add simulated SOV units to an address in this process's in-memory ledger. Requires a positive amount and reason; no real chain or value is involved."
     },
     {
       "name": "sov_burn",
-      "description": "Burn SOV from an address."
+      "description": "Remove simulated SOV units from an address in the in-memory ledger. Requires a positive amount and sufficient balance."
     },
     {
       "name": "sov_transfer",
-      "description": "Transfer SOV between addresses."
+      "description": "Move simulated SOV units between addresses in the in-memory ledger. Requires a positive amount and sufficient sender balance."
     },
     {
       "name": "sov_snapshot",
-      "description": "Current SOV balances, supply, and ledger version."
+      "description": "Inspect current in-memory SOV balances, simulated supply, and version."
     },
     {
       "name": "use_issue",
-      "description": "Issue a proof-of-useful-work receipt (non-transferable by default)."
+      "description": "Create a simulated, non-transferable proof-of-useful-work receipt. Requires a category, positive quantity, evidence commitment, and at least one claimed attestation."
     },
     {
       "name": "use_revoke",
-      "description": "Revoke a USE receipt by ID with a reason."
+      "description": "Mark a simulated USE receipt revoked by ID with a reason; the audit event is append-only."
     },
     {
       "name": "use_snapshot",
-      "description": "All USE receipts and attestation counts."
+      "description": "Inspect simulated USE receipts and their claimed attestation counts."
     },
     {
       "name": "care_submit",
-      "description": "Submit a Proof-of-Care claim in proposed state."
+      "description": "Create a proposed Proof-of-Care claim in memory. This does not verify evidence or grant a real service or benefit."
     },
     {
       "name": "care_attest",
-      "description": "Attest a CARE claim; two independent attestations move it to final."
+      "description": "Add a simulated CARE attestation. Two distinct verifier labels move the claim to final; this is not cryptographic or independent verification."
     },
     {
       "name": "care_appeal",
-      "description": "File an appeal on a finalized or attested CARE claim."
+      "description": "File an in-memory appeal on a CARE claim with at least one attestation."
     },
     {
       "name": "care_snapshot",
-      "description": "CARE claims, attestation counts, and open appeals."
+      "description": "Inspect in-memory CARE claims, attestation counts, and open appeals."
     },
     {
       "name": "amity_entitle",
-      "description": "Convert a finalized CARE claim into an eligible AMITY entitlement under a published policy."
+      "description": "Create simulated AMITY units from a finalized CARE claim under a policy label. The claim must exist and the amount must be positive; no real value is issued."
     },
     {
       "name": "amity_transfer",
-      "description": "Transfer AMITY between addresses."
+      "description": "Move simulated AMITY units between addresses in memory. Requires a positive amount and sufficient sender balance."
     },
     {
       "name": "amity_snapshot",
-      "description": "AMITY balances, supply, and entitlements."
+      "description": "Inspect in-memory AMITY balances, simulated supply, and entitlements."
     },
     {
       "name": "omega_mint",
-      "description": "Mint OMEGA to an address with a reason and protocol version."
+      "description": "Add simulated OMEGA units to an address with a reason and protocol version; no real token is issued."
     },
     {
       "name": "omega_lock",
-      "description": "Lock OMEGA for a duration in blocks; returns a governance weight."
+      "description": "Lock simulated OMEGA units for a positive duration in blocks; returns a prototype governance weight."
     },
     {
       "name": "omega_proposal",
-      "description": "Draft a governance proposal with change set, simulation reference, and rollback plan."
+      "description": "Draft an in-memory governance proposal with a change set, simulation reference, and rollback plan."
     },
     {
       "name": "omega_vote",
-      "description": "Vote on a proposal by voter, support flag, and weight."
+      "description": "Record a simulated vote on a proposal with voter, support flag, and positive weight."
     },
     {
       "name": "omega_snapshot",
-      "description": "OMEGA balances, supply, locks, and proposals."
+      "description": "Inspect in-memory OMEGA balances, simulated supply, locks, and proposals."
     },
     {
       "name": "ledger",
-      "description": "Full deterministic ledger snapshot across all planes plus event count."
+      "description": "Current in-memory simulation snapshot across all planes, plus event count and next version."
     },
     {
       "name": "events_since",
-      "description": "All events after a given version for replay."
+      "description": "Versioned audit events after a given version; payloads are not a complete state-replay log."
     },
     {
       "name": "full_event_log",
-      "description": "Complete append-only event log."
+      "description": "Inspect the append-only audit events emitted by this process; they are not a complete state-replay log."
     }
   ]
 }

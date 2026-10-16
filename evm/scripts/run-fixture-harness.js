@@ -1,26 +1,28 @@
 // Offline fixture harness for verifying EVM $OMEGA signer and novel gate state
 // Mirrors amity/scripts/run-fixture-harness.mjs and solana/scripts/run-fixture-harness.mjs
 
-const assert = require("node:assert/strict");
-const hre = require("hardhat");
+import assert from "node:assert/strict";
+import { network } from "hardhat";
+
+const { ethers } = await network.create();
 
 async function main() {
-  const [deployer, holder] = await hre.ethers.getSigners();
-  const initialSupply = hre.ethers.parseEther("1000000");
-  const claimThreshold = hre.ethers.parseEther("1");
+  const [deployer, holder] = await ethers.getSigners();
+  const initialSupply = ethers.parseEther("1000000");
+  const claimThreshold = ethers.parseEther("1");
 
   // Deploy OmegaTestToken with deployer as initial treasury
-  const OmegaTestToken = await hre.ethers.getContractFactory("OmegaTestToken");
+  const OmegaTestToken = await ethers.getContractFactory("OmegaTestToken");
   const token = await OmegaTestToken.deploy(deployer.address, initialSupply);
   await token.waitForDeployment();
   const tokenAddress = await token.getAddress();
 
-  const latestBlock = await hre.ethers.provider.getBlock("latest");
+  const latestBlock = await ethers.provider.getBlock("latest");
   const claimStart = Number(latestBlock.timestamp);
   const claimEnd = claimStart + 90 * 86400;
 
   // Deploy OmegaNovelGate
-  const OmegaNovelGate = await hre.ethers.getContractFactory("OmegaNovelGate");
+  const OmegaNovelGate = await ethers.getContractFactory("OmegaNovelGate");
   const gate = await OmegaNovelGate.deploy(
     tokenAddress,
     claimThreshold,
@@ -33,7 +35,7 @@ async function main() {
   const gateAddress = await gate.getAddress();
 
   // Transfer 100 $OMEGA to holder
-  const amount = hre.ethers.parseEther("100");
+  const amount = ethers.parseEther("100");
   await token.transfer(holder.address, amount);
   assert.equal(await token.balanceOf(holder.address), amount);
 
