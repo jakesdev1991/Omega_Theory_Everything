@@ -47,5 +47,15 @@ next-env.d.ts
 # generated C.A.R.E. Economy document copies (rebuilt by scripts/sync-docs.mjs)
 /content/
 
+<<<<<<< ours
 # generated public ecosystem map (copied from ../docs/ecosystem-map.svg)
 /public/ecosystem-map.svg
+=======
+# OpenNext
+.open-next
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+>>>>>>> theirs

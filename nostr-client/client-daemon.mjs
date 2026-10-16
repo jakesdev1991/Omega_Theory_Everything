@@ -97,6 +97,11 @@ export async function main() {
 
   pool.connect();
 
+  // Wait for at least one relay to be connected before publishing —
+  // publish() rejects with "not connected" if the TLS handshake is
+  // still in flight (the original bug: startup publishes raced connect).
+  await new Promise((resolve) => pool.once("connected", resolve));
+
   const publishAll = async (why) => {
     for (const ev of events) {
       try {
