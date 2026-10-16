@@ -12,7 +12,7 @@ dependencies = [
     # FastMCP to MCPServer and moved it out of mcp.server (see
     # https://py.sdk.modelcontextprotocol.io/v2/migration/#fastmcp-renamed-to-mcpserver),
     # so an unbounded `mcp>=1.7.0` can fail at import time.
-    "mcp>=1.7.0,<2",
+    "mcp>=1.7.0,<3",
     "pydantic>=2.9.0",
     "pydantic-settings>=2.0.0",
     "fastapi>=0.115.0",
