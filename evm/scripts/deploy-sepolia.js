@@ -122,6 +122,7 @@ async function main() {
   const OmegaLocking = await ethers.getContractFactory("OmegaLocking");
   const OmegaGovernor = await ethers.getContractFactory("OmegaGovernor");
   const OmegaNovelGate = await ethers.getContractFactory("OmegaNovelGate");
+  const OmegaScienceMinter = await ethers.getContractFactory("OmegaScienceMinter");
 
   const token = await deploy("OmegaTestToken", OmegaTestToken, [treasury, initialSupply]);
   const votingEscrow = await deploy("OmegaVotingEscrow", OmegaVotingEscrow, [deployer.address]);
@@ -170,6 +171,41 @@ async function main() {
   await send("grant governor proposer", timelock.grantRole(proposerRole, await governor.getAddress()));
   await send("renounce timelock admin", timelock.renounceRole(adminRole, deployer.address));
 
+  // PoKW receipt-claim leg: deploy the minter bound to this token and
+  // timelock. The fixed science budget is a treasury transfer (there is
+  // no mint path); if the deployer is the treasury, fund + activate +
+  // renounce inline. Otherwise funding stays a treasury-side step and
+  // activation is completed by scripts/activate-pokw-minter.js.
+  const scienceBudget = tokenAmount("POKW_SCIENCE_BUDGET", "1000000");
+  const maxEpochPayout = tokenAmount("POKW_MAX_EPOCH_PAYOUT", "100000");
+  if (scienceBudget > initialSupply) {
+    throw new Error("POKW_SCIENCE_BUDGET cannot exceed OMEGA_INITIAL_SUPPLY.");
+  }
+  if (maxEpochPayout > scienceBudget) {
+    throw new Error("POKW_MAX_EPOCH_PAYOUT cannot exceed POKW_SCIENCE_BUDGET.");
+  }
+  const minter = await deploy("OmegaScienceMinter", OmegaScienceMinter, [
+    await token.getAddress(),
+    timelockAddress,
+    deployer.address,
+    maxEpochPayout,
+  ]);
+  let minterActivated = false;
+  if (deployer.address === treasury) {
+    await send(
+      "fund science budget",
+      token.connect(deployer).transfer(await minter.getAddress(), scienceBudget)
+    );
+    await send("activate minter", minter.connect(deployer).activate());
+    await send("renounce minter owner", minter.connect(deployer).renounceOwnership());
+    minterActivated = true;
+  } else {
+    console.log("  note: treasury is not the deployer;");
+    console.log("        fund the minter from the treasury, then run");
+    console.log("        scripts/activate-pokw-minter.js to lock the budget");
+    console.log("        and end the deployer's setup authority.");
+  }
+
   // Fail closed if the setup handoff did not complete as expected.
   if (await timelock.hasRole(adminRole, deployer.address)) {
     throw new Error("Setup handoff failed: deployer still has Timelock DEFAULT_ADMIN_ROLE.");
@@ -179,6 +215,12 @@ async function main() {
   }
   if ((await votingEscrow.owner()) !== ethers.ZeroAddress) {
     throw new Error("Setup handoff failed: voting escrow ownership was not renounced.");
+  }
+  if (minterActivated && !(await minter.activated())) {
+    throw new Error("Setup handoff failed: minter did not activate.");
+  }
+  if (minterActivated && (await minter.owner()) !== ethers.ZeroAddress) {
+    throw new Error("Setup handoff failed: minter ownership was not renounced.");
   }
 
   const deployedAt = new Date().toISOString();
@@ -198,6 +240,12 @@ async function main() {
       omegaLocking: await locking.getAddress(),
       omegaGovernor: await governor.getAddress(),
       omegaNovelGate: await gate.getAddress(),
+      omegaScienceMinter: await minter.getAddress(),
+    },
+    pokw: {
+      activated: minterActivated,
+      scienceBudget,
+      maxEpochPayout,
     },
     configuration: {
       initialSupply,
@@ -236,6 +284,12 @@ async function main() {
         claimEnd,
         timelockAddress,
         guardian,
+      ],
+      omegaScienceMinter: [
+        await token.getAddress(),
+        timelockAddress,
+        deployer.address,
+        maxEpochPayout,
       ],
     },
   };

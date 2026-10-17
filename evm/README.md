@@ -26,6 +26,7 @@ That scope follows the staged implementation requirement in the [tri-token bluep
 | `OmegaGovernor` | Snapshot-based governance | Reads `veOMEGA`, not liquid `tOMEGA`; successful actions must be queued through the timelock. |
 | OpenZeppelin `TimelockController` | Delayed execution | The deployment script gives proposal rights to the governor, permits public execution, then removes the deployer’s temporary admin role. |
 | `OmegaNovelGate` | One on-chain pilot claim per qualifying wallet | Immutable threshold/window; holds no content key, personal data, private evidence, or off-chain entitlement. Guardian pause affects the gate only, never token transfers. |
+| `OmegaScienceMinter` | PoKW receipt-claim leg: governance-ratified batches of kernel-verified proof-work receipts authorize capped epoch payouts; miners claim against a Merkle root | Two-phase deployment (deploy → treasury funds → `activate()` locks the budget → deployer renounces). No mint path exists: total claimable is bounded by the deploy-time funding. Only the timelock may ratify batches; each leaf is claimable once; a guardian-style pause can halt claims but never exceed the budget. Nothing verifies Lean proofs on-chain — the chain records governance's ratification of a publicly reproducible CI kernel audit; the kernel remains the arbiter of mathematical truth. |
 
 All custom contracts have a `SepoliaTestnetOnly` construction guard. The local Hardhat network mirrors Sepolia’s chain ID so the production bytecode is exercised in tests.
 
@@ -45,6 +46,9 @@ The script pins the following **pilot defaults** unless an explicitly documented
 | Proposal threshold | `1,000 tOMEGA` locked | Snapshot threshold for proposal creation |
 | Quorum | 4% of `veOMEGA` supply | Snapshot quorum |
 | Timelock delay | 86,400 seconds | One day before a passed action can execute |
+| PoKW science budget | `1,000,000 tOMEGA` | Fixed tOMEGA the minter may ever pay out; treasury transfer at deploy, no mint path. Override with `POKW_SCIENCE_BUDGET`. |
+| PoKW max epoch payout | `100,000 tOMEGA` | Hard per-epoch ceiling on any single ratified batch. Override with `POKW_MAX_EPOCH_PAYOUT`. |
+| PoKW max batch leaves | 500 | Gas/DoS bound on receipts per ratified batch (governance may lower it) |
 
 These are test inputs, not a mainnet tokenomics decision. A mainnet implementation must get a separate specification, legal review, threat model, economic simulation, independent audit, and deployment decision.
 
@@ -69,7 +73,8 @@ The test suite covers:
 - expiry and voluntary guardian-enabled emergency exit;
 - threshold, duplicate-claim, and pause behavior in the gate;
 - proposal → vote → timelock queue → delayed execution;
-- removal of temporary deployment authority.
+- removal of temporary deployment authority;
+- PoKW: two-phase budget lock, timelock-only batch ratification (once per epoch), per-epoch cap, budget exhaustion, one-claim-per-leaf Merkle payouts to committed accounts for committed amounts, pause behavior, and rescue of only unratified funds.
 
 ## Sepolia deployment
 
@@ -131,11 +136,12 @@ The test suite covers:
 
 The deployer is intentionally temporary:
 
-1. Deploy `tOMEGA`, `veOMEGA`, `TimelockController`, `OmegaLocking`, `OmegaGovernor`, and `OmegaNovelGate`.
+1. Deploy `tOMEGA`, `veOMEGA`, `TimelockController`, `OmegaLocking`, `OmegaGovernor`, `OmegaNovelGate`, and `OmegaScienceMinter`.
 2. Bind `veOMEGA` to `OmegaLocking` once, then renounce the escrow owner.
 3. Give the governor Timelock `PROPOSER_ROLE`.
 4. Give `DEFAULT_ADMIN_ROLE` for the gate and locking contracts to the timelock at construction.
 5. Renounce the deployer’s Timelock `DEFAULT_ADMIN_ROLE` and stop if that handoff did not succeed.
+6. PoKW minter (two-phase): if the deployer is the treasury, the script funds the science budget, calls `activate()` to lock it, and renounces the minter ownership inline. Otherwise the treasury funds the budget out of band and `npm run activate:pokw` (`scripts/activate-pokw-minter.js`) locks it and ends the deployer's setup authority — it refuses to activate on a budget that does not match the manifest.
 
 `GUARDIAN_ADDRESS` has `PAUSER_ROLE` on the gate and `EMERGENCY_ROLE` on locking. Neither role can mint, seize balances, rewrite a claim, change an immutable threshold/window, or bypass the timelock.
 
@@ -148,6 +154,8 @@ Use this as a minimum post-deploy drill, not as an audit substitute:
 - [ ] Confirm `OmegaTestToken.totalSupply() == initialSupply()` and that the treasury received the supply.
 - [ ] Confirm `OmegaVotingEscrow.owner() == address(0)` and that `locker()` is the deployed locking contract.
 - [ ] Confirm the deployer no longer has Timelock `DEFAULT_ADMIN_ROLE`; confirm only the governor has `PROPOSER_ROLE`.
+- [ ] Confirm the PoKW minter is `activated`, its owner is `address(0)`, `scienceBudgetWei` equals the treasury transfer, and `remainingBudget()` starts at the full budget. If the treasury is not the deployer, complete funding then run `npm run activate:pokw` and confirm the same terminal state.
+- [ ] PoKW drill: ratify a batch through a full governor vote + timelock delay with a small root, then verify a miner can claim the committed amount once, a second claim reverts `LeafClaimed`, a wrong-amount claim reverts `InvalidProof`, and `rescueUnratified` cannot touch funds backing ratified epochs.
 - [ ] Distribute only valueless test tokens from the treasury; test transfer, lock, delegation, expiry withdrawal, emergency-exit enable/disable, and vote snapshots with separate wallets.
 - [ ] Test a passed proposal through the full timelock delay and test gate pause/unpause with the guardian.
 - [ ] Test insufficient-balance, repeated-claim, expired-window, and paused-gate paths.

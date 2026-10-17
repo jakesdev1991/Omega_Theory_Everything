@@ -16,6 +16,7 @@ const CONTRACTS = [
   "OmegaLocking",
   "OmegaGovernor",
   "OmegaNovelGate",
+  "OmegaScienceMinter",
 ];
 
 let exceeded = false;

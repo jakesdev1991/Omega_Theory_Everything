@@ -74,6 +74,12 @@ async function main() {
       contract: "contracts/OmegaNovelGate.sol:OmegaNovelGate",
       args: manifest.constructorArguments.omegaNovelGate,
     },
+    {
+      label: "OmegaScienceMinter",
+      address: manifest.contracts.omegaScienceMinter,
+      contract: "contracts/OmegaScienceMinter.sol:OmegaScienceMinter",
+      args: manifest.constructorArguments.omegaScienceMinter,
+    },
   ];
 
   for (const entry of contracts) {

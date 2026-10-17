@@ -108,6 +108,7 @@ async function main() {
     "OmegaLocking",
     "OmegaGovernor",
     "OmegaNovelGate",
+    "OmegaScienceMinter",
   ];
   let creationGas = 0n;
   for (const name of deploymentPlan) {
@@ -122,6 +123,10 @@ async function main() {
       2n * ((initcodeBytes + 31n) / 32n);
   }
   const setupGasReserve = 200000n; // grant governor proposer + renounce timelock admin
+  // PoKW minter setup, worst case (treasury == deployer): fund the budget
+  // (ERC-20 transfer), activate, renounce ownership. Two are trivial
+  // writes; the transfer is bounded by the same ~65k ERC-20 transfer.
+  const pokwSetupReserve = 260000n;
 
   const feeData = await ethers.provider.getFeeData();
   const gasPrice = feeData.maxFeePerGas ?? feeData.gasPrice;
@@ -140,7 +145,7 @@ async function main() {
     }
     fundsExplanation = "explicit MIN_DEPLOYER_BALANCE_ETH floor (no fee data from the RPC)";
   } else {
-    const estimated = ((creationGas + setupGasReserve) * gasPrice * 3n) / 2n;
+    const estimated = ((creationGas + setupGasReserve + pokwSetupReserve) * gasPrice * 3n) / 2n;
     requiredWei = estimated > (explicitFloor ?? 0n) ? estimated : explicitFloor;
     fundsExplanation = `${ethers.formatEther(estimated)} ETH estimated at ${ethers.formatUnits(gasPrice, "gwei")} gwei`;
   }

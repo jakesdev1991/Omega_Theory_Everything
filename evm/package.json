@@ -17,8 +17,10 @@
     "check": "npm run compile && npm run size && npm test",
     "preflight:sepolia": "hardhat run scripts/preflight-sepolia.js --network sepolia",
     "deploy:sepolia": "hardhat run scripts/deploy-sepolia.js --network sepolia",
+    "activate:pokw": "hardhat run scripts/activate-pokw-minter.js --network sepolia",
     "verify:sepolia": "hardhat run scripts/verify-sepolia.js --network sepolia",
-    "preflight:rehearsal": "node scripts/rehearsal-preflight.js"
+    "preflight:rehearsal": "node scripts/rehearsal-preflight.js",
+    "rehearsal:pokw": "node scripts/rehearsal-pokw-activation.js"
   },
   "dependencies": {
     "@openzeppelin/contracts": "5.6.1"
