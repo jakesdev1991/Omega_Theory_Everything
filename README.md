@@ -61,6 +61,8 @@ The immediate research results and limits are documented here:
 
 The Lean corpus should be read with [`lean_proofs/PROOF_AUDIT.md`](lean_proofs/PROOF_AUDIT.md): kernel checking verifies formal statements under their assumptions, not their physical interpretation or empirical truth.
 
+**Which Lean theorems anchor which claims (added 2026-10-20):** [`lean_proofs/PROOF_MAP.md`](lean_proofs/PROOF_MAP.md) maps each ToE-facing claim to the Lean file and theorem names that formalise it — or records explicitly that no Lean theorem exists. It covers the core mechanism files (information physics, the log-correlation metric and its negative result, the foundation models, both Planck-scale models, and the radial files), the cross-volume structural-consistency theorems in `OmegaProtocol.lean`, representative results from the 54 volumes, and the reverse gaps (black-hole depletion → expansion, the covariant actions, Gauss–Bonnet scalarization, the Q-region benchmarks) that remain Python-only or ansatz. The per-volume results tables themselves live in [`lean_proofs/README.md`](lean_proofs/README.md). Theorem names in the map are verbatim Lean identifiers; names with the bridge_ prefix are, per the proof audit, structural checks inside a degenerate minimal model, not physics results.
+
 ## Formal Verification (Lean 4)
 
 The formal corpus contains a mixture of model definitions, conditional lemmas, and research results; it is not a formal proof of the physical theory as a whole. The build is the source of truth for which individual statements are kernel-checked, and the proof audit explains the limits of that evidence:

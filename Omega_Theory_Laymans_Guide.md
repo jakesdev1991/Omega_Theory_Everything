@@ -93,6 +93,13 @@ rather than reproduce the Schwarzschild radial geometry. A further
 correlation-decay metric is required, and it must be derived from a specified
 Q-region model rather than selected to match the desired answer.
 
+One clarification (added 2026-10-20): the formal corpus contains a *second*,
+different shrinking-length model that older writing blurred into this one.
+In the second model the length shrinks because information is denser, not
+because \(\Phi\) is larger. Both models have been checked as mathematics;
+they are different choices, results about one do not carry over to the
+other, and neither has been shown to be the physical Planck length.
+
 ## 5. Gravity: distinct candidate roles for \(\Phi\)
 
 One proposed route treats \(\Phi\) as an ordinary scalar field that carries
@@ -145,6 +152,21 @@ model. A digital evolution simulation can test its own programmed rules; it
 cannot by itself verify a physical theory of life or show that an overlap
 measure causes adaptation.
 
+*(Added 2026-10-20.)* The fuller version of these ideas, held outside this
+repository, gives them names: living things are described as running an
+"active shredding" process that keeps their internal information organised,
+at a cost stated as a "Metabolic Inequality"; the long-running E. coli
+evolution experiment (and its famous Cit+ moment, when the bacteria gained
+a new food ability) is presented as an example of the pattern; and the mind
+is described as a "Q-Systemic Self," with anxiety pictured as a state where
+the parts of the self-model barely overlap and coherence as the opposite.
+Please read all of that exactly as labelled here: a speculative story told
+by analogy. A few nearby toy models have been formally checked — a simple
+model of selection in evolution, a toy model of integrated information,
+and a model of ecosystems — but they check their own small mathematical
+worlds. They do not check the active-shredding story, the metabolic claim,
+or the picture of the mind, and those remain unproven ideas, not results.
+
 Agent software, token pilots, and economic proposals are separate engineering
 projects. They do not validate the physics.
 
@@ -155,6 +177,20 @@ projects. They do not validate the physics.
   including model degeneracy and the gap between a theorem and its physical
   interpretation; the adversarial audit is the harsher of the two records, and
   its executive summary is the pre-remediation scoreboard, kept as history.
+- (Added 2026-10-20.) There is now a plain map, `lean_proofs/PROOF_MAP.md`,
+  saying which named Lean results stand behind which claims in the technical
+  notes — and, just as important, which claims have *no* Lean result behind
+  them at all. Newly pointed out there: the information-and-energy
+  bookkeeping has been formally checked as a model; the logarithmic-distance
+  idea has been checked in a conditional form, together with a checked
+  *negative* result showing the stronger version of it fails; the radial
+  geometry results in the companion notes are now named individually; and a
+  set of "cross-volume" theorems checks that the formal restatements of
+  different subject volumes agree with each other. That last kind of check
+  is about the internal consistency of the mathematics, not about the
+  universe: a consistent story is not automatically a true one. Some named
+  results were also checked only inside a deliberately tiny, simplified
+  model; the map flags those, and they should not be quoted as physics.
 - The identities quoted in the core notes are re-derived by code, not only
   asserted: twelve checks in `research/verify_derivations.py` (the Schwarzschild
   dictionary, the required correlation-decay rate, the golden-ratio bound, the

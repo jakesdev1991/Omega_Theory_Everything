@@ -69,7 +69,7 @@ $$\boxed{\;h_{ij}=\ell_P(\Phi)^2\,\gamma_{ij},\qquad g_{rr}=\ell_P(\Phi)^2\,\kap
 **Corollaries.**
 
 1. **The finite form needs constant $\Phi$.** §2.1's $d=-\ell_P(\Phi)\ln K$ is exact only when $\Phi$ is constant. For a smooth profile, using a single $\ell_P$ per pair errs by 6–52 %, depending on where $\Phi$ is evaluated (Sim7 check 1). Chain sums converge to the integral at $O(n^{-2})$.
-2. **Reconciliation.** $\ell_P\to0$ and $g_{rr}\to\infty$ are compatible if and only if $\kappa$ grows faster than $1/\ell_P$. With uniform decay ($\kappa$ constant) the canonical profile can only contract. Uniform decay is the implicit assumption in Sim5's `physical_x = cumsum(local_l_p)`.
+2. **Reconciliation.** $\ell_P\to0$ and $g_{rr}\to\infty$ are compatible if and only if $\kappa$ grows faster than $1/\ell_P$. With uniform decay ($\kappa$ constant) the canonical profile can only contract. Uniform decay is the implicit assumption in Sim5's `physical_x = cumsum(local_l_p)`. *(Formal anchor, added 2026-10-20: this reconciliation, and the identification of the dilation ratio with the COD ratio, are formalised in lean_proofs/RadialDilation.lean as `dilation_reconciliation` and `lpRatio_eq_cod_ratio`, with the deviation of the ratio from its quadratic approximation in `lpRatio_quadratic_deviation`.)*
 3. **Local dilation criterion.** For a conformally flat metric $h=\Omega^2(d\rho^2+\rho^2d\Omega^2)$ with $\Omega=\ell_P\kappa/(\ell_{P0}\kappa_0)$, the areal radius is $R=\Omega\rho$ and $g_{RR}=(1+d\ln\Omega/d\ln\rho)^{-2}$. With $\Phi$ decreasing outward, areal-gauge dilation ($g_{RR}>1$) needs
    $$\frac{d\ln\kappa}{d\Phi}>-\frac{d\ln\ell_P}{d\Phi}=\frac{\Phi}{1-\Phi^2},$$
    together with $d\ln\Omega/d\ln\rho>-2$ (no throat). The same function $\Phi/(1-\Phi^2)$ sets the golden-ratio bottleneck (§8), where it equals 1.
@@ -95,6 +95,8 @@ This is the quantitative content of the §2.2 remark that the two forms "point i
 
 **Reading.** $\sqrt{1-\Phi^2}$ can serve as a *microscopic resolution scale*, but not as the macroscopic metric. The information metric $\gamma$ has to supply the mass.
 
+**Formal anchor (Lean 4, added 2026-10-20).** Every row of the table above is formalised in lean_proofs/RadialDilation.lean: the contraction is `gRR_lpOnly_le_one` (with `gRR_lpOnly_eq_one_imp` and `gRR_lpOnly_zero` characterising the boundary cases), and the negative Misner–Sharp mass is `misnerSharpLPOnly_neg` (with `misnerSharpLPOnly_zero`). These are formal statements under the section's stated setting; they do not derive the required information metric.
+
 ## 5. [Identified] What GR demands: Schwarzschild written in $\Phi$
 
 **The dictionary.** Consider a static vacuum, a time-symmetric slice, and a conformally flat metric $h=\psi^4\delta$. The Hamiltonian constraint is then $\nabla^2\psi=0$ (flat Laplacian). **Identify $\Phi:=\psi-1$**, which vanishes at infinity (Lean convention). The static equation for $\Phi$ is then the flat-background Laplace equation. That is the static massless form of the §3.1 equation with $Z=1$ and $V=0$, posed on the flat background rather than on the emergent metric. The single-centre solution $\Phi=M/2\rho$ gives exact Schwarzschild (4D Ricci-flatness checked symbolically):
@@ -115,6 +117,8 @@ Properties (all checked in Sim7):
 $$\frac{\kappa}{\kappa_0}=\frac{(1+\Phi)^2}{\sqrt{1-\Phi^2}}.$$
 
 This satisfies the dilation criterion of §3 with margin $2/(1+\Phi)$.
+
+*(Formal anchor, added 2026-10-20: the required κ of this dictionary is formalised in lean_proofs/RadialDilation.lean as `kappaRequired_pos` and `kappaRequired_zero`, its product with the ℓ_P factor as `kappa_lp_product`, the fact that it outruns the inverse ℓ_P factor as `kappa_outruns_inverse_lp`, and the conformal side as `isotropic_conformal_reproduction`, `conformalFactor_strictMono`, and `areal_reciprocity`. The Schwarzschild-side radial values are `gRR_schwarzschild_gt_one` and `gRR_schwarzschild_zero`. In lean_proofs/RadialMetric.lean the matching areal/lapse statements are `arealRadius_at_vacuum`, `arealRadius_at_horizon`, `lapse_conformal_identity`, and `cod_profile_matches_lapse`.)*
 
 | $\Phi$ | 0 | 0.1 | 0.3 | $\Phi^*\approx0.618$ | 0.9 | 0.99 |
 |---|---|---|---|---|---|---|
@@ -161,7 +165,7 @@ $$1-\Phi^2=\Phi^*(1-2t)-t^2\;\le\;\Phi^*(1-2t)\;\le\;\Phi^*e^{-2t},$$
 
 using $e^x\ge1+x$ in the last step. Hence $e^{2\Phi}(1-\Phi^2)\le\Phi^*e^{2\Phi^*}$ for every real $\Phi$, with equality if and only if $\Phi=\Phi^*$.
 
-So the disformal bound $e^{-\Phi}/(\sqrt\beta\sqrt{1-\Phi^2})$ has its unique global minimum on $(-1,1)$ at $\Phi^*$. The minimum value is $e^{-\Phi^*}/\sqrt{\beta\Phi^*}\approx0.6856/\sqrt\beta$. The proof needs no calculus, and it is now formalized: `RadialMetric.golden_bottleneck_bound` in `lean_proofs/RadialMetric.lean` proves the inequality via `Real.add_one_le_exp` and is kernel-checked by the Lean CI job.
+So the disformal bound $e^{-\Phi}/(\sqrt\beta\sqrt{1-\Phi^2})$ has its unique global minimum on $(-1,1)$ at $\Phi^*$. The minimum value is $e^{-\Phi^*}/\sqrt{\beta\Phi^*}\approx0.6856/\sqrt\beta$. The proof needs no calculus, and it is now formalized: `RadialMetric.golden_bottleneck_bound` in `lean_proofs/RadialMetric.lean` proves the inequality via `Real.add_one_le_exp` and is kernel-checked by the Lean CI job. *(Added 2026-10-20: the companion statements in the same file are `phiStar_pos` and `phiStar_golden`, locating the bottleneck value; `golden_bottleneck_gap`, quantifying it; and `golden_bottleneck_eq_iff`, characterising equality. The finite-chain statements behind §3 are `chainLength_mono`, `chainLength_const_scale`, `chainLength_error`, and `chainLength_factorization_iff`.)*
 
 **Robustness.** For $C=e^{-2a\Phi}$ and $D\propto(1-\Phi^2)^p$, the tightest point is
 
