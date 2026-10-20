@@ -13,7 +13,12 @@ empirically validated Theory of Everything.
 > clearly labelled speculative Part II summarising extension material held
 > outside this repository. It changes no claim's status: the status banner
 > above and the epistemic ledger in §7 stand unchanged in spirit and, except
-> for one added ledger row pointing at §9, in text. The claim-by-claim
+> for one added ledger row pointing at §9, in text. A same-day addition
+> (§§1.1, 4, 5, 9 and the new §11) folds four external preprints in as
+> adopted building blocks with full credit, and registers two tests in
+> `docs/PREDICTIONS_REGISTER.md`; it likewise upgrades no claim — the
+> adopted items are labelled hypotheses, criteria and discriminators.
+> The claim-by-claim
 > formal anchor for every citation added here is
 > [`lean_proofs/PROOF_MAP.md`](lean_proofs/PROOF_MAP.md). Newer ToE drafts
 > held in Google Drive (the 5.0 and OmegaAlpha lines) have not yet been
@@ -87,6 +92,57 @@ operational definition or a physical-vacuum baseline.
 > `energy_conservation_during_state_conversion`, `erasureCost_lower_bound`,
 > `batchCost_decomposition`, and `batch_affordable_iff`. That file
 > formalises the stated model; it does not derive gravity from information.
+
+### 1.1 Two candidate routes to specifying the \(\Phi\)-functional (Route B added 2026-10-20)
+
+The \(\Phi\)-functional is **Open** (see the ledger in §7). Two candidate
+routes for specifying it are now on the table. They are routes, not
+results: adopting a route is a decision to build on it, under this
+programme's working principle that published external work may be used as
+a building block with full credit. Adoption changes no status in §7.
+
+- **Route A — Choi-state pairwise route (this programme's Perspective
+  Manifold line).** \(\Phi\) is the dimension-normalised Choi-state mutual
+  information of CPTP "handshake" maps between two Q-regions, normalised
+  by \(2\min(\ln\dim\mathcal H_i,\ln\dim\mathcal H_j)\), with symmetric
+  \(\Phi\) the geometric mean of the directional overlaps. It is finite,
+  bounded in \([0,1]\), and relational — it defines geometry *between*
+  regions — but it supplies no continuum field \(\Phi(x)\) yet.
+- **Route B — relative-entropy-density route (adopted building block,
+  external).** Damir Ðulović, *Entanglement Density Gravity: A Dynamical
+  Theory of Emergent Spacetime from Quantum Information Constraints*,
+  Zenodo record 17227471, 30 September 2025 (preprint; not
+  peer-reviewed), defines a pointwise scalar directly from quantum
+  information:
+  \(s(x) := (4\pi G\hbar/c^{3})\,\partial^{2}_{\lambda}
+  S_{\mathrm{rel}}(\rho\Vert\sigma)\) per unit transverse area, where
+  \(\lambda\) parameterises null shape deformations of a small causal
+  diamond and \(\sigma\) is a local Hadamard reference state (EDG §4.1,
+  Eq. 4). **What is adopted from EDG:** (i) the operational strategy
+  itself — a gravitational scalar *defined* from a quantum-information
+  quantity rather than postulated; (ii) its positivity argument, in
+  which \(s\geq 0\) follows from relative-entropy monotonicity and joint
+  convexity — i.e. from the data-processing inequality, the same
+  inequality this corpus formalises structurally in
+  `bridge_metric_triangle_from_DPI` (EDG Thm 4.1 is at proof-sketch
+  level, and is adopted at that level); (iii) EDG's discipline of
+  coupling the scalar to gravity only through a conserved stress tensor
+  (§4 below). **The Omega-side adaptation required, not present in
+  EDG:** EDG's \(s\) is unbounded and pointwise, while this programme's
+  \(\Phi\) is bounded and pairwise; the candidate bridge is a bounded
+  monotone image of an EDG-type density (e.g. \(\Phi =
+  \tilde s/(1+\tilde s)\)), recorded here as a candidate, not a
+  construction. **What is explicitly NOT yet done:** no
+  \(\Phi \leftrightarrow s\) dictionary exists; the \(\ell_P(\Phi)\)
+  profile of §3 and the radial Schwarzschild dictionary were built on
+  the pairwise \(\Phi\) and would have to be re-derived under Route B
+  before any result depending on them could be quoted in Route-B terms;
+  and Route B inherits EDG's own open problems — dependence of the
+  definition on the reference state \(\sigma\), on the chosen null
+  direction, and on an unspecified UV/per-area normalisation. Nothing in
+  this subsection is a result of this programme, and EDG is not evidence
+  for any claim in §7; it is an adopted candidate route whose obstacles
+  are now named.
 
 ## 2. Conditional logarithmic chain distance
 
@@ -241,6 +297,45 @@ no-hair argument, FLRW equations, and limits of these candidate branches are
 recorded in
 [`docs/research/COVARIANT_COMPLETION_AND_TEST_GATE.md`](docs/research/COVARIANT_COMPLETION_AND_TEST_GATE.md).
 
+**Adopted test-gate criteria (added 2026-10-20).** The test gate in that
+document adopts, as its constraint checklist, the criteria worked through
+in Ðulović's EDG (full citation in §1.1 and §11): (i) **weak equivalence
+principle / fifth-force safety** — the scalar couples only
+gravitationally, with no direct Standard-Model couplings; (ii) **QNEC
+compatibility** — the scalar's positivity and null-energy behaviour must
+be consistent with the quantum null energy condition; (iii)
+**GW170817 luminality** — the tensor speed must satisfy \(c_T = 1\) at
+tree level and \(|c_T - 1|\) within the GW170817 bound once operators are
+included; (iv) **Cassini PPN** — the parametrised post-Newtonian
+\(\gamma\) must equal 1 at the precision of the Cassini bound; and (v)
+**generalised second law** — total entropy (horizon + matter + scalar)
+must be non-decreasing along horizon generators. EDG meets these, in its
+own preprint account, by taking the most restrictive version of the
+matter-scalar branch above: canonical kinetic term, minimal coupling,
+and the non-minimal operator \(\xi s^{2}R\) together with the dim-6
+curvature–kinetic operators set to zero by renormalisation conditions.
+These criteria are adopted as *criteria*: a candidate branch of this
+programme that fails one fails the gate, whatever its other merits.
+EDG's own caveats travel with the adoption — its dynamics are postulated
+(an explicitly labelled "EFT hypothesis"), not derived from its
+definition of \(s\), and its checklist is a preprint's self-assessment,
+not a peer-reviewed verdict.
+
+> **Open Problem 1 — JBD vs. minimal coupling (registered 2026-10-20).**
+> The Perspective Manifold line *identifies* this programme's theory as
+> a multi-scalar Jordan–Brans–Dicke variant — i.e. it embraces a
+> non-minimal scalar–curvature coupling. EDG's viability strategy is
+> precisely to *suppress* that coupling (\(\xi(\mu_{\ast}) = 0\) by
+> renormalisation condition, with regeneration argued negligible). Both
+> cannot be the operative completion at the same scales. Resolving this
+> — e.g. by showing the JBD identification's effective \(\xi\) is small
+> wherever the §4 gate applies, by confining the JBD reading to a stated
+> regime, or by dropping one of the two — is a numbered open problem of
+> this programme. It is registered as a problem to solve, not as a
+> reason to exclude either EDG or the JBD line, and the JBD
+> identification's status is **[Identified, unreconciled]** until it is
+> solved.
+
 ## 5. Black-hole information loss and cosmology: underived ansatz
 
 The depletion equation
@@ -262,6 +357,28 @@ results. `sim6_v14_depletion.py` calibrates \(\gamma\) to a selected value of
 \(H_0\); reproducing that calibration target is not an independent prediction
 or validation. A distinct prediction and a pre-registered evaluation against
 independent data are not yet available.
+
+**Adopted discriminating test — the \(w(z)\) phantom-crossing check
+(added 2026-10-20; registered as PRED-WZ-01 in
+[`docs/PREDICTIONS_REGISTER.md`](docs/PREDICTIONS_REGISTER.md)).** The
+depletion ansatz above is not the only information-based dark-energy
+mechanism now in this programme's comparison set. EDG's homogeneous
+cosmology (citation in §1.1) is a canonical thawing slow roll with
+\(w_s = -1 + \alpha\dot s^{2}/\rho_s\) (EDG Eq. 23): because its kinetic
+term is canonical, its equation of state approaches \(-1\) strictly from
+above and **cannot cross into the phantom regime** (\(w < -1\)). The
+depletion cosmology of this section, as developed in the Drive ToE 4.4
+line, permits epochs with \(w_{\mathrm{eff}} < -1\). The two mechanisms
+are therefore discriminated by observation, and this test is adopted on
+those terms: percent-level determinations of \(w(z)\) at \(z\lesssim 1\)
+(DESI-class and successor SNe/BAO programmes) that **confirm a phantom
+crossing exclude the EDG baseline** as formulated; determinations that
+**persistently find \(w \geq -1\)** tighten EDG's slow-roll bound
+\(\alpha \gtrsim \lambda_s^{2}/(3\epsilon_w)\) (EDG Eq. 26) while
+leaving the depletion ansatz's calibration freedom untouched — i.e. they
+constrain EDG, they do not confirm depletion. Neither work performs a
+numerical fit; this is a **[Conditional]** discriminator between two
+ansatz/slow-roll-level mechanisms, not a result for either.
 
 ## 6. Other proposed applications
 
@@ -338,7 +455,15 @@ claimed; they do not derive one physical domain from another, and they
 are not evidence for the Open rows in §7.
 
 - Holography ↔ ER=EPR: `cross_vol09_vol22_er_epr_dictionary` and
-  `cross_vol09_vol22_er_epr_dictionary_iff`.
+  `cross_vol09_vol22_er_epr_dictionary_iff`. External counterparts for
+  this dictionary are adopted as building blocks in §11: Sin & Wang's
+  field-theory version of ER=EPR (large-\(N\) equivalence of quenched
+  and annealed averages in the Yukawa–SYK model) and Jusufi et al.'s
+  geometric realisation (only the zero-throat wormhole geometry is
+  compatible with an entanglement-induced ER bridge). Both are external
+  preprints; neither is a proof of, or evidence for, the structural
+  result above — they are the published models this dictionary should be
+  compared against.
 - General relativity ↔ cosmology: `cross_vol05_vol07_flrw`.
 - Electromagnetism ↔ general relativity: `cross_vol02_vol05_em_stress_energy`.
 - Thermodynamics ↔ black-hole thermodynamics: `cross_vol03_vol08_bh_thermo`.
@@ -396,3 +521,74 @@ facts (`frame_preserves_norm`, `frame_round_trip`) used by the §9
 consciousness ↔ reference-frames structural result. These are formal
 statements inside their own toy models. They do not formalise the Active
 Shredding Operator, the Metabolic Inequality, or the Q-Systemic Self.
+
+## 11. External building blocks (added 2026-10-20)
+
+This programme's stated principle is that unifying physics outranks
+originality: published results by other researchers may be built on
+directly, with full credit, instead of being held at arm's length as
+mere precedent. This section records the external works adopted on
+those terms, what each contributes here, and its status **in its own
+literature**. Adoption is not agreement, not endorsement by the cited
+authors, and not validation: every item below is exploratory research,
+and none of it changes any row of the §7 ledger. EDG's caveats in
+particular — its dynamics are postulated, and its laboratory gradient
+\(g_s\) has no proposed physical realisation — stay attached wherever
+its results are used above.
+
+1. **Entanglement Density Gravity (EDG).** Damir Ðulović,
+   *Entanglement Density Gravity: A Dynamical Theory of Emergent
+   Spacetime from Quantum Information Constraints*, Zenodo record
+   17227471, 30 September 2025. **Status: preprint, not
+   peer-reviewed.** *Contribution to this programme:* the Route-B
+   candidate construction of an information-defined scalar (§1.1); the
+   constraint checklist adopted as the §4 covariant test gate; the
+   \(w(z)\) discriminator adopted in §5; and the laboratory channel
+   registered in `docs/PREDICTIONS_REGISTER.md` (PRED-EDG-LAB-01).
+2. **Mutual information → emergent geometry in a concrete material.**
+   Hoang-Anh Le, Hyun Cheol Lee, and S.-R. Eric Yang, *Quantum
+   Entanglement of Anyonic Charges and Emergent Spacetime Geometry*,
+   arXiv:2512.15256 [cond-mat.str-el], submitted 17 December 2025,
+   v2 revised 28 January 2026. **Status: arXiv preprint.** *Contribution:*
+   a worked, concrete realisation of this programme's §2 strategy in a
+   physical system — in a disordered zigzag graphene nanoribbon, the
+   mutual information between fractional (\(e/2\)) charges on opposite
+   edges is coarse-grained into \(M(y) \propto A\,e^{-\alpha
+   d_{\mathrm{geo}}(y)}\) (their §V, Eq. 16), so that coarse-grained
+   mutual information *defines* a geodesic distance in an emergent,
+   hyperbolic-like (AdS-like) information geometry, in a system without
+   conformal symmetry. Adopted as the building block showing the
+   MI-to-distance step carried through end-to-end in at least one
+   microscopic model; it does not supply this programme's kernel
+   hypothesis, continuum limit, or any gravitational dynamics.
+3. **A field-theory version of ER=EPR.** Sang-Jin Sin and Yi-Li Wang,
+   *ER=EPR and Strange Metals from Quantum Entanglement: Disorder
+   theory vs quantum gravity*, arXiv:2503.19431 [hep-th], submitted
+   25 March 2025, v3 revised 7 August 2025. **Status: arXiv preprint.**
+   *Contribution:* in the spatially random Yukawa–SYK model, the
+   Gaussian average over the random coupling yields a "wormhole"
+   (long-range interaction without causal suppression), and the
+   large-\(N\) equivalence of quenched and annealed averages is
+   presented as a field-theory version of ER=EPR — an explicit,
+   computable model on the entanglement side of the ER=EPR dictionary,
+   cross-referenced at the `cross_vol09_vol22_er_epr_dictionary`
+   discussion in §9. Adopted as a comparison model, not as support for
+   the formal dictionary itself.
+4. **A geometric realisation of ER=EPR.** Kimet Jusufi, Francisco
+   S. N. Lobo, Emmanuel N. Saridakis, and Douglas Singleton,
+   *Emergence of ER=EPR from non-local gravitational energy*,
+   arXiv:2512.05022 [gr-qc], submitted 4 December 2025. **Status:
+   arXiv preprint.** *Contribution:* a class of regular wormhole
+   geometries supported by non-local gravitational self-energy
+   (T-duality-inspired), in which entangled particle or
+   particle–black-hole pairs source an Einstein–Rosen-type geometry,
+   the required strong-energy-condition violation arises from the
+   quantum-gravity sector rather than ad hoc exotic matter, and —
+   imposing non-traversability and no macroscopic throat — **only the
+   zero-throat geometry is compatible** with an entanglement-induced
+   ER bridge. The paper also discusses replica-wormhole readings of
+   Hawking radiation and entanglement-driven dark-energy scenarios,
+   both adjacent to §5. Adopted as the geometric-side comparison model
+   for the §9 dictionary and as an external counterpart to the
+   depletion thread; its full transition dynamics are, by its own
+   account, beyond its scope.

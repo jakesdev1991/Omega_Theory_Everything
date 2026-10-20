@@ -207,13 +207,34 @@ labelling.
 | Q-region Markov-chain benchmark behaviour | docs/research/QREGION_MARKOV_MODEL.md; research/qregion_markov.py | **None** — and the Lean minimal model of §1.4 is a different, degenerate model; citing it here would be incorrect | Python-only |
 | Q-region entangled TFIM benchmark behaviour | docs/research/ENTANGLED_TFIM_BENCHMARK.md; research/quantum_ising_chain.py | **None** | Python-only |
 | **Negative finding:** both Q-region diagnostics show a correlation-decay trend **opposite** to the Schwarzschild-required trend | Technical §§1–2 ledger; docs/research/ (both benchmarks) | **None** — this is a computational result about the two benchmark models, integrated into the Technical note as a numbered finding by the v4.1 catch-up edit | Python-only (negative result) |
-| Φ as an operational functional of a physical Q-region state family | Technical §1 | **None** | Open |
+| Φ as an operational functional of a physical Q-region state family | Technical §1 | **None** | Open — an adopted external candidate route now exists (Route B, Technical §1.1: EDG's relative-entropy-density construction, Ðulović, Zenodo 17227471, Sep 2025), but no Φ↔s dictionary has been constructed, so this status is unchanged. See §5 below |
 | Macroscopic metric derived from Q-region data | Technical §§2–4; Radial Metric notes | **None** | Open |
 | Life / mind extensions (Active Shredding Operator, Metabolic Inequality, Q-Systemic Self) | Drive ToE 4.4 §§6–7; summarised in Technical Part II by the v4.1 catch-up edit | **None for the extensions as stated** — neighbouring formal toy models exist (Vol27, Vol28, Vol29, Vol49 rows above) but they do not formalise the Drive claims | Speculative / analogical |
 
 ---
 
-## 5. Maintenance rule
+## 5. External results adopted as building blocks (added 2026-10-20)
+
+Per this programme's stated principle (unification over originality;
+build on published work with full credit), the results below are
+**adopted** — used, not merely cited — in the ToE-facing documents.
+They are not Lean results, not results of this programme, and not
+validated physics; each carries its status in its own literature.
+Adoption does not change any status elsewhere in this map.
+
+| External result | Source | Where used in Omega | Status |
+|---|---|---|---|
+| Pointwise scalar defined from quantum information: s(x) := (4πGℏ/c³)·∂²_λ S_rel(ρ‖σ) per unit transverse area, s ≥ 0 from relative-entropy monotonicity/convexity (data processing) | Ðulović, *Entanglement Density Gravity*, Zenodo record 17227471, 30 Sep 2025, §§4–4.1, Thm 4.1 (sketch-level) | Technical §1.1 "Route B" candidate for specifying the Φ-functional; Technical §11 item 1 | Adopted candidate route (external preprint, not peer-reviewed). Φ-functional remains **Open**: no Φ↔s dictionary exists |
+| Constraint checklist for an information-defined gravitational scalar: WEP/fifth-force safety, QNEC compatibility, GW170817 luminality (c_T = 1), Cassini PPN γ = 1, generalised second law | Ðulović, EDG, §§7–9, 14 | Adopted as the criteria of the covariant test gate, Technical §4 | Adopted criteria (external preprint; EDG's compliance is its own self-assessment; EDG's dynamics are postulated, not derived) |
+| Thawing dark energy with w_s = −1 + αṡ²/ρ_s ≥ −1, never phantom-crossing; bound α ≳ λ_s²/(3ϵ_w) | Ðulović, EDG, §§10–12, Eqs. 23, 26 | Discriminating test against the depletion ansatz, Technical §5; registered as PRED-WZ-01 in docs/PREDICTIONS_REGISTER.md | Adopted discriminating test (conditional; no fit performed in EDG or here) |
+| Laboratory channel: atom-interferometer phase ΔΦ from an engineered entanglement-gradient slab, ~10⁻¹⁰–10⁻⁶ rad over EDG's α benchmarks; null result bounds α | Ðulović, EDG, §§11.2, 13, Eqs. 30, 32–33 | Registered as PRED-EDG-LAB-01 in docs/PREDICTIONS_REGISTER.md | External / conditional. Blocking: no physical realisation or achievable value of the gradient g_s is known in EDG or elsewhere |
+| Coarse-grained mutual information defines a geodesic distance in an emergent hyperbolic-like geometry: M(y) ∝ A·e^(−α·d_geo(y)) in a disordered zigzag graphene nanoribbon (fractional e/2 charges) | Le, Lee & Yang, *Quantum Entanglement of Anyonic Charges and Emergent Spacetime Geometry*, arXiv:2512.15256, submitted 17 Dec 2025 (v2, 28 Jan 2026), §V, Eq. 16 | Building block for the MI-to-distance strategy of Technical §2; Technical §11 item 2 | Adopted building block (arXiv preprint). Concrete material model only; supplies no gravitational dynamics |
+| Field-theory version of ER=EPR: Gaussian disorder average yields a wormhole; large-N equivalence of quenched and annealed averages in the spatially random Yukawa–SYK model | Sin & Wang, *ER=EPR and Strange Metals from Quantum Entanglement: Disorder theory vs quantum gravity*, arXiv:2503.19431, submitted 25 Mar 2025 (v3, 7 Aug 2025) | Comparison model cross-referenced at the ER=EPR dictionary discussion, Technical §§9, 11 item 3 | Adopted comparison model (arXiv preprint). Not support for the §2 structural dictionary itself |
+| Geometric ER=EPR realisation: regular wormholes from non-local gravitational self-energy; only the zero-throat geometry is compatible with an entanglement-induced ER bridge under non-traversability | Jusufi, Lobo, Saridakis & Singleton, *Emergence of ER=EPR from non-local gravitational energy*, arXiv:2512.05022, submitted 4 Dec 2025 | Geometric-side comparison model, Technical §§9, 11 item 4; external counterpart adjacent to the §5 depletion thread (replica wormholes, entanglement-driven dark energy) | Adopted comparison model (arXiv preprint). Transition dynamics out of its own stated scope |
+
+---
+
+## 6. Maintenance rule
 
 When a ToE-facing document cites a formal result, add or update its row
 here in the same change. When a claim has no row, it has no formal anchor
