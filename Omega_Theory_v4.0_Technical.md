@@ -197,11 +197,12 @@ Schwarzschild-required trend. Neither establishes a continuum metric or a
 universal no-go.
 
 > **Formal anchor (Lean 4).** The conditional statement above is the prose
-> form of lean_proofs/LogCorrelationMetric.lean, which proves
-> `neg_log_triangle_of_mul_le`, `logDistance_triangle`,
-> `logDistance_nonneg`, `logDistance_symm`, and
+> form of lean_proofs/LogCorrelationMetric.lean, which contains
+> machine-checked proofs of `neg_log_triangle_of_mul_le`,
+> `logDistance_triangle`, `logDistance_nonneg`, `logDistance_symm`, and
 > `correlation_supermultiplicative` under the multiplicative-kernel
-> hypothesis stated in that file. The same file also proves the limit of
+> hypothesis stated in that file. The same file also contains a
+> machine-checked statement of the limit of
 > the claim: `upper_multiplicative_bound_fails` is a formal negative
 > result showing the stronger universal multiplicative bound does not
 > hold. An older prose argument (held outside this repository) claimed the
