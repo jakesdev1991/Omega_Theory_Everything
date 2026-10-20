@@ -17,7 +17,7 @@ Token ownership and verified useful work remain separate participation concepts 
 
 | Decision | Value | Status |
 |---|---|---|
-| Release asset | **Crucible: The Satoshi Protocol** (public 16-chapter draft; author states it is not final) | ✅ Public draft at `web/public/book/full-book.md` |
+| Release asset | **Crucible: The Satoshi Protocol** (public 17-chapter draft; author states it is not final) | ✅ Public draft at `web/public/book/full-book.md` |
 | Access | Public text under CC BY 4.0; proof-verified reader flow is optional and non-exclusive | ✅ Applied in this release update |
 | Umbrella protocol name | **The C.A.R.E. Protocol** (whole ecosystem) | ✅ Locked |
 | $OMEGA | EVM — **current pilot on Ethereum Sepolia testnet**; mainnet-day-one venue (Ethereum L1 vs EVM L2) **still open** — see §3.1 | ⚠️ Partial |
@@ -39,7 +39,7 @@ Honest inventory as of this plan:
 
 | Component | State |
 |---|---|
-| Novel manuscript | Public 16-chapter draft at `web/public/book/full-book.md`, licensed CC BY 4.0; author states it is not final. No ciphertext or release key protects this public copy; cover and ebook formats are not produced |
+| Novel manuscript | Public 17-chapter draft at `web/public/book/full-book.md`, licensed CC BY 4.0; author states it is not final. No ciphertext or release key protects this public copy; cover and ebook formats are not produced |
 | Token contracts | **Ethereum pilot implemented locally:** [`../evm/`](../evm/) contains a Sepolia-only, valueless `tOMEGA` fixed-supply token, vote escrow, locking, Governor + TimelockController, and claim gate. **Solana pilot implemented locally:** [`../solana/`](../solana/) contains a Devnet-only, valueless `tTWC` standard SPL mint issuer/verifier with immutable Metaplex fungible metadata and null mint/freeze authorities. **AMITY scaffold implemented locally:** [`../amity/`](../amity/) contains a testnet-only operator/configuration scaffold, canonical holder-challenge formatting, and a non-broadcasting preflight for the future Taproot Assets leg. **None is deployed or independently audited.** No Taproot asset exists yet. |
 | Rust core (`rust/`) | Deterministic ledger + PoUW claim lifecycle prototype with tests; no chain integration |
 | App (`app/`) | Local-first wallet prototype with real client-side signing flows; **currently wires two currencies into the optional reader-proof demo**: `$OMEGA` (Ethereum) and `TWC` (Solana) |
