@@ -6,6 +6,20 @@
 **Status (2026-10-11):** exploratory research program; not a completed or
 empirically validated Theory of Everything.
 
+> **v4.1 catch-up note (2026-10-20, draft on the toe-catchup-lean-citations
+> branch).** This edit adds theorem-level Lean 4 citations to the sections
+> below, a map of the cross-volume structural-consistency theorems, a
+> numbered statement of the Q-region benchmark negative finding, and a
+> clearly labelled speculative Part II summarising extension material held
+> outside this repository. It changes no claim's status: the status banner
+> above and the epistemic ledger in §7 stand unchanged in spirit and, except
+> for one added ledger row pointing at §9, in text. The claim-by-claim
+> formal anchor for every citation added here is
+> [`lean_proofs/PROOF_MAP.md`](lean_proofs/PROOF_MAP.md). Newer ToE drafts
+> held in Google Drive (the 5.0 and OmegaAlpha lines) have not yet been
+> read into this repository and may supersede parts of this note; nothing
+> here should be read as a sync from them.
+
 ## Scope and claim level
 
 This note records a proposed route from correlations between subsystems to
@@ -52,6 +66,27 @@ uses ground states with positive two-spin negativity, so it tests the proposed
 mutual-information map in a genuinely entangled family. Both define \(\Phi\)
 explicitly for their own state families; neither supplies a universal
 operational definition or a physical-vacuum baseline.
+
+> **Formal anchor (Lean 4).** The foundation-level statements this section
+> rests on are formalised in two places, with two different strengths.
+> In lean_proofs/OmegaUnifiedFoundation.lean, the concrete foundation model
+> gives `concreteRelativeEntropy_mono`, `concrete_kms_holds`,
+> `fisherMetric_symm`, `fisherMetric_pos`, and
+> `klSecondOrder_hessian_eq_fisher` (the Fisher metric as the Hessian of the
+> second-order KL expansion). In lean_proofs/OmegaAxioms.lean, the Q-region
+> apparatus — `mutualInformation_nonneg`, `mutualInformation_le_quarter`,
+> `mutualInformation_eq_zero_iff`, `pairDistance_ultrametric`,
+> `distance_pos_iff_mutualInformation_pos`, and
+> `bridge_metric_triangle_from_DPI` — is checked only inside the concrete
+> minimal model that lean_proofs/PROOF_AUDIT.md classifies as degenerate
+> (zero-information / singleton). Those names, and every bridge_-prefixed
+> name, are structural consistency checks of the definitions, not physical
+> support. The information-to-energy bookkeeping used later in this note is
+> formalised separately in lean_proofs/InformationPhysics.lean:
+> `information_mass_energy_equivalence`,
+> `energy_conservation_during_state_conversion`, `erasureCost_lower_bound`,
+> `batchCost_decomposition`, and `batch_affordable_iff`. That file
+> formalises the stated model; it does not derive gravity from information.
 
 ## 2. Conditional logarithmic chain distance
 
@@ -105,6 +140,20 @@ Both selected diagnostics show a decay-rate trend opposite to the
 Schwarzschild-required trend. Neither establishes a continuum metric or a
 universal no-go.
 
+> **Formal anchor (Lean 4).** The conditional statement above is the prose
+> form of lean_proofs/LogCorrelationMetric.lean, which proves
+> `neg_log_triangle_of_mul_le`, `logDistance_triangle`,
+> `logDistance_nonneg`, `logDistance_symm`, and
+> `correlation_supermultiplicative` under the multiplicative-kernel
+> hypothesis stated in that file. The same file also proves the limit of
+> the claim: `upper_multiplicative_bound_fails` is a formal negative
+> result showing the stronger universal multiplicative bound does not
+> hold. An older prose argument (held outside this repository) claimed the
+> triangle inequality follows from the Data Processing Inequality alone;
+> it does not — DPI does not yield the multiplicative bound for arbitrary
+> triples, which is exactly why the Lean version carries the bound as a
+> hypothesis. That prose sketch must not be cited as a proof.
+
 ## 3. Chosen operational-scale profile
 
 The profile used by the current Lean model is
@@ -120,6 +169,32 @@ physical Planck length. Under uniform correlation decay it contracts the
 spatial radial factor; the radial notes show that it cannot alone reproduce
 Schwarzschild. An additional, independently derived correlation metric would
 be needed.
+
+> **Formal anchor (Lean 4) — and two models that must not be conflated.**
+> The profile above is lean_proofs/DynamicCODScale.lean: the formally
+> checked properties include `dynamicPlanckCOD_zero`,
+> `dynamicPlanckCOD_one`, `dynamicPlanckCOD_pos`,
+> `dynamicPlanckCOD_strictAntiOn`, `dynamicPlanckCOD_zero_iff`,
+> `cod_scale_contraction`, and `cod_squared_recovery`. A second, different
+> parametrisation also exists and is *not* the profile above:
+> lean_proofs/DynamicPlanckScale.lean defines a density-driven Planck
+> length, with `dynamicPlanckLength_pos`, `dynamicPlanckLength_le`,
+> `planck_scale_contraction_iff`, `informationDensity_pos`, and
+> `information_contracts_planck_scale`. Earlier prose presented the two as
+> if they were one model. They are separate model choices with separate
+> drivers (the field value Φ versus information density); neither is
+> derived from the other, and results proved for one do not transfer to
+> the other.
+
+**Finding (numbered, Python-only).** Both explicit Q-region diagnostics —
+the diagonal Markov-chain benchmark and the genuinely entangled TFIM
+benchmark — show a correlation-decay trend *opposite* to the trend the
+Schwarzschild dictionary requires. This was previously recorded only in
+the ledger below and in docs/research/. It is a computational result about
+those two benchmark models: not a Lean theorem, and not a universal no-go
+for richer Q-region state families. Its correct status is the one already
+given in §7: the macroscopic metric remains Open, with a negative
+consistency result against the two models so far made explicit.
 
 ## 4. Candidate covariant scalar-matter model
 
@@ -215,6 +290,7 @@ physics.
 | Curvature-coupled gravitational scalar | Provisional next-test branch with a linear static Schwarzschild zero mode; nonlinear hair, stability, constraints, and Q-region origin open; fundamental ontology unsettled |
 | Black-hole depletion and \(H(A_{BH})\) | Phenomenological ansatz, not a covariant derivation or independent observation |
 | Theory of Everything claim | Not supported by the current results |
+| Formal unification layer (§9, added 2026-10-20) | Structural-consistency results inside the shared formal corpus; not a physical unification and not evidence for any row above |
 
 ## 8. Reproduction and audit trail
 
@@ -250,3 +326,73 @@ The Lean source and CI audit are documented in
 [`lean_proofs/PROOF_AUDIT.md`](lean_proofs/PROOF_AUDIT.md). A successful kernel
 check establishes the formal theorem under its assumptions; it does not
 establish that the assumptions describe nature.
+
+## 9. The formal unification layer: cross-volume theorems (added 2026-10-20)
+
+lean_proofs/OmegaProtocol.lean contains the corpus's only explicitly
+unifying formal statements: theorems that restate results from two
+different volumes inside the shared formal corpus and check that the
+restatements agree. Their correct label is **structural-consistency
+results**. They show the formal corpus is internally coherent where
+claimed; they do not derive one physical domain from another, and they
+are not evidence for the Open rows in §7.
+
+- Holography ↔ ER=EPR: `cross_vol09_vol22_er_epr_dictionary` and
+  `cross_vol09_vol22_er_epr_dictionary_iff`.
+- General relativity ↔ cosmology: `cross_vol05_vol07_flrw`.
+- Electromagnetism ↔ general relativity: `cross_vol02_vol05_em_stress_energy`.
+- Thermodynamics ↔ black-hole thermodynamics: `cross_vol03_vol08_bh_thermo`.
+- ER=EPR ↔ black-hole information: `cross_vol22_vol25_er_epr_bh_info`.
+- Consciousness ↔ quantum reference frames: `cross_vol27_vol49_consciousness_qrf`
+  and `cross_vol49_all_observer_dependent`.
+- Capstones: `omega_protocol_structural_bundle` and
+  `omega_theory_structural_consistency`.
+
+Several supporting components in that file are bridge_-prefixed and carry
+the minimal-model caveat of §1: they are structural checks only. The full
+claim-by-claim list, including those components, is in
+lean_proofs/PROOF_MAP.md §2.
+
+## 10. Part II — Extensions: Life & Mind (speculative; added 2026-10-20)
+
+**Status of everything in this section: speculative / analogical.** Nothing
+here is evidence for the gravitational or cosmological claims above, and
+§6's quarantine stands. This section exists because the broader ToE
+material held outside this repository (Drive, ToE-V.Omega 4.4 §§6–7)
+develops these extensions at length while this note previously mentioned
+them only to set them aside; a reader of this note should be able to see
+what they are and exactly how little formal support they currently have.
+
+- **Life.** The Drive material proposes an *Active Shredding Operator* for
+  living systems and a *Metabolic Inequality* (an information-processing
+  cost bound for observation and adaptation), and presents the E. coli
+  long-term evolution experiment's Cit+ innovation as a claimed
+  verification case, with RCOD-style redundancy pruning as the proposed
+  rule for living systems. None of these three items is formalised in
+  Lean as stated, and the LTEE case is an interpretation of published
+  experimental history, not a result derived from the model.
+- **Mind.** The same material proposes a *Q-Systemic Self*: a self-model
+  described in overlap/entropy terms — anxiety as a low-overlap,
+  high-entropy mode, coherence as a high-overlap state, and psychological
+  "reboots" as crossings of an innovation horizon. This is a case-study
+  narrative, not a formalised or tested model.
+- **The ambition, in its own words.** The Drive evidence map summarises
+  the intended scope as: a single scalar informational field Φ underlies
+  geometry, gravity, cosmology, life, and mind. In this repository that
+  sentence is a research ambition, not a result; §7's ledger is unchanged
+  by it.
+
+**Neighbouring formal work — not formalisation of the above.** Toy models
+in adjacent domains do exist in the Lean corpus and are worth naming
+precisely so they are not over-read: lean_proofs/Vol27_Consciousness.lean
+formalises an integrated-information toy model (`integrated_info_nonneg`,
+`phi_nonneg`, `experiences_of_strict_integration`, `cortical_phi_pos`);
+lean_proofs/Vol28_EvolutionaryAlgorithms.lean formalises a simple
+selection model (`fitness_bounded_by_length`, `selection_never_decreases`);
+lean_proofs/Vol29_EcosystemDynamics.lean formalises Lotka–Volterra
+equilibria (`lotka_volterra_equilibrium`, `coexistence_positive`); and
+lean_proofs/Vol49_QuantumReferenceFrames.lean formalises frame-change
+facts (`frame_preserves_norm`, `frame_round_trip`) used by the §9
+consciousness ↔ reference-frames structural result. These are formal
+statements inside their own toy models. They do not formalise the Active
+Shredding Operator, the Metabolic Inequality, or the Q-Systemic Self.
