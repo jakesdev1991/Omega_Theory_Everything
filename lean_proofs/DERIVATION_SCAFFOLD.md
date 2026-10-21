@@ -47,7 +47,7 @@ data. No theorem lives in this layer.
 | Dual Maxwell law `law_dual_maxwell : d starF = starJ` on `SourcedField` | `Vol02_Electromagnetism.lean` | existing, carried — T2 re-expresses it, does not derive it |
 | Signature convention for `⋆⋆`: Euclidean `ℝ⁴` (`+` involution on 2-forms) | stated in the `EMHodgeStar.lean` module header (Euclidean `(+, +, +, +)`, orientation `e⁰ ∧ e¹ ∧ e² ∧ e³`) | T1, done |
 | Sign convention for the codifferential `δ = ⋆ d ⋆` on Euclidean `ℝ⁴` | to be stated in the T2 module docstring | T2 |
-| `PhiEMDictionary`: at a point, the physical metric is the constant conformal rescaling of the flat metric by a positive factor `c = ℓ_P(Φ)` | new structure, T3 | T3, carried by design — named and docstringed as a postulate layer |
+| `PhiEMDictionary`: at a point, the physical metric is the constant conformal rescaling of the flat metric by a positive factor `c = ℓ_P(Φ)` | `EMPhiBridge.lean` (T3b) | done, carried by design — named and docstringed as a postulate layer; no value constructed |
 
 Rule for this layer: a postulate is a `def` with an explicit docstring or a
 structure field named as data/`law_*`. It is never a Lean `axiom` (the corpus
@@ -119,11 +119,15 @@ Planned:
   exactly `δF = J`. The *equivalence* is mathematics; its use to rewrite
   the carried law is Layer 3 — the law itself remains carried data, and
   no `SmoothStarExtension` value is constructed anywhere.
-- T3(c): given a `PhiEMDictionary` value as an explicit hypothesis, the
-  vacuum Maxwell system (`dF = 0 ∧ δF = 0`) in the Φ-metric coincides with
-  the flat one. T3(b) — `⋆` on 2-forms in dimension 4 is unchanged under
-  constant positive conformal rescaling `g ↦ c²g` — is Layer 2 algebra at
-  whatever generality T1 supports (full or basis-level; see §3).
+- T3(c) (done in T3b, conditional, at T1's coefficient scope — see the
+  T3b outcome note in §3): given a `PhiEMDictionary` value as an explicit
+  hypothesis, the vacuum Maxwell system (`dF = 0 ∧ δF = 0`) in the
+  Φ-metric coincides with the flat one, stated at coefficient scope
+  through an explicit closedness parameter (the smooth form still awaits
+  the §5 pointwise lift). T3(b) — `⋆` on 2-forms in dimension 4 is
+  unchanged under constant positive conformal rescaling `g ↦ c²g` — is
+  Layer 2 algebra at whatever generality T1 supports (full or
+  basis-level; see §3).
 
 ---
 
@@ -148,7 +152,7 @@ Planned:
 |---|---|---|---|
 | T1 | Concrete Hodge star on 2-forms over `ℝ⁴` | — | **done (scoped)** — `EMHodgeStar.lean`: star as a `LinearMap` on the constant-coefficient coefficient space `Fin 6 → ℝ`; linearity, Euclidean involution `⋆⋆ = +id`, basis actions, pairing identity and nondegeneracy all proved. Scope limit recorded below. |
 | T2 | Codifferential bridge for the sourced Maxwell law | T1 | **done (conditional, level B)** — `EMMaxwellBridge.lean`: `SmoothStarExtension` hypothesis structure extending T1's star to smooth forms; relative to it, `δ` defined, linearity and `δ² = 0` proved, and the bridge equivalence `d(⋆F) = ⋆J ↔ δF = J` proved. The law itself remains carried. See the T2 outcome note below §3's T2 spec. |
-| T3 | Φ-metric conformal bridge (conditional theorems) | T1, T2 (`δ` for T3c) | **pending** |
+| T3 | Φ-metric conformal bridge (conditional theorems) | T1, T2 (`δ` for T3c) | **done** — T3a (item (b)) derived; T3b: the dictionary (a) carried by design and the vacuum consequence (c) conditional on it, both at T1's coefficient scope (see the T3a/T3b outcome notes below) |
 
 ### T1 — Concrete Hodge star on 2-forms over `ℝ⁴`
 
@@ -267,6 +271,72 @@ place the Φ-geometry can touch electromagnetism without new physics.
   hypothesis in every such theorem), the vacuum Maxwell system
   (`dF = 0 ∧ δF = 0`) in the Φ-metric coincides with the flat one.
 
+**T3a outcome (2026-10-21): item (b) done, DERIVED, at T1's coefficient
+scope.** `EMConformalStar.lean` (namespace `OmegaProtocol.EMConformal`)
+defines, for a constant `c`, the rescaled pairing
+`coeffInnerScaled c f g = c⁴ * coeffInner f g` and the rescaled star
+`hodgeStarScaled c` by the explicit-formula route: T1's signed partner
+formula performed in the rescaled orthonormal basis — partner
+coefficient taken with the factor `(c²)⁻¹` (each basis 2-form of the
+rescaled metric `c²g` is `c²` times the flat one), converted back with
+the factor `c²`. Proved: the coefficientwise cancellation
+`hodgeStarScaled_apply_eq` (`c² · (c²)⁻¹ = 1`, for `0 < c`), the main
+theorem `hodgeStarScaled_eq_hodgeStar` (`⋆_{c²g} = ⋆_g` for every
+`c > 0`, as `LinearMap`s on `TwoFormCoeff`), involutivity of the
+rescaled star, the rescaled pairing identity
+`wedgeTopCoeffScaled_eq_coeffInnerScaled`, and the volume scaling
+`wedgeTopCoeffScaled_eq_scaling` (the top pairing scales by exactly
+`c⁴`, the star itself unchanged). Route note: the from-characterization
+definition was not used; the explicit formula plus the proved rescaled
+pairing identity is the route taken, as §T3(b)'s fallback permits.
+Items (a) (the `PhiEMDictionary` postulate structure) and (c) (the
+conditional vacuum-Maxwell consequence) were pending at the T3a commit;
+both landed in T3b — see the outcome note below.
+
+**T3b outcome (2026-10-21): items (a) and (c) done — (a) CARRIED by
+design, (c) CONDITIONAL on (a), both at T1's coefficient scope.**
+`EMPhiBridge.lean` (namespace `OmegaProtocol.EMPhiBridge`) defines
+`PhiEMDictionary` as the Layer 0 postulate structure: its fields are the
+dictionary identification stated as data — the `Φ` value (`phi`), the
+COD environment (`env`, baseline `ℓ_P0 > 0`), the physical-range field
+`phi_sq_lt_one` (`Φ² < 1`), and the conformal factor (`factor`) together
+with the identification field `factor_eq_lP`
+(`factor = DynamicCODScale.dynamicPlanckCOD env phi`, i.e.
+`ℓ_P(Φ) = ℓ_P0 · √(1 − Φ²)`, the profile adopted in
+`DynamicCODScale.lean` — cited as the source formula, not derived
+here). No value of the structure is constructed and no metric object is
+built; the dictionary is carried, exactly as Layer 0 prescribes.
+Derived from the dictionary's fields: `factor_eq_formula` (the factor in
+the source formula) and `factor_pos` (`0 < factor`, via
+`dynamicPlanckCOD_pos`). The physical star named by a dictionary value
+is defined as T3a's rescaled star at its factor
+(`physicalStar d := hodgeStarScaled d.factor`), and
+`physicalStar_eq_hodgeStar` / `physicalStar_apply_eq` prove it equals
+the flat star, from T3a's derived invariance theorem at `d.factor_pos`.
+For (c), the vacuum system is stated at coefficient scope through
+`CoeffVacuumMaxwell closed S F := closed F ∧ closed (S F)`, where the
+closedness test `closed` (standing for `d _ = 0`) is an explicit
+parameter — no coefficient-level exterior derivative is constructed
+(a coefficient-level `d` compatible with Vol02 vanishes on constants;
+see the T2 outcome note), and only the second, star-dependent
+closedness statement (`d(⋆F) = 0`, whose codifferential form is T2's
+conditional bridge) involves the star. The conditional theorems
+`vacuum_maxwell_scaled_iff_flat` (physical star as
+`hodgeStarScaled d.factor`), `vacuum_maxwell_physical_iff_flat`
+(physical star as `physicalStar d`), and
+`dual_closed_physical_iff_flat` (the star-dependent half alone) each
+take the dictionary as an explicit hypothesis and prove the physical
+and flat statements coincide. **Dispositions for T3 as a whole:
+derived — conformal invariance of `⋆` on 2-forms (T3a);
+conditional — the vacuum-Maxwell coincidence, on a `PhiEMDictionary`
+value (T3b (c)); carried — the `PhiEMDictionary` itself (T3b (a)) and
+the sourced Maxwell law in Vol02, as before.** Scope limit, stated
+plainly: (c) is a coefficient-level statement-form coincidence relative
+to a supplied closedness test; the smooth vacuum system
+(`dF = 0 ∧ δF = 0` on `Vol02.Form` values) still awaits the pointwise
+star lift recorded in §5, and nothing here asserts that any particular
+`F` satisfies either system.
+
 ---
 
 ## 4. Honesty rules (binding for every commit on this branch)
@@ -347,3 +417,56 @@ a descriptive message.
   development, if Mathlib ever provides exterior-calculus duals" — this
   scaffold builds it concretely instead of waiting), and
   `.github/workflows/lean-ci.yml` (gate sequence in §4).
+
+---
+
+## 7. Final disposition (integration, 2026-10-21)
+
+All four scaffold modules are registered in `lakefile.lean` roots and
+imported from `ToE.lean` (`EMHodgeStar`, `EMMaxwellBridge`,
+`EMConformalStar`, `EMPhiBridge`). Final disposition of every EM claim
+touched by this scaffold:
+
+| Claim | Where | Disposition |
+|---|---|---|
+| `d² = 0`, `d` ℝ-linear and smoothness-preserving, homogeneous Maxwell `dF = 0` for `F = dA`, gauge invariance of `F` | `Vol02_Electromagnetism.lean` | derived (pre-existing) |
+| Photon masslessness `PhotonMass := 0` | `Vol02_Electromagnetism.lean` | carried — model postulate (pre-existing) |
+| Sourced dual Maxwell law `law_dual_maxwell : d starF = starJ` | `Vol02_Electromagnetism.lean` (`SourcedField`) | carried — model-law data; re-expressed by T2, not derived |
+| Hodge star `⋆` on constant-coefficient 2-forms: linearity, Euclidean `⋆⋆ = +id`, bijectivity, pairing identity, nondegeneracy | `EMHodgeStar.lean` (T1) | derived, at the scoped coefficient level (`TwoFormCoeff = Fin 6 → ℝ`) |
+| Codifferential `δ = ⋆ d ⋆`: linearity, `δ₁ ∘ δ₂ = 0` | `EMMaxwellBridge.lean` (T2) | conditional on a `SmoothStarExtension` value (named structure fields) |
+| Bridge `d(⋆F) = ⋆J ↔ δF = J`; carried law of a `SourcedField` whose duals are the extension's stars ⟺ `δF = J` | `EMMaxwellBridge.lean` (T2) | conditional on `SmoothStarExtension`; the law itself remains carried |
+| Conformal invariance `⋆_{c²g} = ⋆_g` on 2-forms for `c > 0`; rescaled pairing identity; top pairing scales by `c⁴` | `EMConformalStar.lean` (T3a) | derived, at T1's coefficient scope |
+| `PhiEMDictionary` (Φ value, COD environment, `factor = ℓ_P(Φ) = ℓ_P0·√(1−Φ²)` identification) | `EMPhiBridge.lean` (T3b (a)) | carried by design — Layer 0 postulate structure; no value constructed |
+| Physical star of a dictionary value equals the flat star | `EMPhiBridge.lean` (T3b) | conditional on the dictionary value; proof is T3a's derived theorem at its `factor_pos` |
+| Vacuum Maxwell coincidence (physical ⟺ flat), coefficient scope via an explicit closedness parameter | `EMPhiBridge.lean` (T3b (c)) | conditional on a `PhiEMDictionary` value |
+
+### What the next extension can now build on
+
+- **The pointwise lift is the one remaining blocker** (see §5): a
+  `SmoothStarExtension` value — equivalently `⋆` on smooth `Vol02.Form`
+  values — needs alternating-map basis / volume-form infrastructure that
+  Mathlib v4.32.0 does not provide. Everything in T2 is stated so that
+  constructing that one value immediately upgrades the conditional
+  bridge theorems to unconditional ones, with no restatement.
+- T1's coefficient star and T3a's conformal invariance are proved at
+  exactly the scope a pointwise lift must reproduce on constant forms
+  (`star22_const` is the agreement field), so the lift has a concrete
+  target specification and a regression check.
+- With a lift in hand, T3b (c) can be restated for the genuine smooth
+  vacuum system `dF = 0 ∧ δF = 0` on `Vol02.Form` values instead of the
+  coefficient-scope closedness parameter.
+- Nothing in this scaffold derives the sourced Maxwell law, and no
+  extension of it can: the law is physical input (Layer 0), and the
+  scaffold's contribution is that its statement and its codifferential
+  form now use proved operators with the seam stated exactly.
+
+### Integration gate record (2026-10-21)
+
+- CI grep gate: clean. `audit_axioms.py --max 0`: 0.
+  `audit_vacuity.py` (all ratchets at 0): OK.
+  `check_declaration_parity.py`: 73 files unchanged.
+  `sync_txt_mirrors.py`: 72 files in sync.
+  `check_statement_audit.py`: OK (163 rows; carried 33/33 cap).
+  `check_mathlib_names.py --max 0`: 0 suspicious names.
+  Python tooling tests: 107 tests, OK.
+- Full build `lake build ToE`: **not yet established at the integration deadline** — the build was started 2026-10-21 14:37 EDT and polled for ~50 minutes under heavy shared-VM contention (2 CPUs, load ≈ 4.5): 34 of 73 library modules built, **zero compiler errors** (warnings only, pre-existing linter warnings in unrelated modules), still running on `Vol25`/`Vol26` at the deadline. All four EM modules and every module they depend on are among the built-green set. The unbuilt remainder consists of pre-existing volume modules unchanged by this branch. The PR CI `lean-build` job runs the authoritative full `lake build ToE`.
