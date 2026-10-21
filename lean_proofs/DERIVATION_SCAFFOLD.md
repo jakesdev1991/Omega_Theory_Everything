@@ -148,7 +148,7 @@ Planned:
 |---|---|---|---|
 | T1 | Concrete Hodge star on 2-forms over `ℝ⁴` | — | **done (scoped)** — `EMHodgeStar.lean`: star as a `LinearMap` on the constant-coefficient coefficient space `Fin 6 → ℝ`; linearity, Euclidean involution `⋆⋆ = +id`, basis actions, pairing identity and nondegeneracy all proved. Scope limit recorded below. |
 | T2 | Codifferential bridge for the sourced Maxwell law | T1 | **done (conditional, level B)** — `EMMaxwellBridge.lean`: `SmoothStarExtension` hypothesis structure extending T1's star to smooth forms; relative to it, `δ` defined, linearity and `δ² = 0` proved, and the bridge equivalence `d(⋆F) = ⋆J ↔ δF = J` proved. The law itself remains carried. See the T2 outcome note below §3's T2 spec. |
-| T3 | Φ-metric conformal bridge (conditional theorems) | T1, T2 (`δ` for T3c) | **pending** |
+| T3 | Φ-metric conformal bridge (conditional theorems) | T1, T2 (`δ` for T3c) | **in progress** — T3a (the algebraic core, item (b)) done (derived, see outcome note below); the dictionary (a) and the vacuum consequence (c) are pending |
 
 ### T1 — Concrete Hodge star on 2-forms over `ℝ⁴`
 
@@ -266,6 +266,27 @@ place the Φ-geometry can touch electromagnetism without new physics.
 - (c) Prove the conditional consequence: **given** the dictionary (explicit
   hypothesis in every such theorem), the vacuum Maxwell system
   (`dF = 0 ∧ δF = 0`) in the Φ-metric coincides with the flat one.
+
+**T3a outcome (2026-10-21): item (b) done, DERIVED, at T1's coefficient
+scope.** `EMConformalStar.lean` (namespace `OmegaProtocol.EMConformal`)
+defines, for a constant `c`, the rescaled pairing
+`coeffInnerScaled c f g = c⁴ * coeffInner f g` and the rescaled star
+`hodgeStarScaled c` by the explicit-formula route: T1's signed partner
+formula performed in the rescaled orthonormal basis — partner
+coefficient taken with the factor `(c²)⁻¹` (each basis 2-form of the
+rescaled metric `c²g` is `c²` times the flat one), converted back with
+the factor `c²`. Proved: the coefficientwise cancellation
+`hodgeStarScaled_apply_eq` (`c² · (c²)⁻¹ = 1`, for `0 < c`), the main
+theorem `hodgeStarScaled_eq_hodgeStar` (`⋆_{c²g} = ⋆_g` for every
+`c > 0`, as `LinearMap`s on `TwoFormCoeff`), involutivity of the
+rescaled star, the rescaled pairing identity
+`wedgeTopCoeffScaled_eq_coeffInnerScaled`, and the volume scaling
+`wedgeTopCoeffScaled_eq_scaling` (the top pairing scales by exactly
+`c⁴`, the star itself unchanged). Route note: the from-characterization
+definition was not used; the explicit formula plus the proved rescaled
+pairing identity is the route taken, as §T3(b)'s fallback permits.
+Items (a) (the `PhiEMDictionary` postulate structure) and (c) (the
+conditional vacuum-Maxwell consequence) remain pending.
 
 ---
 

@@ -20,6 +20,11 @@
       "declarations": 13,
       "sha256": "6555bafbbf064963cdabd6daacd291f0a37fa4cf5940b01fc536afb7cad5d831"
     },
+    "EMConformalStar.lean": {
+      "code_lines": 64,
+      "declarations": 10,
+      "sha256": "ecc5b9a1a9c52b65849ffcc45942dc8d4bae6ffc0241f37086dbe74f950af621"
+    },
     "EMHodgeStar.lean": {
       "code_lines": 114,
       "declarations": 25,
@@ -76,9 +81,9 @@
       "sha256": "0e64f4bdd216ba27513ba9458de166a666980d29b229f44c04ec621adece3449"
     },
     "ToE.lean": {
-      "code_lines": 69,
+      "code_lines": 70,
       "declarations": 0,
-      "sha256": "389175a0928409819537e3b480778a0963135437a59edf77aba00050639c63d8"
+      "sha256": "4863495db30a2849d7c400c0bebccb86117f2f1632d15adee4f28919ecc5525f"
     },
     "Vol01_ClassicalMechanics.lean": {
       "code_lines": 194,
@@ -351,9 +356,9 @@
       "sha256": "d1980386920266028639c9bceea72f0fd0f2aeb90b0f8f2ca52e53a7d215d75e"
     },
     "lakefile.lean": {
-      "code_lines": 79,
+      "code_lines": 80,
       "declarations": 0,
-      "sha256": "67da5f3534481c723454916d002d32f6fdd9a30e63e0064a9d2e447a3ba68643"
+      "sha256": "55a63aaba6813e95f30482ab644f68d338a4f7ec126bead5e2fa62eb9db7aae3"
     }
   },
   "version": 1
