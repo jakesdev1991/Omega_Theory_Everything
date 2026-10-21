@@ -63,7 +63,7 @@ baked into the definition beyond the Layer 0 conventions.
 |---|---|---|
 | Exterior derivative `d` | `Vol02.d := extDeriv` on `Form n := Spacetime4 → ContinuousAlternatingMap ℝ Spacetime4 ℝ (Fin n)`, `Spacetime4 := EuclideanSpace ℝ (Fin 4)` | existing |
 | Hodge star `⋆` on 2-forms | T1: explicit operator via an orthonormal basis of 2-forms / bivectors over `EuclideanSpace ℝ (Fin 4)` (or, if scoped down, over the finite-dimensional space of constant-coefficient 2-forms — the scope actually achieved must be recorded in §3) | T1, done at the scoped-down level: `EMHodgeStar.hodgeStar`, a `LinearMap` on the coefficient space `Fin 6 → ℝ` of constant-coefficient 2-forms (see §3) |
-| Codifferential `δ` | T2: `δ := ⋆ ∘ d ∘ ⋆` with the Layer 0 sign convention, on smooth forms in the scope T1 supports | T2 |
+| Codifferential `δ` | T2: `δ := ⋆ ∘ d ∘ ⋆` with the Layer 0 sign convention, on smooth forms in the scope T1 supports | T2, done conditionally: `EMBridge.codifferential` / `codifferentialOne`, defined relative to a `SmoothStarExtension` value (the smooth star itself is a hypothesis field, not a construction — see the T2 outcome note) |
 
 ### Layer 2 — Derived theorems (about the primitives)
 
@@ -89,7 +89,10 @@ Planned:
   volume-form coefficient of `f ∧ ⋆g` equals the coefficient inner
   product), inner-product preservation (`coeffInner_hodgeStar`), and
   pairing nondegeneracy (`eq_zero_of_wedgeTopCoeff_eq_zero_all`).
-- T2: `δ ∘ δ = 0` (from `d² = 0` and the T1 involution); linearity of `δ`.
+- T2 (done, conditional on a `SmoothStarExtension` — the `d² = 0` input is
+  Vol02's derived theorem, the star inputs are the structure's named
+  fields): `δ ∘ δ = 0` (`EMBridge.codifferentialOne_codifferential`);
+  linearity of `δ` (`codifferential_add`, `codifferential_smul`).
 
 ### Layer 3 — Conditional bridge theorems
 
@@ -106,10 +109,16 @@ Existing:
 
 Planned:
 
-- T2 bridge theorem: for field strength `F` and current 1-form `J` (in T1's
-  scope), `d (⋆F) = ⋆J ↔ δF = J`, proved from the T1 involution. The
-  *equivalence* is Layer 2 mathematics; its use to rewrite the carried law
-  is Layer 3 — the law itself remains carried data.
+- T2 bridge theorem (done, conditional): for field strength `F` and current
+  1-form `J`, relative to a `SmoothStarExtension` `E`,
+  `d (⋆F) = ⋆J ↔ δF = J` (`EMBridge.dual_maxwell_iff_codifferential`),
+  proved from the extension's cross-degree inverse fields (the smooth
+  analogue of the T1 involution); and
+  `EMBridge.carried_law_iff_codifferential` states that *if* a
+  `SourcedField`'s carried duals are `E`'s stars, its carried law is
+  exactly `δF = J`. The *equivalence* is mathematics; its use to rewrite
+  the carried law is Layer 3 — the law itself remains carried data, and
+  no `SmoothStarExtension` value is constructed anywhere.
 - T3(c): given a `PhiEMDictionary` value as an explicit hypothesis, the
   vacuum Maxwell system (`dF = 0 ∧ δF = 0`) in the Φ-metric coincides with
   the flat one. T3(b) — `⋆` on 2-forms in dimension 4 is unchanged under
@@ -138,7 +147,7 @@ Planned:
 | Target | Title | Depends on | Status |
 |---|---|---|---|
 | T1 | Concrete Hodge star on 2-forms over `ℝ⁴` | — | **done (scoped)** — `EMHodgeStar.lean`: star as a `LinearMap` on the constant-coefficient coefficient space `Fin 6 → ℝ`; linearity, Euclidean involution `⋆⋆ = +id`, basis actions, pairing identity and nondegeneracy all proved. Scope limit recorded below. |
-| T2 | Codifferential bridge for the sourced Maxwell law | T1 | **pending** |
+| T2 | Codifferential bridge for the sourced Maxwell law | T1 | **done (conditional, level B)** — `EMMaxwellBridge.lean`: `SmoothStarExtension` hypothesis structure extending T1's star to smooth forms; relative to it, `δ` defined, linearity and `δ² = 0` proved, and the bridge equivalence `d(⋆F) = ⋆J ↔ δF = J` proved. The law itself remains carried. See the T2 outcome note below §3's T2 spec. |
 | T3 | Φ-metric conformal bridge (conditional theorems) | T1, T2 (`δ` for T3c) | **pending** |
 
 ### T1 — Concrete Hodge star on 2-forms over `ℝ⁴`
@@ -210,6 +219,32 @@ located. Defining `J := δF` (or any equivalent smuggling of the conclusion
 into a definition) is forbidden. If T1 landed in reduced scope, T2 adapts
 to that scope and documents it.
 
+**T2 outcome (2026-10-21): done at the conditional level (level B).**
+Level A — an unconditional codifferential from a coefficient-level
+exterior derivative — is not honestly available: the only coefficient-level
+derivative compatible with Vol02's smooth forms vanishes on
+constant-coefficient forms (a constant field has zero derivative), so a
+coefficient-level `δ` would be identically zero and the bridge would
+degenerate. Level B landed as `EMMaxwellBridge.lean`
+(namespace `OmegaProtocol.EMBridge`): the structure
+`SmoothStarExtension` packages the smooth extension as explicit named
+fields — ℝ-linear stars `star22`, `star14`, `star32`, `star04`, the
+constant-coefficient embedding `const2`, the restriction field
+`star22_const` (agreement with T1's proved `hodgeStar` on constants),
+`star22_involutive`, the cross-degree inverse fields `star32_star14` /
+`star14_star32`, and `smooth_star22`. Relative to any such `E`:
+`codifferential E F = star32 (d (star22 F))` (Euclidean sign `+1`,
+i.e. `δ = ⋆ d ⋆` on the nose), with `codifferential_add` /
+`codifferential_smul` (linearity), `codifferentialOne_codifferential`
+(`δ₁ ∘ δ₂ = 0`, from Vol02's derived `d² = 0` plus the named fields),
+`dual_maxwell_iff_codifferential` (`d(⋆₂F) = ⋆₁J ↔ δF = J`), and
+`carried_law_iff_codifferential` (a `SourcedField` whose carried duals
+are `E`'s stars satisfies its carried law iff `δF = J`). **Dispositions:
+every T2 theorem is conditional on the `SmoothStarExtension` argument;
+`sourced law` remains carried.** No value of `SmoothStarExtension` is
+constructed — constructing one is exactly the pointwise-lift blocker in
+§5.
+
 ### T3 — Φ-metric conformal bridge (conditional)
 
 Context: the radial-metric work uses the conformal spatial factor
@@ -278,6 +313,16 @@ a descriptive message.
   codifferential must be scoped to constant-coefficient forms (or to the
   coefficient level) and must say so; using T1's operator as if it acted
   on all smooth forms would be an overclaim.
+- **T2 level taken (2026-10-21):** T2 was completed at the conditional
+  level (level B in the working brief) rather than the coefficient level,
+  for the reason recorded in the T2 outcome note: a coefficient-level
+  exterior derivative compatible with Vol02 vanishes on constants, making
+  a coefficient-level `δ` identically zero. The remaining blocker is
+  unchanged and precise: **no `SmoothStarExtension` value exists yet** —
+  constructing one requires the pointwise lift of `⋆` to smooth
+  `Vol02.Form` values (alternating-map basis / volume-form infrastructure
+  absent from Mathlib v4.32.0). Until that lift is built, every T2
+  statement stays conditional and the sourced Maxwell law stays carried.
 
 ---
 
