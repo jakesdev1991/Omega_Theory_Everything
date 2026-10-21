@@ -6,6 +6,8 @@ import CBwK_Budget_Pacer
 import APPA_Context_Branching
 import Vol01_ClassicalMechanics
 import Vol02_Electromagnetism
+import EMHodgeStar
+import EMMaxwellBridge
 import Vol03_Thermodynamics
 import Vol04_QuantumMechanics
 import Vol05_GeneralRelativity

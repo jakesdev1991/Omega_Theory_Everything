@@ -20,6 +20,16 @@
       "declarations": 13,
       "sha256": "6555bafbbf064963cdabd6daacd291f0a37fa4cf5940b01fc536afb7cad5d831"
     },
+    "EMHodgeStar.lean": {
+      "code_lines": 114,
+      "declarations": 25,
+      "sha256": "5dc2cb5b4e5faca5e94060ef7426734940f6c9d0294ddb496f7d78378ff9e8b0"
+    },
+    "EMMaxwellBridge.lean": {
+      "code_lines": 57,
+      "declarations": 8,
+      "sha256": "03c2e03627bb3c84dbee38ad3d92b540574850cc959e59b2c562584394d77043"
+    },
     "InformationPhysics.lean": {
       "code_lines": 243,
       "declarations": 45,
@@ -66,9 +76,9 @@
       "sha256": "0e64f4bdd216ba27513ba9458de166a666980d29b229f44c04ec621adece3449"
     },
     "ToE.lean": {
-      "code_lines": 67,
+      "code_lines": 69,
       "declarations": 0,
-      "sha256": "512fa86540469fbde3d6f6204aa22b03fb08f987db2a4dc876316ade07935eab"
+      "sha256": "389175a0928409819537e3b480778a0963135437a59edf77aba00050639c63d8"
     },
     "Vol01_ClassicalMechanics.lean": {
       "code_lines": 194,
@@ -341,9 +351,9 @@
       "sha256": "d1980386920266028639c9bceea72f0fd0f2aeb90b0f8f2ca52e53a7d215d75e"
     },
     "lakefile.lean": {
-      "code_lines": 77,
+      "code_lines": 79,
       "declarations": 0,
-      "sha256": "6d4875d95c38bdf7368ab8a3aee60c87f11d35766fecf5f7ee882857e82aefa4"
+      "sha256": "67da5f3534481c723454916d002d32f6fdd9a30e63e0064a9d2e447a3ba68643"
     }
   },
   "version": 1
