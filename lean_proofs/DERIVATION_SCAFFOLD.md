@@ -45,7 +45,7 @@ data. No theorem lives in this layer.
 |---|---|---|
 | Masslessness of the model photon, `PhotonMass := 0` | `Vol02_Electromagnetism.lean` (definition + docstring "Model postulate") | existing, carried |
 | Dual Maxwell law `law_dual_maxwell : d starF = starJ` on `SourcedField` | `Vol02_Electromagnetism.lean` | existing, carried — T2 re-expresses it, does not derive it |
-| Signature convention for `⋆⋆`: Euclidean `ℝ⁴` (`+` involution on 2-forms) | to be stated in the T1 module docstring | T1 |
+| Signature convention for `⋆⋆`: Euclidean `ℝ⁴` (`+` involution on 2-forms) | stated in the `EMHodgeStar.lean` module header (Euclidean `(+, +, +, +)`, orientation `e⁰ ∧ e¹ ∧ e² ∧ e³`) | T1, done |
 | Sign convention for the codifferential `δ = ⋆ d ⋆` on Euclidean `ℝ⁴` | to be stated in the T2 module docstring | T2 |
 | `PhiEMDictionary`: at a point, the physical metric is the constant conformal rescaling of the flat metric by a positive factor `c = ℓ_P(Φ)` | new structure, T3 | T3, carried by design — named and docstringed as a postulate layer |
 
@@ -62,7 +62,7 @@ baked into the definition beyond the Layer 0 conventions.
 | Primitive | Definition | Status |
 |---|---|---|
 | Exterior derivative `d` | `Vol02.d := extDeriv` on `Form n := Spacetime4 → ContinuousAlternatingMap ℝ Spacetime4 ℝ (Fin n)`, `Spacetime4 := EuclideanSpace ℝ (Fin 4)` | existing |
-| Hodge star `⋆` on 2-forms | T1: explicit operator via an orthonormal basis of 2-forms / bivectors over `EuclideanSpace ℝ (Fin 4)` (or, if scoped down, over the finite-dimensional space of constant-coefficient 2-forms — the scope actually achieved must be recorded in §3) | T1 |
+| Hodge star `⋆` on 2-forms | T1: explicit operator via an orthonormal basis of 2-forms / bivectors over `EuclideanSpace ℝ (Fin 4)` (or, if scoped down, over the finite-dimensional space of constant-coefficient 2-forms — the scope actually achieved must be recorded in §3) | T1, done at the scoped-down level: `EMHodgeStar.hodgeStar`, a `LinearMap` on the coefficient space `Fin 6 → ℝ` of constant-coefficient 2-forms (see §3) |
 | Codifferential `δ` | T2: `δ := ⋆ ∘ d ∘ ⋆` with the Layer 0 sign convention, on smooth forms in the scope T1 supports | T2 |
 
 ### Layer 2 — Derived theorems (about the primitives)
@@ -81,9 +81,14 @@ Existing (Vol02, all derived):
 
 Planned:
 
-- T1: linearity of `⋆` (`map_add` / `map_smul`, or a `LinearMap` structure);
-  involution `⋆⋆ = +id` on 2-forms in the Euclidean convention; the induced
-  nondegenerate pairing identity if reachable in scope.
+- T1 (done, scoped as recorded in §3): linearity of `⋆` (the `LinearMap`
+  `EMHodgeStar.hodgeStar`, restated as `hodgeStar_add` / `hodgeStar_smul`);
+  involution `⋆⋆ = +id` on 2-forms in the Euclidean convention
+  (`hodgeStar_hodgeStar`, `hodgeStar_involutive`, `hodgeStar_bijective`);
+  the induced pairing identity (`wedgeTopCoeff_eq_coeffInner`: the
+  volume-form coefficient of `f ∧ ⋆g` equals the coefficient inner
+  product), inner-product preservation (`coeffInner_hodgeStar`), and
+  pairing nondegeneracy (`eq_zero_of_wedgeTopCoeff_eq_zero_all`).
 - T2: `δ ∘ δ = 0` (from `d² = 0` and the T1 involution); linearity of `δ`.
 
 ### Layer 3 — Conditional bridge theorems
@@ -132,7 +137,7 @@ Planned:
 
 | Target | Title | Depends on | Status |
 |---|---|---|---|
-| T1 | Concrete Hodge star on 2-forms over `ℝ⁴` | — | **pending** |
+| T1 | Concrete Hodge star on 2-forms over `ℝ⁴` | — | **done (scoped)** — `EMHodgeStar.lean`: star as a `LinearMap` on the constant-coefficient coefficient space `Fin 6 → ℝ`; linearity, Euclidean involution `⋆⋆ = +id`, basis actions, pairing identity and nondegeneracy all proved. Scope limit recorded below. |
 | T2 | Codifferential bridge for the sourced Maxwell law | T1 | **pending** |
 | T3 | Φ-metric conformal bridge (conditional theorems) | T1, T2 (`δ` for T3c) | **pending** |
 
@@ -154,6 +159,36 @@ the largest honest version (e.g. `⋆` on the finite-dimensional space of
 constant-coefficient 2-forms) and record exactly what was scoped and why
 here and in the module docstring. A scoped-down T1 is a success if labelled
 as such; an overclaimed T1 is a failure.
+
+**T1 outcome (2026-10-21): done at the scoped-down level.** The operator
+landed as `OmegaProtocol.EMHodge.hodgeStar : TwoFormCoeff →ₗ[ℝ]
+TwoFormCoeff` in `EMHodgeStar.lean`, where `TwoFormCoeff := Fin 6 → ℝ` is
+the space of constant-coefficient 2-forms on Euclidean `ℝ⁴` identified
+through the ordered orthonormal basis `e⁰¹, e⁰², e⁰³, e¹², e¹³, e²³`.
+Partner indices are `i ↔ i.rev` with sign `-1` exactly on indices `1, 4`.
+Proved: the `LinearMap` linearity fields (restated as `hodgeStar_add` /
+`hodgeStar_smul`), `hodgeStar_hodgeStar` (`⋆⋆ = +id`, Euclidean
+signature `(+, +, +, +)` stated in the module header), involutivity and
+bijectivity, all six basis actions (`hodgeStar_apply_zero` …
+`hodgeStar_apply_five`, plus the basis-vector witness
+`hodgeStar_single_five`), inner-product preservation
+(`coeffInner_hodgeStar`), the wedge-pairing identity
+(`wedgeTopCoeff_eq_coeffInner`), and pairing nondegeneracy
+(`eq_zero_of_wedgeTopCoeff_eq_zero_all`).
+
+**What was scoped, and why:** the operator is *not* yet defined on
+arbitrary point-dependent alternating maps (`Vol02.Form 2` values, i.e.
+`ContinuousAlternatingMap ℝ Spacetime4 ℝ (Fin 2)` at a point, let alone
+smooth form fields). Mathlib v4.32.0 provides no basis / volume-form /
+alternating-map Hodge infrastructure to lift a coefficient formula to
+that generality without first building that infrastructure, which is a
+larger development than T1. The constant-coefficient space is the
+largest scope in which the star, its involution, and its pairing are
+proved here without new unproved infrastructure; the module header
+states this scope verbatim. Lifting `⋆` pointwise to `Form 2` is the
+recorded next step (blocker log, §5), and T2 must be stated in this
+coefficient scope or wait for that lift — it must not silently use
+`hodgeStar` as if it acted on all smooth forms.
 
 ### T2 — Codifferential bridge
 
@@ -233,8 +268,16 @@ a descriptive message.
 
 ## 5. Blocker log
 
-_(empty at scaffold creation — entries are appended, never erased, as
-targets are attempted)_
+- **T1 scope limit (2026-10-21, not a failure — the §3 scope rule applied):**
+  `EMHodgeStar.hodgeStar` acts on constant-coefficient 2-forms via their
+  six coefficients in an explicit orthonormal basis, not on arbitrary
+  `ContinuousAlternatingMap` values or smooth `Vol02.Form 2` fields.
+  Mathlib v4.32.0 has no Hodge star, volume form, or orthonormal-basis
+  infrastructure for alternating maps, so a pointwise lift requires
+  building that infrastructure first. Until that lift exists, T2's
+  codifferential must be scoped to constant-coefficient forms (or to the
+  coefficient level) and must say so; using T1's operator as if it acted
+  on all smooth forms would be an overclaim.
 
 ---
 

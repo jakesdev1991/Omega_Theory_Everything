@@ -19,6 +19,7 @@ lean_lib ToE where
     `ToE,
     `Vol01_ClassicalMechanics,
     `Vol02_Electromagnetism,
+    `EMHodgeStar,
     `Vol03_Thermodynamics,
     `Vol04_QuantumMechanics,
     `Vol05_GeneralRelativity,

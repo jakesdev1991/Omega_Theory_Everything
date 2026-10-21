@@ -150,6 +150,7 @@ Unchanged limitations are deliberately recorded rather than hidden by renaming.
 | `lakefile.lean` | Pinned dependencies unchanged; all local proof modules rooted; added explicit default target and coverage tests. |
 | `LogCorrelationMetric.lean` | New positive real-line kernel with separated points, symmetry, triangle and multiplicative lower bound. Independent reference model, not an assertion that real mutual information has these properties. |
 | `ProofRegression.lean` | New boundary witnesses for budget rejection/exhaustion, gate flag combinations, equal Boltzmann weights, fitter selection, nonconstant-scale factorization and compiler limitation. Pending kernel build. |
+| `EMHodgeStar.lean` | Concrete Hodge star on constant-coefficient 2-forms over Euclidean `ℝ⁴` (EM derivation scaffold T1): the coefficient space `Fin 6 → ℝ` in the ordered orthonormal basis `e⁰¹, e⁰², e⁰³, e¹², e¹³, e²³`, the star as a genuine `LinearMap` with the Euclidean `(+, +, +, +)` sign table, proved involution `⋆⋆ = +id`, basis actions, inner-product preservation, the wedge-pairing identity, and pairing nondegeneracy. Scoped exactly as stated: constant-coefficient forms identified through the basis, not yet a pointwise operator on all of `Vol02.Form 2`; the inhomogeneous Maxwell law itself remains carried data in Vol02, not derived here. |
 
 ### Volumes
 
