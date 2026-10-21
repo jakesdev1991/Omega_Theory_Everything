@@ -22,6 +22,7 @@ lean_lib ToE where
     `EMHodgeStar,
     `EMMaxwellBridge,
     `EMConformalStar,
+    `EMPhiBridge,
     `Vol03_Thermodynamics,
     `Vol04_QuantumMechanics,
     `Vol05_GeneralRelativity,

@@ -9,6 +9,7 @@ import Vol02_Electromagnetism
 import EMHodgeStar
 import EMMaxwellBridge
 import EMConformalStar
+import EMPhiBridge
 import Vol03_Thermodynamics
 import Vol04_QuantumMechanics
 import Vol05_GeneralRelativity
