@@ -30,7 +30,7 @@
     "dotenv": "16.6.1",
     "hardhat": "3.20.0",
     "rimraf": "6.0.1",
-    "solc": "0.8.26"
+    "solc": "0.8.38"
   },
   "overrides": {
     "tmp": "0.2.7"
