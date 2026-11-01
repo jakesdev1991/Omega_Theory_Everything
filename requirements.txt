@@ -14,6 +14,6 @@ sympy>=1.12  # optional: exact checks in Sim7_Radial_Metric.py
 # change: `ruff format --check .` started failing on a commit that only added an
 # unrelated file, because the runner pulled whatever ruff was newest that day.
 ruff==0.16.10
-mypy==2.4.0
+mypy==2.4.1
 pytest==9.1.1
 pip-audit==2.10.1
