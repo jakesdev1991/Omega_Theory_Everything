@@ -54,7 +54,7 @@ These are test inputs, not a mainnet tokenomics decision. A mainnet implementati
 
 ## Local verification
 
-Prerequisites: Node.js 22+ and npm. The project uses Hardhat 3.20.0 with the Ethers/Mocha toolbox and native ESM scripts. It pins `solc-js` locally, so compiling does **not** download a compiler during CI or local build.
+Prerequisites: Node.js 22+ and npm. The project uses Hardhat 3.21.2 with the Ethers/Mocha toolbox and native ESM scripts. It pins `solc-js` locally, so compiling does **not** download a compiler during CI or local build.
 
 ```bash
 cd evm
@@ -64,6 +64,23 @@ npm run test:fixture
 npm run preflight:rehearsal
 npm audit
 ```
+
+The full dependency audit remains enabled. Hardhat 3.21.2 declares Zod 3, which
+is affected by GHSA-mrhx-c7xc-m3w5. This pilot overrides it to Zod 4.6.7 and
+applies the version-specific patches in `patches/` during `npm ci`: Hardhat's
+single-argument record schemas are updated for Zod 4, and its Zod utility uses
+`issues` and the Zod 4 error option. **This is a local compatibility patch, not
+upstream support for Zod 4.** Tests cover core network, Solidity and coverage
+configuration, the installed Ethers, Mocha, Typechain and Verify plugin
+validators, RPC decoding, invalid input paths and CLI error reporting. They do
+not establish compatibility with every configuration, task or third-party
+plugin. Do not use untrusted configuration or inputs. Installation scripts must
+be enabled; `npm ci --ignore-scripts` skips the patches. Patch failures fail
+installation, and the Hardhat configuration checks package versions and hashes
+of patched files and refuses to start if they are missing or changed. Remove the
+overrides and patches when a supported upstream release fixes the advisory, and
+re-test any Hardhat, plugin or Zod upgrade. Other dependency overrides also
+address audit advisories; Mocha's major-version overrides are temporary.
 
 The test suite covers:
 

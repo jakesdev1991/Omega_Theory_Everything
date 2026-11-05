@@ -1,0 +1,24 @@
+diff --git a/node_modules/@nomicfoundation/hardhat-zod-utils/dist/src/index.js b/node_modules/@nomicfoundation/hardhat-zod-utils/dist/src/index.js
+index ebd56b7..643f5da 100644
+--- a/node_modules/@nomicfoundation/hardhat-zod-utils/dist/src/index.js
++++ b/node_modules/@nomicfoundation/hardhat-zod-utils/dist/src/index.js
+@@ -108,9 +108,7 @@ export const conditionalUnionType = (cases, noMatchMessage) => z.any().superRefi
+  */
+ export const incompatibleFieldType = (errorMessage = "Unexpected field") => z
+     .never({
+-    errorMap: () => ({
+-        message: errorMessage,
+-    }),
++    error: errorMessage,
+ })
+     .optional();
+ /**
+@@ -164,7 +162,7 @@ export function validateUserConfigZodType(hardhatUserConfig, configType) {
+         return [];
+     }
+     else {
+-        return result.error.errors.map((issue) => ({
++        return result.error.issues.map((issue) => ({
+             path: issue.path,
+             message: issue.message,
+         }));
