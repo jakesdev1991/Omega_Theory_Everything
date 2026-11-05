@@ -26,6 +26,10 @@ geometry-informed metrics be tested against simpler baselines).
 | `benchmark_noise_recovery.py` | Teacher-student label-noise shock benchmark |
 | `RESULTS.md` | Findings, honest verdict, next experiments |
 | `results_noise_recovery.csv` | Per-eval-step trajectories (evidence) |
+| `harness.py` | **Portable**: pre-registered evaluation of an onset-prediction claim |
+| `section5/swarm.py` | **Portable**: the Φ/μ metrics (batch, prefix-sum, streaming) |
+| `section5/experiment.py` | The frozen §5 experiment (pre-registered; not a library) |
+| `section5/domain_example.py` | **Portable**: run the protocol on another family or your own CSV |
 
 ## Defects fixed relative to the design draft
 
@@ -81,6 +85,45 @@ Benchmark:
 pip install torch --index-url https://download.pytorch.org/whl/cpu
 python benchmark_noise_recovery.py --csv results_noise_recovery.csv
 ```
+
+## Using the metrics on your own series
+
+Nothing in `section5/swarm.py` is cosmology-specific, and the §5 protocol in
+`harness.py` is not either — that is the part of this directory worth reusing
+elsewhere. See [`../docs/DOMAIN_AGNOSTIC_CORE.md`](../docs/DOMAIN_AGNOSTIC_CORE.md)
+for what is portable, what is not, and the measurements behind each claim.
+
+```python
+from rcod import SwarmTracker, swarm_metrics, pool_channels
+
+m = swarm_metrics(x)  # (T,) or (T, channels)
+m = pool_channels(m)  # one alarm signal across channels
+tracker = SwarmTracker()  # online: O(1) memory, ~97 us/sample
+state = tracker.update(value)  # {'median_mu', 'macro_mu', 'dissonance'}
+```
+
+```python
+from rcod.harness import Arm, Protocol, Series, run_benchmark, render_report
+
+summary = run_benchmark(
+    lambda seed: Series.from_csv("telemetry.csv"),
+    [Arm("rcod", my_extractor), Arm("rolling", baseline)],
+    seeds=range(10),
+    protocol=Protocol(horizon=30),
+)
+print(render_report(summary, arms, baseline="rolling"))
+```
+
+```bash
+python -m rcod.section5.domain_example                     # synthetic non-AR(1) family
+python -m rcod.section5.domain_example --csv yours.csv --value sensor --onset fault
+```
+
+Three implementations of the same arithmetic exist on purpose: the reference
+path produced the committed §5 numbers, the prefix-sum path is the same
+arithmetic in O(T·W) memory, and the tracker is the online form. `tests/test_rcod.py`
+is the proof that they agree (max difference 4e-12), and re-running Run 5 after
+that refactor reproduces `section5/results_dyadic.json` byte for byte.
 
 (`torch` is deliberately **not** in the repo `requirements.txt` — it is a
 heavy optional dependency for this directory only.)
