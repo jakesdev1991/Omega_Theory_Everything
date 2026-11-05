@@ -1,0 +1,844 @@
+{
+  "auditor_repo": "https://github.com/jakesdev1991/lean-proof-audit",
+  "auditor_commit": "d91d47f57d0c6a140ee68473f75498bfab7ce20b",
+  "auditor_version": "2.0.0",
+  "target_commit": "dd83f48c560986162cbe256589c20f8c64c55274",
+  "scope": "all top-level lean_proofs/*.lean including lakefile.lean",
+  "doctor": {
+    "project_dir": "/home/user/Omega_Theory_Everything/lean_proofs",
+    "lean_version": null,
+    "lean_path": null,
+    "lake_path": null,
+    "lake_project": false,
+    "mathlib_present": false,
+    "probe": null,
+    "error": "No Lean toolchain found — no `lean` executable on PATH, in ~/.elan/bin, or in $LEAN_AUDIT_LEAN.\nInstall with:  curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh\nor set LEAN_AUDIT_LEAN=/path/to/lean. Notes: GitHub release downloads can be blocked on hosts that only allow git/npm/pypi egress, in which case run the audit where a toolchain is already installed."
+  },
+  "results": [
+    {
+      "file": "lean_proofs/APPA_Context_Branching.lean",
+      "exit_code": 3,
+      "sha256": "6fe0ed5be386219130009e2d37ce2a3a606a7fbeae814d1cce7029df39c005cc",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/CBwK_Budget_Pacer.lean",
+      "exit_code": 3,
+      "sha256": "7293b102685ddb20770374806d21eb416ef14691f54f8c2dce71b52d13f36221",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/DynamicCODScale.lean",
+      "exit_code": 3,
+      "sha256": "711e9f774b30cc0a14050aa578b768888e12b0959d3efb7d7de80ec67178bf94",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/DynamicPlanckScale.lean",
+      "exit_code": 3,
+      "sha256": "c8e493d3a1e3558864af9fe79597d0cdcb559a5944051ea4954c588165ebf7ba",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/EMConformalStar.lean",
+      "exit_code": 3,
+      "sha256": "16bdf62e644d4dd4dbb8a7971b15bf62b42b69e87af2b08706ec2f71bdc5623f",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/EMHodgeStar.lean",
+      "exit_code": 3,
+      "sha256": "294499133211b2b4a5afa68ad99a859d1f32f7ce0c4adc15b238dfa136715274",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/EMMaxwellBridge.lean",
+      "exit_code": 3,
+      "sha256": "43d75bdf89afa6edecb6d8bf0efc090b2425894404a82f5119f001d47ecd03e0",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/EMPhiBridge.lean",
+      "exit_code": 3,
+      "sha256": "8d17cbf2a81de91f141320ec5fddce04734ae91bdb9a254ea8dd0e3bc6a12351",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/InformationPhysics.lean",
+      "exit_code": 3,
+      "sha256": "6547141834b8c54c550ecfb5a95b5244ae6e501a6beab5378dfe1210e1cbaf60",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/LogCorrelationMetric.lean",
+      "exit_code": 3,
+      "sha256": "77bb9ee3f9b11a385165af3c7f3b694044e7dd6d259afa9b19f68974cbcdfcb9",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/OmegaAxioms.lean",
+      "exit_code": 3,
+      "sha256": "2f8167846d6e7f956a9c753e122e77c1fb2ff25813afda459fc5ac14cab02edd",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/OmegaDimensionalHierarchy.lean",
+      "exit_code": 3,
+      "sha256": "69d971da62505433cd546081c19e6c500848ecaab98a57ac0f6bcf247e2feeae",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/OmegaProtocol.lean",
+      "exit_code": 3,
+      "sha256": "d0b18ffb465c3b3e437dab4ee770a2e69e4f5db6bead6858b6055a26718b28fe",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/OmegaUnifiedFoundation.lean",
+      "exit_code": 3,
+      "sha256": "4645bb1af8d0ec575b4d37cfa5f94900f66d1decd60afc9860a65d70a04f3ee1",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/PlanckProfileMatching.lean",
+      "exit_code": 3,
+      "sha256": "ac67fbdd3079ff75077ad8e9f9e2cb40440a8551360ff0bc372e5181efc11736",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/ProofRegression.lean",
+      "exit_code": 3,
+      "sha256": "3466e13a9ee48282bb29689ff549b14402379fbd495db32d6994438346ed3f4f",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/QRegionChannel.lean",
+      "exit_code": 3,
+      "sha256": "227d6fcb3a8601f71befcc0dad4055b1b199afd0e399af7f85ca31fd4cc791bf",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/RadialDilation.lean",
+      "exit_code": 3,
+      "sha256": "380d3697d22c2accee285fc658624e761663f87db39c7ed069f4818c0bde2192",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/RadialMetric.lean",
+      "exit_code": 3,
+      "sha256": "f91f72ffabe467d0480cd42daf003fd71b21fb66f054b74fb98684eceb7fcab2",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/ToE.lean",
+      "exit_code": 3,
+      "sha256": "51c4f637b098ce19be8ccef760c24f8b2c8453a1e75d04d3dcd6bfbb06ceda2b",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol01_ClassicalMechanics.lean",
+      "exit_code": 3,
+      "sha256": "c2753bba4128e718f9418676ac5d5497c0d392c1a4d923b1f6e21deff8821793",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol02_Electromagnetism.lean",
+      "exit_code": 3,
+      "sha256": "3c71cf26463aff5c5b8ff0691b8e645a0fa2df5e44d2d20860128d6db2cb5f39",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol03_Thermodynamics.lean",
+      "exit_code": 3,
+      "sha256": "ffb1cce1efebd27888f7fed672efb215ad036c19cb941bd6073b0df0e7679aac",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol04_QuantumMechanics.lean",
+      "exit_code": 3,
+      "sha256": "3dc750feb331f243cd3f26e157b56de37b9348fb1d2201731c04e617ce1fae9a",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol05_GeneralRelativity.lean",
+      "exit_code": 3,
+      "sha256": "5d2ed0b5c0a3842a0d1e43a30495cfec7fcb204802563b71c5f585324dd8c96c",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol06_QuantumFieldTheory.lean",
+      "exit_code": 3,
+      "sha256": "faf5c167f98fe763c16cde1068f55a527f81d31456f5b643c99c5c83f131df95",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol07_Cosmology.lean",
+      "exit_code": 3,
+      "sha256": "b0ec3088cf321a3dae9e381d1c485d828ed96bf229023031a6350bd9295b1869",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol08_BlackHoleThermodynamics.lean",
+      "exit_code": 3,
+      "sha256": "7fdd2567c0055afe3732245eafafce612166f41b64d9fa0473d42341f76267cc",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol09_HolographicPrinciple.lean",
+      "exit_code": 3,
+      "sha256": "2854ff9328c2ff99b06057ea275f2c5a8cef273660fa7a998efea3161fd369ec",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol10_StandardModel.lean",
+      "exit_code": 3,
+      "sha256": "8f0b3bc68b6d95b7ec6ad341f47564b3f876c35fabd4165e10eea0135aee24fa",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol11_CondensedMatter.lean",
+      "exit_code": 3,
+      "sha256": "db70497e2c999328ad0e204848546e77dacc52fe681ecb3eac0f2bcce9ed9c83",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol12_QuantumInformation.lean",
+      "exit_code": 3,
+      "sha256": "a20adf602038549ee5fb427dcd57fbca335fb714fd681c58babce93866ad87df",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol13_QuantumGravity.lean",
+      "exit_code": 3,
+      "sha256": "3d8b47b84246bd4a71c4722c981d3e1f726c91d531c60048e26d8087a30d651f",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol14_DarkSector.lean",
+      "exit_code": 3,
+      "sha256": "3c27df9f975fee1a356c27e69c909f9d2a552ee1b026313908ee944a46d0cfcd",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol15_EarlyUniverse.lean",
+      "exit_code": 3,
+      "sha256": "079b91c2db7c5e7da032fa5a196d9871c3c22dd2d68dbc6d33abbf5bcfd4cede",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol16_NonEquilibriumThermodynamics.lean",
+      "exit_code": 3,
+      "sha256": "345f4a1bc3ea6337bbc60c130d9e88186566164012dd42798a15dae264430b34",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol17_FluidDynamics.lean",
+      "exit_code": 3,
+      "sha256": "e02f2daba9fd91488ba39917adcd4691a5b920decb2a61c805a546f66aa9b8ae",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol18_StatisticalMechanics.lean",
+      "exit_code": 3,
+      "sha256": "16d79123caef6132118664f141320ab06cb2e34301cbaa6faa837df2a2d35e0e",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol19_ComplexSystems.lean",
+      "exit_code": 3,
+      "sha256": "aa3b9ce1f0394c5f19825be642806abb24ca28132d868338be47ccc0f38ed3fc",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol20_ChaosTheory.lean",
+      "exit_code": 3,
+      "sha256": "83332332b9c3aabc4bdcbcc8586269bd59ab2e82c272ce81ccf466b58aaa8e82",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol21_ArrowOfTime.lean",
+      "exit_code": 3,
+      "sha256": "3be56af93c6e782c6baea94690625a5c7bc18a040f1d6f05f60554a78f42b726",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol22_EREqualsEPR.lean",
+      "exit_code": 3,
+      "sha256": "ff1dfec0430bf511ccf89dbf02f9a03f968d495fbd286cf3fd763063db83c125",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol23_MeasurementProblem.lean",
+      "exit_code": 3,
+      "sha256": "82e95fdc03880aa91970a17457aaf884a1b023cd27492c8d57d9a8e7d90bd36a",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol24_NonLocality.lean",
+      "exit_code": 3,
+      "sha256": "a14a818996ee222e8d12f296fd8025a8c204c5eed08f9d0b17df82810f04a9a3",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol25_BlackHoleInformation.lean",
+      "exit_code": 3,
+      "sha256": "1a4ec41b13b82d2b49c740d2ff8034e44053f4f9c88ac2521dc5940a7df34d33",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol26_NetworkTheory.lean",
+      "exit_code": 3,
+      "sha256": "0d59674f5da5f4e4df0cd656969dcce63bf63d76cb9013866f0f390bd5f0b0aa",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol27_Consciousness.lean",
+      "exit_code": 3,
+      "sha256": "916a960c40b9fa515a5a58e843b24c3de879424d48ca872f5b49899fb4578a16",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol28_EvolutionaryAlgorithms.lean",
+      "exit_code": 3,
+      "sha256": "576f64832bd44b18e77c4fa97a4d7e7923d6af3d8cbf73d56ee071067d18dc10",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol29_EcosystemDynamics.lean",
+      "exit_code": 3,
+      "sha256": "9ec3b6f964026aa2718775f45c7bf21f2fa20939c588395b8f6ad22cc20be6fc",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol30_PlanetarySystems.lean",
+      "exit_code": 3,
+      "sha256": "e11bdb80507bc7530899ecfedae5119e51072929f26b05b7c4c2a2aa6112645b",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol31_GameTheory.lean",
+      "exit_code": 3,
+      "sha256": "267c8ab30b8e2d4014b631876e7b67d292f5a4d05d8c0995036033472f89ec59",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol32_Cybernetics.lean",
+      "exit_code": 3,
+      "sha256": "26f9a6a215470b975f7bb356362261bd4bc1844721cec2f65b994f93cd33e1d7",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol33_AGI.lean",
+      "exit_code": 3,
+      "sha256": "38f544edfb1f80623494f6d40e0e20772e88ce604f6453cccf79e3f8830f181f",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol34_QuantumComputing.lean",
+      "exit_code": 3,
+      "sha256": "c1046e0eaabbfbbfe8fd411835c5b76ae93753042c456810278c150a6b44df37",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol35_TheoryOfComputation.lean",
+      "exit_code": 3,
+      "sha256": "5646bda5f4dc515e182c25325a5c763c364f359665a2fb975787b4122372bf45",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol36_ToposTheory.lean",
+      "exit_code": 3,
+      "sha256": "b2a75c2b4bb10aa7a1f47ece898cd30208eb33c3acb1b53d211ca91d72259387",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol37_Morphogenesis.lean",
+      "exit_code": 3,
+      "sha256": "a7c0d8e2863e1e342fe975219235d527860144d9f8a7cfa5632493a77571be39",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol38_Economics.lean",
+      "exit_code": 3,
+      "sha256": "decbac27e061f38b2956d7d47dbdf54e6dd2925e781b2a60a4094d2a59aaa339",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol39_SocietalNetworks.lean",
+      "exit_code": 3,
+      "sha256": "e0d70a73ce0ec32286d8b4f9d5a0530842b29a37eed99991f8b1e2bf0a5ec2aa",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol40_FermiParadox.lean",
+      "exit_code": 3,
+      "sha256": "eadc24fe8c235100f0933c81eb48341fb933f094621abeb72839c2606f38434c",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol41_PostBiologicalEvolution.lean",
+      "exit_code": 3,
+      "sha256": "6997c55ee85f64d898d153fdd58f959a3516314af50baa77d73957a66929be3d",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol42_StellarEngineering.lean",
+      "exit_code": 3,
+      "sha256": "69610b32c3c1c6b94d95fe30ede558cf8017cfb26555056c14c8990e737f734a",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol43_GalacticEcosystems.lean",
+      "exit_code": 3,
+      "sha256": "6dc0c97014522a9b08cc0504a33c2d6f03da3a87d8134ddf1adf76b81e612867",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol44_UniversalExpansion.lean",
+      "exit_code": 3,
+      "sha256": "ffe507d38a77fd733714381574065c232fc590b289ee3feccca5becf689b2995",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol45_MultiverseTheory.lean",
+      "exit_code": 3,
+      "sha256": "f0cced6d4d3f0d441cd3343884764d05fea3947f8986158d4ed9041fa5a31978",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol46_SimulationHypothesis.lean",
+      "exit_code": 3,
+      "sha256": "9b08617e1d4b0a6f87108fb3c201fea975fd5b949250606b95627d8ab867fe8f",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol47_TranscendentArchitectures.lean",
+      "exit_code": 3,
+      "sha256": "aac3162389c23f31079ebc9f826e58f3db4a1b619a011218b6a5e68ee6ffd935",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol48_ExtraDimensions.lean",
+      "exit_code": 3,
+      "sha256": "b53245cefc2a2ab7daf743967ecacfdb80235f56ae81f8bc40e100b28fe1933c",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol49_QuantumReferenceFrames.lean",
+      "exit_code": 3,
+      "sha256": "06433df5c5a649fe72ac445a08aac7d606f61f1d88ccbb9fa881f6359f595b99",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol50_UltimateEnsemble.lean",
+      "exit_code": 3,
+      "sha256": "7f8927dcf5b0fbf7978eaef3abb7ddbd1c66e68b2c5440ea60356694d55793ab",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol51_ClosedTimelikeCurves.lean",
+      "exit_code": 3,
+      "sha256": "7438a8d11c7506c2bdb513ae045fbb50abc459874423e6ebf2c9c3d804854181",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol52_OmegaPointTheory.lean",
+      "exit_code": 3,
+      "sha256": "95515bdee0e6b0532fffadb9452dacf9e1466bfb1913bf096558162dd9b6b128",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol53_UniversalCompiler.lean",
+      "exit_code": 3,
+      "sha256": "90d99bd1ff617b67155deb0aadd6d2acc32e929f4c2ecfe29a2684aedaaae4f9",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/Vol54_TheoryOfNothing.lean",
+      "exit_code": 3,
+      "sha256": "e5dad3edd411822a817fb0362a527c711dee8fc0e40992cdb28756a9f0a327c0",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    },
+    {
+      "file": "lean_proofs/lakefile.lean",
+      "exit_code": 3,
+      "sha256": "4d5d549076c86583db3afa031daa71461d70a623d7edb63e31a4fd5959c1db52",
+      "overall": "inconclusive",
+      "lean_runs": 0,
+      "findings": [
+        "no_toolchain"
+      ],
+      "stderr": ""
+    }
+  ]
+}
