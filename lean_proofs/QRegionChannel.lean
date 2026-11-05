@@ -1,4 +1,5 @@
 import Mathlib
+import OmegaAxioms
 
 /-!
 # A finite-state information benchmark
@@ -134,5 +135,41 @@ theorem bitFlip_mutualInformation_le {q e : ℝ}
   have hentropy := Real.binEntropy_strictMonoOn.monotoneOn hq hflip hb.2.1
   rw [mutualInformation_eq, mutualInformation_eq]
   linarith
+
+/-- Model-specific overlap: mutual information normalized by one fair bit.
+It is not asserted to be the universal Omega COD functional. -/
+noncomputable def normalizedOverlap (q : ℝ) : ℝ := mutualInformation q / Real.log 2
+
+/-- The normalized benchmark overlap lies in the unit interval. -/
+theorem normalizedOverlap_bounds {q : ℝ} (hq0 : 0 ≤ q) (hq1 : q ≤ 1) :
+    normalizedOverlap q ∈ Set.Icc (0 : ℝ) 1 := by
+  have hlog : 0 < Real.log 2 := Real.log_pos (by norm_num)
+  have hmi := mutualInformation_bounds hq0 hq1
+  constructor
+  · exact div_nonneg hmi.1 hlog.le
+  · exact (div_le_one hlog).2 hmi.2
+
+/-- Perfect correlation has unit overlap, while independence has zero overlap. -/
+theorem normalizedOverlap_endpoints :
+    normalizedOverlap 0 = 1 ∧ normalizedOverlap (1 / 2) = 0 := by
+  have hlog : Real.log 2 ≠ 0 := ne_of_gt (Real.log_pos (by norm_num))
+  unfold normalizedOverlap
+  rw [mutualInformation_endpoints.1, mutualInformation_endpoints.2]
+  simp [hlog]
+
+/-- The selected bit-flip channel cannot increase normalized overlap. -/
+theorem bitFlip_normalizedOverlap_le {q e : ℝ}
+    (hq0 : 0 ≤ q) (hq1 : q ≤ 1 / 2) (he0 : 0 ≤ e) (he1 : e ≤ 1 / 2) :
+    normalizedOverlap (bitFlip q e) ≤ normalizedOverlap q := by
+  unfold normalizedOverlap
+  exact div_le_div_of_nonneg_right (bitFlip_mutualInformation_le hq0 hq1 he0 he1)
+    (Real.log_pos (by norm_num : (1 : ℝ) < 2)).le
+
+/-- The independent endpoint of this benchmark cannot equal the current
+strictly positive pairwise overlap on any existing `QRegion` pair. -/
+theorem independent_not_existing_overlap (R S : OmegaProtocol.QRegion) :
+    OmegaProtocol.Φ R S ≠ normalizedOverlap (1 / 2) := by
+  rw [normalizedOverlap_endpoints.2]
+  exact ne_of_gt (OmegaProtocol.Φ_pos R S)
 
 end QRegionChannel

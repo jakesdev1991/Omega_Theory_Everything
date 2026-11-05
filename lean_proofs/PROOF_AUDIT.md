@@ -50,8 +50,9 @@ bit-flip channel, including normalization, marginals, channel action, bounds,
 composition and a nontrivial witness. It does not construct quantum Q-regions,
 derive physical dynamics. Its joint-distribution and channel declarations passed
 the Lean build and transitive kernel-axiom audit in CI run 42127214338 at commit
-`e202364`. Subsequent candidate mutual-information and noise-monotonicity
-proofs have not yet passed the Lean build or kernel audit.
+`e202364`. Mutual-information and noise-monotonicity proofs passed the Lean
+build and kernel audit in CI run 42128816079 at commit `ab6ad24`. Subsequent
+normalized-overlap and incompatibility declarations await Lean CI.
 
 ## Main finding and logical next step
 
