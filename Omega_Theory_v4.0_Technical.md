@@ -82,11 +82,13 @@ operational definition or a physical-vacuum baseline.
 > apparatus — `mutualInformation_nonneg`, `mutualInformation_le_quarter`,
 > `mutualInformation_eq_zero_iff`, `pairDistance_ultrametric`,
 > `distance_pos_iff_mutualInformation_pos`, and
-> `bridge_metric_triangle_from_DPI` — is checked only inside the concrete
-> minimal model that lean_proofs/PROOF_AUDIT.md classifies as degenerate
-> (zero-information / singleton). Those names, and every bridge_-prefixed
-> name, are structural consistency checks of the definitions, not physical
-> support. The information-to-energy bookkeeping used later in this note is
+> `bridge_metric_triangle_from_DPI` — is checked inside a concrete scalar-record
+> model. The present `QRegion` has distinct witnesses and nonconstant model
+> quantities, but its entropy and density are supplied fields, its pair overlap
+> uses a chosen minimum rule, and its mutual information is not calculated from
+> a joint quantum state. These checks do not establish a physical microscopic
+> construction; some audit descriptions of an earlier singleton model are
+> historical. See docs/Q_REGION_DATA_AND_EVOLUTION.md. The information-to-energy bookkeeping used later in this note is
 > formalised separately in lean_proofs/InformationPhysics.lean:
 > `information_mass_energy_equivalence`,
 > `energy_conservation_during_state_conversion`, `erasureCost_lower_bound`,

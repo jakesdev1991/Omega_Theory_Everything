@@ -40,8 +40,10 @@ existing chosen profiles: its conditional statements address uniqueness,
 endpoint mismatch, the clamped branch and monotonicity of any matching map.
 They do not establish that a matching map exists or that the relationship is a
 physical law. The new declarations passed the Lean build and kernel audit in
-CI run 42114531942 at commit `b8048ae`; see `docs/PLANCK_PROFILE_MATCHING.md`
-for the remaining work.
+CI run 42114531942 at commit `b8048ae`. A subsequent addition proposes a
+matching dictionary, both inverse directions and trajectory contraction; these
+new declarations have not yet passed a Lean build or kernel audit. See
+`docs/PLANCK_PROFILE_MATCHING.md` for the remaining work.
 
 ## Main finding and logical next step
 

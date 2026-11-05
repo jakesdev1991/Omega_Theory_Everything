@@ -79,9 +79,13 @@ statement must not assert that the dictionary follows from Q-region physics.
 conditional uniqueness, the maximal-overlap obstruction, the clamped branch,
 and strict monotonicity on positive densities for **any** physical-range matching
 function. The latter is conditional and does not construct such a function.
-These declarations passed the Lean build and transitive kernel-axiom audit in
-[Lean CI run 42114531942](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/42114531942)
-at commit `b8048ae`. The full formalisation remains open until existence,
-monotonicity including the zero boundary, and the inverse are also proved and
-the build and axiom audit pass. A failure to formalise this particular proof is
-not evidence that no dictionary exists.
+Those conditional declarations passed the Lean build and transitive kernel-axiom
+audit in [Lean CI run 42114531942](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/42114531942)
+at commit `b8048ae`. A subsequent change adds candidate Lean proofs for the
+construction, matching, monotonicity, both inverse directions and an overlap
+trajectory; **these additions have not yet been compiled or kernel-audited**.
+The full formalisation remains open until they pass both checks. The new code
+uses `√(ρ/(ρ+ρ₀))`, algebraically equal to the expression in §1 for `ρ₀ > 0`.
+A failure to formalise this particular proof is not evidence that no dictionary
+exists. See [the Q-region milestone](Q_REGION_DATA_AND_EVOLUTION.md) for the
+next task; the mathematical matching is not a microscopic construction.

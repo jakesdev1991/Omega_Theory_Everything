@@ -71,9 +71,9 @@
       "sha256": "baf0b922da1acee854ba3e59bb839d88bed1e03f6fb4ca0e8d47eccc7fda2e72"
     },
     "PlanckProfileMatching.lean": {
-      "code_lines": 54,
-      "declarations": 4,
-      "sha256": "48c00a069c09c10126db82015f8bdfb1fb8ddecfc627527b4a0e275e648a0924"
+      "code_lines": 153,
+      "declarations": 13,
+      "sha256": "a6f82f67f72621018304ab1970db84c454752a85227fb4d273ddb95de202ef63"
     },
     "ProofRegression.lean": {
       "code_lines": 538,
