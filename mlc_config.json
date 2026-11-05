@@ -1,0 +1,12 @@
+{
+  "//": "Configuration for markdown-link-check, used by the Documentation Check job in .github/workflows/ci.yml.",
+  "//retry": "Outbound links fail transiently often enough that a single attempt is not evidence of a dead link. Retry hard, then give up quickly rather than hanging the job.",
+  "retryOn429": true,
+  "retryCount": 3,
+  "fallbackRetryDelay": "15s",
+  "timeout": "20s",
+  "//status": "Several documentation hosts answer 403 to non-browser user agents (bot protection) and 429 when the runner is rate-limited; neither means the page is gone. 200/206 are the real successes, 301/302 are redirects that markdown-link-check does not always follow.",
+  "aliveStatusCodes": [200, 206, 301, 302, 403, 429],
+  "//ignore": "Nothing is excluded yet. Add a host here only with a note saying why the link cannot be machine-checked.",
+  "ignorePatterns": []
+}

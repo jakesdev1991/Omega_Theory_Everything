@@ -8,6 +8,11 @@ branched from `main`) · **Scope:** 532 tracked files, 27 top-level directories,
 Every number and status below was produced by a command run against this checkout on this date.
 Items marked **[unchecked]** could not be verified from here and say so explicitly.
 
+> **Status (2026-11-05):** superseded. Sections 1–10 are closed on `main`; the
+> remaining sections are owner decisions. The current pass is
+> [`docs/MAINTENANCE_AUDIT_2026-11-05.md`](docs/MAINTENANCE_AUDIT_2026-11-05.md).
+> This file is kept as the record of the September pass.
+
 ---
 
 ## Resolution status

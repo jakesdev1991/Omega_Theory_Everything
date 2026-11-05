@@ -16,6 +16,7 @@ import json
 import re
 import sys
 from pathlib import Path
+from typing import Any
 
 AUDIT = Path.home() / "Omega_Theory_Everything" / "lean_proofs" / "PROOF_AUDIT.md"
 OUT = Path("/opt/omni-bridge/telemetry/proof_backlog.json")
@@ -37,8 +38,8 @@ def main():
         except Exception:
             pass
 
-    tasks = []
-    seen = set()
+    tasks: list[dict[str, Any]] = []
+    seen: set[tuple[str, str]] = set()
     # module rows in the two inventory tables: | `File.lean` | ... Next: ... |
     for m in re.finditer(r"^\|\s*`([\w.]+\.lean)`\s*\|([^|]+)\|", text, re.M):
         module, body = m.group(1), m.group(2)

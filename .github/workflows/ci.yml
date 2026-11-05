@@ -15,12 +15,26 @@ on:
   # instead of waiting for the Sunday cron.
   workflow_dispatch:
 
+# A burst of pushes used to queue whole CI runs behind each other (four full
+# runs were waiting at once on 2026-11-05). Cancel superseded runs on the same
+# ref, but never on main: every push there is a merge worth verifying.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+# Least privilege by default: read-only contents. The one job that needs more
+# (security-scan and its security-events: write) declares it on the job itself.
+permissions:
+  contents: read
+
 # Keep Linux jobs on an explicit Ubuntu image so a ubuntu-latest migration
 # cannot silently change the compiler and system-library baseline.
 jobs:
   python-checks:
     name: Python Lint & Type Check
     runs-on: ubuntu-24.04
+    # A hung step should fail the job, not hold a runner for the 6 h default.
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       
@@ -80,14 +94,20 @@ jobs:
   rust-checks:
     name: Rust Build & Test
     runs-on: ubuntu-24.04
+    # A hung step should fail the job, not hold a runner for the 6 h default.
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Set up Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
+        with:
+          # The action takes its toolchain from the ref name; with an immutable
+          # SHA pin the input is what keeps this on stable.
+          toolchain: stable
 
       - name: Cache Rust build
-        uses: Swatinem/rust-cache@v2
+        uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2
         with:
           workspaces: rust
 
@@ -115,6 +135,8 @@ jobs:
   evm-contracts:
     name: EVM Contract Build & Test
     runs-on: ubuntu-24.04
+    # A hung step should fail the job, not hold a runner for the 6 h default.
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -154,6 +176,8 @@ jobs:
   solana-pilot:
     name: Solana Devnet Pilot Checks
     runs-on: ubuntu-24.04
+    # A hung step should fail the job, not hold a runner for the 6 h default.
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -179,6 +203,8 @@ jobs:
   web-app:
     name: Web App Build & Economy Tests
     runs-on: ubuntu-24.04
+    # A hung step should fail the job, not hold a runner for the 6 h default.
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -193,9 +219,18 @@ jobs:
         working-directory: web
         run: npm ci
 
-      - name: Check dependency advisories
+      - name: Check production dependency advisories
         working-directory: web
-        run: npm audit --audit-level=high
+        # Gate on the tree that actually ships. web/'s production dependencies
+        # (next, react, react-dom, ethers, nostr-tools, tweetnacl, bs58) carry no
+        # advisory; every open finding comes from the build-only
+        # @opennextjs/cloudflare -> @opennextjs/aws -> @node-minify/core -> glob
+        # chain, for which npm's only remedy was a downgrade to a pre-1.0
+        # adapter. A build tool with no runtime path should not block the deploy,
+        # but it should not be invisible either, so the full tree is printed.
+        run: |
+          npm audit --omit=dev --audit-level=high
+          npm audit || true
 
       - name: Sync the wallet GUI into the web app
         working-directory: web
@@ -224,6 +259,8 @@ jobs:
   mobile-node:
     name: Mobile Node Tests (NIP-90 daemon)
     runs-on: ubuntu-24.04
+    # A hung step should fail the job, not hold a runner for the 6 h default.
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -249,6 +286,8 @@ jobs:
   amity-pilot:
     name: AMITY Testnet Scaffold Checks
     runs-on: ubuntu-24.04
+    # A hung step should fail the job, not hold a runner for the 6 h default.
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -274,6 +313,8 @@ jobs:
   nostr-client:
     name: Nostr Client Checks
     runs-on: ubuntu-24.04
+    # A hung step should fail the job, not hold a runner for the 6 h default.
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -301,6 +342,8 @@ jobs:
   cpp-suites:
     name: C++ Acceptance Suites (CBwK pacer + Omni-Bridge)
     runs-on: ubuntu-24.04
+    # A hung step should fail the job, not hold a runner for the 6 h default.
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -324,6 +367,8 @@ jobs:
   mcp-hub:
     name: Omega MCP Hub Smoke Test
     runs-on: ubuntu-24.04
+    # A hung step should fail the job, not hold a runner for the 6 h default.
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -352,6 +397,8 @@ jobs:
   ai-governor:
     name: AI Governor Build & Smoke Run (PoUW trainer)
     runs-on: ubuntu-24.04
+    # A hung step should fail the job, not hold a runner for the 6 h default.
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -372,6 +419,8 @@ jobs:
   wallet-desktop:
     name: Wallet Desktop Wrapper Checks
     runs-on: ubuntu-24.04
+    # A hung step should fail the job, not hold a runner for the 6 h default.
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -401,9 +450,12 @@ jobs:
         run: npm ci
         working-directory: web
 
-      - name: Check wallet web dependency advisories
-        run: npm audit --audit-level=high
-        working-directory: web
+      # The wallet GUI is built out of web/, so this job installs web/'s lockfile
+      # below. It used to run its own `npm audit` over that lockfile too, which
+      # could only ever repeat the verdict of the Web App job's advisory gate on
+      # the same file -- and, when it turned red, made two jobs report one cause.
+      # web/'s production tree is gated there; the desktop wrapper's own tree is
+      # still audited above.
 
       - name: Run wallet security regression tests
         run: npm run test:wallet
@@ -419,6 +471,8 @@ jobs:
   security-scan:
     name: Security Scan
     runs-on: ubuntu-24.04
+    # A hung step should fail the job, not hold a runner for the 6 h default.
+    timeout-minutes: 15
     permissions:
       contents: read
       # Required by github/codeql-action/upload-sarif to publish to Code Scanning.
@@ -434,7 +488,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         # Pinned to a tag, not @master: a floating ref on a security job is a
         # supply-chain risk (any upstream push lands here unreviewed).
-        uses: aquasecurity/trivy-action@v0.36.0
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           scan-type: 'fs'
           scan-ref: '.'
@@ -447,7 +501,7 @@ jobs:
           ${{ !cancelled() && hashFiles('trivy-results.sarif') != '' &&
               (github.event_name != 'pull_request' ||
                github.event.pull_request.head.repo.full_name == github.repository) }}
-        uses: github/codeql-action/upload-sarif@v4
+        uses: github/codeql-action/upload-sarif@33d7b85da1a04171e211befe2c739303b9a4c066 # v4
         with:
           sarif_file: 'trivy-results.sarif'
           category: trivy
@@ -456,7 +510,7 @@ jobs:
         # Run regardless of whether the SARIF upload succeeded.
         if: ${{ !cancelled() }}
         # Pinned to a tag, not @main — see the note on trivy-action above.
-        uses: trufflesecurity/trufflehog@v3.99.7
+        uses: trufflesecurity/trufflehog@31ce31ee1abbcc7dc8eee5764c17121c3044c8b2 # v3.99.7
         with:
           # No explicit base/head: the action derives the range from the event
           # (push: before..after, pull_request: base..head, schedule and
@@ -476,6 +530,8 @@ jobs:
   docs:
     name: Documentation Check
     runs-on: ubuntu-24.04
+    # A hung step should fail the job, not hold a runner for the 6 h default.
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       
@@ -483,4 +539,13 @@ jobs:
         run: test -f README.md
       
       - name: Validate markdown links
-        uses: gaurav-nelson/github-action-markdown-link-check@v1
+        # Relative links are already covered by tests/test_markdown_links.py; this
+        # only has to police outbound URLs. Two things made it fail non-
+        # deterministically before: markdown-link-check treats a 403 from a host
+        # that blocks non-browser user agents as a failure, and it gives up on the
+        # first timeout. mlc_config.json (the action's default config path) sets
+        # retries, a timeout, and the status codes to accept.
+        uses: gaurav-nelson/github-action-markdown-link-check@5c5dfc0ac2e225883c0e5f03a85311ec2830d368 # v1
+        with:
+          config-file: mlc_config.json
+          use-quiet-mode: 'yes'

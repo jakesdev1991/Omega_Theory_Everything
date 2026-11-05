@@ -8,6 +8,10 @@ on:
       - 'wallet-v*'
   workflow_dispatch:
 
+# Least privilege by default; the publish job raises this to contents: write.
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Build ${{ matrix.platform }} installer
@@ -25,6 +29,8 @@ jobs:
             bundles: msi
             args: --bundles msi
     runs-on: ${{ matrix.platform }}
+    # Native bundling is slow but not unbounded; do not sit on a runner for hours.
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -34,7 +40,9 @@ jobs:
           node-version: '22'
 
       - name: Set up Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
+        with:
+          toolchain: stable
 
       - name: Install Linux webview dependencies
         if: startsWith(matrix.platform, 'ubuntu')
@@ -92,6 +100,7 @@ jobs:
     needs: build
     if: startsWith(github.ref, 'refs/tags/wallet-v')
     runs-on: ubuntu-22.04
+    timeout-minutes: 15
     # The default token cannot create releases or upload assets; without this the
     # first tag would build installers and then fail at the upload step.
     permissions:
