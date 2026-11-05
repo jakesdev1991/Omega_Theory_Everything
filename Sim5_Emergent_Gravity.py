@@ -245,7 +245,7 @@ def update(frame):
     ax1.legend(loc="upper right", facecolor="#000000")
 
     # Velocity Graph
-    avg_vel = np.mean(velocities) if velocities else 0.0
+    avg_vel = float(np.mean(velocities)) if velocities else 0.0
     vel_history.append(avg_vel)
     time_history.append(frame)
 

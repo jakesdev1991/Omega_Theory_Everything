@@ -36,7 +36,8 @@ def gen_series(seed):
     eps = rng.standard_normal(T)
     for t in range(1, T):
         x[t] = phi * x[t - 1] + eps[t]
-    onsets, kinds = [], []
+    onsets: list[int] = []
+    kinds: list[str] = []
     t = 2500 + int(rng.integers(0, 800))
     i = 0
     while len(onsets) < N_SHOCKS and t + PRE + 700 < T - 1500:
@@ -208,14 +209,14 @@ def run_seed_temporal(seed, block_sizes=(84, 21, 6)):
     th = temporal_hierarchy(x, block_sizes=block_sizes)
     warmup = 5 * block_sizes[0]  # 4 coarsest blocks completed + mu defined
     idx = np.arange(warmup, T - HORIZON)
-    feats, latest = [], []
+    feats, latest_cols = [], []
     for lv in (1, 2, 3):
         mu, W = th[lv]["mu"], th[lv]["W"]
         b = (idx + 1) // W - 1  # latest completed block at each t
         assert (b >= 4).all() and not np.isnan(mu[b]).any()
         feats.extend([mu[b - k] for k in (3, 2, 1, 0)])
-        latest.append(mu[b])
-    latest = np.column_stack(latest)
+        latest_cols.append(mu[b])
+    latest = np.column_stack(latest_cols)
     feats.append(np.median(latest, axis=1))
     feats.append(latest.std(axis=1))
     F_temp = np.column_stack(feats)
