@@ -6,7 +6,7 @@ matplotlib>=3.11.2
 pandas>=3.1.0
 networkx>=3.1
 tqdm>=4.70.1
-sympy>=1.12  # optional: exact checks in Sim7_Radial_Metric.py
+sympy>=1.14.0  # optional: exact checks in Sim7_Radial_Metric.py
 
 # Lint/type/test tooling, pinned. CI installs this file exactly as the README
 # Quick Start tells a reader to, so the versions CI runs are the versions the
