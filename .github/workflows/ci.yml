@@ -72,6 +72,27 @@ jobs:
         # own uv/venv boundary (see the comment in that file).
         run: python -m pytest -v
       
+      - name: Build and install the onset-eval package
+        # `packages/onset_eval` is a distributable (someone is meant to
+        # `pip install` it), so the artifact under test is the distribution, not
+        # the source tree: build a wheel, install it into a virtual environment
+        # that cannot see this checkout, and run its tests from /tmp. A wheel
+        # that forgets a module, `py.typed` or the LICENSE fails here instead of
+        # in somebody else's project.
+        run: |
+          set -euo pipefail
+          python -m venv /tmp/pkg-venv
+          /tmp/pkg-venv/bin/pip install -q --upgrade pip
+          /tmp/pkg-venv/bin/pip install -q './packages/onset_eval[test]'
+          /tmp/pkg-venv/bin/python -c "
+          import onset_eval, sys
+          assert 'site-packages' in onset_eval.__file__, onset_eval.__file__
+          assert onset_eval.__version__
+          print('installed', onset_eval.__version__, 'from', onset_eval.__file__)
+          "
+          cp packages/onset_eval/tests/test_harness.py /tmp/
+          cd /tmp && /tmp/pkg-venv/bin/python -m pytest -q test_harness.py
+
       - name: Run simulations (smoke test)
         # No `|| true` here. The previous version ended every command with it,
         # which is how sim6_v14_depletion.py stayed broken: it raised

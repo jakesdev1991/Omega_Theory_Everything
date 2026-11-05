@@ -20,7 +20,7 @@ committed result, it links to the file that carries it.
 | Layer | Portable today? | What was blocking | State after this pass |
 |---|---|---|---|
 | RCOD metrics (`Φ`, `μ`, median/macro/dissonance) | **Yes**, mechanically | Batch-only, O(T·Σw) memory, single-channel, Python 2-era layout | Streaming tracker, prefix-sum backend, multichannel, explicit level-shift and flat-window options; four implementations that agree to 1e-12 |
-| §5 evaluation protocol (arms, split, PR-AUC, paired test, kill criteria) | **Yes**, and it is the most valuable export | Shipped as `main_*` functions inside one experiment | Extracted to `rcod/harness.py`; runs on any series with labelled onsets |
+| §5 evaluation protocol (arms, split, PR-AUC, paired test, kill criteria) | **Yes**, and it is the most valuable export | Shipped as `main_*` functions inside one experiment | Published as the **`onset-eval`** distribution (`packages/onset_eval/`); installable, tested against its own wheel |
 | The §5 *result* | **No** — a negative, correctly | — | Reproduces byte-identically; a second, unrelated family also negative (§5) |
 | Optimizer governor (`rcod_optimizer.py`) | **No** — negative result | — | Unchanged; `rcod/RESULTS.md` still the record |
 | Lean kernel/axiom audits | **Yes** | — | Unchanged; `audit_axioms`, `audit_kernel` take `--root` already |
@@ -129,11 +129,16 @@ change: `results_dyadic.json` is **byte-identical**, with the same PR-AUCs
 
 ## 4. The portable piece: a pre-registered claim harness
 
-`rcod/harness.py` is the protocol the §5 work invented, with the physics taken
-out. Its interface is deliberately domain-shaped, not RCOD-shaped:
+The harness is now a distribution rather than a file in a research directory:
+**`packages/onset_eval/`**, importable as `onset_eval`, installable with
+`pip install ./packages/onset_eval` (`[full]` extra for scikit-learn/SciPy).
+`rcod/harness.py` remains as a shim so that the in-repository import path still
+works; the canonical name outside this tree is `onset_eval`.
+
+Its interface is deliberately domain-shaped, not RCOD-shaped:
 
 ```python
-from rcod.harness import Arm, Protocol, Series, run_benchmark, render_report
+from onset_eval import Arm, Protocol, Series, run_benchmark, render_report
 
 series = Series.from_csv("telemetry.csv", value="sensor", onset="fault")
 arms = [Arm("rcod", my_extractor), Arm("rolling", rolling_stats)]
@@ -150,6 +155,16 @@ operational numbers (lead time, false alarms per 1,000 steps) are reported
 alongside ranking quality; comparisons are paired by seed against the simplest
 credible baseline; and arms with different warm-ups are scored on the
 intersection of their index grids so an arm cannot win on an easier slice.
+
+Running it from outside the repository is what caught two honesty bugs that the
+in-tree tests had not: a single-seed run printed *"Wilcoxon p = 1.0000 — not
+significant"* when no test was possible, and the verdict said KILL for an
+untested claim. Both are now explicit — `paired_test` returns `p_value: None`
+with a `reason`, the report says "no test possible (n = 1 seed)", and `decide`
+has three outcomes (`PASS`, `KILL`, `UNDECIDED`) instead of two. The same run
+also surfaced that a seed whose test slice has one class has no ROC-AUC at all;
+the table now reports the count of valid seeds rather than silently averaging
+NaN, which is the convention the RCOD record already used ("n = 9/10 valid").
 
 `rcod/section5/domain_example.py` is the demonstration and the entry point:
 
@@ -238,11 +253,14 @@ offline consistency gate can run 16 checks before a Lean installation exists.
 
 ## 7. What to do next, in order of leverage
 
-1. **Split the three portable artifacts out of the one directory.** `rcod/` now
-   contains a metrics library, a claim harness, and a closed negative result. The
-   harness is the thing another domain should be able to `pip install`; today it
-   imports nothing outside numpy/scipy/sklearn and could be its own package with
-   its own tests.
+1. ~~**Split the three portable artifacts out of the one directory.**~~ **Done**
+   for the harness: `packages/onset_eval/` is a hatchling-built distribution with
+   its own tests, its own LICENSE and `py.typed`, and CI builds the wheel,
+   installs it into a virtual environment that cannot see this checkout, and runs
+   its tests from `/tmp`. Nothing in it imports this repository. Still open: the
+   metrics (`rcod.section5.swarm`) could follow, but they are one import of
+   NumPy and two functions — the argument for publishing them is weaker than the
+   argument for the harness, which is the thing whose *rules* need to be shared.
 2. **Parameterise the `bridge_*` convention** in `audit_vacuity.py` (the last
    hard-coded rule in the Lean stack), then document the eight gates as an
    adoptable recipe rather than eight scripts in this repo.

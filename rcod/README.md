@@ -88,10 +88,14 @@ python benchmark_noise_recovery.py --csv results_noise_recovery.csv
 
 ## Using the metrics on your own series
 
-Nothing in `section5/swarm.py` is cosmology-specific, and the §5 protocol in
-`harness.py` is not either — that is the part of this directory worth reusing
-elsewhere. See [`../docs/DOMAIN_AGNOSTIC_CORE.md`](../docs/DOMAIN_AGNOSTIC_CORE.md)
-for what is portable, what is not, and the measurements behind each claim.
+Nothing in `section5/swarm.py` is cosmology-specific, and the §5 protocol is not
+either — that is the part of this directory worth reusing elsewhere. The
+protocol is published as the **`onset-eval`** distribution in
+[`../packages/onset_eval/`](../packages/onset_eval/), so another project can
+`pip install ./packages/onset_eval` instead of copying it; `rcod/harness.py` is
+a shim that keeps `from rcod.harness import ...` working inside this repository.
+See [`../docs/DOMAIN_AGNOSTIC_CORE.md`](../docs/DOMAIN_AGNOSTIC_CORE.md) for what
+is portable, what is not, and the measurements behind each claim.
 
 ```python
 from rcod import SwarmTracker, swarm_metrics, pool_channels
@@ -103,7 +107,9 @@ state = tracker.update(value)  # {'median_mu', 'macro_mu', 'dissonance'}
 ```
 
 ```python
-from rcod.harness import Arm, Protocol, Series, run_benchmark, render_report
+# published package; in this repository the same names are importable from
+# rcod.harness, which re-exports them unchanged
+from onset_eval import Arm, Protocol, Series, run_benchmark, render_report
 
 summary = run_benchmark(
     lambda seed: Series.from_csv("telemetry.csv"),

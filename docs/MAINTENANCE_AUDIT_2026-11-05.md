@@ -59,8 +59,8 @@ scheme that markdown-link-check can reach, and the two hosts it choked on
    It needs the thing the repo does not have — an explicit allowlist of accepted
    advisories with a reason and a review date — or it will keep this job red
    forever, which teaches people to ignore a red CI.
-2. **`ruff.toml` `target-version = "py38"`** while the project runs 3.11 and
-   `pyproject.toml` says `requires-python = ">=3.10"`. Raising it enables 95
+2. **`ruff.toml` `target-version = "py38"`** while CI runs 3.11 and the tree's
+   only distribution metadata requires 3.10 or newer. Raising it enables 95
    modernization findings (76 auto-fixable: `datetime.UTC`, `TimeoutError`,
    `list`/`tuple`/`X | None` annotations). Mechanical, but a 30-file diff.
 3. **Solana kit 8** remains blocked: `@solana-program/system` 0.16 and
