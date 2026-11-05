@@ -98,6 +98,12 @@ def gate_commands(python: str) -> list[GateCommand]:
             "unhedged claim language in the notes, volumes and proofs",
         ),
         GateCommand(
+            "theory ledger",
+            (python, "research/toe_census.py"),
+            ".",
+            "open-distance and carried-law ratchets in docs/theory_ledger.json",
+        ),
+        GateCommand(
             "Lean sorry/trivial grep",
             (
                 "bash",

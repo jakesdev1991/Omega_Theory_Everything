@@ -1,0 +1,155 @@
+{
+  "//": "Census of what this programme has NOT derived. Consumed by research/toe_census.py. See docs/TOE_ROADMAP.md for how this is meant to be used.",
+  "//statuses": {
+    "undetermined": "Nothing in the corpus fixes it: a free function, a free parameter, or an acknowledged gap.",
+    "chosen": "A form or model was picked for the formalisation and is not derived from anything below it.",
+    "identified": "Fixed by a matching condition (two constructions agree) rather than derived from a principle.",
+    "postulate": "Declared model data on purpose, named as such (`law_*`, `PhotonMass := 0`, legacy constants). Not a defect; it is the inventory of what physics is assumed.",
+    "external": "Fixed by measurement, not by the theory (e.g. the observed Planck length).",
+    "derived": "Proved from lower layers with no remaining freedom."
+  },
+  "//open": "`undetermined`, `chosen` and `identified` are the OPEN statuses: the distance between here and a TOE is that list. `postulate` items are counted separately -- they are the assumptions, not the gaps.",
+  "//ratchet": "max_open and max_carried_laws may only be lowered. Raising one is allowed but must be a visible diff with a stated reason, exactly like carrier_cap in lean_proofs/statement_audit.json.",
+  "ratchet": {
+    "max_open": 14,
+    "max_carried_laws": 16
+  },
+  "items": [
+    {
+      "id": "phi-functional",
+      "kind": "function",
+      "name": "Φ as a functional of Q-region data",
+      "status": "undetermined",
+      "evidence": "Omega_Theory_v4.0_Technical.md#7",
+      "note": "The single load-most-bearing gap. ℓ_P(Φ), the metric, the radial dictionary and every RCOD measurement are functions of Φ; if Φ is not defined from microscopic data, they are a family of parameterised models, not a theory. Two candidate routes (Choi-state, relative-entropy) are recorded in Technical §1.1; neither is adopted as a construction."
+    },
+    {
+      "id": "phi-s-dictionary",
+      "kind": "dictionary",
+      "name": "Φ ↔ s dictionary (to the relative-entropy-density scalar)",
+      "status": "undetermined",
+      "evidence": "Omega_Theory_v4.0_Technical.md#1",
+      "note": "Route B adopts EDG's construction as a building block but no Φ→s map exists, so none of EDG's laboratory consequences transfer. Recorded in PREDICTIONS_REGISTER as a blocking feasibility item."
+    },
+    {
+      "id": "rho-critical",
+      "kind": "constant",
+      "name": "ρ₀, the critical saturation density",
+      "status": "undetermined",
+      "evidence": "lean_proofs/DynamicPlanckScale.lean:ScaleEnvironment",
+      "note": "Free parameter of the density-driven profile. No independent determination or bound exists anywhere in the corpus."
+    },
+    {
+      "id": "planck-baseline",
+      "kind": "constant",
+      "name": "ℓ_P0, the vacuum Planck length",
+      "status": "external",
+      "evidence": "lean_proofs/DynamicCODScale.lean:CODEnvironment",
+      "note": "Set from observation rather than derived. Acceptable for a candidate theory, but it means the profile is a rescaling of a measured constant, not a prediction of it."
+    },
+    {
+      "id": "lp-density-profile",
+      "kind": "profile",
+      "name": "ℓ_P(ρ) = ℓ_P0/√(1 + ρ/ρ₀)",
+      "status": "chosen",
+      "evidence": "lean_proofs/DynamicPlanckScale.lean:dynamicPlanckLength",
+      "note": "Stated model assumption with formally checked properties (positivity, strict monotonicity, saturation). The properties are theorems; the profile is not."
+    },
+    {
+      "id": "lp-phi-profile",
+      "kind": "profile",
+      "name": "ℓ_P(Φ) = ℓ_P0·√(1 − Φ²)",
+      "status": "chosen",
+      "evidence": "lean_proofs/DynamicCODScale.lean:dynamicPlanckCOD",
+      "note": "Same status: the collapse at Φ=1 and the monotonicity are proved, the form is chosen. No independent argument selects √(1−Φ²) over the many monotone alternatives."
+    },
+    {
+      "id": "kappa-dilation",
+      "kind": "function",
+      "name": "κ(Φ) = (1 + Φ)²/√(1 − Φ²)",
+      "status": "identified",
+      "evidence": "lean_proofs/RadialDilation.lean:kappaRequired",
+      "note": "Fixed by requiring the ℓ_P-based radial metric to reproduce the isotropic conformal factor. Identified, not derived: the requirement is a matching condition, and RadialDilation records that ℓ_P alone gives g_RR = (1−Φ²)² with negative quasi-local mass and no linear term."
+    },
+    {
+      "id": "phi-star",
+      "kind": "constant",
+      "name": "Φ* = (√5 − 1)/2, the golden-ratio bottleneck",
+      "status": "chosen",
+      "evidence": "lean_proofs/RadialMetric.lean:phiStar",
+      "note": "The disformal causality band is *placed* at the golden ratio. The sharpness theorem (equality iff Φ = Φ*) is proved; nothing derives the value."
+    },
+    {
+      "id": "freeze-threshold",
+      "kind": "constant",
+      "name": "freezeBoundaryThreshold := 0.012",
+      "status": "undetermined",
+      "evidence": "lean_proofs/OmegaAxioms.lean:freezeBoundaryThreshold",
+      "note": "A literal in the axiom layer. The theorems around it are `Iff.rfl` because the threshold is a definition; the number itself has no derivation or measurement behind it."
+    },
+    {
+      "id": "depletion-rate",
+      "kind": "constant",
+      "name": "γ in İ = −γ·A_BH^κ·I",
+      "status": "undetermined",
+      "evidence": "Omega_Theory_v4.0_Technical.md#5",
+      "note": "Phenomenological ansatz; the classical area theorem gives no rate. It is fitted in the simulation suite, not predicted."
+    },
+    {
+      "id": "depletion-exponent",
+      "kind": "function",
+      "name": "κ in the depletion law",
+      "status": "undetermined",
+      "evidence": "Omega_Theory_v4.0_Technical.md#5",
+      "note": "The candidate action does not determine γ or κ(Φ) (Technical §3). One toy κ(Φ) comes from the Markov model and one effective κ from the Ising fit."
+    },
+    {
+      "id": "bh-information",
+      "kind": "ansatz",
+      "name": "H(A_BH), the horizon information content",
+      "status": "undetermined",
+      "evidence": "Omega_Theory_v4.0_Technical.md#5",
+      "note": "No covariant derivation and no independent measurement. The depletion story is built on it."
+    },
+    {
+      "id": "nonminimal-coupling",
+      "kind": "constant",
+      "name": "ξ, the scalar–curvature coupling",
+      "status": "undetermined",
+      "evidence": "Omega_Theory_v4.0_Technical.md#4",
+      "note": "Registered Open Problem 1: the JBD identification embraces non-minimal coupling while the adopted EDG route suppresses it. Both cannot be operative at the same scales, and the corpus says so."
+    },
+    {
+      "id": "qregion-carrier",
+      "kind": "model",
+      "name": "The Q-region carrier model (singleton / zero-information)",
+      "status": "chosen",
+      "evidence": "lean_proofs/OmegaAxioms.lean:QRegion",
+      "note": "The model that makes the corpus provable is degenerate: information, distance, flux and asymmetry are identically zero in it, and 33 of 163 audited statements are true only from data the model carries. Chosen for formalisation; replacing it with a non-degenerate carrier is the largest single piece of work in the programme."
+    },
+    {
+      "id": "macroscopic-metric",
+      "kind": "function",
+      "name": "The macroscopic spatial metric from Φ",
+      "status": "undetermined",
+      "evidence": "Omega_Theory_v4.0_Technical.md#7",
+      "note": "The explicit Markov and entangled-chain diagnostics both show a decay-rate trend opposite to the Schwarzschild-required trend. Neither is a continuum derivation, and the ledger records both as Open."
+    },
+    {
+      "id": "photon-mass",
+      "kind": "postulate",
+      "name": "PhotonMass := 0",
+      "status": "postulate",
+      "evidence": "lean_proofs/Vol02_Electromagnetism.lean:PhotonMass",
+      "note": "Model postulate, named and docstringed. The theorem `photonMass_eq_zero` is `rfl`: a restatement, not a derivation, and the rename pass says so in its name."
+    },
+    {
+      "id": "legacy-density-constants",
+      "kind": "postulate",
+      "name": "Legacy density constants (Ω_b, Ω_DM, Ω_Λ summing to 1)",
+      "status": "postulate",
+      "evidence": "lean_proofs/Vol14_DarkSector.lean:legacy_density_constants_sum_eq_one",
+      "note": "Flatness is the constant 1, not a derived property. Renamed from `flat_universe_sum` precisely because the old name implied otherwise."
+    }
+  ]
+}
