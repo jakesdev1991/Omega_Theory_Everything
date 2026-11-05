@@ -14,6 +14,8 @@ computed from the four joint probabilities and their marginals in nats.
 
 namespace QRegionChannel
 
+open OmegaProtocol
+
 /-- Joint probability of a pair of unbiased bits. -/
 noncomputable def joint (q : ℝ) (a b : Bool) : ℝ :=
   if a = b then (1 - q) / 2 else q / 2
@@ -167,9 +169,9 @@ theorem bitFlip_normalizedOverlap_le {q e : ℝ}
 
 /-- The independent endpoint of this benchmark cannot equal the current
 strictly positive pairwise overlap on any existing `QRegion` pair. -/
-theorem independent_not_existing_overlap (R S : OmegaProtocol.QRegion) :
-    OmegaProtocol.Φ R S ≠ normalizedOverlap (1 / 2) := by
+theorem independent_not_existing_overlap (R S : QRegion) :
+    Φ R S ≠ normalizedOverlap (1 / 2) := by
   rw [normalizedOverlap_endpoints.2]
-  exact ne_of_gt (OmegaProtocol.Φ_pos R S)
+  exact ne_of_gt (Φ_pos R S)
 
 end QRegionChannel
