@@ -11,9 +11,10 @@ conditionally; it does not determine physical Φ from a Q-region.
 
 `lean_proofs/QRegionChannel.lean` now proposes the joint distribution and
 bit-flip channel, including normalization, unbiased marginals, channel action,
-bounds, composition and a nontrivial witness. These new declarations have not
-yet been Lean-checked. Mutual information, entropy monotonicity and the bridge
-to the existing Q-region interface remain open.
+bounds, composition and a nontrivial witness. These declarations passed the
+Lean build and transitive kernel-axiom audit in CI run 42127214338 at commit
+`e202364`. Mutual information, entropy monotonicity and the bridge to the
+existing Q-region interface remain open.
 
 ## What the present model actually supplies
 
