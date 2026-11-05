@@ -17,8 +17,9 @@ Lean build and transitive kernel-axiom audit in CI run 42127214338 at commit
 under the bit-flip channel passed Lean build and kernel audit in CI run
 42128816079 at commit `ab6ad24`. Further candidate declarations add normalized
 overlap and expose its independent endpoint's incompatibility with the current
-strictly positive `QRegion` overlap; these additions await Lean CI. A general
-bridge to physical Q-region data remains open.
+strictly positive `QRegion` overlap; these additions passed Lean build and kernel
+axiom audit in CI run 42132144272 at commit `c770dce`. A general bridge to
+physical Q-region data remains open.
 
 ## What the present model actually supplies
 

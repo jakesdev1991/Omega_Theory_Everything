@@ -52,7 +52,8 @@ derive physical dynamics. Its joint-distribution and channel declarations passed
 the Lean build and transitive kernel-axiom audit in CI run 42127214338 at commit
 `e202364`. Mutual-information and noise-monotonicity proofs passed the Lean
 build and kernel audit in CI run 42128816079 at commit `ab6ad24`. Subsequent
-normalized-overlap and incompatibility declarations await Lean CI.
+normalized-overlap and incompatibility declarations passed Lean build and
+kernel audit in CI run 42132144272 at commit `c770dce`.
 
 ## Main finding and logical next step
 

@@ -17,6 +17,13 @@ No structured claim files were supplied. No claim-to-statement comparison,
 mutation-based dependence check, elaborated-statement inspection, or transitive
 axiom inspection was performed by the requested auditor.
 
+**Subsequent CI update:** After this audit snapshot, the remote push succeeded.
+The normalized-overlap additions, including a namespace-only adjustment for the
+repository's lexical name checker, passed the full Lean build and selected
+288-target kernel-axiom audit in [run 42132144272](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/42132144272)
+at commit `c770dce`. This does not change the external auditor's inconclusive
+result for the original snapshot or replace its unrun full-corpus checks.
+
 ## Findings
 
 ### 1. Auditor report can incorrectly say “yes” when nothing ran
@@ -38,17 +45,17 @@ in the separate auditor repository would give each question an explicit
 pass/fail/unknown state and test missing, skipped and inconclusive checks; this
 audit did not modify that repository.
 
-### 2. Latest normalized-overlap additions are not kernel-verified
+### 2. Normalized-overlap additions were not kernel-verified at audit time
 
 The earlier Lean CI [run 42128816079](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/42128816079)
 passed the full `ToE` build and its selected **284-target** transitive axiom
 audit at commit `ab6ad24`. That includes the binary benchmark's mutual
 information and bit-flip monotonicity, and the Planck dictionary. It does not
 include the four additional normalized-overlap declarations at local commit
-`dd83f48`; the latest push was rejected by the remote. Their proof text and
-kernel-audit targets exist locally, but their compilation and axiom status are
-**unknown**. The present target list contains 288 names; CI's earlier pass does
-not verify the four additions retroactively.
+`dd83f48`; the push had been rejected by the remote at audit time, so their
+compilation and axiom status were then **unknown**. The 288-target kernel audit
+subsequently passed at `c770dce`, as recorded above; CI's earlier 284-target
+pass alone did not verify those additions.
 
 ### 3. Model-interface mismatch remains a real conceptual issue
 
@@ -56,9 +63,9 @@ not verify the four additions retroactively.
 positive, while the classical two-bit benchmark's independent endpoint has
 zero mutual information. A proposed normalized benchmark overlap therefore
 cannot equal the existing pairwise overlap at that endpoint. The local
-`independent_not_existing_overlap` declaration expresses this, but it is among
-the unverified additions in finding 2. Even if it passes, it is a mismatch
-between these particular definitions—not evidence that all possible Q-region
+`independent_not_existing_overlap` declaration expresses this and was later
+kernel-checked as noted above. It is a mismatch between these particular
+definitions—not evidence that all possible Q-region
 models fail. No identification of the classical channel with physical Q-region
 evolution is established.
 
@@ -96,8 +103,8 @@ external Lean auditor**:
 
 ## Required follow-up
 
-1. Repair the remote push issue, then run the full Lean build and transitive
-   kernel audit for the current commit; resolve any compilation failures.
+1. **Completed after the audit:** the push succeeded, and the full Lean build
+   and selected transitive kernel audit passed at `c770dce`.
 2. Run the requested auditor on each proof module in an environment with the
    pinned Lean 4.32.0, a built Mathlib project and the auditor's conformance
    probes. Retain machine-readable per-file results and account for mutation
