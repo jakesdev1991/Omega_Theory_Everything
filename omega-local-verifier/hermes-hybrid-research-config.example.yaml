@@ -1,0 +1,125 @@
+# Hybrid Hermes profile: local/networkless Lean verification plus allowlisted
+# scholarly research MCPs. Merge this TOP-LEVEL block into the active config
+# shown by `hermes config path`. Replace every /ABSOLUTE/PATH placeholder.
+#
+# Put the contact email in the active profile's .env (shown by
+# `hermes config env-path`):
+#   SCHOLAR_CONTACT_EMAIL=researcher@example.org
+#
+# Research package versions below were reviewed on 2026-08-18. Re-review source,
+# release notes, license, and dependencies before updating them.
+
+mcp_servers:
+  # Keep the `axle` key so Hermes exposes stable mcp_axle_* names. Today this
+  # local server provides strict verification tools; planned AXLE-compatible
+  # proof-engineering tools can be added behind the same local endpoint.
+  axle:
+    command: "/ABSOLUTE/PATH/TO/lean-local-verifier/.venv/bin/lean-verifier-mcp"
+    args: []
+    env:
+      LEAN_VERIFIER_IMAGE: "local-lean-verifier:4.27.0"
+      LEAN_VERIFIER_SPECS_DIR: "/ABSOLUTE/PATH/TO/lean-local-verifier/specs"
+      LEAN_VERIFIER_TIMEOUT: "120"
+      LEAN_VERIFIER_MAX_TIMEOUT: "300"
+    enabled: true
+    timeout: 320
+    connect_timeout: 60
+    trust: full
+    supports_parallel_tool_calls: false
+    tools:
+      resources: false
+      prompts: false
+
+  # Local gateway process, connected only to the hard-coded official ERIC,
+  # OpenAlex, and Crossref HTTPS APIs. It is outside the networkless Lean worker.
+  scholar:
+    command: "/ABSOLUTE/PATH/TO/lean-local-verifier/.venv/bin/research-evidence-mcp"
+    args: []
+    env:
+      SCHOLAR_CONTACT_EMAIL: "${SCHOLAR_CONTACT_EMAIL}"
+      RESEARCH_HTTP_TIMEOUT: "30"
+      # OPENALEX_API_KEY: "${OPENALEX_API_KEY}"  # optional
+    enabled: true
+    timeout: 90
+    connect_timeout: 30
+    trust: untrusted
+    supports_parallel_tool_calls: true
+    tools:
+      resources: false
+      prompts: false
+
+  # Dedicated arXiv discovery/full-text server. arXiv is a moderated preprint
+  # repository, not peer review. Paper text and LaTeX are untrusted input.
+  arxiv:
+    command: "/ABSOLUTE/PATH/TO/uvx"
+    args:
+      - "--from"
+      - "arxiv-mcp-server==0.6.3"
+      - "arxiv-mcp-server"
+      - "--storage-path"
+      - "/ABSOLUTE/PATH/TO/research-cache/arxiv"
+    env:
+      MAX_RESULTS: "25"
+      REQUEST_TIMEOUT: "60"
+    enabled: true
+    timeout: 120
+    connect_timeout: 60
+    trust: untrusted
+    supports_parallel_tool_calls: false
+    tools:
+      resources: false
+      prompts: false
+
+  # Cross-check claimed references against Crossref, Semantic Scholar, and
+  # arXiv. "verified" here means bibliographically matched, not claim-correct.
+  refcheck:
+    command: "/ABSOLUTE/PATH/TO/uvx"
+    args: ["--from", "refcheck-mcp==0.1.0", "refcheck"]
+    env:
+      CROSSREF_EMAIL: "${SCHOLAR_CONTACT_EMAIL}"
+      # SEMANTIC_SCHOLAR_API_KEY: "${SEMANTIC_SCHOLAR_API_KEY}"  # optional
+    enabled: true
+    timeout: 90
+    connect_timeout: 60
+    trust: untrusted
+    supports_parallel_tool_calls: true
+    tools:
+      resources: false
+      prompts: false
+
+  # Optional biomedical profile: PubMed, PMC, Europe PMC, and lawful OA
+  # fallback through Unpaywall. Requires Node.js >=24 for this pinned release.
+  pubmed:
+    command: "/ABSOLUTE/PATH/TO/npx"
+    args: ["-y", "@cyanheads/pubmed-mcp-server@2.10.2"]
+    env:
+      MCP_TRANSPORT_TYPE: "stdio"
+      MCP_LOG_LEVEL: "info"
+      NCBI_ADMIN_EMAIL: "${SCHOLAR_CONTACT_EMAIL}"
+      UNPAYWALL_EMAIL: "${SCHOLAR_CONTACT_EMAIL}"
+      EUROPEPMC_ENABLED: "true"
+      # NCBI_API_KEY: "${NCBI_API_KEY}"  # optional higher rate limit
+    enabled: false
+    timeout: 120
+    connect_timeout: 60
+    trust: untrusted
+    supports_parallel_tool_calls: false
+    tools:
+      resources: false
+      prompts: false
+
+  # Optional local interactive Lean diagnostics. Disable every remote theorem
+  # search tool if you want all proof-engineering calls to stay local.
+  lean_lsp:
+    command: "/ABSOLUTE/PATH/TO/uvx"
+    args: ["lean-lsp-mcp", "--loogle-local"]
+    env:
+      LEAN_PROJECT_PATH: "/ABSOLUTE/PATH/TO/YOUR/LEAN/PROJECT"
+      LEAN_LOG_LEVEL: "NONE"
+      LEAN_LOOGLE_LOCAL: "true"
+      LEAN_MCP_DISABLED_TOOLS: "lean_leansearch,lean_leanfinder,lean_state_search,lean_hammer_premise"
+    enabled: false
+    timeout: 180
+    connect_timeout: 120
+    trust: full
+    supports_parallel_tool_calls: false

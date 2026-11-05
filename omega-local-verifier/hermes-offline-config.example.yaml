@@ -1,0 +1,37 @@
+# Planned all-local Hermes configuration.
+# `axle` intentionally points to the local compatibility server so Hermes tool names
+# remain mcp_axle_<tool>. The current project already provides local verify_proof;
+# add the remaining compatibility tools according to OFFLINE_SERVER_PLAN.md.
+
+mcp_servers:
+  axle:
+    command: "/ABSOLUTE/PATH/TO/lean-local-verifier/.venv/bin/lean-verifier-mcp"
+    args: []
+    env:
+      LEAN_VERIFIER_IMAGE: "local-lean-verifier:4.27.0"
+      LEAN_VERIFIER_SPECS_DIR: "/ABSOLUTE/PATH/TO/lean-local-verifier/specs"
+      HF_HUB_OFFLINE: "1"
+      TRANSFORMERS_OFFLINE: "1"
+      HF_DATASETS_OFFLINE: "1"
+    enabled: true
+    timeout: 320
+    connect_timeout: 60
+    trust: full
+    supports_parallel_tool_calls: false
+    tools:
+      resources: false
+      prompts: false
+
+  lean_lsp:
+    command: "/ABSOLUTE/PATH/TO/OFFLINE/VENV/bin/lean-lsp-mcp"
+    args: ["--loogle-local"]
+    env:
+      LEAN_PROJECT_PATH: "/ABSOLUTE/PATH/TO/Volumes"
+      LEAN_LOG_LEVEL: "NONE"
+      LEAN_LOOGLE_LOCAL: "true"
+      LEAN_MCP_DISABLED_TOOLS: "lean_leansearch,lean_leanfinder,lean_state_search,lean_hammer_premise"
+    enabled: true
+    timeout: 180
+    connect_timeout: 120
+    trust: full
+    supports_parallel_tool_calls: false

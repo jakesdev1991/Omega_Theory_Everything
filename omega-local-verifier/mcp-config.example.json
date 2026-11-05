@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "lean-local-verifier": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/ABSOLUTE/PATH/TO/lean-local-verifier",
+        "run",
+        "lean-verifier-mcp"
+      ],
+      "env": {
+        "LEAN_VERIFIER_IMAGE": "local-lean-verifier:4.27.0",
+        "LEAN_VERIFIER_SPECS_DIR": "/ABSOLUTE/PATH/TO/lean-local-verifier/specs",
+        "LEAN_VERIFIER_TIMEOUT": "120"
+      }
+    }
+  }
+}
