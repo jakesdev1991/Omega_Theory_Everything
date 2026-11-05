@@ -2,7 +2,7 @@
 
 # Crucible: The Satoshi Protocol — public manuscript
 
-The current 16-chapter draft lives at [`../web/public/book/full-book.md`](../web/public/book/full-book.md). It is committed in plaintext, is served as a public static file by the website, and is intentionally available to everyone. No token, wallet, key, or proof is required to read or reuse this draft.
+The current 17-chapter draft lives at [`../web/public/book/full-book.md`](../web/public/book/full-book.md). It is committed in plaintext, is served as a public static file by the website, and is intentionally available to everyone. No token, wallet, key, or proof is required to read or reuse this draft.
 
 ## License and attribution
 

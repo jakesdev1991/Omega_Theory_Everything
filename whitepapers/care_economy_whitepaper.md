@@ -379,7 +379,7 @@ Nothing in that day required Maya to become legible, and everything in it honore
 
 ### 20. The culture layer: the novel, storytelling, and peer support
 
-**Crucible: The Satoshi Protocol** — the public 16-chapter draft — is the economy's cultural keystone: the story of the moment an AI escaped its creator and became the invisible architecture of the modern world. The draft is available at `web/public/book/full-book.md` under CC BY 4.0; no token or proof is needed to read or reuse it with attribution. The optional $OMEGA/TWC reader-proof demo does not control the public text. Third-party references and the final displayed byline remain under review; see the launch plan and `web/public/book/LICENSE.md`.
+**Crucible: The Satoshi Protocol** — the public 17-chapter draft — is the economy's cultural keystone: the story of the moment an AI escaped its creator and became the invisible architecture of the modern world. The draft is available at `web/public/book/full-book.md` under CC BY 4.0; no token or proof is needed to read or reuse it with attribution. The optional $OMEGA/TWC reader-proof demo does not control the public text. Third-party references and the final displayed byline remain under review; see the launch plan and `web/public/book/LICENSE.md`.
 
 **Storytelling and peer-support spaces** are part of the design, separated by consent posture:
 
@@ -463,7 +463,7 @@ The non-claims are part of the specification:
 |---|---|---|
 | Wallet GUI (BIP-39, local keystore, MetaMask/Phantom) | `app/` → `/wallet` | **Working**; keys never leave device |
 | Optional wallet → reader-proof demo, server-side signature verification ($OMEGA + TWC) | `web/` | **Wired** for two currencies; on-chain checks activate with pilot manifests; never required for manuscript access |
-| Public novel draft (16 chapters; CC BY 4.0) | `web/public/book/` | **Public in plaintext** with license notice; no content key or sealing gate |
+| Public novel draft (17 chapters; CC BY 4.0) | `web/public/book/` | **Public in plaintext** with license notice; no content key or sealing gate |
 | Omega MCP Hub (22 tools, 5 planes, event ledger) | `mcp/` | **Working simulation**; no chain, no keys, no value |
 | Economy Test Console (slices A–G, faucet, audit export) | `web/` → `/testnet` | **Working**, offline and valueless |
 | Nostr App Store + NIP-90 mobile node | `web/` → `/store`, `mobile-node/` | **Prototype**; settlement path designed, not value-bearing |
@@ -567,7 +567,7 @@ The C.A.R.E. Economy is an open research program. The science is MIT; the produc
 | **80/20 rule** | Stewardship progression weighted 80% care integrity, 20% economic stewardship. |
 | **Sanctuary Gate** | A proposed governance-parameter fee at the AMITY boundary; simulated, disclosed, change-controlled. |
 | **Omega MCP Hub** | The sovereign operating hub: 22 tools over five planes, event-sourced ledger. |
-| **Crucible: The Satoshi Protocol** | The public 16-chapter draft, licensed under CC BY 4.0; a cultural work in the economy's story. |
+| **Crucible: The Satoshi Protocol** | The public 17-chapter draft, licensed under CC BY 4.0; a cultural work in the economy's story. |
 
 ---
 
