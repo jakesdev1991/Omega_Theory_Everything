@@ -121,29 +121,72 @@ def test_decide_distinguishes_killed_from_untested():
     assert passed["verdict"] == "PASS"
 
 
+def _summary(per_arm: dict[str, list[float]], seeds: list[int]) -> dict:
+    """A run_benchmark-shaped summary, built by hand.
+
+    Built here rather than produced by `run_benchmark` so that the reporting and
+    verdict logic can be tested in an environment without scikit-learn -- which
+    is the environment this repository's own CI uses. The one-seed path is
+    exactly what a user hits first with their own CSV, so it has to be covered
+    without the modelling stack.
+    """
+    summary: dict = {"seeds": seeds, "arms": list(per_arm), "per_seed": []}
+    for name, values in per_arm.items():
+        n = len(values)
+        summary[name] = {
+            "pr_auc_mean": sum(values) / n,
+            "pr_auc_sd": 0.0,
+            "pr_auc_per_seed": list(values),
+            "roc_auc_mean": 0.5,
+            "roc_auc_n_valid": n,
+            "fa_per_1000_mean": 0.0,
+            "missed_mean": 0.0,
+            "n_test_rows": 100,
+            "median_lead": 10.0,
+        }
+    return summary
+
+
+def _arms_placeholder() -> list:
+    def extract(series, warmup):  # never called by render_report
+        raise AssertionError("render_report must not build features")
+
+    return [onset_eval.Arm("a", extract), onset_eval.Arm("b", extract)]
+
+
 def test_single_seed_report_is_descriptive_not_a_verdict():
-    """The one-seed path is the common one, and it must not read as evidence."""
-
-    def family(_seed):
-        n = 900
-        x = np.cumsum(np.random.default_rng(0).standard_normal(n)) * 0.1
-        return onset_eval.Series(values=x, onsets=np.array([300, 600]), name="one")
-
-    def extract(series, warmup):
-        idx = np.arange(warmup, len(series) - 30)
-        return ("v",), series.values[idx][:, None]
-
-    arms = [
-        onset_eval.Arm("a", extract, warmup=40),
-        onset_eval.Arm("b", extract, warmup=40),
-    ]
-    summary = onset_eval.run_benchmark(family, arms, [0], onset_eval.Protocol())
+    """One seed is the common case, and it must not read as evidence."""
+    arms = _arms_placeholder()
+    summary = _summary({"a": [0.30], "b": [0.10]}, seeds=[0])
     report = onset_eval.render_report(
         summary, arms, baseline="b", treatment="a", protocol=onset_eval.Protocol()
     )
     assert "no test possible (n = 1 seed)" in report
     assert "Verdict for `a`: UNDECIDED" in report
+    assert "description of a single run, not evidence" in report
     assert "p = 1.0000" not in report
+
+
+def test_multi_seed_report_reports_the_test_it_ran():
+    arms = _arms_placeholder()
+    # a wins on every seed by a clear margin, and is operational (0 false alarms)
+    summary = _summary(
+        {"a": [0.5, 0.6, 0.55, 0.52, 0.58], "b": [0.1] * 5}, seeds=list(range(5))
+    )
+    summary["a"]["fa_per_1000_mean"] = 0.5
+    report = onset_eval.render_report(
+        summary, arms, baseline="b", treatment="a", protocol=onset_eval.Protocol()
+    )
+    assert "Wilcoxon p = 0.0312" in report and "significant" in report
+    assert "Verdict for `a`: PASS" in report
+
+
+def test_seeds_with_one_class_have_no_roc_auc_and_the_table_says_how_many():
+    arms = _arms_placeholder()
+    summary = _summary({"a": [0.4, 0.4, 0.4], "b": [0.1, 0.1, 0.1]}, seeds=[0, 1, 2])
+    summary["a"]["roc_auc_n_valid"] = 2
+    report = onset_eval.render_report(summary, arms, baseline="b")
+    assert "(2/3 seeds)" in report
 
 
 def test_benchmark_and_report_end_to_end():
