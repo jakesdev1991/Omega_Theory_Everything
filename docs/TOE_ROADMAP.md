@@ -58,9 +58,10 @@ physical-range candidate `Φ = √((ρ/ρ₀)/(1 + ρ/ρ₀))` for nonnegative f
 density and a shared baseline. It is strictly increasing, but reaches `Φ = 1`
 only in the infinite-density limit. On the clamped negative-density branch the
 matching overlap is zero, so strict monotonicity on all reals is impossible.
-The calculation is not yet Lean-checked; formalising its precise domain,
-uniqueness, inverse and endpoint is the next target. Do not raise `carried_cap`
-in `statement_audit.json` (33, at the limit).
+The construction is not yet Lean-checked; a conditional bridge for uniqueness,
+positive-density monotonicity and the endpoint has passed Lean CI. Formalising
+existence, the zero boundary and the inverse is the next target. Do not raise
+`carried_cap` in `statement_audit.json` (33, at the limit).
 
 A match alone does **not** derive either chosen profile or establish that the
 physical COD and density satisfy this relation. It removes a mathematical

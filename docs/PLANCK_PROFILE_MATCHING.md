@@ -1,8 +1,8 @@
 # Matching the two Planck-scale profiles
 
-This is an analytic calculation, **not a Lean-checked theorem** and not a
-physical derivation of either profile. It makes the target and its domain precise
-before formalisation. The definitions being compared are
+This analytic calculation is **not a Lean-checked construction** and is not a
+physical derivation of either profile. The conditional results described below
+have been Lean-checked. The definitions being compared are
 [`dynamicPlanckLength`](../lean_proofs/DynamicPlanckScale.lean) and
 [`dynamicPlanckCOD`](../lean_proofs/DynamicCODScale.lean).
 
@@ -79,9 +79,9 @@ statement must not assert that the dictionary follows from Q-region physics.
 conditional uniqueness, the maximal-overlap obstruction, the clamped branch,
 and strict monotonicity on positive densities for **any** physical-range matching
 function. The latter is conditional and does not construct such a function.
-These declarations have been added to the kernel-audit target list, but have not
-yet been compiled or kernel-audited in an environment with Lake. The full
-formalisation remains open until existence, monotonicity including the zero
-boundary, and the inverse are also proved and the build and axiom audit pass. A
-failure to formalise this particular proof is not evidence that no dictionary
-exists.
+These declarations passed the Lean build and transitive kernel-axiom audit in
+[Lean CI run 42114531942](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/42114531942)
+at commit `b8048ae`. The full formalisation remains open until existence,
+monotonicity including the zero boundary, and the inverse are also proved and
+the build and axiom audit pass. A failure to formalise this particular proof is
+not evidence that no dictionary exists.

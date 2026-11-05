@@ -39,8 +39,9 @@ CI's `lake build ToE` is what makes a named witness more than a string.
 existing chosen profiles: its conditional statements address uniqueness,
 endpoint mismatch, the clamped branch and monotonicity of any matching map.
 They do not establish that a matching map exists or that the relationship is a
-physical law. The new declarations require Lean build and kernel-audit validation
-in CI; see `docs/PLANCK_PROFILE_MATCHING.md` for the remaining work.
+physical law. The new declarations passed the Lean build and kernel audit in
+CI run 42114531942 at commit `b8048ae`; see `docs/PLANCK_PROFILE_MATCHING.md`
+for the remaining work.
 
 ## Main finding and logical next step
 
