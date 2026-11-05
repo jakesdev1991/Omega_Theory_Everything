@@ -12,6 +12,7 @@ Aggregates per t:
 Documented choice (see DESIGN.md): each window is z-scored before the cosine
 similarity, otherwise a nonzero series mean pins Phi ~= 1 and mu ~= 0.
 """
+
 import numpy as np
 from numpy.lib.stride_tricks import sliding_window_view
 
@@ -35,14 +36,14 @@ def swarm_metrics(x, macro_w=252, leaf_ws=None, seed=0):
     for j, w in enumerate(windows):
         if w + 1 > T:
             continue
-        W = sliding_window_view(x, w)          # shape (T-w+1, w); W[i] ends at t=i+w-1
+        W = sliding_window_view(x, w)  # shape (T-w+1, w); W[i] ends at t=i+w-1
         Z = _zscore_rows(W)
         norms = np.linalg.norm(Z, axis=1)
         norms = np.where(norms < 1e-12, 1.0, norms)
         Zn = Z / norms[:, None]
-        cos = np.einsum("ij,ij->i", Zn[1:], Zn[:-1])   # cos between window t and t-1
+        cos = np.einsum("ij,ij->i", Zn[1:], Zn[:-1])  # cos between window t and t-1
         cos = np.clip(cos, -1.0, 1.0)
-        mu = np.sqrt(np.maximum(0.0, 1.0 - cos ** 2))
+        mu = np.sqrt(np.maximum(0.0, 1.0 - cos**2))
         # mu[k] compares windows ending at t=k+w-1 and t=k+w-2 -> assign to t=k+w-1
         mu_mat[w : w + len(mu), j] = mu
 
@@ -104,6 +105,6 @@ def temporal_hierarchy(x, block_sizes=(84, 21, 6)):
         cos = np.einsum("ij,ij->i", Zn[1:], Zn[:-1])
         cos = np.clip(cos, -1.0, 1.0)
         mu = np.full(n, np.nan)
-        mu[1:] = np.sqrt(np.maximum(0.0, 1.0 - cos ** 2))
+        mu[1:] = np.sqrt(np.maximum(0.0, 1.0 - cos**2))
         out[lv] = {"mu": mu, "W": W, "n": n}
     return out
