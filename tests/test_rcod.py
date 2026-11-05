@@ -12,9 +12,10 @@ The first is what the published numbers mean; the other two are what a
 deployment can afford. This file is the proof that they agree, which is the
 only thing that makes the faster paths safe to use.
 
-Nothing here needs scikit-learn or scipy: the modelling-dependent checks skip
-themselves when those packages are absent (the repo's CI requirements do not
-include them), so the equivalence guarantees still run in CI.
+The harness that used to be tested here now lives in `packages/onset_eval/` and
+is tested there, including against an installed wheel; what remains here is the
+metric core plus one check that the `rcod.harness` shim still resolves to the
+published package.
 """
 
 from __future__ import annotations
@@ -29,7 +30,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-import rcod.harness as harness  # noqa: E402
+import rcod.harness as rcod_harness  # noqa: E402
 from rcod.section5 import swarm  # noqa: E402
 
 
@@ -201,123 +202,31 @@ def test_tracker_rejects_non_finite():
 
 
 # --------------------------------------------------------------------------
-# harness: the portable protocol
+# the published package: rcod.harness is a shim over onset_eval
 # --------------------------------------------------------------------------
-def test_label_onsets_marks_only_the_horizon_after_an_onset():
-    idx = np.arange(0, 100)
-    y = harness.label_onsets(idx, np.array([10, 50]), horizon=5)
-    # onset at 10 is positive for t in (10-horizon, 10) = 5..9, and never at 10
-    assert set(idx[y == 1]) == set(range(5, 10)) | set(range(45, 50))
-    assert y[idx[np.isin(idx, [10, 50])]].tolist() == [
-        0,
-        0,
-    ]  # onset itself not positive
+def test_rcod_harness_shim_resolves_to_the_published_package():
+    """`rcod.harness` must keep working now that the code moved to a package."""
+    import onset_eval
+    import onset_eval.harness as published
+
+    assert rcod_harness.__all__ == published.__all__
+    for name in published.__all__:
+        assert getattr(rcod_harness, name) is getattr(published, name), name
+    assert onset_eval.__version__
 
 
-def test_series_validates_onsets():
-    with pytest.raises(ValueError, match="outside"):
-        harness.Series(values=np.zeros(10), onsets=np.array([10]))
-    with pytest.raises(ValueError, match="distinct"):
-        harness.Series(values=np.zeros(10), onsets=np.array([3, 3]))
-    with pytest.raises(ValueError, match="1-D"):
-        harness.Series(values=np.zeros((4, 2)), onsets=np.array([1]))
+def test_package_public_surface_matches_its_module():
+    import onset_eval
 
-
-def test_series_from_csv_flags_and_indices(tmp_path):
-    flags = tmp_path / "flags.csv"
-    flags.write_text("value,onset\n1,0\n2,1\n3,0\n4,0\n", encoding="utf-8")
-    series = harness.Series.from_csv(flags)
-    assert series.onsets.tolist() == [1]
-    assert series.values.tolist() == [1.0, 2.0, 3.0, 4.0]
-
-    indices = tmp_path / "indices.csv"
-    indices.write_text("value,onset\n1,\n2,\n3,2\n", encoding="utf-8")
-    series = harness.Series.from_csv(indices)
-    assert series.onsets.tolist() == [2]
-
-
-def test_protocol_rejects_impossible_splits():
-    with pytest.raises(ValueError, match="split"):
-        harness.Protocol(split=(0.5, 0.2, 0.2))
-    with pytest.raises(ValueError, match="horizon"):
-        harness.Protocol(horizon=0)
-
-
-def test_paired_test_degenerate_inputs_report_no_evidence():
-    same = harness.paired_test([0.1, 0.2, 0.3], [0.1, 0.2, 0.3])
-    assert same["p_value"] == 1.0
-    one = harness.paired_test([0.1], [0.2])
-    assert one["p_value"] == 1.0 and one["n"] == 1.0
-
-
-def test_benchmark_and_report_end_to_end():
-    """A whole claim, decided: two arms, three seeds, a verdict line."""
-    pytest.importorskip("sklearn")
-    pytest.importorskip("scipy")
-
-    def family(seed):
-        rng = np.random.default_rng(seed)
-        n = 1200
-        x = np.cumsum(rng.standard_normal(n)) * 0.1
-        onsets = np.array([300, 700, 1000])
-        for onset in onsets:  # visible level breaks at each onset
-            x[onset:] += 3.0
-        return harness.Series(values=x, onsets=onsets, name=f"toy-{seed}")
-
-    def informative(series, warmup):
-        idx = np.arange(warmup, len(series) - 30)
-        x = series.values
-        level = np.array([x[max(0, t - 20) : t + 1].mean() for t in idx])
-        slope = np.array([x[t] - x[max(0, t - 20)] if t >= 20 else 0.0 for t in idx])
-        return ("level", "slope"), np.column_stack([level, slope])
-
-    def flat(series, warmup):
-        idx = np.arange(warmup, len(series) - 30)
-        return ("constant",), np.ones((idx.size, 1))
-
-    arms = [
-        harness.Arm("informative", informative, warmup=40),
-        harness.Arm("constant", flat, warmup=40),
-    ]
-    summary = harness.run_benchmark(
-        family, arms, [0, 1, 2], harness.Protocol(horizon=30)
-    )
-    assert summary["informative"]["pr_auc_mean"] > summary["constant"]["pr_auc_mean"]
-    assert len(summary["per_seed"]) == 3
-    report = harness.render_report(
-        summary, arms, baseline="constant", treatment="informative"
-    )
-    assert (
-        "| informative |" in report and "Wilcoxon p" in report and "Verdict" in report
-    )
-
-
-def test_arms_on_different_warmups_are_compared_on_one_grid():
-    pytest.importorskip("sklearn")
-
-    def family(_seed):
-        n = 900
-        x = (
-            np.sin(np.arange(n) / 25.0)
-            + np.random.default_rng(0).standard_normal(n) * 0.1
-        )
-        return harness.Series(values=x, onsets=np.array([300, 600]), name="grid")
-
-    def extract(series, warmup):
-        idx = np.arange(warmup, len(series) - 20)  # must match Protocol.horizon
-        return ("v",), series.values[idx][:, None]
-
-    arms = [
-        harness.Arm("short", extract, warmup=50),
-        harness.Arm("long", extract, warmup=120),
-    ]
-    summary = harness.run_benchmark(family, arms, [0], harness.Protocol(horizon=20))
-    # The arms' warmups differ, so their natural grids differ; the harness
-    # scores both on the intersection, which shows up as an equal test-slice
-    # size. Without that, the longer-warmup arm would be judged on a different
-    # slice of the series than the arm it is compared against.
-    rows = {summary[arm]["n_test_rows"] for arm in ("short", "long")}
-    assert len(rows) == 1, rows
-    assert summary["short"]["pr_auc_mean"] == pytest.approx(
-        summary["long"]["pr_auc_mean"], abs=1e-9
-    )
+    for name in (
+        "Arm",
+        "Protocol",
+        "Series",
+        "evaluate_arm",
+        "label_onsets",
+        "paired_test",
+        "render_report",
+        "run_benchmark",
+        "decide",
+    ):
+        assert hasattr(onset_eval, name), name
