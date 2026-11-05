@@ -1,0 +1,6 @@
+This product includes SafeVerify, developed by GasStationManager and contributors,
+licensed under the Apache License 2.0.
+
+SafeVerify source: https://github.com/GasStationManager/SafeVerify
+Vendored revision: b291b588a53999a7e837dda61c7dbfe8c550c814
+The unmodified upstream source used by this project is under vendor/SafeVerify.

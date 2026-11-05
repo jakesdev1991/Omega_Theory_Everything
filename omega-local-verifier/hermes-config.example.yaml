@@ -1,0 +1,46 @@
+# Merge this TOP-LEVEL block into the active Hermes config shown by:
+#   hermes config path
+# Do not use Claude's `mcpServers` spelling in Hermes.
+mcp_servers:
+  axle:
+    command: "/ABSOLUTE/PATH/TO/uvx"
+    args: ["--from", "axiom-axle-mcp", "axle-mcp-server"]
+    env:
+      AXLE_API_KEY: "${AXLE_API_KEY}"
+    enabled: true
+    timeout: 300
+    connect_timeout: 90
+    trust: untrusted
+    supports_parallel_tool_calls: false
+    tools:
+      resources: false
+      prompts: false
+
+  lean_verify_local:
+    command: "/ABSOLUTE/PATH/TO/uv"
+    args:
+      - "--directory"
+      - "/ABSOLUTE/PATH/TO/lean-local-verifier"
+      - "run"
+      - "lean-verifier-mcp"
+    env:
+      LEAN_VERIFIER_IMAGE: "local-lean-verifier:4.27.0"
+      LEAN_VERIFIER_SPECS_DIR: "/ABSOLUTE/PATH/TO/lean-local-verifier/specs"
+    enabled: true
+    timeout: 320
+    connect_timeout: 60
+    trust: full
+    supports_parallel_tool_calls: false
+
+  # Optional but recommended for local interactive goal states and theorem search.
+  lean_lsp:
+    command: "/ABSOLUTE/PATH/TO/uvx"
+    args: ["lean-lsp-mcp"]
+    env:
+      LEAN_PROJECT_PATH: "/ABSOLUTE/PATH/TO/YOUR/LEAN/PROJECT"
+      LEAN_LOG_LEVEL: "NONE"
+    enabled: true
+    timeout: 180
+    connect_timeout: 120
+    trust: full
+    supports_parallel_tool_calls: false

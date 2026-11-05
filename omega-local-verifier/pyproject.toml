@@ -1,0 +1,28 @@
+[build-system]
+requires = ["hatchling>=1.26"]
+build-backend = "hatchling.build"
+
+[project]
+name = "lean-local-verifier"
+version = "0.1.0"
+description = "Sandboxed local Lean 4 proof verification with CLI and MCP interfaces"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+dependencies = [
+  "httpx>=0.27,<1",
+  "mcp[cli]>=1.19,<3",
+  "ruamel.yaml>=0.18,<0.19",
+]
+
+[project.scripts]
+lean-verifier-mcp = "lean_local_verifier.server:main"
+lean-verify = "lean_local_verifier.cli:main"
+research-evidence-mcp = "research_evidence.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/lean_local_verifier", "src/research_evidence"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
