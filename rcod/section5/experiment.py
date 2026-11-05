@@ -2,17 +2,22 @@
 
 Pre-registered in DESIGN.md BEFORE Run 1 ran; Amendments 1 (precursor fix)
 and 2 (hierarchical 3-level swarms) written before their runs.
+
+To reproduce, use the environment recorded in ../SECTION5_RESULTS.md
+(Python 3, numpy 2.5.4, scikit-learn 1.9.1). scikit-learn is *not* in the
+root requirements.txt, which CI installs for the simulation suite; install
+it separately when re-running this benchmark.
 """
+
 import json
 import sys
+
 import numpy as np
 from scipy.stats import wilcoxon
 from sklearn.linear_model import LogisticRegression
-from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import average_precision_score, f1_score, roc_auc_score
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import average_precision_score, roc_auc_score, f1_score
-
-from swarm import swarm_metrics, hierarchical_swarm, temporal_hierarchy
+from swarm import hierarchical_swarm, swarm_metrics, temporal_hierarchy
 
 T = 24000
 N_SHOCKS = 8
@@ -52,8 +57,8 @@ def gen_series(seed):
 def lagged_stack(series_list, idx):
     cols = []
     for s in series_list:
-        for l in LAGS:
-            cols.append(s[idx - l])
+        for lag in LAGS:
+            cols.append(s[idx - lag])
     return np.column_stack(cols)
 
 
@@ -63,8 +68,10 @@ def build_features(x, metrics, warmup):
     F_rcod = lagged_stack([med, mac, dis], idx)
     F_dis = lagged_stack([dis], idx)
     w = 60
-    mean = np.full(T, np.nan); std = np.full(T, np.nan)
-    ac1 = np.full(T, np.nan); maxd = np.full(T, np.nan)
+    mean = np.full(T, np.nan)
+    std = np.full(T, np.nan)
+    ac1 = np.full(T, np.nan)
+    maxd = np.full(T, np.nan)
     # fill from warmup-max(LAGS): lagged features reach back before warmup
     for t in range(warmup - max(LAGS), T - HORIZON):
         s = x[t - w + 1 : t + 1]
@@ -77,7 +84,9 @@ def build_features(x, metrics, warmup):
 
 
 def labels_primary(idx, onsets):
-    return np.array([np.any((onsets > t) & (onsets <= t + HORIZON)) for t in idx]).astype(int)
+    return np.array(
+        [np.any((onsets > t) & (onsets <= t + HORIZON)) for t in idx]
+    ).astype(int)
 
 
 def evaluate_arm(F, y, idx, onsets, seed):
@@ -103,7 +112,9 @@ def evaluate_arm(F, y, idx, onsets, seed):
         else:
             missed += 1
     if len(test_onsets):
-        fa = np.sum(~np.any(np.abs(alarms[:, None] - test_onsets[None, :]) <= 200, axis=1))
+        fa = np.sum(
+            ~np.any(np.abs(alarms[:, None] - test_onsets[None, :]) <= 200, axis=1)
+        )
     else:
         fa = len(alarms)
     return {
@@ -147,13 +158,19 @@ def main_hier():
     results = [run_seed_hier(s) for s in SEEDS]
     with open("results_hier.json", "w") as f:
         json.dump(results, f, indent=1)
-    pr = {k: np.array([r[k]["pr_auc"] for r in results]) for k in ("rcod", "raw", "hier")}
-    roc = {k: np.array([r[k]["roc_auc"] for r in results]) for k in ("rcod", "raw", "hier")}
+    pr = {
+        k: np.array([r[k]["pr_auc"] for r in results]) for k in ("rcod", "raw", "hier")
+    }
+    roc = {
+        k: np.array([r[k]["roc_auc"] for r in results]) for k in ("rcod", "raw", "hier")
+    }
     print("=== Run 3: hierarchical (3-level) swarms vs single-level vs raw ===")
     print("--- PR-AUC (primary; pre-registered) ---")
     for k in ("rcod", "raw", "hier"):
-        print(f"  {k:5s}: mean={pr[k].mean():.3f} sd={pr[k].std():.3f} "
-              f"values={[round(v, 3) for v in pr[k]]}")
+        print(
+            f"  {k:5s}: mean={pr[k].mean():.3f} sd={pr[k].std():.3f} "
+            f"values={[round(v, 3) for v in pr[k]]}"
+        )
     _, p_hr = wilcoxon(pr["hier"], pr["raw"], alternative="greater")
     _, p_ha = wilcoxon(pr["hier"], pr["rcod"], alternative="greater")
     print(f"Wilcoxon hier>raw: p={p_hr:.4f} | hier>rcod-single: p={p_ha:.4f}")
@@ -161,16 +178,25 @@ def main_hier():
     for k in ("rcod", "raw", "hier"):
         print(f"  {k:5s}: mean={roc[k].mean():.3f} sd={roc[k].std():.3f}")
     print("--- operational (hier arm, F1-tuned threshold) ---")
-    h = results[0]["hier"]
-    leads = [r["hier"]["median_lead"] for r in results if r["hier"]["median_lead"] is not None]
+    leads = [
+        r["hier"]["median_lead"]
+        for r in results
+        if r["hier"]["median_lead"] is not None
+    ]
     fa = np.mean([r["hier"]["fa_per_1000"] for r in results])
     miss = np.mean([r["hier"]["missed"] for r in results])
-    print(f"  median_lead={np.median(leads) if leads else None} fa/1000={fa:.2f} missed/seed={miss:.1f}")
+    print(
+        f"  median_lead={np.median(leads) if leads else None} fa/1000={fa:.2f} missed/seed={miss:.1f}"
+    )
     print("=== pre-registered verdict (Amendment 2) ===")
     if p_hr >= 0.05:
-        print("KILL: hier PR-AUC NOT significantly > raw -> NEGATIVE for hierarchical variant")
+        print(
+            "KILL: hier PR-AUC NOT significantly > raw -> NEGATIVE for hierarchical variant"
+        )
     else:
-        print("PASS: hier PR-AUC significantly > raw -> POSITIVE, earns real-data follow-up")
+        print(
+            "PASS: hier PR-AUC significantly > raw -> POSITIVE, earns real-data follow-up"
+        )
 
 
 def run_seed_temporal(seed, block_sizes=(84, 21, 6)):
@@ -210,27 +236,45 @@ def main_temporal():
     results = [run_seed_temporal(s) for s in SEEDS]
     with open("results_temporal.json", "w") as f:
         json.dump(results, f, indent=1)
-    pr = {k: np.array([r[k]["pr_auc"] for r in results]) for k in ("rcod", "raw", "temp")}
-    roc = {k: np.array([r[k]["roc_auc"] for r in results]) for k in ("rcod", "raw", "temp")}
+    pr = {
+        k: np.array([r[k]["pr_auc"] for r in results]) for k in ("rcod", "raw", "temp")
+    }
+    roc = {
+        k: np.array([r[k]["roc_auc"] for r in results]) for k in ("rcod", "raw", "temp")
+    }
     print("=== Run 4: nested temporal partitions (Jacob's '3 levels deep') ===")
     for k in ("rcod", "raw", "temp"):
         valid = ~np.isnan(roc[k])
-        print(f"  {k:5s} PR-AUC  mean={pr[k].mean():.4f} sd={pr[k].std():.4f} "
-              f"values={np.round(pr[k], 3).tolist()}")
-        print(f"       ROC-AUC mean={roc[k][valid].mean():.3f} (n={valid.sum()}/10 valid)")
+        print(
+            f"  {k:5s} PR-AUC  mean={pr[k].mean():.4f} sd={pr[k].std():.4f} "
+            f"values={np.round(pr[k], 3).tolist()}"
+        )
+        print(
+            f"       ROC-AUC mean={roc[k][valid].mean():.3f} (n={valid.sum()}/10 valid)"
+        )
     _, p_tr = wilcoxon(pr["temp"], pr["raw"], alternative="greater")
     _, p_ta = wilcoxon(pr["temp"], pr["rcod"], alternative="greater")
     print(f"Wilcoxon temp>raw: p={p_tr:.4f} | temp>rcod-single: p={p_ta:.4f}")
-    leads = [r["temp"]["median_lead"] for r in results if r["temp"]["median_lead"] is not None]
+    leads = [
+        r["temp"]["median_lead"]
+        for r in results
+        if r["temp"]["median_lead"] is not None
+    ]
     fa = np.mean([r["temp"]["fa_per_1000"] for r in results])
     miss = np.mean([r["temp"]["missed"] for r in results])
-    print(f"temp operational: median_lead={np.median(leads) if leads else None} "
-          f"fa/1000={fa:.2f} missed/seed={miss:.1f}")
+    print(
+        f"temp operational: median_lead={np.median(leads) if leads else None} "
+        f"fa/1000={fa:.2f} missed/seed={miss:.1f}"
+    )
     print("=== pre-registered verdict (Amendment 3) ===")
     if p_tr >= 0.05:
-        print("KILL: temp PR-AUC NOT significantly > raw -> NEGATIVE for temporal-hierarchy variant")
+        print(
+            "KILL: temp PR-AUC NOT significantly > raw -> NEGATIVE for temporal-hierarchy variant"
+        )
     else:
-        print("PASS: temp PR-AUC significantly > raw -> POSITIVE, earns real-data follow-up")
+        print(
+            "PASS: temp PR-AUC significantly > raw -> POSITIVE, earns real-data follow-up"
+        )
 
 
 def main_dyadic():
@@ -241,27 +285,45 @@ def main_dyadic():
         results.append(r)
     with open("results_dyadic.json", "w") as f:
         json.dump(results, f, indent=1)
-    pr = {k: np.array([r[k]["pr_auc"] for r in results]) for k in ("rcod", "raw", "dyad")}
-    roc = {k: np.array([r[k]["roc_auc"] for r in results]) for k in ("rcod", "raw", "dyad")}
+    pr = {
+        k: np.array([r[k]["pr_auc"] for r in results]) for k in ("rcod", "raw", "dyad")
+    }
+    roc = {
+        k: np.array([r[k]["roc_auc"] for r in results]) for k in ("rcod", "raw", "dyad")
+    }
     print("=== Run 5: dyadic ladder (128/32/8) — precise structure, last redesign ===")
     for k in ("rcod", "raw", "dyad"):
         valid = ~np.isnan(roc[k])
-        print(f"  {k:5s} PR-AUC  mean={pr[k].mean():.4f} sd={pr[k].std():.4f} "
-              f"values={np.round(pr[k], 3).tolist()}")
-        print(f"       ROC-AUC mean={roc[k][valid].mean():.3f} (n={valid.sum()}/10 valid)")
+        print(
+            f"  {k:5s} PR-AUC  mean={pr[k].mean():.4f} sd={pr[k].std():.4f} "
+            f"values={np.round(pr[k], 3).tolist()}"
+        )
+        print(
+            f"       ROC-AUC mean={roc[k][valid].mean():.3f} (n={valid.sum()}/10 valid)"
+        )
     _, p_tr = wilcoxon(pr["dyad"], pr["raw"], alternative="greater")
     _, p_ta = wilcoxon(pr["dyad"], pr["rcod"], alternative="greater")
     print(f"Wilcoxon dyad>raw: p={p_tr:.4f} | dyad>rcod-single: p={p_ta:.4f}")
-    leads = [r["dyad"]["median_lead"] for r in results if r["dyad"]["median_lead"] is not None]
+    leads = [
+        r["dyad"]["median_lead"]
+        for r in results
+        if r["dyad"]["median_lead"] is not None
+    ]
     fa = np.mean([r["dyad"]["fa_per_1000"] for r in results])
     miss = np.mean([r["dyad"]["missed"] for r in results])
-    print(f"dyad operational: median_lead={np.median(leads) if leads else None} "
-          f"fa/1000={fa:.2f} missed/seed={miss:.1f}")
+    print(
+        f"dyad operational: median_lead={np.median(leads) if leads else None} "
+        f"fa/1000={fa:.2f} missed/seed={miss:.1f}"
+    )
     print("=== pre-registered verdict (Amendment 4, one-shot) ===")
     if p_tr >= 0.05:
-        print("KILL: dyad PR-AUC NOT significantly > raw -> NEGATIVE; section-5 thread CLOSED")
+        print(
+            "KILL: dyad PR-AUC NOT significantly > raw -> NEGATIVE; section-5 thread CLOSED"
+        )
     else:
-        print("PASS: dyad PR-AUC significantly > raw -> POSITIVE, earns real-data follow-up")
+        print(
+            "PASS: dyad PR-AUC significantly > raw -> POSITIVE, earns real-data follow-up"
+        )
 
 
 if __name__ == "__main__":
