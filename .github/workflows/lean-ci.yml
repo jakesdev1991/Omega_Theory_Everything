@@ -76,7 +76,7 @@ jobs:
 
       # Official Lean action: installs elan + pinned toolchain, fetches
       # prebuilt mathlib oleans, and runs `lake build ToE` in lean_proofs/.
-      - uses: leanprover/lean-action@v1
+      - uses: leanprover/lean-action@fe408643ea7367d8c0404a8be3975bb145f5fb64 # v1
         id: lean_build
         with:
           lake-package-directory: lean_proofs
