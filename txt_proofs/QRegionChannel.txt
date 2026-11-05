@@ -7,8 +7,8 @@ Two unbiased classical bits have crossover probability `q`: each equal pair has
 probability `(1-q)/2` and each unequal pair has probability `q/2`. A bit-flip
 channel on the first bit, with flip probability `e`, maps `q` to `q+e*(1-2*q)`.
 This is a deliberately selected classical benchmark, not a derivation of the
-quantum Q-region functional or a physical evolution law. The mutual-information
-and entropy results remain separate work.
+quantum Q-region functional or a physical evolution law. Mutual information is
+computed from the four joint probabilities and their marginals in nats.
 -/
 
 namespace QRegionChannel
@@ -66,5 +66,73 @@ theorem bitFlip_compose (q e d : ℝ) :
 /-- A concrete channel actually changes a perfectly correlated pair. -/
 theorem bitFlip_witness : bitFlip 0 (1 / 4) = 1 / 4 ∧ 0 < bitFlip 0 (1 / 4) := by
   norm_num [bitFlip]
+
+/-- Shannon entropy of the four joint probabilities, in nats. Mathlib's
+`negMulLog` uses the continuous zero endpoint. -/
+noncomputable def jointEntropy (q : ℝ) : ℝ :=
+  Real.negMulLog (joint q false false) + Real.negMulLog (joint q false true) +
+    Real.negMulLog (joint q true false) + Real.negMulLog (joint q true true)
+
+/-- Mutual information computed as the two marginal entropies minus joint
+entropy, rather than a chosen function of overlap. -/
+noncomputable def mutualInformation (q : ℝ) : ℝ :=
+  Real.negMulLog (joint q false false + joint q false true) +
+    Real.negMulLog (joint q true false + joint q true true) +
+    Real.negMulLog (joint q false false + joint q true false) +
+    Real.negMulLog (joint q false true + joint q true true) - jointEntropy q
+
+/-- The entropy of a fair bit. -/
+theorem negMulLog_half : Real.negMulLog (1 / 2 : ℝ) = Real.log 2 / 2 := by
+  rw [show (1 / 2 : ℝ) = (2 : ℝ)⁻¹ by norm_num, Real.negMulLog, Real.log_inv]
+  ring
+
+/-- Computing the joint entropy yields the fair-bit entropy plus the binary
+entropy of the crossover parameter. -/
+theorem jointEntropy_eq (q : ℝ) : jointEntropy q = Real.log 2 + Real.binEntropy q := by
+  have hhalf : Real.negMulLog ((2 : ℝ)⁻¹) = Real.log 2 / 2 := by
+    simpa using negMulLog_half
+  rw [Real.binEntropy_eq_negMulLog_add_negMulLog_one_sub]
+  simp only [jointEntropy, joint, Bool.false_eq_true, Bool.true_eq_false, if_false, if_true,
+    div_eq_mul_inv, Real.negMulLog_mul, hhalf]
+  ring
+
+/-- Exact mutual information of the benchmark in nats, including `q = 0` and
+`q = 1/2`. -/
+theorem mutualInformation_eq (q : ℝ) :
+    mutualInformation q = Real.log 2 - Real.binEntropy q := by
+  have h1 := (marginal_unbiased q false).1
+  have h2 := (marginal_unbiased q true).1
+  have h3 := (marginal_unbiased q false).2
+  have h4 := (marginal_unbiased q true).2
+  unfold mutualInformation
+  simp only [h1, h2, h3, h4, negMulLog_half, jointEntropy_eq]
+  ring
+
+/-- On the probability domain, mutual information lies between zero and one
+fair bit, expressed in nats. -/
+theorem mutualInformation_bounds {q : ℝ} (hq0 : 0 ≤ q) (hq1 : q ≤ 1) :
+    0 ≤ mutualInformation q ∧ mutualInformation q ≤ Real.log 2 := by
+  rw [mutualInformation_eq]
+  constructor
+  · linarith [Real.binEntropy_le_log_two (p := q)]
+  · linarith [Real.binEntropy_nonneg hq0 hq1]
+
+/-- The perfectly correlated and independent endpoints are one bit and zero. -/
+theorem mutualInformation_endpoints :
+    mutualInformation 0 = Real.log 2 ∧ mutualInformation (1 / 2) = 0 := by
+  simp [mutualInformation_eq]
+
+/-- Local bit-flip noise cannot increase mutual information on the stated
+classical benchmark. -/
+theorem bitFlip_mutualInformation_le {q e : ℝ}
+    (hq0 : 0 ≤ q) (hq1 : q ≤ 1 / 2) (he0 : 0 ≤ e) (he1 : e ≤ 1 / 2) :
+    mutualInformation (bitFlip q e) ≤ mutualInformation q := by
+  have hb := bitFlip_bounds hq0 hq1 he0 he1
+  have hq : q ∈ Set.Icc (0 : ℝ) (2 : ℝ)⁻¹ := ⟨hq0, by norm_num at *; linarith⟩
+  have hflip : bitFlip q e ∈ Set.Icc (0 : ℝ) (2 : ℝ)⁻¹ :=
+    ⟨hb.1, by norm_num at *; linarith [hb.2.2]⟩
+  have hentropy := Real.binEntropy_strictMonoOn.monotoneOn hq hflip hb.2.1
+  rw [mutualInformation_eq, mutualInformation_eq]
+  linarith
 
 end QRegionChannel

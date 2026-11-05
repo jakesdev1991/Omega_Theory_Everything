@@ -13,8 +13,10 @@ conditionally; it does not determine physical Φ from a Q-region.
 bit-flip channel, including normalization, unbiased marginals, channel action,
 bounds, composition and a nontrivial witness. These declarations passed the
 Lean build and transitive kernel-axiom audit in CI run 42127214338 at commit
-`e202364`. Mutual information, entropy monotonicity and the bridge to the
-existing Q-region interface remain open.
+`e202364`. A subsequent change proposes mutual-information and channel
+monotonicity theorems from the joint probabilities and marginal entropies; those
+new declarations are pending Lean build and kernel audit. Normalized overlap
+and the bridge to the existing Q-region interface remain open.
 
 ## What the present model actually supplies
 

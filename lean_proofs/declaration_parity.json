@@ -81,9 +81,9 @@
       "sha256": "42ff317ff59c356df0d7f5d3b7c093c2cba147a54be9eb8cd5e208b4610e1af9"
     },
     "QRegionChannel.lean": {
-      "code_lines": 37,
-      "declarations": 9,
-      "sha256": "1408da761537ee5fa6a831739c325844e131892dfc1bd2011539d5f4add257c3"
+      "code_lines": 83,
+      "declarations": 17,
+      "sha256": "2e49dff701c98321fe216d564cdf93a72b634c1a388c92804ccb4c8d37b0853f"
     },
     "RadialDilation.lean": {
       "code_lines": 174,

@@ -48,9 +48,10 @@ new declarations passed the Lean build and transitive kernel audit in CI run
 `QRegionChannel.lean` proposes a two-bit classical joint distribution and local
 bit-flip channel, including normalization, marginals, channel action, bounds,
 composition and a nontrivial witness. It does not construct quantum Q-regions,
-prove an entropy theorem or derive physical dynamics. The new module passed the
-Lean build and transitive kernel-axiom audit in CI run 42127214338 at commit
-`e202364`.
+derive physical dynamics. Its joint-distribution and channel declarations passed
+the Lean build and transitive kernel-axiom audit in CI run 42127214338 at commit
+`e202364`. Subsequent candidate mutual-information and noise-monotonicity
+proofs have not yet passed the Lean build or kernel audit.
 
 ## Main finding and logical next step
 
