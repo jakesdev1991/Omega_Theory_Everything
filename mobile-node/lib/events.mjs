@@ -12,8 +12,8 @@
 
 import { randomBytes } from "node:crypto";
 
-import { schnorr } from "@noble/curves/secp256k1";
-import { sha256 } from "@noble/hashes/sha256";
+import { schnorr } from "@noble/curves/secp256k1.js";
+import { sha256 } from "@noble/hashes/sha2.js";
 
 import { hexToNpub, nsecToHex, npubToHex } from "./bech32.mjs";
 
