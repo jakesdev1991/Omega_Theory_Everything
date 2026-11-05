@@ -23,7 +23,7 @@
     "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
   "dependencies": {
-    "@noble/hashes": "^1.4.0",
+    "@noble/hashes": "^2.4.0",
     "bs58": "^6.0.0",
     "ethers": "^6.17.0",
     "next": "16.4.2",
