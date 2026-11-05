@@ -108,13 +108,13 @@ theorem overlapOfDensity_matches (senv : DynamicGeometry.ScaleEnvironment)
   · have hpos : 0 < rho := lt_of_le_of_ne hrho (Ne.symm hzero)
     have hden : 0 < rho + senv.rho0 := by linarith [senv.hrho0]
     have hquot0 : 0 ≤ rho / (rho + senv.rho0) := div_nonneg hrho hden.le
-    have hsum : 0 < 1 + rho / senv.rho0 := by
-      have hdiv : 0 ≤ rho / senv.rho0 := div_nonneg hrho senv.hrho0.le
-      linarith
+    have hsum : 1 + rho / senv.rho0 = (rho + senv.rho0) / senv.rho0 := by
+      field_simp [ne_of_gt senv.hrho0]
+      <;> ring
     have harg : 1 - (overlapOfDensity senv rho) ^ 2 =
         1 / (1 + rho / senv.rho0) := by
-      rw [overlapOfDensity, Real.sq_sqrt hquot0]
-      field_simp [ne_of_gt hden, ne_of_gt senv.hrho0, ne_of_gt hsum]
+      rw [overlapOfDensity, Real.sq_sqrt hquot0, hsum, one_div_div]
+      field_simp [ne_of_gt hden]
       <;> ring
     rw [DynamicCODScale.dynamicPlanckCOD, harg,
       Real.sqrt_div (by norm_num : (0 : ℝ) ≤ 1), Real.sqrt_one, hbase]
@@ -160,7 +160,7 @@ theorem overlapOfDensity_inverse (senv : DynamicGeometry.ScaleEnvironment)
     (div_lt_one hden).2 (by linarith [senv.hrho0])
   have hdiff : 1 - rho / (rho + senv.rho0) ≠ 0 := by linarith
   rw [overlapOfDensity, Real.sq_sqrt hquot0]
-  field_simp [ne_of_gt hden, hdiff]
+  field_simp [ne_of_gt hden, hdiff, ne_of_gt senv.hrho0]
   <;> ring
 
 /-- Density corresponding to an overlap below saturation. -/
