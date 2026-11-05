@@ -66,6 +66,7 @@ import InformationPhysics
 import DynamicPlanckScale
 import DynamicCODScale
 import PlanckProfileMatching
+import QRegionChannel
 import RadialMetric
 import LogCorrelationMetric
 import ProofRegression

@@ -1,8 +1,8 @@
 # Matching the two Planck-scale profiles
 
-This analytic calculation is **not a Lean-checked construction** and is not a
-physical derivation of either profile. The conditional results described below
-have been Lean-checked. The definitions being compared are
+This matching calculation is not a physical derivation of either profile. The
+conditional construction and results described below have been Lean-checked.
+The definitions being compared are
 [`dynamicPlanckLength`](../lean_proofs/DynamicPlanckScale.lean) and
 [`dynamicPlanckCOD`](../lean_proofs/DynamicCODScale.lean).
 
@@ -79,9 +79,11 @@ statement must not assert that the dictionary follows from Q-region physics.
 conditional uniqueness, the maximal-overlap obstruction, the clamped branch,
 and strict monotonicity on positive densities for **any** physical-range matching
 function. The latter is conditional and does not construct such a function.
-These declarations passed the Lean build and transitive kernel-axiom audit in
-[Lean CI run 42114531942](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/42114531942)
-at commit `b8048ae`. The full formalisation remains open until existence,
-monotonicity including the zero boundary, and the inverse are also proved and
-the build and axiom audit pass. A failure to formalise this particular proof is
-not evidence that no dictionary exists.
+Those conditional declarations passed the Lean build and transitive kernel-axiom
+audit in [Lean CI run 42114531942](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/42114531942)
+at commit `b8048ae`. The subsequent construction, matching, monotonicity,
+both inverse directions and conditional trajectory theorem passed Lean build
+and transitive axiom audit in [run 42126178975](https://github.com/jakesdev1991/Omega_Theory_Everything/actions/runs/42126178975)
+at commit `2d7e70e`. The construction uses `√(ρ/(ρ+ρ₀))`, algebraically equal
+to the expression in §1 for `ρ₀ > 0`. See [the Q-region milestone](Q_REGION_DATA_AND_EVOLUTION.md):
+the mathematical matching is not a microscopic construction or physical law.

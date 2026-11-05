@@ -40,8 +40,20 @@ existing chosen profiles: its conditional statements address uniqueness,
 endpoint mismatch, the clamped branch and monotonicity of any matching map.
 They do not establish that a matching map exists or that the relationship is a
 physical law. The new declarations passed the Lean build and kernel audit in
-CI run 42114531942 at commit `b8048ae`; see `docs/PLANCK_PROFILE_MATCHING.md`
-for the remaining work.
+CI run 42114531942 at commit `b8048ae`. A subsequent addition proposes a
+matching dictionary, both inverse directions and trajectory contraction; these
+new declarations passed the Lean build and transitive kernel audit in CI run
+42126178975 at commit `2d7e70e`. See `docs/PLANCK_PROFILE_MATCHING.md`.
+
+`QRegionChannel.lean` proposes a two-bit classical joint distribution and local
+bit-flip channel, including normalization, marginals, channel action, bounds,
+composition and a nontrivial witness. It does not construct quantum Q-regions,
+derive physical dynamics. Its joint-distribution and channel declarations passed
+the Lean build and transitive kernel-axiom audit in CI run 42127214338 at commit
+`e202364`. Mutual-information and noise-monotonicity proofs passed the Lean
+build and kernel audit in CI run 42128816079 at commit `ab6ad24`. Subsequent
+normalized-overlap and incompatibility declarations passed Lean build and
+kernel audit in CI run 42132144272 at commit `c770dce`.
 
 ## Main finding and logical next step
 

@@ -71,14 +71,19 @@
       "sha256": "baf0b922da1acee854ba3e59bb839d88bed1e03f6fb4ca0e8d47eccc7fda2e72"
     },
     "PlanckProfileMatching.lean": {
-      "code_lines": 54,
-      "declarations": 4,
-      "sha256": "48c00a069c09c10126db82015f8bdfb1fb8ddecfc627527b4a0e275e648a0924"
+      "code_lines": 153,
+      "declarations": 13,
+      "sha256": "11da4f457268a346cc64edcf9df12c4a99c3bbb54c4d3daa4253991a4501b1e7"
     },
     "ProofRegression.lean": {
       "code_lines": 538,
       "declarations": 4,
       "sha256": "42ff317ff59c356df0d7f5d3b7c093c2cba147a54be9eb8cd5e208b4610e1af9"
+    },
+    "QRegionChannel.lean": {
+      "code_lines": 109,
+      "declarations": 22,
+      "sha256": "df2864fba3bac1ac61dc45739f268971eaf2136453aa0f9f26bacc31ede16580"
     },
     "RadialDilation.lean": {
       "code_lines": 174,
@@ -91,9 +96,9 @@
       "sha256": "0e64f4bdd216ba27513ba9458de166a666980d29b229f44c04ec621adece3449"
     },
     "ToE.lean": {
-      "code_lines": 72,
+      "code_lines": 73,
       "declarations": 0,
-      "sha256": "e101d639d69d81b080e12b9a3a75000a64e99c128d0ac0dd419d880a4c573181"
+      "sha256": "a47de2a5237e1645fe6fb72970d31c3e561dc8aa52a7b64827fd6c68e668afbe"
     },
     "Vol01_ClassicalMechanics.lean": {
       "code_lines": 194,
@@ -366,9 +371,9 @@
       "sha256": "d1980386920266028639c9bceea72f0fd0f2aeb90b0f8f2ca52e53a7d215d75e"
     },
     "lakefile.lean": {
-      "code_lines": 82,
+      "code_lines": 83,
       "declarations": 0,
-      "sha256": "9d5ebc5fa491a659e64088745b35ecf152729b55c25062ebffab0d3dd3c4707e"
+      "sha256": "977dc1108c235ac0765cf3573e17ce1936f5eb3ae31562e86d979dbfeed3afaf"
     }
   },
   "version": 1
