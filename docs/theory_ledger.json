@@ -53,7 +53,7 @@
       "name": "ℓ_P(ρ) = ℓ_P0/√(1 + ρ/ρ₀)",
       "status": "chosen",
       "evidence": "lean_proofs/DynamicPlanckScale.lean:dynamicPlanckLength",
-      "note": "Stated model assumption with formally checked properties (positivity, strict monotonicity, saturation). The properties are theorems; the profile is not."
+      "note": "Stated model assumption with formally checked properties (positivity, strict monotonicity, saturation). The properties are theorems; the profile is not. docs/PLANCK_PROFILE_MATCHING.md gives an analytic matching condition, not a physical derivation; the Lean bridge checks only conditional properties, not existence."
     },
     {
       "id": "lp-phi-profile",
@@ -61,7 +61,7 @@
       "name": "ℓ_P(Φ) = ℓ_P0·√(1 − Φ²)",
       "status": "chosen",
       "evidence": "lean_proofs/DynamicCODScale.lean:dynamicPlanckCOD",
-      "note": "Same status: the collapse at Φ=1 and the monotonicity are proved, the form is chosen. No independent argument selects √(1−Φ²) over the many monotone alternatives."
+      "note": "Same status: the collapse at Φ=1 and the monotonicity are proved, the form is chosen. No independent argument selects √(1−Φ²) over the many monotone alternatives. The analytic matching condition in docs/PLANCK_PROFILE_MATCHING.md is not a physical derivation; the Lean bridge checks only conditional properties, not existence."
     },
     {
       "id": "kappa-dilation",
