@@ -42,8 +42,14 @@ They do not establish that a matching map exists or that the relationship is a
 physical law. The new declarations passed the Lean build and kernel audit in
 CI run 42114531942 at commit `b8048ae`. A subsequent addition proposes a
 matching dictionary, both inverse directions and trajectory contraction; these
-new declarations have not yet passed a Lean build or kernel audit. See
-`docs/PLANCK_PROFILE_MATCHING.md` for the remaining work.
+new declarations passed the Lean build and transitive kernel audit in CI run
+42126178975 at commit `2d7e70e`. See `docs/PLANCK_PROFILE_MATCHING.md`.
+
+`QRegionChannel.lean` proposes a two-bit classical joint distribution and local
+bit-flip channel, including normalization, marginals, channel action, bounds,
+composition and a nontrivial witness. It does not construct quantum Q-regions,
+prove an entropy theorem or derive physical dynamics. The new module requires
+Lean build and kernel-audit validation in CI.
 
 ## Main finding and logical next step
 

@@ -80,6 +80,11 @@
       "declarations": 4,
       "sha256": "42ff317ff59c356df0d7f5d3b7c093c2cba147a54be9eb8cd5e208b4610e1af9"
     },
+    "QRegionChannel.lean": {
+      "code_lines": 37,
+      "declarations": 9,
+      "sha256": "44c35690abf13a2e13f88049e632e19c01395e2a0f9293275a57615e18fb63a8"
+    },
     "RadialDilation.lean": {
       "code_lines": 174,
       "declarations": 27,
@@ -91,9 +96,9 @@
       "sha256": "0e64f4bdd216ba27513ba9458de166a666980d29b229f44c04ec621adece3449"
     },
     "ToE.lean": {
-      "code_lines": 72,
+      "code_lines": 73,
       "declarations": 0,
-      "sha256": "e101d639d69d81b080e12b9a3a75000a64e99c128d0ac0dd419d880a4c573181"
+      "sha256": "a47de2a5237e1645fe6fb72970d31c3e561dc8aa52a7b64827fd6c68e668afbe"
     },
     "Vol01_ClassicalMechanics.lean": {
       "code_lines": 194,
@@ -366,9 +371,9 @@
       "sha256": "d1980386920266028639c9bceea72f0fd0f2aeb90b0f8f2ca52e53a7d215d75e"
     },
     "lakefile.lean": {
-      "code_lines": 82,
+      "code_lines": 83,
       "declarations": 0,
-      "sha256": "9d5ebc5fa491a659e64088745b35ecf152729b55c25062ebffab0d3dd3c4707e"
+      "sha256": "977dc1108c235ac0765cf3573e17ce1936f5eb3ae31562e86d979dbfeed3afaf"
     }
   },
   "version": 1

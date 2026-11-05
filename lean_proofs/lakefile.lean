@@ -79,6 +79,7 @@ lean_lib ToE where
     `DynamicPlanckScale,
     `DynamicCODScale,
     `PlanckProfileMatching,
+    `QRegionChannel,
     `ProofRegression,
     `LogCorrelationMetric,
     `RadialMetric,

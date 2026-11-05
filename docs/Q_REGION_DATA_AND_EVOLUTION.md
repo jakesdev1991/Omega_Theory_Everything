@@ -1,10 +1,19 @@
 # Q-region data and evolution: next formal target
 
 This is a research specification, not a proposed fundamental evolution law.
-The Planck-profile construction in `lean_proofs/PlanckProfileMatching.lean`
-must pass Lean and the transitive axiom audit before its new results are treated
-as checked. It relates two chosen profiles conditionally; it does not determine
-physical Φ from a Q-region.
+The distribution below is the two-site case of the existing diagonal benchmark
+in `research/qregion_markov.py`, with correlation `1 − 2q`; the proposed Lean
+milestone formalises its data and a specified noise channel rather than inventing
+an unrelated simulation. The Planck-profile construction in
+`lean_proofs/PlanckProfileMatching.lean` passed Lean and its transitive axiom
+audit in CI run 42126178975 at commit `2d7e70e`. It relates two chosen profiles
+conditionally; it does not determine physical Φ from a Q-region.
+
+`lean_proofs/QRegionChannel.lean` now proposes the joint distribution and
+bit-flip channel, including normalization, unbiased marginals, channel action,
+bounds, composition and a nontrivial witness. These new declarations have not
+yet been Lean-checked. Mutual information, entropy monotonicity and the bridge
+to the existing Q-region interface remain open.
 
 ## What the present model actually supplies
 
