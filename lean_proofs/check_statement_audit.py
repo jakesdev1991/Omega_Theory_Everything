@@ -160,9 +160,35 @@ def words(name: str) -> list[str]:
     return out
 
 
-def physics_words(name: str) -> list[str]:
+def physics_words(
+    name: str, lexicon: frozenset[str] | set[str] = PHYSICS_TOKENS
+) -> list[str]:
     """The lexicon tokens a declaration name carries, sorted."""
-    return sorted(set(words(name)) & PHYSICS_TOKENS)
+    return sorted(set(words(name)) & lexicon)
+
+
+def load_lexicon(path: pathlib.Path) -> frozenset[str]:
+    """Read a replacement lexicon: one token per line, `#` comments allowed.
+
+    The built-in PHYSICS_TOKENS list is this corpus's rule for "this name
+    asserts a subject-matter claim". Another formalisation has a different
+    subject matter, so the rule -- not the file glob, not the checker -- is the
+    thing that has to be swapped to reuse this gate elsewhere.
+    """
+    tokens: set[str] = set()
+    for lineno, raw in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        line = raw.split("#", 1)[0].strip()
+        if not line:
+            continue
+        for token in line.split():
+            if not token.replace("_", "").isalnum():
+                raise ValueError(
+                    f"{path.name}:{lineno}: not a lexicon token: {token!r}"
+                )
+            tokens.add(token.lower())
+    if not tokens:
+        raise ValueError(f"{path.name}: empty lexicon")
+    return frozenset(tokens)
 
 
 def _statement_end(masked: str, start: int) -> int:
@@ -252,12 +278,16 @@ def corpus(root: pathlib.Path) -> list[Declaration]:
     return out
 
 
-def candidates(root: pathlib.Path) -> list[Declaration]:
-    """Theorems and lemmas in the volumes whose names carry a physics word."""
+def candidates(
+    root: pathlib.Path,
+    volume_glob: str = VOLUME_GLOB,
+    lexicon: frozenset[str] | set[str] = PHYSICS_TOKENS,
+) -> list[Declaration]:
+    """Theorems and lemmas in the volumes whose names carry a lexicon word."""
     out: list[Declaration] = []
-    for path in sorted(root.glob(VOLUME_GLOB)):
+    for path in sorted(root.glob(volume_glob)):
         for decl in extract_declarations(path):
-            if decl.kind in ("theorem", "lemma") and physics_words(decl.name):
+            if decl.kind in ("theorem", "lemma") and physics_words(decl.name, lexicon):
                 out.append(decl)
     return out
 
@@ -433,17 +463,39 @@ def main(argv: list[str] | None = None) -> int:
         default=0,
         help="fail when more than this many candidates lack a row (default 0)",
     )
+    parser.add_argument(
+        "--volume-glob",
+        default=VOLUME_GLOB,
+        help=f"which files are subject to the audit (default {VOLUME_GLOB}); "
+        "the corpus indexes every *.lean beside it",
+    )
+    parser.add_argument(
+        "--lexicon",
+        type=pathlib.Path,
+        default=None,
+        help="replace the built-in subject-matter lexicon with this file "
+        "(one token per line, # comments); needed when reusing the gate on a "
+        "formalisation whose subject matter is not this one",
+    )
     parser.add_argument("--review", action="store_true", help="print what needs a row")
     parser.add_argument("--list", action="store_true", help="print one line per row")
     args = parser.parse_args(argv)
 
     root = pathlib.Path(args.repo).resolve()
+    lexicon = PHYSICS_TOKENS
+    if args.lexicon is not None:
+        try:
+            lexicon = load_lexicon(args.lexicon)
+        except (OSError, ValueError) as error:
+            print(f"error: {error}", file=sys.stderr)
+            return 2
     corpus_decls = corpus(root)
-    candidate_decls = candidates(root)
+    candidate_decls = candidates(root, args.volume_glob, lexicon)
     print(
         f"{len(candidate_decls)} physics-sounding declaration(s) in "
         f"{len({decl.file for decl in candidate_decls})} volume(s) "
-        f"({len(PHYSICS_TOKENS)} lexicon tokens, {len(corpus_decls)} declarations indexed)"
+        f"({len(lexicon)} lexicon tokens, {len(corpus_decls)} declarations indexed, "
+        f"glob {args.volume_glob})"
     )
 
     if args.review:

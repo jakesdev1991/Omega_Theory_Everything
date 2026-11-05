@@ -23,7 +23,9 @@ import unittest
 
 from check_statement_audit import (
     PHYSICS_TOKENS,
+    candidates,
     corpus,
+    load_lexicon,
     main,
     physics_words,
     stale_uses,
@@ -315,6 +317,76 @@ class LexiconTests(unittest.TestCase):
         # words like `the` and `of` became tokens and matched unrelated names.
         for prose in ("the", "of", "names", "line", "tokens", "comment"):
             self.assertNotIn(prose, PHYSICS_TOKENS)
+
+
+class ReuseTests(unittest.TestCase):
+    """The gate must be re-usable on a different subject matter.
+
+    Nothing about the mechanism (one row per candidate, dispositions, witnesses,
+    the carried cap) is specific to physics. What is specific is the lexicon and
+    the file glob, so those are the two things the CLI exposes; these tests pin
+    that they actually select a different corpus rather than being decoration.
+    """
+
+    DOMAIN_VOLUME = """\
+namespace SomeDomain.Finance
+
+theorem profit_maximisation (x : ℝ) : x = x := rfl
+
+theorem entropy_increase (x : ℝ) : x = x := rfl
+
+end SomeDomain.Finance
+"""
+
+    def setUp(self) -> None:
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        self.root = pathlib.Path(tmp.name)
+        (self.root / "Domain01_Finance.lean").write_text(
+            self.DOMAIN_VOLUME, encoding="utf-8"
+        )
+
+    def test_custom_lexicon_selects_a_different_subject_matter(self) -> None:
+        lexicon = self.root / "lexicon.txt"
+        lexicon.write_text(
+            """# economics
+profit
+""",
+            encoding="utf-8",
+        )
+        tokens = load_lexicon(lexicon)
+        self.assertEqual(tokens, {"profit"})
+        found = candidates(self.root, "Domain*.lean", tokens)
+        self.assertEqual([decl.name for decl in found], ["profit_maximisation"])
+
+    def test_default_lexicon_and_glob_ignore_the_other_domain(self) -> None:
+        # The physics lexicon matches `entropy_increase`, but the default glob
+        # (Vol*.lean) excludes this file entirely: both knobs bind.
+        self.assertEqual(candidates(self.root), [])
+        found = candidates(self.root, "Domain*.lean")
+        self.assertEqual([decl.name for decl in found], ["entropy_increase"])
+
+    def test_lexicon_accepts_comments_and_rejects_junk(self) -> None:
+        good = self.root / "good.txt"
+        good.write_text("profit  # trailing comment\n\n# only a comment\nloss\n")
+        self.assertEqual(load_lexicon(good), {"profit", "loss"})
+        empty = self.root / "empty.txt"
+        empty.write_text("# nothing here\n", encoding="utf-8")
+        with self.assertRaises(ValueError):
+            load_lexicon(empty)
+        junk = self.root / "junk.txt"
+        junk.write_text("not a token!\n", encoding="utf-8")
+        with self.assertRaises(ValueError):
+            load_lexicon(junk)
+
+    def test_cli_reports_the_glob_it_used(self) -> None:
+        out, err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            status = main(["--repo", str(self.root), "--volume-glob", "Domain*.lean"])
+        # No audit file in this tree: exit 2, but the run must have found the
+        # domain declarations first and said which glob it applied.
+        self.assertEqual(status, 2, err.getvalue())
+        self.assertIn("glob Domain*.lean", out.getvalue())
 
 
 class ShippedAuditTests(unittest.TestCase):

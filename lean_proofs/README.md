@@ -151,6 +151,15 @@ This corpus is maintained under an explicit honesty policy, enforced in CI:
 1. **No unsound escapes.** `sorry`, `admit`, `native_decide`, `sorryAx`,
    `@[extern]`, and `implemented_by` are banned from sources (grep gate in
    `.github/workflows/lean-ci.yml`).
+**Reusing the audits elsewhere.** Six of the eight gates are lexical and run
+offline; they take `--root`, and the statement audit additionally takes
+`--volume-glob` and `--lexicon FILE` so that another formalisation can apply the
+same mechanism to its own subject matter (the built-in lexicon and `Vol*.lean`
+glob remain the defaults). What the gates do and do not establish, and the three
+couplings that still block reuse (the `bridge_*` convention, the
+`working-directory`/`unittest` layout, and the two CI-only gates), are written
+down in [`../docs/DOMAIN_AGNOSTIC_CORE.md`](../docs/DOMAIN_AGNOSTIC_CORE.md) §6.
+
 2. **No declaration-level axioms.** `audit_axioms.py --max 0` counts
    `axiom` commands; physical postulates are instead encoded as concrete
    definitions in `OmegaAxioms.lean` or as explicit theorem hypotheses.
