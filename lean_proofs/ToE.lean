@@ -65,6 +65,7 @@ import Vol54_TheoryOfNothing
 import InformationPhysics
 import DynamicPlanckScale
 import DynamicCODScale
+import PlanckProfileMatching
 import RadialMetric
 import LogCorrelationMetric
 import ProofRegression

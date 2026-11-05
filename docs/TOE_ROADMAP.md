@@ -53,14 +53,21 @@ smaller by writing another volume.
 positive and strictly monotone. Nothing relates them, which means the corpus
 currently contains two inequivalent theories of the same quantity.
 
-This is the highest-value formal target in the repository, because either answer
-is progress. Exhibit the unique monotone dictionary Φ(ρ) that makes
-`dynamicPlanckCOD (Φ ρ) = dynamicPlanckLength ρ` hold for every ρ and both laws
-collapse into one — a derived statement, not a carried one, and the first
-genuinely new bridge in the corpus. Or prove no such dictionary exists, which
-retires one of the two profiles and removes a degree of freedom. Both outcomes
-are Lean-sized, both land inside existing modules, and neither touches the
-`carried_cap` in `statement_audit.json` (33, at the limit — do not raise it).
+The [matching calculation](PLANCK_PROFILE_MATCHING.md) gives the unique
+physical-range candidate `Φ = √((ρ/ρ₀)/(1 + ρ/ρ₀))` for nonnegative finite
+density and a shared baseline. It is strictly increasing, but reaches `Φ = 1`
+only in the infinite-density limit. On the clamped negative-density branch the
+matching overlap is zero, so strict monotonicity on all reals is impossible.
+The calculation is not yet Lean-checked; formalising its precise domain,
+uniqueness, inverse and endpoint is the next target. Do not raise `carried_cap`
+in `statement_audit.json` (33, at the limit).
+
+A match alone does **not** derive either chosen profile or establish that the
+physical COD and density satisfy this relation. It removes a mathematical
+inconsistency only if the dictionary is independently justified or explicitly
+adopted as a model assumption. Until then both profile choices and the
+microscopic Φ construction remain open; do not lower the ledger ratchet merely
+because matching is possible.
 
 **2. Audit the two literal constants before strengthening anything else.**
 `freezeBoundaryThreshold : ℝ := 0.012` in `OmegaAxioms.lean` is the most
