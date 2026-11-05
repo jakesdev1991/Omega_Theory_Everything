@@ -33,7 +33,7 @@ theorem joint_normalized (q : ℝ) :
 theorem marginal_unbiased (q : ℝ) (a : Bool) :
     joint q a false + joint q a true = 1 / 2 ∧
       joint q false a + joint q true a = 1 / 2 := by
-  cases a <;> simp [joint] <;> constructor <;> ring
+  cases a <;> simp [joint] <;> ring
 
 /-- A local bit flip acts on the crossover probability. -/
 noncomputable def bitFlip (q e : ℝ) : ℝ := q + e * (1 - 2 * q)

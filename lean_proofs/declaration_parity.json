@@ -83,7 +83,7 @@
     "QRegionChannel.lean": {
       "code_lines": 37,
       "declarations": 9,
-      "sha256": "44c35690abf13a2e13f88049e632e19c01395e2a0f9293275a57615e18fb63a8"
+      "sha256": "1408da761537ee5fa6a831739c325844e131892dfc1bd2011539d5f4add257c3"
     },
     "RadialDilation.lean": {
       "code_lines": 174,
