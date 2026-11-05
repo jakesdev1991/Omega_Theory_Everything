@@ -5,6 +5,9 @@ import "dotenv/config";
 import { createRequire } from "node:module";
 import { defineConfig } from "hardhat/config";
 import hardhatToolboxMochaEthers from "@nomicfoundation/hardhat-toolbox-mocha-ethers";
+import { requireZod4Compatibility } from "./scripts/require-zod4-compatibility.js";
+
+requireZod4Compatibility();
 
 const require = createRequire(import.meta.url);
 const solcPath = require.resolve("solc/soljson.js");
