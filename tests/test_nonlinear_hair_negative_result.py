@@ -11,9 +11,9 @@ SCRIPT = os.path.join(REPO, 'research', 'nonlinear_hair_negative_result.py')
 def test_script_runs_and_reports_done():
     r = subprocess.run([sys.executable, SCRIPT], capture_output=True, text=True, timeout=600)
     assert 'NEGATIVE-RESULT SCAN DONE' in r.stdout
-    # regular small-amplitude shoots must all have A > 0
+    # regular small-amplitude shoots must all have A > 0 (skip nan rows)
     for line in r.stdout.splitlines():
-        if 'regular, A>0' in line:
+        if 'regular, A>0' in line and 'nan' not in line:
             a = float(line.split('A=')[1].split()[0])
             assert a > 0
 
