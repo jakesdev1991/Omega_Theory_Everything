@@ -6,7 +6,17 @@
   "fallbackRetryDelay": "15s",
   "timeout": "20s",
   "//status": "Several documentation hosts answer 403 to non-browser user agents (bot protection) and 429 when the runner is rate-limited; neither means the page is gone. 200/206 are the real successes, 301/302 are redirects that markdown-link-check does not always follow.",
-  "aliveStatusCodes": [200, 206, 301, 302, 403, 429],
-  "//ignore": "Nothing is excluded yet. Add a host here only with a note saying why the link cannot be machine-checked.",
-  "ignorePatterns": []
+  "aliveStatusCodes": [
+    200,
+    206,
+    301,
+    302,
+    403,
+    429
+  ],
+  "//ignore": "Two dead upstream links in vendored docs (omega-local-verifier/vendor/SafeVerify/README.md), which must not be edited: ProvablyCorrectVibeCoding.com does not resolve, and the morph-labs/lean-abc-true-almost-always repo returns 404. Neither can be machine-checked.",
+  "ignorePatterns": [
+    "ProvablyCorrectVibeCoding\\.com",
+    "github\\.com/morph-labs/lean-abc-true-almost-always"
+  ]
 }

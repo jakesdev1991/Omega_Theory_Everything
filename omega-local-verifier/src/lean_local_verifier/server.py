@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any
 
 try:
@@ -53,6 +54,7 @@ async def verify_against_spec(
     spec_name: str,
     candidate: str,
     timeout_seconds: int = 120,
+    project_lib: str | None = None,
 ) -> dict[str, Any]:
     """Verify candidate Lean code against a trusted local specification.
 
@@ -68,6 +70,7 @@ async def verify_against_spec(
             formal_statement,
             candidate,
             timeout_seconds=timeout_seconds,
+            project_lib=Path(project_lib) if project_lib else None,
         )
         result["spec_name"] = spec_name
         return result
@@ -84,6 +87,7 @@ async def verify_proof(
     formal_statement: str,
     candidate: str,
     timeout_seconds: int = 120,
+    project_lib: str | None = None,
 ) -> dict[str, Any]:
     """Verify candidate Lean code against the supplied formal statement.
 
@@ -96,6 +100,7 @@ async def verify_proof(
             formal_statement,
             candidate,
             timeout_seconds=timeout_seconds,
+            project_lib=Path(project_lib) if project_lib else None,
         )
     except ValueError as exc:
         return failure("input", exc)

@@ -2,7 +2,7 @@
 FROM ubuntu:24.04
 
 ARG DEBIAN_FRONTEND=noninteractive
-ARG LEAN_TOOLCHAIN=leanprover/lean4:v4.27.0
+ARG LEAN_TOOLCHAIN=leanprover/lean4:v4.32.0
 
 ENV ELAN_HOME=/opt/elan
 ENV PATH=/opt/elan/bin:${PATH}

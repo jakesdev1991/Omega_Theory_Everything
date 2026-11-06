@@ -63,9 +63,20 @@ class DockerVerifier:
     def __init__(self, settings: Settings | None = None):
         self.settings = settings or load_settings()
 
-    def _docker_command(self, container_name: str) -> list[str]:
+    def _resolve_project_lib(self, project_lib: Path | None) -> Path | None:
+        resolved = project_lib if project_lib is not None else self.settings.project_lib
+        if resolved is None:
+            return None
+        resolved = Path(resolved)
+        if not resolved.is_dir():
+            raise ValueError(f"project_lib {resolved} is not an existing directory")
+        return resolved
+
+    def _docker_command(
+        self, container_name: str, project_lib: Path | None = None
+    ) -> list[str]:
         s = self.settings
-        return [
+        command = [
             s.docker_bin,
             "run",
             "--rm",
@@ -92,9 +103,11 @@ class DockerVerifier:
             "HOME=/tmp/home",
             "--env",
             "TMPDIR=/tmp",
-            "-i",
-            s.image,
         ]
+        if project_lib is not None:
+            command.extend(["-v", f"{project_lib}:/opt/project-lib:ro"])
+        command.extend(["-i", s.image])
+        return command
 
     async def _force_remove(self, container_name: str) -> None:
         try:
@@ -110,14 +123,24 @@ class DockerVerifier:
         except (FileNotFoundError, TimeoutError):
             pass
 
-    async def run(self, payload: dict[str, Any], timeout_seconds: int | None = None) -> dict[str, Any]:
+    async def run(
+        self,
+        payload: dict[str, Any],
+        timeout_seconds: int | None = None,
+        project_lib: Path | None = None,
+    ) -> dict[str, Any]:
         timeout = clamp_timeout(timeout_seconds, self.settings)
+        resolved_project_lib = self._resolve_project_lib(project_lib)
         payload = dict(payload)
         payload["timeout_seconds"] = timeout
+        if resolved_project_lib is not None:
+            # The project library is mounted read-only; its compiled modules
+            # live under lib/lean (the standard Lake build layout).
+            payload["project_lean_path"] = ["/opt/project-lib/lean"]
 
         encoded = json.dumps(payload, ensure_ascii=False).encode("utf-8")
         container_name = f"lean-verifier-{uuid.uuid4().hex[:20]}"
-        command = self._docker_command(container_name)
+        command = self._docker_command(container_name, resolved_project_lib)
 
         try:
             process = await asyncio.create_subprocess_exec(
@@ -170,7 +193,9 @@ class DockerVerifier:
             ) from exc
 
         if not isinstance(result, dict):
-            raise VerifierInfrastructureError("Verifier container returned a non-object JSON value")
+            raise VerifierInfrastructureError(
+                "Verifier container returned a non-object JSON value"
+            )
 
         result.setdefault("container_exit_code", process.returncode)
         if process.returncode != 0:
@@ -184,6 +209,23 @@ class DockerVerifier:
         result.setdefault("image", self.settings.image)
         return result
 
+    async def audit(
+        self,
+        source: str,
+        file_name: str | None = None,
+        timeout_seconds: int | None = None,
+        project_lib: Path | None = None,
+    ) -> dict[str, Any]:
+        validate_size("source", source, self.settings)
+        payload: dict[str, Any] = {"mode": "audit", "source": source}
+        if file_name is not None:
+            payload["file_name"] = file_name
+        return await self.run(
+            payload,
+            timeout_seconds=timeout_seconds,
+            project_lib=project_lib,
+        )
+
     async def health(self, timeout_seconds: int = 30) -> dict[str, Any]:
         return await self.run({"mode": "health"}, timeout_seconds=timeout_seconds)
 
@@ -192,6 +234,7 @@ class DockerVerifier:
         formal_statement: str,
         candidate: str,
         timeout_seconds: int | None = None,
+        project_lib: Path | None = None,
     ) -> dict[str, Any]:
         validate_size("formal_statement", formal_statement, self.settings)
         validate_size("candidate", candidate, self.settings)
@@ -202,4 +245,5 @@ class DockerVerifier:
                 "candidate": candidate,
             },
             timeout_seconds=timeout_seconds,
+            project_lib=project_lib,
         )

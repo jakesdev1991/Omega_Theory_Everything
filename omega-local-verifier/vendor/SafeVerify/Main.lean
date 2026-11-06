@@ -12,14 +12,30 @@ import Cli
 open Lean Meta Core SafeVerify
 open Std
 
+/-- Collect axioms for a constant using Lean 4.32.0's public `Lean.collectAxioms` API.
+    Lean 4.32.0 made the old axiom-collection entry point private and changed its
+    signature, so the pre-4.32 code no longer compiles. The public `Lean.collectAxioms`
+    requires a `MonadEnv` instance, so we run it in a minimal `CoreM` and lift the
+    result to `IO`. -/
+def collectAxiomsIO (env : Environment) (name : Name) : IO (Array Name) := do
+  let ctx : Core.Context := { fileName := "", fileMap := "".toFileMap }
+  let state : Core.State := { env := env }
+  -- Pin the monad to CoreM explicitly: `Lean.collectAxioms` is polymorphic in its
+  -- `MonadEnv` monad, and dot-notation `.run'` cannot infer `CoreM` on its own.
+  let act : CoreM (Array Name) := Lean.collectAxioms name
+  let result : IO (Except Lean.Exception (Array Name)) := act.run' ctx state |>.toIO'
+  match ← result with
+  | .ok axs => return axs
+  | .error _ => throw <| IO.userError s!"collectAxioms failed for '{name}'"
+
 /-- Takes the environment obtained after replaying all the constant in a file and outputs
 a hashmap storing the infos corresponding to all the theorems and definitions in the file. -/
-def processFileDeclarations (env : Environment) : HashMap Name Info := Id.run do
+def processFileDeclarations (env : Environment) : IO (HashMap Name Info) := do
   let mut out : HashMap Name Info := {}
   for (_, ci) in env.constants.map₂  do
     if ci.kind ∈ ["theorem", "def", "opaque", "inductive", "constructor"] then
-      let (_, s) := (CollectAxioms.collect ci.name).run env |>.run {}
-      out := out.insert ci.name ⟨ci, s.axioms⟩
+      let axs ← collectAxiomsIO env ci.name
+      out := out.insert ci.name ⟨ci, axs⟩
   return out
 
 /-- Lean generates auxiliary `_unsafe_rec` runtime shims for ordinary accepted
@@ -171,7 +187,8 @@ def replayFile (filePath : System.FilePath) (disallowPartial : Bool) :
         | _ => throw <| IO.userError s!"kernel verification failed for '{name}': inferred type does not match declared type"
       | .error _ =>
         throw <| IO.userError s!"kernel verification failed for '{name}': proof term rejected by kernel typechecker (possible unsafeCast or compacted-region corruption)"
-  return (processFileDeclarations env, env)
+  let decls ← processFileDeclarations env
+  return (decls, env)
 
 /-- Replays the target (challenge) file and extracts declarations plus the environment.
     Reads file path and settings from the Settings context. -/
@@ -215,7 +232,8 @@ def replayFileWithEnv (filePath : System.FilePath) (disallowPartial : Bool)
         | _ => throw <| IO.userError s!"kernel verification failed for '{name}': inferred type does not match declared type"
       | .error _ =>
         throw <| IO.userError s!"kernel verification failed for '{name}': proof term rejected by kernel typechecker (possible unsafeCast or compacted-region corruption)"
-  return (processFileDeclarations env, env)
+  let decls ← processFileDeclarations env
+  return (decls, env)
 
 /-- Read module imports from an olean file without full replay. -/
 def readImports (filePath : System.FilePath) : IO (Array Import) := do
@@ -420,8 +438,8 @@ def runMain (p : Parsed) : IO UInt32 := do
     if submissionDecls.get? name |>.isNone then
       if let some ci := submissionEnv.find? name then
         if ci.kind ∈ ["theorem", "def", "opaque", "inductive", "constructor"] then
-          let (_, s) := (CollectAxioms.collect name).run submissionEnv |>.run {}
-          supplementedDecls := supplementedDecls.insert name ⟨ci, s.axioms⟩
+          let axs ← collectAxiomsIO submissionEnv name
+          supplementedDecls := supplementedDecls.insert name ⟨ci, axs⟩
           IO.eprintln s!"  Note: '{name}' found in submission's imported environment"
 
   -- Validate Nat literals in new declarations

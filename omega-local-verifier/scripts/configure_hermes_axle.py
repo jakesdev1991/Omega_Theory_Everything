@@ -35,7 +35,11 @@ def parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Configure AXLE only; do not register this project's local verifier",
     )
-    p.add_argument("--no-test", action="store_true", help="Write config without running Hermes tests")
+    p.add_argument(
+        "--no-test",
+        action="store_true",
+        help="Write config without running Hermes tests",
+    )
     return p
 
 
@@ -59,8 +63,7 @@ def hermes_path(hermes: str, profile: str | None, kind: str) -> Path:
         hermes_command(hermes, profile, "config", kind),
         check=False,
         text=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
     )
     if completed.returncode != 0:
         raise RuntimeError(
@@ -178,7 +181,9 @@ def configure_yaml(
         project = lean_project.expanduser().resolve()
         if not project.is_dir():
             raise RuntimeError(f"Lean project directory does not exist: {project}")
-        if not ((project / "lakefile.toml").exists() or (project / "lakefile.lean").exists()):
+        if not (
+            (project / "lakefile.toml").exists() or (project / "lakefile.lean").exists()
+        ):
             raise RuntimeError(f"No lakefile.toml or lakefile.lean found in: {project}")
         servers["lean_lsp"] = CommentedMap(
             {
