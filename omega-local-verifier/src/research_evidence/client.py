@@ -32,7 +32,7 @@ class ResearchSettings:
     timeout_seconds: float
 
     @classmethod
-    def from_env(cls) -> "ResearchSettings":
+    def from_env(cls) -> ResearchSettings:
         raw_timeout = os.environ.get("RESEARCH_HTTP_TIMEOUT", "30")
         try:
             timeout = float(raw_timeout)
@@ -90,8 +90,18 @@ def _first(value: Any) -> Any:
 
 
 def _date_parts(message: dict[str, Any]) -> list[int] | None:
-    for key in ("published", "published-print", "published-online", "issued", "created"):
-        parts = message.get(key, {}).get("date-parts", []) if isinstance(message.get(key), dict) else []
+    for key in (
+        "published",
+        "published-print",
+        "published-online",
+        "issued",
+        "created",
+    ):
+        parts = (
+            message.get(key, {}).get("date-parts", [])
+            if isinstance(message.get(key), dict)
+            else []
+        )
         if parts and isinstance(parts[0], list):
             return parts[0]
     return None
@@ -152,7 +162,9 @@ def title_similarity(left: str | None, right: str | None) -> float | None:
     return round(SequenceMatcher(None, a, b).ratio(), 4)
 
 
-def normalize_eric_record(doc: dict[str, Any], *, retrieved_at: str | None = None) -> dict[str, Any]:
+def normalize_eric_record(
+    doc: dict[str, Any], *, retrieved_at: str | None = None
+) -> dict[str, Any]:
     retrieved_at = retrieved_at or utc_now()
     eric_id = str(doc.get("id") or "")
     peer_value = doc.get("peerreviewed")
@@ -247,7 +259,9 @@ def _openalex_locations(work: dict[str, Any]) -> list[dict[str, Any]]:
     return locations
 
 
-def normalize_openalex_work(work: dict[str, Any], *, retrieved_at: str | None = None) -> dict[str, Any]:
+def normalize_openalex_work(
+    work: dict[str, Any], *, retrieved_at: str | None = None
+) -> dict[str, Any]:
     retrieved_at = retrieved_at or utc_now()
     ids = work.get("ids") or {}
     if not isinstance(ids, dict):
@@ -305,7 +319,9 @@ def normalize_openalex_work(work: dict[str, Any], *, retrieved_at: str | None = 
             "any_repository_has_fulltext": oa.get("any_repository_has_fulltext"),
         },
         "integrity": {
-            "retraction_status": "retracted" if is_retracted else "not_flagged_by_openalex",
+            "retraction_status": "retracted"
+            if is_retracted
+            else "not_flagged_by_openalex",
             "openalex_is_retracted": is_retracted,
             "crossref_update_check_performed": False,
         },
@@ -318,7 +334,9 @@ def normalize_openalex_work(work: dict[str, Any], *, retrieved_at: str | None = 
     }
 
 
-def normalize_crossref_work(message: dict[str, Any], *, retrieved_at: str | None = None) -> dict[str, Any]:
+def normalize_crossref_work(
+    message: dict[str, Any], *, retrieved_at: str | None = None
+) -> dict[str, Any]:
     retrieved_at = retrieved_at or utc_now()
     doi = clean_doi(str(message.get("DOI"))) if message.get("DOI") else None
     date_parts = _date_parts(message)
@@ -445,7 +463,9 @@ def build_claim_evidence(
         raise ValueError("source_url must use HTTPS")
 
     quote_hash = hashlib.sha256(cleaned["exact_quote"].encode("utf-8")).hexdigest()
-    canonical = json.dumps(cleaned, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    canonical = json.dumps(
+        cleaned, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    )
     evidence_id = "sha256:" + hashlib.sha256(canonical.encode("utf-8")).hexdigest()
     return {
         "okay": True,
@@ -487,8 +507,16 @@ def merge_doi_evidence(
     retrieved_at: str | None = None,
 ) -> dict[str, Any]:
     retrieved_at = retrieved_at or utc_now()
-    crossref = normalize_crossref_work(crossref_message, retrieved_at=retrieved_at) if crossref_message else None
-    openalex = normalize_openalex_work(openalex_work, retrieved_at=retrieved_at) if openalex_work else None
+    crossref = (
+        normalize_crossref_work(crossref_message, retrieved_at=retrieved_at)
+        if crossref_message
+        else None
+    )
+    openalex = (
+        normalize_openalex_work(openalex_work, retrieved_at=retrieved_at)
+        if openalex_work
+        else None
+    )
     update_status = extract_crossref_updates(crossref_update_items)
 
     oa_retracted = bool(openalex_work and openalex_work.get("is_retracted"))
@@ -499,7 +527,9 @@ def merge_doi_evidence(
     openalex_title = openalex.get("title") if openalex else None
     similarity = title_similarity(crossref_title, openalex_title)
     if crossref and openalex and similarity is not None:
-        bibliographic_status = "consistent" if similarity >= 0.9 else "manual_review_required"
+        bibliographic_status = (
+            "consistent" if similarity >= 0.9 else "manual_review_required"
+        )
     elif crossref or openalex:
         bibliographic_status = "single_database_match"
     else:
@@ -524,7 +554,9 @@ def merge_doi_evidence(
         "openalex_record": openalex,
         "integrity": {
             **update_status,
-            "openalex_is_retracted": oa_retracted if openalex_work is not None else None,
+            "openalex_is_retracted": oa_retracted
+            if openalex_work is not None
+            else None,
             "checked_at": retrieved_at,
             "warning": (
                 "A clean lookup means no flag was found in these sources at this time; it is not a "
@@ -581,14 +613,19 @@ class ResearchClient:
         if not query or len(query) > 1000:
             raise ValueError("query must contain 1 to 1000 characters")
         limit = clamp_limit(limit)
-        if not isinstance(start, int) or isinstance(start, bool) or start < 0 or start > 100000:
+        if (
+            not isinstance(start, int)
+            or isinstance(start, bool)
+            or start < 0
+            or start > 100000
+        ):
             raise ValueError("start must be an integer between 0 and 100000")
 
         clauses = [f"({query})"]
         if peer_reviewed_only:
             clauses.append("peerreviewed:T")
         if publication_type:
-            clean_type = publication_type.strip().replace('"', r'\"')
+            clean_type = publication_type.strip().replace('"', r"\"")
             if not clean_type or len(clean_type) > 100:
                 raise ValueError("publication_type must contain 1 to 100 characters")
             clauses.append(f'publicationtype:"{clean_type}"')
@@ -660,7 +697,11 @@ class ResearchClient:
             raise ValueError("query must contain 1 to 500 characters")
         limit = clamp_limit(limit)
         for label, value in (("from_year", from_year), ("to_year", to_year)):
-            if value is not None and (not isinstance(value, int) or isinstance(value, bool) or not 1000 <= value <= 3000):
+            if value is not None and (
+                not isinstance(value, int)
+                or isinstance(value, bool)
+                or not 1000 <= value <= 3000
+            ):
                 raise ValueError(f"{label} must be a year between 1000 and 3000")
         if from_year is not None and to_year is not None and from_year > to_year:
             raise ValueError("from_year must not exceed to_year")
@@ -715,9 +756,13 @@ class ResearchClient:
         update_params = {"filter": f"updates:{clean}", "rows": 20}
 
         async with self._client() as client:
-            crossref_request = client.get(f"{CROSSREF_API}/works/{quote(clean, safe='')}")
+            crossref_request = client.get(
+                f"{CROSSREF_API}/works/{quote(clean, safe='')}"
+            )
             updates_request = client.get(f"{CROSSREF_API}/works", params=update_params)
-            openalex_request = client.get(f"{OPENALEX_API}/works", params=openalex_params)
+            openalex_request = client.get(
+                f"{OPENALEX_API}/works", params=openalex_params
+            )
             responses = await asyncio.gather(
                 crossref_request,
                 updates_request,
@@ -732,7 +777,7 @@ class ResearchClient:
 
         names = ("crossref_record", "crossref_updates", "openalex_record")
         for name, response in zip(names, responses):
-            if isinstance(response, Exception):
+            if isinstance(response, BaseException):
                 errors.append({"source": name, "error": str(response)})
                 continue
             if response.status_code == 404:
@@ -742,13 +787,19 @@ class ResearchClient:
                 payload = response.json()
                 if name == "crossref_record":
                     candidate = payload.get("message")
-                    crossref_message = candidate if isinstance(candidate, dict) else None
+                    crossref_message = (
+                        candidate if isinstance(candidate, dict) else None
+                    )
                 elif name == "crossref_updates":
                     candidate = (payload.get("message") or {}).get("items", [])
                     update_items = [x for x in candidate if isinstance(x, dict)]
                 else:
                     candidate = payload.get("results", [])
-                    openalex_work = candidate[0] if candidate and isinstance(candidate[0], dict) else None
+                    openalex_work = (
+                        candidate[0]
+                        if candidate and isinstance(candidate[0], dict)
+                        else None
+                    )
             except Exception as exc:
                 errors.append({"source": name, "error": str(exc)})
 

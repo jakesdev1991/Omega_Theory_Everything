@@ -178,6 +178,52 @@ The `verify_against_spec` MCP tool is preferable to passing both strings dynamic
 If an AI can modify both the specification and candidate, it can weaken the specification.
 Verification can only prove that a candidate matches the specific statement it was given.
 
+## Verifying code that imports a built Lake project
+
+By default the worker only sees its own SafeVerify library and Mathlib, so a
+candidate cannot import modules from another project. To verify a candidate
+that imports a built Lake project's modules:
+
+1. Build the project first so its `.olean` files exist, e.g.
+   `cd lean_proofs && lake build`.
+2. Point the verifier at the project's built library directory (the
+   `.lake/build/lib` directory of the project):
+
+   ```bash
+   export LEAN_VERIFIER_PROJECT_LIB=/absolute/path/to/project/.lake/build/lib
+   ```
+
+   or pass `--project-lib` to the `lean-verify` CLI, or `project_lib` to the
+   `verify_against_spec` / `verify_proof` MCP tools. The directory is mounted
+   read-only into the container at `/opt/project-lib`, and its `lean/`
+   subdirectory is appended to the worker's `LEAN_PATH`.
+3. Import the project modules in the spec and candidate as usual, e.g.
+   `import OmegaAxioms`.
+
+The project's modules must have been built against the same Mathlib revision
+the verifier image was built with, or Lean refuses to load their `.olean`
+files (dependency-hash mismatch). This repository's `lean_proofs/` and the
+verifier image both use Mathlib v4.32.0.
+
+## Auditing a whole corpus
+
+The `audit` mode compiles one Lean source file and then kernel-replays and
+axiom-audits every declaration it defines (via safe_verify run against the
+file itself). Unlike `verify`, it does not compare against a specification and
+does not apply the untrusted-submission source policy — it is a reporting tool
+for trusted project code. It reports compile diagnostics, whether the kernel
+accepted the file, the per-declaration axiom lists, and any `sorry` /
+non-standard-axiom uses.
+
+```bash
+uv run lean-verify audit --file lean_proofs/OmegaAxioms.lean \
+  --project-lib /absolute/path/to/lean_proofs/.lake/build/lib
+```
+
+`scripts/audit_corpus.py` runs that audit over every `.lean` file in a
+directory (e.g. `lean_proofs/`) and writes a machine-checkable JSON report
+with per-file results and totals.
+
 ## Deployment profiles
 
 ### Hybrid scholarly research + local verification—recommended
