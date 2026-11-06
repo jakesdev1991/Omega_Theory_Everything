@@ -83,5 +83,6 @@ lean_lib ToE where
     `ProofRegression,
     `LogCorrelationMetric,
     `RadialMetric,
-    `RadialDilation
+    `RadialDilation,
+    `SGBZeroMode
   ]
