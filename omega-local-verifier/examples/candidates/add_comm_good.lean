@@ -1,0 +1,4 @@
+import Mathlib
+
+theorem local_add_comm (a b : Nat) : a + b = b + a := by
+  exact Nat.add_comm a b

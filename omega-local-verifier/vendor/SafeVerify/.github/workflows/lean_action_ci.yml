@@ -1,0 +1,21 @@
+name: Lean Action CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean-action@v1
+        with:
+          build-args: 'safe_verify'  # Only build the main executable, not test files
+      
+      - name: Run SafeVerify Tests
+        run: |
+          chmod +x scripts/run_tests.sh
+          ./scripts/run_tests.sh
