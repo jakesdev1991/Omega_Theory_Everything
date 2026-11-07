@@ -84,5 +84,6 @@ lean_lib ToE where
     `LogCorrelationMetric,
     `RadialMetric,
     `RadialDilation,
-    `SGBZeroMode
+    `SGBZeroMode,
+    `QRegionCoupling
   ]
