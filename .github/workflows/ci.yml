@@ -191,6 +191,8 @@ jobs:
         # Hardhat 3 has been migrated and the pinned solc compiler's vulnerable
         # tmp transitive dependency is overridden to the patched release. Gate
         # the complete dependency tree so future advisories cannot silently pass.
+        # Accepted advisories live in evm/AUDIT_ALLOWLIST.md with reasons and
+        # review dates; the audit fails on anything not listed there.
         working-directory: evm
         run: npm audit
 

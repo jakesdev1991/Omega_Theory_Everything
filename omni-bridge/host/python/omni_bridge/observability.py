@@ -7,7 +7,6 @@ import time
 import uuid
 from dataclasses import asdict, dataclass
 from enum import Enum
-from typing import List, Optional
 
 
 class TraceStage(Enum):
@@ -31,8 +30,8 @@ class TraceSpan:
     trace_id: str
     stage: TraceStage
     start_time: float
-    end_time: Optional[float]
-    parent_span_id: Optional[str]
+    end_time: float | None
+    parent_span_id: str | None
     attributes: dict
     status: str
 
@@ -99,7 +98,7 @@ class TraceCorrelator:
                 (span.span_id, span.trace_id, span.start_time, json.dumps(d)),
             )
 
-    def get_trace(self, trace_id: str) -> List[TraceSpan]:
+    def get_trace(self, trace_id: str) -> list[TraceSpan]:
         with sqlite3.connect(self.db_path) as conn:
             cur = conn.cursor()
             cur.execute(

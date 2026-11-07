@@ -7,7 +7,7 @@ import logging
 import sqlite3
 from dataclasses import asdict, dataclass
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -52,9 +52,9 @@ class SkillRecord:
     created_at: float
     updated_at: float
     author: str
-    test_results: Dict[str, Any]
-    audit_log: List[Dict[str, Any]]
-    metadata: Dict[str, Any]
+    test_results: dict[str, Any]
+    audit_log: list[dict[str, Any]]
+    metadata: dict[str, Any]
 
 
 class SkillLifecycleManager:
@@ -97,7 +97,7 @@ class SkillLifecycleManager:
         skill_id: str,
         target_state: SkillState,
         reason: str,
-        evidence: Optional[Dict] = None,
+        evidence: dict | None = None,
     ) -> SkillRecord:
         record = self._get_record(skill_id)
         if not record:
@@ -127,7 +127,7 @@ class SkillLifecycleManager:
 
     def get_eligible_skills(
         self, min_state: SkillState = SkillState.PROMOTED
-    ) -> List[SkillRecord]:
+    ) -> list[SkillRecord]:
         # For simplistic implementation, just returning PROMOTED or MONITORED if min_state is PROMOTED.
         # Can be enhanced to define proper hierarchy
         eligible_states = {SkillState.PROMOTED, SkillState.MONITORED}
@@ -146,13 +146,13 @@ class SkillLifecycleManager:
     def retire_skill(self, skill_id: str, reason: str) -> SkillRecord:
         return self.transition(skill_id, SkillState.RETIRED, reason)
 
-    def get_audit_trail(self, skill_id: str) -> List[Dict[str, Any]]:
+    def get_audit_trail(self, skill_id: str) -> list[dict[str, Any]]:
         record = self._get_record(skill_id)
         if not record:
             return []
         return record.audit_log
 
-    def _get_record(self, skill_id: str) -> Optional[SkillRecord]:
+    def _get_record(self, skill_id: str) -> SkillRecord | None:
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
             cursor.execute(

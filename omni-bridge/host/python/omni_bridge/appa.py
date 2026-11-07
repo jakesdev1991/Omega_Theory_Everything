@@ -4,7 +4,7 @@
 import enum
 import logging
 from dataclasses import dataclass, field
-from typing import Any, Set
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -41,23 +41,23 @@ class Capability:
 
 @dataclass
 class ChildContext:
-    capabilities: Set[Capability]
+    capabilities: set[Capability]
     restricted_fs: bool = True
     restricted_net: bool = True
     bounded_execution: bool = True
-    credentials: Set[Any] = field(default_factory=set)
+    credentials: set[Any] = field(default_factory=set)
 
 
 class AppaEngine:
     def compute_effective_permissions(
         self,
-        system: Set[Capability],
-        declared: Set[Capability],
-        tenant: Set[Capability],
-        tool: Set[Capability],
-        context: Set[Capability],
-        risk: Set[Capability],
-    ) -> Set[Capability]:
+        system: set[Capability],
+        declared: set[Capability],
+        tenant: set[Capability],
+        tool: set[Capability],
+        context: set[Capability],
+        risk: set[Capability],
+    ) -> set[Capability]:
         """Effective = System ∩ Declared ∩ Tenant ∩ Tool ∩ Context, then subtract risk.
 
         Risk may remove authority. Risk must NEVER manufacture authority (§24).

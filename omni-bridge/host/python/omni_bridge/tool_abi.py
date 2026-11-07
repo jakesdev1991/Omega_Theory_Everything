@@ -4,7 +4,6 @@
 import json
 import sqlite3
 from dataclasses import asdict, dataclass
-from typing import List, Optional, Tuple
 
 
 @dataclass
@@ -13,16 +12,16 @@ class ToolManifest:
     version: str
     input_schema: dict
     output_schema: dict
-    required_capabilities: List[str]
+    required_capabilities: list[str]
     security_requirements: dict
-    network_requirements: List[str]
-    filesystem_requirements: List[str]
+    network_requirements: list[str]
+    filesystem_requirements: list[str]
     resource_limits: dict
     timeout_seconds: int
     deterministic: bool
-    side_effects: List[str]
+    side_effects: list[str]
     rollback_supported: bool
-    verification_requirements: List[str]
+    verification_requirements: list[str]
 
 
 class ToolRegistry:
@@ -43,7 +42,7 @@ class ToolRegistry:
                 (manifest.tool_id, json.dumps(asdict(manifest))),
             )
 
-    def get(self, tool_id: str) -> Optional[ToolManifest]:
+    def get(self, tool_id: str) -> ToolManifest | None:
         with sqlite3.connect(self.db_path) as conn:
             cur = conn.cursor()
             cur.execute("SELECT record_json FROM tools WHERE tool_id = ?", (tool_id,))
@@ -52,7 +51,7 @@ class ToolRegistry:
                 return None
             return ToolManifest(**json.loads(row[0]))
 
-    def list_tools(self) -> List[ToolManifest]:
+    def list_tools(self) -> list[ToolManifest]:
         with sqlite3.connect(self.db_path) as conn:
             cur = conn.cursor()
             cur.execute("SELECT record_json FROM tools")
@@ -60,7 +59,7 @@ class ToolRegistry:
 
     def validate_invocation(
         self, tool_id: str, input_data: dict
-    ) -> Tuple[bool, List[str]]:
+    ) -> tuple[bool, list[str]]:
         m = self.get(tool_id)
         if not m:
             return False, ["Tool not found"]

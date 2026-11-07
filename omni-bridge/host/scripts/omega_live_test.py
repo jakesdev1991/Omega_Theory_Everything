@@ -71,7 +71,7 @@ def lucifer_ipc(op_json):
             if not b:
                 break
             chunks.append(b)
-    except pysocket.timeout:
+    except TimeoutError:
         pass
     s.close()
     return json.loads(b"".join(chunks).decode())

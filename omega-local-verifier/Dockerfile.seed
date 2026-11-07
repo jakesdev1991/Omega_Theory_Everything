@@ -1,0 +1,64 @@
+# syntax=docker/dockerfile:1
+# TEMPORARY SEEDED BUILD — DO NOT COMMIT.
+# Builds local-lean-verifier:4.32.0 from the host's already-downloaded
+# Lean 4.32.0 toolchain + Mathlib cache (no big downloads).
+# The committed Dockerfile stays self-contained (it downloads).
+# Build from the repo root:
+#   docker build -f omega-local-verifier/Dockerfile.seed -t local-lean-verifier:4.32.0 omega-local-verifier/
+FROM ubuntu:24.04
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+ENV ELAN_HOME=/opt/elan
+ENV PATH=/opt/elan/bin:${PATH}
+ENV LEAN_VERIFIER_ROOT=/opt/SafeVerify
+
+RUN apt-get -o Acquire::Check-Valid-Until=false -o Acquire::Check-Date=false update \
+    && apt-get install -y --no-install-recommends \
+       ca-certificates curl git python3 zstd xz-utils build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Seed the Lean 4.32.0 toolchain from the host cache (no download).
+# /host-elan/bin holds the elan binary + shims (hardlinked); the 4.32.0
+# toolchain dir is copied whole. Default toolchain is set by editing the
+# host's settings.toml (no `elan default`, which might try to download).
+RUN --mount=type=bind,source=/home/jake/.elan,target=/host-elan,readonly \
+    mkdir -p /opt/elan/bin /opt/elan/toolchains \
+    && cp -a /host-elan/bin/. /opt/elan/bin/ \
+    && cp -a /host-elan/toolchains/leanprover--lean4---v4.32.0 /opt/elan/toolchains/ \
+    && cp /host-elan/settings.toml /opt/elan/settings.toml \
+    && sed -i 's/v4.27.0/v4.32.0/' /opt/elan/settings.toml \
+    && cat /opt/elan/settings.toml \
+    && lean --version \
+    && lake --version
+
+COPY vendor/SafeVerify /opt/SafeVerify
+WORKDIR /opt/SafeVerify
+
+# Seed Mathlib + deps from the host's lake packages (no download).
+# The repo's package dir is "mathlib4"; SafeVerify's lakefile requires "mathlib".
+RUN --mount=type=bind,source=/home/jake/Omega_Theory_Everything/lean_proofs/.lake/packages,target=/host-pkgs,readonly \
+    mkdir -p .lake/packages \
+    && cp -a /host-pkgs/mathlib4 .lake/packages/mathlib \
+    && cp -a /host-pkgs/Cli .lake/packages/Cli \
+    && cp -a /host-pkgs/LeanSearchClient .lake/packages/LeanSearchClient \
+    && cp -a /host-pkgs/Qq .lake/packages/Qq \
+    && cp -a /host-pkgs/aesop .lake/packages/aesop \
+    && cp -a /host-pkgs/batteries .lake/packages/batteries \
+    && cp -a /host-pkgs/importGraph .lake/packages/importGraph \
+    && cp -a /host-pkgs/plausible .lake/packages/plausible \
+    && cp -a /host-pkgs/proofwidgets .lake/packages/proofwidgets \
+    && ls .lake/packages/
+
+# Build the kernel-replay verifier against the seeded Mathlib.
+# (No `lake update` / `lake exe cache get` — packages + oleans are already seeded.)
+RUN lake build safe_verify \
+    && test -x .lake/build/bin/safe_verify
+
+COPY docker/worker.py /opt/lean-verifier-worker.py
+RUN chmod 0555 /opt/lean-verifier-worker.py \
+    && chmod -R a+rX /opt/elan /opt/SafeVerify \
+    && useradd --uid 10001 --create-home --shell /usr/sbin/nologin verifier
+
+USER 10001:10001
+ENTRYPOINT ["python3", "/opt/lean-verifier-worker.py"]

@@ -6,7 +6,7 @@ import json
 import sqlite3
 from dataclasses import asdict, dataclass
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 # Similarity is not truth. Embedding distance is not proof. (per §33)
 from .appa import ConfidentialityLevel, IntegrityLevel, SecurityLabel
@@ -39,8 +39,8 @@ class MemoryRecord:
     created_at: float
     security_label: SecurityLabel
     validation_status: ValidationStatus
-    expiry: Optional[float]
-    dependencies: List[str]
+    expiry: float | None
+    dependencies: list[str]
 
 
 class MemoryStore:
@@ -87,8 +87,8 @@ class MemoryStore:
         return record.memory_id
 
     def recall(
-        self, memory_type: MemoryType, query: Optional[str] = None, limit: int = 10
-    ) -> List[MemoryRecord]:
+        self, memory_type: MemoryType, query: str | None = None, limit: int = 10
+    ) -> list[MemoryRecord]:
         records = []
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
@@ -135,7 +135,7 @@ class MemoryStore:
             )
             return cursor.rowcount
 
-    def get_by_provenance(self, provenance_chain: str) -> List[MemoryRecord]:
+    def get_by_provenance(self, provenance_chain: str) -> list[MemoryRecord]:
         records = []
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
@@ -147,7 +147,7 @@ class MemoryStore:
                 records.append(self._parse_record(json.loads(row[0])))
         return records
 
-    def _parse_record(self, data: Dict[str, Any]) -> MemoryRecord:
+    def _parse_record(self, data: dict[str, Any]) -> MemoryRecord:
         data["memory_type"] = MemoryType(data["memory_type"])
         data["validation_status"] = ValidationStatus(data["validation_status"])
 

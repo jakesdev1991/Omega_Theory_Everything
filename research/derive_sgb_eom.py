@@ -6,6 +6,8 @@ Action (G=1, Z=1, V=0): S = ∫ √-g [ R/16π - ½(∇φ)² + ½ηφ² 𝒢 ] �
 Reduced Lagrangian: L = r² e^δ [ R/16π - ½ μ φ'² + ½ η φ² 𝒢 ].
 Euler-Lagrange with second derivatives handled by integration by parts.
 """
+import itertools
+
 import sympy as sp
 
 r = sp.symbols('r', positive=True)
@@ -39,7 +41,7 @@ R = [[sp.simplify(sum(rup(k, i, k, j) for k in range(n))) for j in range(n)] for
 Rs = sp.simplify(sum(inv[i, j]*R[i][j] for i in range(n) for j in range(n)))
 RR = sp.simplify(sum(R[i][j]*R[a][b]*inv[i, a]*inv[j, b] for i in range(n) for j in range(n) for a in range(n) for b in range(n)))
 K = 0
-import itertools
+
 for a, b, c, d in itertools.product(range(n), repeat=4):
     comp = sum(g[a, e]*rup(e, b, c, d) for e in range(n))
     if sp.expand(comp) != 0:
@@ -56,7 +58,8 @@ print(f"L has {len(str(L))} chars")
 
 # Generalized Euler-Lagrange for L(q, q', q''):
 def euler_lagrange(L, q):
-    q1 = sp.diff(q, r); q2 = sp.diff(q, r, 2)
+    q1 = sp.diff(q, r)
+    q2 = sp.diff(q, r, 2)
     term = sp.diff(L, q) - sp.diff(sp.diff(L, q1), r) + sp.diff(sp.diff(L, q2), r, 2)
     return sp.simplify(sp.expand(term))
 

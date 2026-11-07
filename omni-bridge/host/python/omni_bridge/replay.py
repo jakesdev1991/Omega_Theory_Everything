@@ -5,7 +5,6 @@ import json
 import sqlite3
 from dataclasses import asdict, dataclass
 from enum import Enum
-from typing import List, Optional
 
 
 class ReplayClassification(Enum):
@@ -26,7 +25,7 @@ class ReplayRecord:
     inputs_hash: str
     outputs_hash: str
     match_result: str
-    divergence_detail: Optional[str]
+    divergence_detail: str | None
     metadata: dict
 
 
@@ -69,7 +68,7 @@ class ReplayEngine:
             )
         return record
 
-    def get_replays_for_trace(self, trace_id: str) -> List[ReplayRecord]:
+    def get_replays_for_trace(self, trace_id: str) -> list[ReplayRecord]:
         with sqlite3.connect(self.db_path) as conn:
             cur = conn.cursor()
             cur.execute(

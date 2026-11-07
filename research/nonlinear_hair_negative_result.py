@@ -63,7 +63,7 @@ if __name__ == '__main__':
         print(f'  φ_h={p:.3f}  A={a:+.4e}  min μ={mu:+.4f}  {tag}', flush=True)
     print('λ scan at fixed small φ_h (looking for sign change across λ₁):', flush=True)
     for ph in [1e-3, 1e-2]:
-        vals = [(l, A(l, ph)) for l in np.linspace(0.5, 2.0, 16)]
+        vals = [(lam, A(lam, ph)) for lam in np.linspace(0.5, 2.0, 16)]
         signs = [np.sign(v) for _, v in vals if np.isfinite(v)]
         print(f'  φ_h={ph:.0e}: A>0 for all λ scanned: {all(s > 0 for s in signs)}', flush=True)
     print('NEGATIVE-RESULT SCAN DONE', flush=True)

@@ -1,7 +1,7 @@
 """Tests for research/verify_nonlinear_sgb.py — nonlinear SGB structural checks."""
+import os
 import subprocess
 import sys
-import os
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SCRIPT = os.path.join(HERE, '..', 'research', 'verify_nonlinear_sgb.py')
@@ -16,7 +16,7 @@ def test_all_structural_checks_pass():
     rc, out = run_script()
     assert rc == 0, out
     for tag in ['[1]', '[2]', '[3]', '[4]', '[5]']:
-        line = next(l for l in out.split('\n') if l.startswith(tag))
+        line = next(ln for ln in out.split('\n') if ln.startswith(tag))
         assert 'False' not in line, line
     assert '[2]' in out and 'G(Schw) = 48M²/r⁶: True' in out
 

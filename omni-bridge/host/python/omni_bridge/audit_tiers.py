@@ -6,7 +6,6 @@ import sqlite3
 import time
 from dataclasses import asdict, dataclass
 from enum import Enum
-from typing import List
 
 
 class AuditVerdict(Enum):
@@ -19,7 +18,7 @@ class AuditVerdict(Enum):
 class ScrutinyReport:
     trace_id: str
     verdict: AuditVerdict
-    findings: List[str]
+    findings: list[str]
     timestamp: float
 
 
@@ -37,7 +36,7 @@ class Tier2Scrutiny:
             )
 
     def analyze_trace(
-        self, trace_id: str, ledger_records: List[dict]
+        self, trace_id: str, ledger_records: list[dict]
     ) -> ScrutinyReport:
         findings = []
         verdict = AuditVerdict.PASS
@@ -73,7 +72,7 @@ class Tier3MetaScrutiny:
             )
 
     def run_meta_audit(
-        self, audit_id: str, scrutiny_reports: List[ScrutinyReport]
+        self, audit_id: str, scrutiny_reports: list[ScrutinyReport]
     ) -> dict:
         flagged_count = sum(
             1 for r in scrutiny_reports if r.verdict != AuditVerdict.PASS

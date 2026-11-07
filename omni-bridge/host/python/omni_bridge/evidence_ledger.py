@@ -5,7 +5,6 @@ import json
 import logging
 import sqlite3
 from dataclasses import asdict, dataclass
-from typing import List, Tuple
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +38,7 @@ class LedgerRecord:
     input_hash: str
     output_hash: str
     security_labels: SecurityLabel
-    capabilities: List[str]
+    capabilities: list[str]
     budget_used: float
     latency_ms: float
     verification_result: str
@@ -110,7 +109,7 @@ class EvidenceLedger:
 
         return record
 
-    def verify_chain(self) -> Tuple[bool, List[str]]:
+    def verify_chain(self) -> tuple[bool, list[str]]:
         errors = []
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
@@ -145,7 +144,7 @@ class EvidenceLedger:
 
         return len(errors) == 0, errors
 
-    def get_records_by_trace(self, trace_id: str) -> List[LedgerRecord]:
+    def get_records_by_trace(self, trace_id: str) -> list[LedgerRecord]:
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
             cursor.execute(

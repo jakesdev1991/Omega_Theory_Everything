@@ -11,6 +11,7 @@ Uses sympy to build Christoffels and Riemann from the metric directly
    tt-equation gives an integral constraint linking mass, φ, and η.
 """
 import itertools
+
 import sympy as sp
 
 t, r, th, ph = sp.symbols('t r theta phi', positive=True)
@@ -66,7 +67,8 @@ print(f"[1] K(Schw) = 48M²/r⁶: {sp.simplify(K - 48*M**2/r**6) == 0}")
 print(f"[2] R(Schw) = 0: {sp.simplify(Rs) == 0};  G(Schw) = 48M²/r⁶: {sp.simplify(G - 48*M**2/r**6) == 0}")
 
 # 3: general static ansatz
-A = sp.Function('A')(r); B = sp.Function('B')(r)
+A = sp.Function('A')(r)
+B = sp.Function('B')(r)
 mgen = sp.diag(-A, B, r**2, r**2*sp.sin(th)**2)
 Kg, Rg, Gg = invariants(mgen, [t, r, th, ph])
 print(f"[3] general-ansatz G computed: {Gg is not None}, length={len(str(Gg))} chars")
@@ -98,5 +100,5 @@ print(f"[5] f'(φ)𝒢 = ηφ·48M²/r⁶: {sp.simplify(eta*phi0*48*M**2/r**6 - 
 Z0 = sp.symbols('Z0', positive=True)
 V = sp.Function('V')
 rho_phi = sp.Rational(1,2)*Z0*(sp.diff(phi0, r)**2)*f + V(phi0)  # T^t_t ≈ -ρ
-print(f"[6] effective density ρ_φ = ½Z₀φ'²(1-2M/r) + V(φ): stated")
+print("[6] effective density ρ_φ = ½Z₀φ'²(1-2M/r) + V(φ): stated")
 print("    mass constraint: d/dr[r(1-1/B)] = -8πr²ρ_eff (tt Einstein eq)")

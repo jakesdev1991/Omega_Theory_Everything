@@ -10,7 +10,7 @@ clever generator would be a learning component and the pilot has none.
 from __future__ import annotations
 
 import re
-from typing import Iterator
+from collections.abc import Iterator
 
 from .schema import Binder, Candidate, Statement
 

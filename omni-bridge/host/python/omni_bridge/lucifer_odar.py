@@ -1,7 +1,7 @@
 # Copyright (c) 2025-2026 Jacob See.
 # SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 
-from typing import Any, List, Tuple
+from typing import Any
 
 
 class ODAREngine:
@@ -14,7 +14,7 @@ class ODAREngine:
     def __init__(self, lambda_penalty: float = 1.5):
         self.lambda_penalty = lambda_penalty
 
-    def compute_varentropy_penalty(self, log_probs: List[float]) -> float:
+    def compute_varentropy_penalty(self, log_probs: list[float]) -> float:
         """
         Calculates the variance of the negative log probabilities (surprisal).
         High variance indicates token volatility (hallucinations/uncertainty).
@@ -31,8 +31,8 @@ class ODAREngine:
         return variance
 
     def evaluate_candidate_chain(
-        self, log_probs: List[float]
-    ) -> Tuple[float, float, float]:
+        self, log_probs: list[float]
+    ) -> tuple[float, float, float]:
         """
         Evaluates a reasoning chain candidate.
         Returns: (free_energy, mean_surprisal, varentropy)

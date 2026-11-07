@@ -5,10 +5,11 @@ import hashlib
 import json
 import os
 import re
+from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from difflib import SequenceMatcher
-from typing import Any, Iterable
+from typing import Any
 from urllib.parse import quote
 
 import httpx

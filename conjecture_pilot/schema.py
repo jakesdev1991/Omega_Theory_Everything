@@ -12,10 +12,11 @@ import hashlib
 import json
 import re
 import time
+from collections.abc import Iterator
 from dataclasses import asdict, dataclass, field
 from enum import Enum
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any
 
 
 class Epistemic(str, Enum):

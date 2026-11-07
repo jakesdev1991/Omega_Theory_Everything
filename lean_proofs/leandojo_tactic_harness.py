@@ -22,9 +22,9 @@ import json
 import re
 import subprocess
 import time
+from collections.abc import Iterable, Sequence
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Iterable, Sequence
 
 DEFAULT_MODULES = (
     "CBwK_Budget_Pacer.lean",

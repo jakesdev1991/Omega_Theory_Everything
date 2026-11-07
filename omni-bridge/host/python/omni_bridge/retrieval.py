@@ -6,7 +6,7 @@ import json
 import logging
 import sqlite3
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ class RetrievalResult:
     content: str
     score: float
     source: SourceType
-    metadata: Dict[str, Any]
+    metadata: dict[str, Any]
 
 
 class RetrievalEngine:
@@ -47,7 +47,7 @@ class RetrievalEngine:
             """)
 
     def index_document(
-        self, doc_id: str, content: str, metadata: Optional[Dict[str, Any]] = None
+        self, doc_id: str, content: str, metadata: dict[str, Any] | None = None
     ):
         meta_str = json.dumps(metadata) if metadata else "{}"
         with sqlite3.connect(self.fts5_db_path) as conn:
@@ -58,17 +58,17 @@ class RetrievalEngine:
                 (doc_id, content, meta_str),
             )
 
-    def search(self, query: str, limit: int = 10) -> List[RetrievalResult]:
+    def search(self, query: str, limit: int = 10) -> list[RetrievalResult]:
         return self._lexical_search(query, limit)
 
-    def hybrid_search(self, query: str, limit: int = 10) -> List[RetrievalResult]:
+    def hybrid_search(self, query: str, limit: int = 10) -> list[RetrievalResult]:
         results = self._lexical_search(query, limit)
         if self.dense_enabled:
             dense_results = self._dense_search(query, limit)
             results.extend(dense_results)
         return results[:limit]
 
-    def _lexical_search(self, query: str, limit: int) -> List[RetrievalResult]:
+    def _lexical_search(self, query: str, limit: int) -> list[RetrievalResult]:
         """FTS5-safe lexical search.
 
         FTS5 MATCH syntax treats ':' and other punctuation as operators and
@@ -121,12 +121,12 @@ class RetrievalEngine:
                     ]
         return []
 
-    def _dense_search(self, query: str, limit: int) -> List[RetrievalResult]:
+    def _dense_search(self, query: str, limit: int) -> list[RetrievalResult]:
         raise NotImplementedError(
             "Dense retrieval requires Qdrant benchmark validation per §32"
         )
 
-    def _graph_search(self, query: str, limit: int) -> List[RetrievalResult]:
+    def _graph_search(self, query: str, limit: int) -> list[RetrievalResult]:
         raise NotImplementedError(
             "Graph retrieval gated per §70: must beat FTS5+dense on recall, utility, false positives, cost, latency, poisoning robustness"
         )

@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 
 from dataclasses import dataclass
-from typing import Any, Dict
+from typing import Any
 
 
 @dataclass
@@ -45,7 +45,7 @@ class ATOMSEngine:
         pass
 
     def generate_profile(
-        self, user_prompt: str, context: Dict[str, Any] | None = None
+        self, user_prompt: str, context: dict[str, Any] | None = None
     ) -> ATOMSProfile:
         """
         Analyzes the prompt and generates a 7-dimensional psychological profile.

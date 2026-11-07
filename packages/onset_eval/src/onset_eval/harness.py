@@ -47,7 +47,8 @@ from __future__ import annotations
 import csv
 import dataclasses
 import pathlib
-from typing import Any, Callable, Iterable, Sequence
+from collections.abc import Callable, Iterable, Sequence
+from typing import Any
 
 import numpy as np
 

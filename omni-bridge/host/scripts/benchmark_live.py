@@ -59,7 +59,7 @@ def once(req):
                 break
             except Exception:
                 continue
-    except socket.timeout:
+    except TimeoutError:
         pass
     s.close()
     return data

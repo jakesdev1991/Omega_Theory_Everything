@@ -33,7 +33,7 @@ def once(msg="benchmark warmup"):
             if not chunk:
                 break
             data += chunk
-    except socket.timeout:
+    except TimeoutError:
         pass
     s.close()
     return data
