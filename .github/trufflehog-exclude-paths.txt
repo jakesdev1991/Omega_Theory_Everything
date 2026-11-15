@@ -44,3 +44,10 @@ package-lock\.json$
 # so the introducing diffs still trip the URI detector on every weekly run.
 ^solana/test/config\.test\.mjs$
 ^amity/test/holder-verification\.test\.mjs$
+#
+# The exclude file itself. It is a list of regexes and comments, never a
+# place a real secret can hide — and it must be excluded because it is
+# scanned like any other file: an earlier revision of this file quoted the
+# two fixture URIs in its comment, and the full-history scan flags that
+# revision forever unless the file itself is out of scope.
+^\.github/trufflehog-exclude-paths\.txt$
