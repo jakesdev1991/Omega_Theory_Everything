@@ -22,3 +22,32 @@ package-lock\.json$
 (^|/)yarn\.lock$
 (^|/)pnpm-lock\.yaml$
 (^|/)Cargo\.lock$
+#
+# Hand-written test fixtures that assert credential-bearing URIs are REJECTED.
+# Narrow exception to the machine-written-only rule above, scoped to these
+# two files by exact-path regexes (nothing else is excluded):
+#
+#   - solana/test/config.test.mjs: asserts validateMetadataUri() rejects
+#     a credential-bearing Arweave metadata URI (placeholder user/password).
+#   - amity/test/holder-verification.test.mjs: asserts the challenge builder
+#     rejects a credential-bearing universe URL on the example testnet host.
+#     (The fixtures themselves are quoted in the test files, not here: this
+#     file is scanned too, so writing the literal URIs here would re-create
+#     the finding this entry exists to suppress.)
+#
+# Both are placeholder credentials on example hosts, in tests whose whole
+# point is that such URIs must be rejected; TruffleHog verified 0 secrets
+# in scheduled run 43695925702. The inline `trufflehog:ignore` tags already
+# on those lines cannot suppress the finding: the schedule scan covers full
+# git history, and the URIs were introduced in ce9563b (2026-09-23) and
+# 896fcca (2026-09-24) before the tags were added in 02ce959 (2026-09-27),
+# so the introducing diffs still trip the URI detector on every weekly run.
+^solana/test/config\.test\.mjs$
+^amity/test/holder-verification\.test\.mjs$
+#
+# The exclude file itself. It is a list of regexes and comments, never a
+# place a real secret can hide — and it must be excluded because it is
+# scanned like any other file: an earlier revision of this file quoted the
+# two fixture URIs in its comment, and the full-history scan flags that
+# revision forever unless the file itself is out of scope.
+^\.github/trufflehog-exclude-paths\.txt$
