@@ -28,9 +28,12 @@ package-lock\.json$
 # two files by exact-path regexes (nothing else is excluded):
 #
 #   - solana/test/config.test.mjs: asserts validateMetadataUri() rejects
-#     "https://user:pass@arweave.net/twc.json" (user "user", password "pass").
+#     a credential-bearing Arweave metadata URI (placeholder user/password).
 #   - amity/test/holder-verification.test.mjs: asserts the challenge builder
-#     rejects "https://user:password@universe.example.testnet/amity".
+#     rejects a credential-bearing universe URL on the example testnet host.
+#     (The fixtures themselves are quoted in the test files, not here: this
+#     file is scanned too, so writing the literal URIs here would re-create
+#     the finding this entry exists to suppress.)
 #
 # Both are placeholder credentials on example hosts, in tests whose whole
 # point is that such URIs must be rejected; TruffleHog verified 0 secrets
