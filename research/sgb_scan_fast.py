@@ -3,6 +3,7 @@
 Coarse φ_h scan only — no brentq refinement. Used by the unit test so the
 test stays under a few seconds.
 """
+
 import numpy as np
 from scipy.integrate import solve_ivp
 
@@ -23,8 +24,15 @@ def nl(x, y, lam):
 
 def A(lam, ph, xmax=X_MAX):
     x0 = 1.0 + 1e-6
-    sol = solve_ivp(nl, (x0, xmax), [1.0, 0.0, ph, -3 * lam * ph], args=(lam,),
-                    method="LSODA", rtol=1e-7, atol=1e-9)
+    sol = solve_ivp(
+        nl,
+        (x0, xmax),
+        [1.0, 0.0, ph, -3 * lam * ph],
+        args=(lam,),
+        method="LSODA",
+        rtol=1e-7,
+        atol=1e-9,
+    )
     if not sol.success:
         return np.nan
     phi, psi = sol.y[2, -1], sol.y[3, -1]
@@ -37,7 +45,7 @@ def coarse_scan(lam, phs=None):
     return [(p, A(lam, p)) for p in phs]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     for lam in [0.75, 1.0, 2.0]:
         print(f"λ={lam}")
         for p, a in coarse_scan(lam):

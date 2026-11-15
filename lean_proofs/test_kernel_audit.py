@@ -25,11 +25,12 @@ class KernelAuditTests(unittest.TestCase):
         (self.root / "kernel_audit_targets.json").write_text(
             json.dumps(["Fixture.result"] if targets is None else targets)
         )
-        with patch("audit_kernel.shutil.which", return_value="/mock/lake"), patch(
-            "audit_kernel.run_checked", side_effect=side_effect
-        ) as runner, patch(
-            "sys.argv", ["audit_kernel.py", "--root", str(self.root)]
-        ), contextlib.redirect_stdout(io.StringIO()) as output:
+        with (
+            patch("audit_kernel.shutil.which", return_value="/mock/lake"),
+            patch("audit_kernel.run_checked", side_effect=side_effect) as runner,
+            patch("sys.argv", ["audit_kernel.py", "--root", str(self.root)]),
+            contextlib.redirect_stdout(io.StringIO()) as output,
+        ):
             code = main()
         return code, runner, output.getvalue()
 
@@ -46,8 +47,9 @@ class KernelAuditTests(unittest.TestCase):
 
     def test_proof_hole_and_custom_axioms_fail(self):
         for axiom in ["sorryAx", "Model.physicalPostulate", "Lean.ofReduceBool"]:
-            with self.subTest(axiom=axiom), self.assertRaisesRegex(
-                ValueError, "Unapproved"
+            with (
+                self.subTest(axiom=axiom),
+                self.assertRaisesRegex(ValueError, "Unapproved"),
             ):
                 parse_axiom_report(
                     f"'Model.result' depends on axioms: [{axiom}]", ["Model.result"]
@@ -55,8 +57,9 @@ class KernelAuditTests(unittest.TestCase):
 
     def test_missing_and_truncated_reports_fail(self):
         for report in ["", "'Model.result' depends on axioms: [propext"]:
-            with self.subTest(report=report), self.assertRaisesRegex(
-                ValueError, "Missing"
+            with (
+                self.subTest(report=report),
+                self.assertRaisesRegex(ValueError, "Missing"),
             ):
                 parse_axiom_report(report, ["Model.result"])
 
@@ -97,9 +100,11 @@ class KernelAuditTests(unittest.TestCase):
         self.assertEqual(validate_targets(targets), targets)
 
     def test_missing_lake_is_failure_not_skip_or_success(self):
-        with patch("audit_kernel.shutil.which", return_value=None), patch(
-            "sys.argv", ["audit_kernel.py"]
-        ), contextlib.redirect_stdout(io.StringIO()) as output:
+        with (
+            patch("audit_kernel.shutil.which", return_value=None),
+            patch("sys.argv", ["audit_kernel.py"]),
+            contextlib.redirect_stdout(io.StringIO()) as output,
+        ):
             self.assertEqual(main(), 2)
         self.assertIn("no kernel audit was performed", output.getvalue())
 
@@ -107,10 +112,10 @@ class KernelAuditTests(unittest.TestCase):
         result = subprocess.CompletedProcess(
             [], 1, "'X' does not depend on any axioms\n"
         )
-        with patch(
-            "audit_kernel.subprocess.run", return_value=result
-        ), contextlib.redirect_stdout(io.StringIO()), self.assertRaisesRegex(
-            RuntimeError, "exited 1"
+        with (
+            patch("audit_kernel.subprocess.run", return_value=result),
+            contextlib.redirect_stdout(io.StringIO()),
+            self.assertRaisesRegex(RuntimeError, "exited 1"),
         ):
             run_checked(["lake", "env", "lean", "Report.lean"], Path("."), 1)
 
